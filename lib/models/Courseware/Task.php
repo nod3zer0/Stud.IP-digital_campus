@@ -16,20 +16,22 @@ use User;
  * @property int $task_group_id database column
  * @property int $structural_element_id database column
  * @property string $solver_id database column
- * @property string $solver_type database column
+ * @property string|null $solver_type database column
  * @property int $submission_date database column
  * @property int $submitted database column
- * @property string $renewal database column
+ * @property string|null $renewal database column
  * @property int $renewal_date database column
- * @property int $feedback_id database column
+ * @property int|null $feedback_id database column
  * @property int $mkdate database column
  * @property int $chdate database column
- * @property \Courseware\TaskGroup $task_group belongs_to Courseware\TaskGroup
- * @property \Courseware\StructuralElement $structural_element belongs_to Courseware\TaskGroup
- * @property \User $user belongs_to User
- * @property \Statusgruppen $group belongs_to Statusgruppen
- * @property \Courseware\TaskFeedback $task_feedback belongs_to Courseware\TaskFeedback
- * @property-read \User|\Statusgruppen|null $solver belongs_to User or Statusgruppen
+ * @property TaskGroup $task_group belongs_to TaskGroup
+ * @property StructuralElement $structural_element belongs_to StructuralElement
+ * @property \User $lecturer belongs_to \User
+ * @property \User $user belongs_to \User
+ * @property \Statusgruppen $group belongs_to \Statusgruppen
+ * @property \Course $course belongs_to \Course
+ * @property TaskFeedback|null $task_feedback belongs_to TaskFeedback
+ * @property mixed $solver additional field
  */
 class Task extends \SimpleORMap
 {

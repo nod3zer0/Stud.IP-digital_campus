@@ -21,15 +21,13 @@
  * @property string $id database column
  * @property string $name database column
  * @property string $description database column
- * @property string $class_name database column: The name of the SORM class
- *     that handles the resource object, defaults to Resource.
- * @property bool $system database column
- * @property int $iconnr database column
+ * @property int $system database column
+ * @property int|null $iconnr database column
+ * @property string $class_name database column
  * @property int $mkdate database column
  * @property int $chdate database column
- *
- * @property ResourcePropertyDefinition[]|SimpleORMapCollection $property_definitions
- * @property ResourceCategoryProperty[]|SimpleORMapCollection $property_links
+ * @property SimpleORMapCollection|ResourceCategoryProperty[] $property_links has_many ResourceCategoryProperty
+ * @property SimpleORMapCollection|ResourcePropertyDefinition[] $property_definitions has_and_belongs_to_many ResourcePropertyDefinition
  */
 class ResourceCategory extends SimpleORMap
 {

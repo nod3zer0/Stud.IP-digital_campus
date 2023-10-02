@@ -8,21 +8,37 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @param Room room Link to the Room resource (same as the resource attribute).
- * @param string seats additional field (from ResourceRequestProperty)
- * @param string booking_plan_is_public additional field
- *     (from ResourceRequestProperty)
- *
- * All other properties are inherited from the parent class (ResourceRequest).
- * @author      Cornelis Kater <ckater@gwdg.de>
- * @author      Till Glöggler <tgloeggl@uos.de>
- * @author      André Noack <noack@data-quest.de>
- * @author      Suchi & Berg GmbH <info@data-quest.de>
- * @author      Moritz Strohm <strohm@data-quest.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- *
- *
+ * @property string $id database column
+ * @property string $course_id database column
+ * @property string $termin_id database column
+ * @property string $metadate_id database column
+ * @property string $user_id database column
+ * @property string $last_modified_by database column
+ * @property string $resource_id database column
+ * @property string|null $category_id database column
+ * @property string|null $comment database column
+ * @property string|null $reply_comment database column
+ * @property string $reply_recipients database column
+ * @property int $closed database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property int $begin database column
+ * @property int $end database column
+ * @property int $preparation_time database column
+ * @property int $marked database column
+ * @property SimpleORMapCollection|ResourceRequestProperty[] $properties has_many ResourceRequestProperty
+ * @property SimpleORMapCollection|ResourceRequestAppointment[] $appointments has_many ResourceRequestAppointment
+ * @property Room $room belongs_to Room
+ * @property Resource $resource belongs_to Resource
+ * @property ResourceCategory|null $category belongs_to ResourceCategory
+ * @property User $user belongs_to User
+ * @property User $last_modifier belongs_to User
+ * @property Course $course belongs_to Course
+ * @property SeminarCycleDate $cycle belongs_to SeminarCycleDate
+ * @property CourseDate $date belongs_to CourseDate
+ * @property mixed $seats additional field
+ * @property mixed $room_type additional field
+ * @property mixed $booking_plan_is_public additional field
  */
 class RoomRequest extends ResourceRequest
 {

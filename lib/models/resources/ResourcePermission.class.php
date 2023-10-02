@@ -3,6 +3,13 @@
 /**
  * ResourcePermission.class.php - model class for resource permissions.
  *
+ * Description of the resources permission system:
+ * - admin: An admin may do everything in the resource management:
+ *     edit resource bookings and resources.
+ * - tutor: A tutor may edit all resource bookings.
+ * - autor: An autor may edit his own resource bookings only.
+ * - user: A user may read internal comments on resource bookings.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,24 +22,14 @@
  * @package     resources
  * @since       4.5
  *
- * @property string id database column
- * @property string user_id database column
- * @property string resource_id database column
- * @property string perms database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property User user belongs_to User
- * @property Resource resource belongs_to Resource
- */
-
-
-/**
- * Description of the resources permission system:
- *  - admin: An admin may do everything in the resource management:
- *    edit resource bookings and resources.
- *  - tutor: A tutor may edit all resource bookings.
- *  - autor: An autor may edit his own resource bookings only.
- *  - user: A user may read internal comments on resource bookings.
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property string $resource_id database column
+ * @property string $perms database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property User $user belongs_to User
+ * @property Resource $resource belongs_to Resource
  */
 class ResourcePermission extends SimpleORMap implements PrivacyObject
 {

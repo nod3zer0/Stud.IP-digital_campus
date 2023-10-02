@@ -12,11 +12,14 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string background_id database column
- * @property string id alias column for background_id
- * @property string filename database column
- * @property string active database column
- * @property string in_release database column
+ * @property int $id alias column for background_id
+ * @property int $background_id database column
+ * @property string $filename database column
+ * @property int $mobile database column
+ * @property int $desktop database column
+ * @property int $in_release database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
  */
 class LoginBackground extends SimpleORMap
 {

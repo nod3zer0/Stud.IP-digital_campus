@@ -4,31 +4,32 @@
  *
  * @author Nils Gehrke <nils.gehrke@uni-goettingen.de>
  *
+ * The column "range_type" represents the name of a class that implements
+ * FeedbackRange.
+ *
  * @property int $id database column
  * @property string $user_id database column
  * @property string $range_id database column
- * @property string $range_type database column:
- *                  name of class that implements FeedbackRange
- *
+ * @property string $range_type database column
  * @property string $course_id database column
  * @property string $question database column
  * @property string $description database column
- * @property int $mode database column:
- *                  0 without rating;
- *                  1 with star rating from 1 to 5;
- *                  2 with star rating from 1 to 10;
- *
- * @property boolean $results_visible database column:
- *                   show rating results to users after feedback submission
- * @property boolean $commentable database column: users may comment ratings
- *
- * @property Feedbackentry[]|SimpleORMapCollection $entries
- * @property Course $course
- * @property User $user
+ * @property int $mode database column
+ * @property int $results_visible database column
+ * @property int $commentable database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|FeedbackEntry[] $entries has_many FeedbackEntry
+ * @property Course $course belongs_to Course
+ * @property User $user belongs_to User
  */
 
 class FeedbackElement extends SimpleORMap
 {
+    public const MODE_NO_RATING = 0;
+    public const MODE_5STAR_RATING = 1;
+    public const MODE_10STAR_RATING = 2;
+
     public static function configure($config = [])
     {
         $config['db_table'] = 'feedback';
@@ -144,12 +145,10 @@ class FeedbackElement extends SimpleORMap
     public function getMaxRating()
     {
         switch ($this->mode) {
-            case 1:
-                // 5 Stars Rating
+            case self::MODE_5STAR_RATING:
                 return 5;
                 break;
-            case 2:
-                // 10 Stars Rating
+            case self::MODE_10STAR_RATING:
                 return 10;
                 break;
             default:

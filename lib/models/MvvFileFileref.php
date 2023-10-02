@@ -11,6 +11,20 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property array $id alias for pk
+ * @property string $mvvfile_id database column
+ * @property string $file_language database column
+ * @property string $name database column
+ * @property string $fileref_id database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property MvvFile $mvv_file belongs_to MvvFile
+ * @property FileRef $file_ref belongs_to FileRef
+ * @property-read mixed $filetype additional field
+ * @property-read mixed $filename additional field
  */
 
 class MvvFileFileref extends ModuleManagementModel

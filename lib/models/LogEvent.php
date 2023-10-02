@@ -13,17 +13,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
- * @property string event_id database column
- * @property string id alias column for event_id
- * @property string user_id database column
- * @property string action_id database column
- * @property string affected_range_id database column
- * @property string coaffected_range_id database column
- * @property string info database column
- * @property string dbg_info database column
- * @property string mkdate database column
- * @property LogAction action belongs_to LogAction
- * @property User user belongs_to User
+ *
+ * @property int $id alias column for event_id
+ * @property int $event_id database column
+ * @property string $user_id database column
+ * @property string $action_id database column
+ * @property string|null $affected_range_id database column
+ * @property string|null $coaffected_range_id database column
+ * @property string|null $info database column
+ * @property string|null $dbg_info database column
+ * @property int $mkdate database column
+ * @property LogAction $action belongs_to LogAction
+ * @property User $user belongs_to User
  */
 
 

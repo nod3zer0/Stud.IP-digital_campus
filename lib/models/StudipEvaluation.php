@@ -13,22 +13,23 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
- * @property string eval_id database column
- * @property string id alias column for eval_id
- * @property string author_id database column
- * @property string title database column
- * @property string text database column
- * @property string startdate database column
- * @property string stopdate database column
- * @property string timespan database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string anonymous database column
- * @property string visible database column
- * @property string shared database column
- * @property string enddate computed column
- * @property User author belongs_to User
- * @property SimpleORMapCollection participants has_and_belongs_to_many User
+ *
+ * @property string $id alias column for eval_id
+ * @property string $eval_id database column
+ * @property string $author_id database column
+ * @property string $title database column
+ * @property string $text database column
+ * @property int|null $startdate database column
+ * @property int|null $stopdate database column
+ * @property int|null $timespan database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $anonymous database column
+ * @property int $visible database column
+ * @property int $shared database column
+ * @property User $author belongs_to User
+ * @property SimpleORMapCollection|User[] $participants has_and_belongs_to_many User
+ * @property mixed $enddate additional field
  */
 class StudipEvaluation extends SimpleORMap
 {

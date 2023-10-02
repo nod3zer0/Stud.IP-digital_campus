@@ -89,7 +89,12 @@
                     ),
                     'method'      => 'GET',
                     'extraParams' => [
-                        'booking_types'        => [0, 1, 2],
+                        'booking_types'        => [
+                            ResourceBooking::TYPE_NORMAL,
+                            ResourceBooking::TYPE_RESERVATION,
+                            ResourceBooking::TYPE_LOCK,
+
+                        ],
                         'semester_id'          => $semester->id,
                         'semester_timerange'   => Request::get("semester_timerange", 'vorles'),
                         'display_requests'     => 0,

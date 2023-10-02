@@ -12,6 +12,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       5.0
+ *
+ * @property string $id alias column for external_contact_id
+ * @property string $external_contact_id database column
+ * @property string|null $foreign_id database column
+ * @property string|null $host_id database column
+ * @property string $contact_type database column
+ * @property string $name database column
+ * @property string|null $avatar_url database column
+ * @property JSONArrayObject|null $data database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property OERHost|null $host belongs_to OERHost
  */
 
 class ExternalUser extends SimpleORMap
@@ -28,7 +40,7 @@ class ExternalUser extends SimpleORMap
             'class_name' => OERHost::class,
             'foreign_key' => 'host_id'
         ];
-        $config['serialized_fields']['data'] = 'JSONArrayObject';
+        $config['serialized_fields']['data'] = JSONArrayObject::class;
         parent::configure($config);
     }
 }

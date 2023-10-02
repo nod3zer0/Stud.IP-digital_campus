@@ -18,27 +18,23 @@
  * @package     resources
  * @since       4.1
  *
+ * @property string $id alias column for property_id
  * @property string $property_id database column
- * @property string $id alias for resource_id
- * @property string $name database column The internal name of the property.
- * @property string $display_name The display name of the property.
- * @property string $description database column
- * @property string $type database column ('bool', 'text', 'num', 'select',
- *     'user', 'institute', 'position', 'fileref', 'url')
+ * @property string $name database column
+ * @property I18NString|null $description database column
+ * @property string $type database column
  * @property string $options database column
- * @property string $system database column
- * @property string $info_label database column
- * @property bool $searchable database column
- *     0 = not searchable, 1 = searchable
- * @property bool $range_search database column: Whether a search field
- *     for this property shall display a range selector (1) or not (0).
- *     Setting this attribute is only useful for the property types
- *     'num' and 'position'.
+ * @property int $system database column
+ * @property int $info_label database column
+ * @property I18NString $display_name database column
+ * @property int $searchable database column
+ * @property int $range_search database column
  * @property string $write_permission_level database column
+ * @property int|null $property_group_id database column
+ * @property int|null $property_group_pos database column
  * @property int $mkdate database column
  * @property int $chdate database column
- *
- * @property ResourcePropertyGroup $group
+ * @property ResourcePropertyGroup|null $group belongs_to ResourcePropertyGroup
  */
 
 

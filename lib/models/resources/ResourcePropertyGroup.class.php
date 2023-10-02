@@ -15,11 +15,12 @@
  * @package     resources
  * @since       TODO
  *
- * @property string id database column
- * @property string name database column
- * @property string position database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property int $id database column
+ * @property string $name database column
+ * @property int $position database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|ResourcePropertyDefinition[] $properties has_many ResourcePropertyDefinition
  */
 class ResourcePropertyGroup extends SimpleORMap
 {

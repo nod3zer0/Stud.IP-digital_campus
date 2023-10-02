@@ -13,23 +13,24 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string user_id database column
- * @property string seminar_id database column
- * @property string status database column
- * @property string mkdate database column
- * @property string position database column
- * @property string comment database column
- * @property string visible database column
- * @property string vorname computed column read/write
- * @property string nachname computed column read/write
- * @property string username computed column read/write
- * @property string email computed column read/write
- * @property string title_front computed column read/write
- * @property string title_rear computed column read/write
- * @property string course_name computed column read/write
- * @property string id computed column read/write
- * @property User user belongs_to User
- * @property Course course belongs_to Course
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property string $seminar_id database column
+ * @property string $status database column
+ * @property int $mkdate database column
+ * @property int|null $chdate database column
+ * @property int|null $position database column
+ * @property string $comment database column
+ * @property string $visible database column
+ * @property User $user belongs_to User
+ * @property Course $course belongs_to Course
+ * @property mixed $vorname additional field
+ * @property mixed $nachname additional field
+ * @property mixed $username additional field
+ * @property mixed $email additional field
+ * @property mixed $title_front additional field
+ * @property mixed $title_rear additional field
+ * @property mixed $course_name additional field
  */
 class AdmissionApplication extends SimpleORMap implements PrivacyObject
 {

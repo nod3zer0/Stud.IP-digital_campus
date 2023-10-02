@@ -10,27 +10,28 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string termin_id database column
- * @property string id alias column for termin_id
- * @property string range_id database column
- * @property string autor_id database column
- * @property string content database column
- * @property string date database column
- * @property string end_time database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string date_typ database column
- * @property string topic_id database column
- * @property string raum database column
- * @property string metadate_id database column
- * @property User author belongs_to User
- * @property Course course belongs_to Course
- * @property SeminarCycleDate cycle belongs_to SeminarCycleDate
- * @property RoomRequest room_requests has_many RoomRequest
- * @property ResourceBooking room_booking has_one ResourceBooking
- * @property SimpleORMapCollection topics has_and_belongs_to_many CourseTopic
- * @property SimpleORMapCollection statusgruppen has_and_belongs_to_many Statusgruppen
- * @property SimpleORMapCollection dozenten has_and_belongs_to_many User
+ * @property string $id alias column for termin_id
+ * @property string $termin_id database column
+ * @property string $range_id database column
+ * @property string $autor_id database column
+ * @property string $content database column
+ * @property int $date database column
+ * @property int $end_time database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $date_typ database column
+ * @property string|null $raum database column
+ * @property string|null $metadate_id database column
+ * @property SimpleORMapCollection|Folder[] $folders has_many Folder
+ * @property SimpleORMapCollection|RoomRequest[] $room_requests has_many RoomRequest
+ * @property SimpleORMapCollection|ResourceRequestAppointment[] $resource_request_appointments has_many ResourceRequestAppointment
+ * @property User $author belongs_to User
+ * @property Course $course belongs_to Course
+ * @property SeminarCycleDate|null $cycle belongs_to SeminarCycleDate
+ * @property ResourceBooking $room_booking has_one ResourceBooking
+ * @property SimpleORMapCollection|CourseTopic[] $topics has_and_belongs_to_many CourseTopic
+ * @property SimpleORMapCollection|Statusgruppen[] $statusgruppen has_and_belongs_to_many Statusgruppen
+ * @property SimpleORMapCollection|User[] $dozenten has_and_belongs_to_many User
  */
 
 class CourseDate extends SimpleORMap implements PrivacyObject

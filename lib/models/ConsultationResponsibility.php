@@ -4,11 +4,12 @@
  * @license GPL2 or any later version
  * @since   Stud.IP 5.1
  *
- * @property int block_id database column
- * @property int id alias column for block_id
- * @property string range_id database column
- * @property string range_type database column
- * @property int mkdate database column
+ * @property array $id alias for pk
+ * @property int $block_id database column
+ * @property string $range_id database column
+ * @property string $range_type database column
+ * @property int $mkdate database column
+ * @property ConsultationBlock $block belongs_to ConsultationBlock
  */
 class ConsultationResponsibility extends SimpleORMap
 {

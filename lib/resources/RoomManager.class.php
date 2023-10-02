@@ -389,8 +389,18 @@ class RoomManager
         Room $room,
         DateTime $begin,
         DateTime $end,
-        $booking_types = [0, 1, 2, 3],
-        $building_booking_types = [0, 1, 2, 3],
+        $booking_types = [
+            ResourceBooking::TYPE_NORMAL,
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK,
+            ResourceBooking::TYPE_PLANNED,
+        ],
+        $building_booking_types = [
+            ResourceBooking::TYPE_NORMAL,
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK,
+            ResourceBooking::TYPE_PLANNED,
+        ],
         $exclude_canceled_intervals = true
     )
     {

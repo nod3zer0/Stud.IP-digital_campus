@@ -15,15 +15,19 @@
  * @package     resources
  * @since       TODO
  *
- * @property string property_id database column
- * @property string resource_id database column
- * @property string state database column
- * @property string form_text database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property Resource resource belongs_to Resource
- * @property ResourcePropertyDefinition definition belongs_to
- *     ResourcePropertyDefinition
+ * @property array $id alias for pk
+ * @property string $resource_id database column
+ * @property string $property_id database column
+ * @property string $state database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property ResourcePropertyDefinition $definition belongs_to ResourcePropertyDefinition
+ * @property Resource $resource belongs_to Resource
+ * @property mixed $name additional field
+ * @property-read mixed $fullname additional field
+ * @property mixed $display_name additional field
+ * @property mixed $type additional field
+ * @property mixed $info_label additional field
  */
 class ResourceProperty extends SimpleORMap
 {

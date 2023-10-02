@@ -10,30 +10,29 @@
  *       method when the dev board finally fully supports PHP7 since that
  *       required "yield from".
  *
- * @property string $id alias column for block_id
- * @property string $block_id database column
+ * @property int $id alias column for block_id
+ * @property int $block_id database column
  * @property string $range_id database column
  * @property string $range_type database column
  * @property int $start database column
  * @property int $end database column
  * @property string $room database column
- * @property bool $calendar_events database column
- * @property bool $show_participants database column
- * @property bool $require_reason database column
- * @property string $confirmation_text database column
+ * @property int $calendar_events database column
+ * @property int $show_participants database column
+ * @property string $require_reason database column
+ * @property string|null $confirmation_text database column
  * @property string $note database column
- * @property string $size database column
- * @property int $lock_time
+ * @property int $size database column
+ * @property int|null $lock_time database column
  * @property int $mkdate database column
  * @property int $chdate database column
- *
- * @property bool $has_bookings computed column
- * @property string $range_display
- * @property bool $is_expired
- * @property Range $range computed column
- * @property ConsultationSlot[]|SimpleORMapCollection $slots has_many ConsultationSlot
- * @property ConsultationResponsibility[]|SimpleCollection $responsibilities has_many ConsultationResponsibility
- * @property User[] $responsible_persons
+ * @property SimpleORMapCollection|ConsultationSlot[] $slots has_many ConsultationSlot
+ * @property SimpleORMapCollection|ConsultationResponsibility[] $responsibilities has_many ConsultationResponsibility
+ * @property mixed $range additional field
+ * @property-read mixed $range_display additional field
+ * @property-read mixed $has_bookings additional field
+ * @property-read mixed $is_expired additional field
+ * @property-read mixed $responsible_persons additional field
  */
 class ConsultationBlock extends SimpleORMap implements PrivacyObject
 {

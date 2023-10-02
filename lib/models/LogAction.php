@@ -13,17 +13,20 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.0
- * @property string action_id database column
- * @property string id alias column for action_id
- * @property string name database column
- * @property string description database column
- * @property string info_template database column
- * @property string active database column
- * @property string expires database column
- * @property string filename database column
- * @property string class database column
- * @property string type database column
- * @property SimpleORMapCollection events has_many LogEvent
+ *
+ * @property string $id alias column for action_id
+ * @property string $action_id database column
+ * @property string $name database column
+ * @property string|null $description database column
+ * @property string|null $info_template database column
+ * @property int $active database column
+ * @property int $expires database column
+ * @property string|null $filename database column
+ * @property string|null $class database column
+ * @property string|null $type database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property SimpleORMapCollection|LogEvent[] $events has_many LogEvent
  */
 class LogAction extends SimpleORMap
 {

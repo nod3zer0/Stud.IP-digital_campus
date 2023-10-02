@@ -22,7 +22,7 @@
             'data-dialog' => 'size=auto'
         ]
     ) ?>
-    <? if ($booking->booking_type == '1') : ?>
+    <? if ($booking->booking_type == ResourceBooking::TYPE_RESERVATION) : ?>
         <?= \Studip\LinkButton::create(
             _('In Buchung umwandeln'),
             $controller->url_for('resources/booking/transform/' . $booking->id),
@@ -30,7 +30,7 @@
                 'data-dialog' => 'size=auto'
             ]
         ) ?>
-    <? elseif ($booking->booking_type == '0') : ?>
+    <? elseif ($booking->booking_type == ResourceBooking::TYPE_NORMAL) : ?>
         <?= \Studip\LinkButton::create(
             _('In Reservierung umwandeln'),
             $controller->url_for('resources/booking/transform/' . $booking->id),

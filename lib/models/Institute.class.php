@@ -13,33 +13,36 @@
  * @category    Stud.IP
  * @since       2.0
  *
- * @property string institut_id database column
- * @property string id alias column for institut_id
- * @property string name database column
- * @property string fakultaets_id database column
- * @property string strasse database column
- * @property string plz database column
- * @property string url database column
- * @property string telefon database column
- * @property string email database column
- * @property string fax database column
- * @property string type database column
- * @property string modules database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string lit_plugin_name database column
- * @property string srienabled database column
- * @property string lock_rule database column
- * @property string is_fak computed column
- * @property SimpleORMapCollection members has_many InstituteMember
- * @property SimpleORMapCollection home_courses has_many Course
- * @property SimpleORMapCollection sub_institutes has_many Institute
- * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
- * @property Institute faculty belongs_to Institute
- * @property SimpleORMapCollection courses has_and_belongs_to_many Course
- *
- * @property ConsultationBlock[]|SimpleORMapCollection $consultation_blocks
- * @property ConsultationResponsibility[]|SimpleORMapCollection $consultation_responsibilities
+ * @property string $id alias column for institut_id
+ * @property string $institut_id database column
+ * @property I18NString $name database column
+ * @property string $fakultaets_id database column
+ * @property string $strasse database column
+ * @property string $plz database column
+ * @property string $url database column
+ * @property string $telefon database column
+ * @property string $email database column
+ * @property string $fax database column
+ * @property int $type database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property string|null $lit_plugin_name database column
+ * @property int $srienabled database column
+ * @property string $lock_rule database column
+ * @property SimpleORMapCollection|InstituteMember[] $members has_many InstituteMember
+ * @property SimpleORMapCollection|Course[] $home_courses has_many Course
+ * @property SimpleORMapCollection|Institute[] $sub_institutes has_many Institute
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property SimpleORMapCollection|StudipScmEntry[] $scm has_many StudipScmEntry
+ * @property SimpleORMapCollection|Statusgruppen[] $status_groups has_many Statusgruppen
+ * @property SimpleORMapCollection|BlubberThread[] $blubberthreads has_many BlubberThread
+ * @property SimpleORMapCollection|ConsultationBlock[] $consultation_blocks has_many ConsultationBlock
+ * @property SimpleORMapCollection|ConsultationResponsibility[] $consultation_responsibilities has_many ConsultationResponsibility
+ * @property SimpleORMapCollection|ToolActivation[] $tools has_many ToolActivation
+ * @property Institute $faculty belongs_to Institute
+ * @property SimpleORMapCollection|Course[] $courses has_and_belongs_to_many Course
+ * @property-read mixed $is_fak additional field
+ * @property-read mixed $all_status_groups additional field
  */
 
 class Institute extends SimpleORMap implements Range

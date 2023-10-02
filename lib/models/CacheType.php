@@ -13,11 +13,12 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string cache_id database column
- * @property string class_name database column
- * @property string display_name database column
- * @property int mkdate database column
- * @property int chdate database column
+ * @property int $id alias column for cache_id
+ * @property int $cache_id database column
+ * @property string $class_name database column
+ * @property int|null $chdate database column
+ * @property int|null $mkdate database column
+ * @property mixed $display_name additional field
  */
 
 class CacheType extends SimpleORMap

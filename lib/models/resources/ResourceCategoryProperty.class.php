@@ -16,14 +16,19 @@
  * @package     resources
  * @since       4.5
  *
- * @property string category_id database column
- * @property string property_id database column
- * @property string requestable database column
- * @property string protected database column
- * @property string system database column
- * @property string form_text database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property array $id alias for pk
+ * @property string $category_id database column
+ * @property string $property_id database column
+ * @property int $requestable database column
+ * @property int $protected database column
+ * @property int $system database column
+ * @property string|null $form_text database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property ResourceCategory $category belongs_to ResourceCategory
+ * @property ResourcePropertyDefinition $definition belongs_to ResourcePropertyDefinition
+ * @property mixed $name additional field
+ * @property mixed $type additional field
  */
 
 

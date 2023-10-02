@@ -11,6 +11,19 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property string $id alias column for extern_contact_id
+ * @property string $extern_contact_id database column
+ * @property I18NString $name database column
+ * @property string|null $vorname database column
+ * @property I18NString $homepage database column
+ * @property string $mail database column
+ * @property string $tel database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property MvvContact $MvvContact belongs_to MvvContact
  */
 
 class MvvExternContact extends ModuleManagementModel

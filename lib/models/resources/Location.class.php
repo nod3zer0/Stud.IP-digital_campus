@@ -15,8 +15,28 @@
  * @package     resources
  * @since       4.1
  *
- * @property string id location-ID (equal to Resource.resource_id)
- * Other properties are inherited from the parent class (Resource).
+ * @property string $id database column
+ * @property string $parent_id database column
+ * @property string $category_id database column
+ * @property int|null $level database column
+ * @property string $name database column
+ * @property I18NString|null $description database column
+ * @property int $requestable database column
+ * @property int $lockable database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $sort_position database column
+ * @property SimpleORMapCollection|ResourceProperty[] $properties has_many ResourceProperty
+ * @property SimpleORMapCollection|ResourcePermission[] $permissions has_many ResourcePermission
+ * @property SimpleORMapCollection|ResourceRequest[] $requests has_many ResourceRequest
+ * @property SimpleORMapCollection|ResourceBooking[] $bookings has_many ResourceBooking
+ * @property SimpleORMapCollection|Resource[] $children has_many Resource
+ * @property ResourceCategory $category belongs_to ResourceCategory
+ * @property Resource $parent belongs_to Resource
+ * @property mixed $geo_coordinates additional field
+ * @property-read mixed $buildings additional field
+ * @property mixed $director additional field
+ * @property mixed $class_name additional field
  */
 class Location extends Resource
 {
@@ -328,7 +348,7 @@ class Location extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0
+        $booking_type = ResourceBooking::TYPE_NORMAL
     )
     {
         return null;
@@ -340,7 +360,7 @@ class Location extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $prepend_preparation_time = false,
         $notify_lecturers = false
     )
@@ -358,7 +378,7 @@ class Location extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $force_booking = false
     )
     {

@@ -13,7 +13,18 @@
  * @category    Stud.IP
  * @since       4.5
  *
- * @property BlubberThread thread related thread
+ * @property string $id alias column for comment_id
+ * @property string $comment_id database column
+ * @property string $thread_id database column
+ * @property string $user_id database column
+ * @property int $external_contact database column
+ * @property string|null $content database column
+ * @property string|null $network database column
+ * @property int|null $chdate database column
+ * @property int|null $mkdate database column
+ * @property BlubberThread $thread belongs_to BlubberThread
+ * @property User $user belongs_to User
+ * @property ExternalUser $external_user belongs_to ExternalUser
  */
 
 class BlubberComment extends SimpleORMap implements PrivacyObject

@@ -18,28 +18,30 @@ require_once 'lib/dates.inc.php';
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.0
- * @property string                metadate_id  database column
- * @property string                id           alias column for metadate_id
- * @property string                seminar_id   database column
- * @property string                start_time   database column
- * @property string                end_time     database column
- * @property string                weekday      database column
- * @property string                description  database column
- * @property string                sws          database column
- * @property string                cycle        database column
- * @property string                week_offset  database column
- * @property string                end_offset   database column
- * @property string                sorter       database column
- * @property string                mkdate       database column
- * @property string                chdate       database column
- * @property string                start_hour   computed column read/write
- * @property string                start_minute computed column read/write
- * @property string                end_hour     computed column read/write
- * @property string                end_minute   computed column read/write
- * @property SimpleORMapCollection dates        has_many CourseDate
- * @property Course                course       belongs_to Course
- * @property RoomRequest           room_requests has_many RoomRequest
- * @property bool                  is_visible   computed column read
+ *
+ * @property string $id alias column for metadate_id
+ * @property string $metadate_id database column
+ * @property string $seminar_id database column
+ * @property string $start_time database column
+ * @property string $end_time database column
+ * @property int $weekday database column
+ * @property string $description database column
+ * @property float $sws database column
+ * @property int $cycle database column
+ * @property int $week_offset database column
+ * @property int|null $end_offset database column
+ * @property int $sorter database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|RoomRequest[] $room_requests has_many RoomRequest
+ * @property SimpleORMapCollection|CourseDate[] $dates has_many CourseDate
+ * @property SimpleORMapCollection|CourseExDate[] $exdates has_many CourseExDate
+ * @property Course $course belongs_to Course
+ * @property mixed $start_hour additional field
+ * @property mixed $start_minute additional field
+ * @property mixed $end_hour additional field
+ * @property mixed $end_minute additional field
+ * @property-read mixed $is_visible additional field
  */
 class SeminarCycleDate extends SimpleORMap
 {

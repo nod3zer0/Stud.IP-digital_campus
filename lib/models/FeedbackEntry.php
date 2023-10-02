@@ -9,9 +9,10 @@
  * @property string $user_id database column
  * @property string $comment database column
  * @property int $rating database column
- *
- * @property FeedbackElement $feedback
- * @property User $user
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property FeedbackElement $feedback belongs_to FeedbackElement
+ * @property User $user belongs_to User
  */
 
 class FeedbackEntry extends SimpleORMap

@@ -128,10 +128,10 @@ class Resources_ExportController extends AuthenticatedController
 
         // All available booking types.
         $this->booking_types = [
-            0 => _('Buchung'),
-            1 => _('Reservierung'),
-            2 => _('Sperrbuchung'),
-            3 => _('geplante Buchung')
+            ResourceBooking::TYPE_NORMAL          => _('Buchung'),
+            ResourceBooking::TYPE_RESERVATION     => _('Reservierung'),
+            ResourceBooking::TYPE_LOCK            => _('Sperrbuchung'),
+            ResourceBooking::TYPE_PLANNED => _('geplante Buchung')
         ];
         $this->selected_booking_types = Request::intArray('bookingtypes') ?:
             Config::get()->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
@@ -236,10 +236,10 @@ class Resources_ExportController extends AuthenticatedController
 
         // All available booking types.
         $this->booking_types = [
-            0 => _('Buchung'),
-            1 => _('Reservierung'),
-            2 => _('Sperrbuchung'),
-            3 => _('geplante Buchung')
+            ResourceBooking::TYPE_NORMAL          => _('Buchung'),
+            ResourceBooking::TYPE_RESERVATION     => _('Reservierung'),
+            ResourceBooking::TYPE_LOCK            => _('Sperrbuchung'),
+            ResourceBooking::TYPE_PLANNED => _('geplante Buchung')
         ];
         $this->selected_booking_types = Config::get()->RESOURCES_EXPORT_BOOKINGTYPES_DEFAULT;
     }
@@ -384,13 +384,13 @@ class Resources_ExportController extends AuthenticatedController
                     ),
                     $booking->resource->name,
                     (
-                    $booking->booking_type == '0'
+                    $booking->booking_type == ResourceBooking::TYPE_NORMAL
                         ? _('Buchung')
                         : (
-                    $booking->booking_type == '1'
+                    $booking->booking_type == ResourceBooking::TYPE_RESERVATION
                         ? _('Reservierung')
                         : (
-                    $booking->booking_type == '2'
+                    $booking->booking_type == ResourceBooking::TYPE_LOCK
                         ? _('Sperrbuchung')
                         : _('sonstiges')
                     )
@@ -494,11 +494,11 @@ class Resources_ExportController extends AuthenticatedController
                 }
 
                 $booking_type_string = '';
-                if ($interval->booking->booking_type == '0') {
+                if ($interval->booking->booking_type == ResourceBooking::TYPE_NORMAL) {
                     $booking_type_string = _('Buchung');
-                } elseif ($interval->booking->booking_type == '1') {
+                } elseif ($interval->booking->booking_type == ResourceBooking::TYPE_RESERVATION) {
                     $booking_type_string = _('Reservierung');
-                } elseif ($interval->booking->booking_type == '2') {
+                } elseif ($interval->booking->booking_type == ResourceBooking::TYPE_LOCK) {
                     $booking_type_string = _('Sperrbuchung');
                 }
 

@@ -27,22 +27,23 @@ require_once 'lib/object.inc.php';
  * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
- * @property string news_id database column
- * @property string id alias column for news_id
- * @property string topic database column
- * @property string body database column
- * @property string author database column
- * @property string date database column
- * @property string user_id database column
- * @property string expire database column
- * @property string allow_comments database column
- * @property int prio database column
- * @property string chdate database column
- * @property string chdate_uid database column
- * @property string mkdate database column
- * @property SimpleORMapCollection news_ranges has_many NewsRange
- * @property SimpleORMapCollection comments has_many StudipComment
- * @property User owner belongs_to User
+ * @property string $id alias column for news_id
+ * @property string $news_id database column
+ * @property I18NString $topic database column
+ * @property I18NString $body database column
+ * @property string $author database column
+ * @property int $date database column
+ * @property string $user_id database column
+ * @property int $expire database column
+ * @property int $allow_comments database column
+ * @property int $prio database column
+ * @property int $chdate database column
+ * @property string $chdate_uid database column
+ * @property int $mkdate database column
+ * @property SimpleORMapCollection|NewsRange[] $news_ranges has_many NewsRange
+ * @property SimpleORMapCollection|StudipComment[] $comments has_many StudipComment
+ * @property SimpleORMapCollection|NewsRoles[] $news_roles has_many NewsRoles
+ * @property User $owner belongs_to User
  */
 class StudipNews extends SimpleORMap implements PrivacyObject
 {

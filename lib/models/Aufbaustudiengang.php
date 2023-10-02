@@ -12,8 +12,19 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.4
+ *
+ * @property int $id database column
+ * @property string $grund_stg_id database column
+ * @property string $aufbau_stg_id database column
+ * @property string $typ database column
+ * @property I18NString|null $kommentar database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Studiengang $grund_studiengang belongs_to Studiengang
+ * @property Studiengang $aufbau_studiengang has_one Studiengang
  */
-
 class Aufbaustudiengang extends ModuleManagementModel
 {
     protected static function configure($config = [])

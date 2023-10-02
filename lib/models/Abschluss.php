@@ -12,6 +12,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for abschluss_id
+ * @property string $abschluss_id database column
+ * @property I18NString $name database column
+ * @property I18NString|null $name_kurz database column
+ * @property I18NString|null $beschreibung database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property SimpleORMapCollection|Fach[] $faecher has_many Fach
+ * @property SimpleORMapCollection|Studiengang[] $studiengaenge has_many Studiengang
+ * @property AbschlussKategorie $category belongs_to AbschlussKategorie
+ * @property AbschlussZuord $category_assignment has_one AbschlussZuord
+ * @property SimpleORMapCollection|Fach[] $professions has_and_belongs_to_many Fach
+ * @property-read mixed $count_faecher additional field
+ * @property-read mixed $kategorie_name additional field
+ * @property-read mixed $kategorie_id additional field
+ * @property-read mixed $count_studiengaenge additional field
+ * @property-read mixed $count_objects additional field
+ * @property-read mixed $count_user additional field
  */
 class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
 {

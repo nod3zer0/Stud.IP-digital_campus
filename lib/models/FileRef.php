@@ -13,22 +13,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- *
- * @property string id database column
- * @property string file_id database column
- * @property string folder_id database column
- * @property string user_id database column
- * @property string name database column
- * @property string downloads database column
- * @property string description database column
- * @property string license database column
- * @property string content_terms_of_use_id database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMap file belongs_to File
- * @property SimpleORMap folder belongs_to Folder
- * @property SimpleORMap owner belongs_to User
- * @property SimpleORMap terms_of_use belongs_to ContentTermsOfUse
+ * @property string $id database column
+ * @property string $file_id database column
+ * @property string $folder_id database column
+ * @property int $downloads database column
+ * @property string $description database column
+ * @property string $content_terms_of_use_id database column
+ * @property string $user_id database column
+ * @property string $name database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property File $file belongs_to File
+ * @property Folder $folder belongs_to Folder
+ * @property User $owner belongs_to User
+ * @property ContentTermsOfUse $terms_of_use belongs_to ContentTermsOfUse
+ * @property mixed $size additional field
+ * @property mixed $mime_type additional field
+ * @property mixed $download_url additional field
+ * @property-read mixed $author_name additional field
+ * @property-read mixed $is_accessible additional field
+ * @property-read mixed $is_link additional field
+ * @property mixed $foldertype additional field
  */
 class FileRef extends SimpleORMap implements PrivacyObject, FeedbackRange
 {

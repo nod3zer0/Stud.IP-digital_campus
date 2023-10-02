@@ -12,16 +12,15 @@
  * @category    Stud.IP
  * @since       2.4
  *
- * @property string $kategorie_id database column
  * @property string $id alias column for kategorie_id
+ * @property string $kategorie_id database column
  * @property string $range_id database column
- * @property string|I18NString $name database column
- * @property string|I18NString $content database column
+ * @property I18NString $name database column
+ * @property I18NString $content database column
  * @property int $mkdate database column
  * @property int $chdate database column
  * @property int $priority database column
- *
- * @property User $user
+ * @property User $user belongs_to User
  */
 
 class Kategorie extends SimpleORMap

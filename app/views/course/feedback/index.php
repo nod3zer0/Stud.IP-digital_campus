@@ -72,7 +72,7 @@
                     </a>
                 </td>
                 <td>
-                    <?php if (count($feedback->entries) >= 1 && $feedback->mode != 0) {
+                    <?php if (count($feedback->entries) >= 1 && $feedback->mode != FeedbackElement::MODE_NO_RATING) {
                         echo $feedback->getMeanOfRating();
                     }
                     ?>
@@ -81,9 +81,9 @@
                     <?= count($feedback->entries) ?>
                 </td>
                 <td data-sort-value="<?= $feedback->mode ?>" class="responsive-hidden">
-                    <? if($feedback->mode == 1) : ?>
+                    <? if($feedback->mode == FeedbackElement::MODE_5STAR_RATING) : ?>
                         <?= Icon::create('star', Icon::ROLE_INFO) ?> (1-5)
-                    <? elseif($feedback->mode == 2): ?>
+                    <? elseif($feedback->mode == FeedbackElement::MODE_10STAR_RATING): ?>
                         <?= Icon::create('star', Icon::ROLE_INFO) ?> (1-10)
                     <? else: ?>
                         <?= _('Kommentar') ?>

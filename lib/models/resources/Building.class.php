@@ -3,6 +3,9 @@
 /**
  * Building.class.php - model class for a resource which is a building
  *
+ * The building class is a derived class from the Resource class
+ * which includes specialisations for Building resource types.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,15 +18,31 @@
  * @package     resources
  * @since       4.1
  *
- * @property string id building-ID (equal to Resource.resource_id)
- * @property Location Location
- * Other properties are inherited from the parent class (Resource).
- */
-
-
-/**
- * The building class is a derived class from the Resource class
- * which includes specialisations for Building resource types.
+ * @property string $id database column
+ * @property string $parent_id database column
+ * @property string $category_id database column
+ * @property int|null $level database column
+ * @property string $name database column
+ * @property I18NString|null $description database column
+ * @property int $requestable database column
+ * @property int $lockable database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $sort_position database column
+ * @property SimpleORMapCollection|ResourceProperty[] $properties has_many ResourceProperty
+ * @property SimpleORMapCollection|ResourcePermission[] $permissions has_many ResourcePermission
+ * @property SimpleORMapCollection|ResourceRequest[] $requests has_many ResourceRequest
+ * @property SimpleORMapCollection|ResourceBooking[] $bookings has_many ResourceBooking
+ * @property SimpleORMapCollection|Resource[] $children has_many Resource
+ * @property ResourceCategory $category belongs_to ResourceCategory
+ * @property Resource $parent belongs_to Resource
+ * @property mixed $address additional field
+ * @property mixed $number additional field
+ * @property mixed $geo_coordinates additional field
+ * @property-read mixed $location additional field
+ * @property-read mixed $rooms additional field
+ * @property mixed $facility_manager additional field
+ * @property mixed $class_name additional field
  */
 class Building extends Resource
 {
@@ -407,7 +426,7 @@ class Building extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0
+        $booking_type = ResourceBooking::TYPE_NORMAL
     )
     {
         return null;
@@ -419,7 +438,7 @@ class Building extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $prepend_preparation_time = false,
         $notify_lecturers = false
     )
@@ -438,7 +457,7 @@ class Building extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $force_booking = false
     )
     {

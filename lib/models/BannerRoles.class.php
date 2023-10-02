@@ -14,8 +14,10 @@
  * @package     admin
  * @since       5.1
  *
- * @property string ad_id database column
- * @property int roleid database column
+ * @property array $id alias for pk
+ * @property string $ad_id database column
+ * @property int $roleid database column
+ * @property Banner $banner_ads belongs_to Banner
  */
 
 class BannerRoles extends SimpleORMap

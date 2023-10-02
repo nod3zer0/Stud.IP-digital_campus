@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Fachbereich.php
  * model class for Fachbereiche (aka institutes)
  *
@@ -12,6 +12,25 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for institut_id
+ * @property string $institut_id database column
+ * @property I18NString $name database column
+ * @property string $fakultaets_id database column
+ * @property string $strasse database column
+ * @property string $plz database column
+ * @property string $url database column
+ * @property string $telefon database column
+ * @property string $email database column
+ * @property string $fax database column
+ * @property int $type database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property string|null $lit_plugin_name database column
+ * @property int $srienabled database column
+ * @property string $lock_rule database column
+ * @property-read mixed $count_objects additional field
+ * @property-read mixed $count_module additional field
  */
 
 class Fachbereich extends ModuleManagementModelTreeItem

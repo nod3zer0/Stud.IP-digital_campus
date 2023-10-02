@@ -2,6 +2,7 @@
 
 namespace Courseware;
 
+use JSONArrayObject;
 use User;
 
 /**
@@ -14,24 +15,24 @@ use User;
  *
  * @since   Stud.IP 5.0
  *
- * @property int                                      $id                    database column
- * @property int                                      $structural_element_id database column
- * @property string                                   $owner_id              database column
- * @property string                                   $editor_id             database column
- * @property string                                   $edit_blocker_id       database column
- * @property int                                      $position              database column
- * @property int                                      $site                  database column
- * @property string                                   $container_type        database column
- * @property int                                      $visible               database column
- * @property string                                   $payload               database column
- * @property int                                      $mkdate                database column
- * @property int                                      $chdate                database column
- * @property \Courseware\ContainerTypes\ContainerType $type                  computed column read/write
- * @property \SimpleORMapCollection                   $blocks                has_many Courseware\Block
- * @property \User                                    $owner                 belongs_to User
- * @property \User                                    $editor                belongs_to User
- * @property \User                                    $edit_blocker          belongs_to User
- * @property \Courseware\StructuralElement            $structural_element    belongs_to Courseware\StructuralElement
+ * @property int $id database column
+ * @property int $structural_element_id database column
+ * @property string $owner_id database column
+ * @property string $editor_id database column
+ * @property string|null $edit_blocker_id database column
+ * @property int $position database column
+ * @property int $site database column
+ * @property string $container_type database column
+ * @property int $visible database column
+ * @property \JSONArrayObject $payload database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \SimpleORMapCollection|Block[] $blocks has_many Block
+ * @property \User $owner belongs_to \User
+ * @property \User $editor belongs_to \User
+ * @property \User|null $edit_blocker belongs_to \User
+ * @property StructuralElement $structural_element belongs_to StructuralElement
+ * @property mixed $type additional field
  */
 class Container extends \SimpleORMap implements \PrivacyObject
 {
@@ -39,7 +40,7 @@ class Container extends \SimpleORMap implements \PrivacyObject
     {
         $config['db_table'] = 'cw_containers';
 
-        $config['serialized_fields']['payload'] = 'JSONArrayObject';
+        $config['serialized_fields']['payload'] = JSONArrayObject::class;
 
         $config['has_many']['blocks'] = [
             'class_name' => Block::class,
@@ -145,7 +146,7 @@ class Container extends \SimpleORMap implements \PrivacyObject
             'payload' => $this['payload'],
         ]);
 
-        list($blockMapIds, $blockMapObjs) = $this->copyBlocks($user, $container);
+        [$blockMapIds, $blockMapObjs] = $this->copyBlocks($user, $container);
 
         $container['payload'] = $container->type->copyPayload($blockMapIds);
 

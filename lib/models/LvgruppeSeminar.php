@@ -13,6 +13,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property array $id alias for pk
+ * @property string $lvgruppe_id database column
+ * @property string $seminar_id database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Lvgruppe $lvgruppe belongs_to Lvgruppe
+ * @property Course $course belongs_to Course
  */
 
 class LvgruppeSeminar extends ModuleManagementModel

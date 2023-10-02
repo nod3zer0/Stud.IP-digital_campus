@@ -11,17 +11,16 @@
  * @author    mlunzena
  * @copyright (c) Authors
  *
- * @property string user_id database column
- * @property string message_id database column
- * @property string readed database column
- * @property string deleted database column
- * @property string snd_rec database column
- * @property string confirmed_read database column
- * @property string answered database column
- * @property string mkdate database column
- * @property string id computed column read/write
- * @property User user belongs_to User
- * @property Message message belongs_to Message
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property string $message_id database column
+ * @property int $readed database column
+ * @property int $deleted database column
+ * @property string $snd_rec database column
+ * @property int $answered database column
+ * @property int $mkdate database column
+ * @property User $user belongs_to User
+ * @property Message $message belongs_to Message
  */
 
 class MessageUser extends SimpleORMap implements PrivacyObject

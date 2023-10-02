@@ -12,8 +12,26 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for kategorie_id
+ * @property string $kategorie_id database column
+ * @property I18NString $name database column
+ * @property I18NString|null $name_kurz database column
+ * @property I18NString|null $beschreibung database column
+ * @property int|null $position database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|MvvFile[] $documents has_many MvvFile
+ * @property SimpleORMapCollection|MvvFile[] $document_assignments has_many MvvFile
+ * @property SimpleORMapCollection|AbschlussZuord[] $abschluss_assignments has_many AbschlussZuord
+ * @property SimpleORMapCollection|Abschluss[] $abschluesse has_and_belongs_to_many Abschluss
+ * @property-read mixed $count_abschluesse additional field
+ * @property-read mixed $count_studiengaenge additional field
+ * @property-read mixed $count_dokumente additional field
+ * @property-read mixed $count_objects additional field
  */
-
 class AbschlussKategorie extends ModuleManagementModelTreeItem
 {
 

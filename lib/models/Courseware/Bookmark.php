@@ -12,13 +12,13 @@ namespace Courseware;
  *
  * @since   Stud.IP 5.0
  *
- * @property array                         $id         computed column read/write
- * @property string                        $user_id    database column
- * @property int                           $element_id database column
- * @property int                           $mkdate     database column
- * @property int                           $chdate     database column
- * @property \User                         $user       belongs_to User
- * @property \Courseware\StructuralElement $element    belongs_to Courseware\StructuralElement
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property int $element_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \User $user belongs_to \User
+ * @property StructuralElement $element belongs_to StructuralElement
  */
 class Bookmark extends \SimpleORMap implements \PrivacyObject
 {

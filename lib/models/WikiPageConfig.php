@@ -9,6 +9,16 @@
  *
  * @author      Elmar Ludwig
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ *
+ * @property array $id alias for pk
+ * @property string $range_id database column
+ * @property string $keyword database column
+ * @property int $read_restricted database column
+ * @property int $edit_restricted database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property Course $course belongs_to Course
+ * @property Institute $institute belongs_to Institute
  */
 class WikiPageConfig extends SimpleORMap
 {

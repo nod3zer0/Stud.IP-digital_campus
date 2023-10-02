@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * @license GPL2 or any later version
+ *
+ * @property string $id alias column for anonymous_answer_id
+ * @property string $anonymous_answer_id database column
+ * @property string $questionnaire_id database column
+ * @property string $user_id database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property Questionnaire $questionnaire belongs_to Questionnaire
+ */
 class QuestionnaireAnonymousAnswer extends SimpleORMap implements PrivacyObject
 {
     protected static function configure($config = [])

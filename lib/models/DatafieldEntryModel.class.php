@@ -13,15 +13,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string datafield_id database column
- * @property string range_id database column
- * @property string content database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string sec_range_id database column
- * @property string name computed column read/write
- * @property string id computed column read/write
- * @property Datafield datafield belongs_to Datafield
+ * @property array $id alias for pk
+ * @property string $datafield_id database column
+ * @property string $range_id database column
+ * @property string|null $content database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property string $sec_range_id database column
+ * @property string $lang database column
+ * @property DataField $datafield belongs_to DataField
+ * @property mixed $name additional field
  */
 
 class DatafieldEntryModel extends SimpleORMap implements PrivacyObject

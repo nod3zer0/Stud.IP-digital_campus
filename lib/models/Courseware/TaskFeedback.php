@@ -12,15 +12,15 @@ use User;
 *
 * @since   Stud.IP 5.1
 *
-* @property int                            $id                     database column
-* @property int                            $task_id                database column
-* @property string                         $lecturer_id            database column
-* @property string                         $content                database column
-* @property int                            $mkdate                 database column
-* @property int                            $chdate                 database column
-
-* @property \User                          $lecturer               belongs_to User
-* @property \Courseware\Task               $task                   belongs_to Courseware\Task
+ *
+ * @property int $id database column
+ * @property int $task_id database column
+ * @property string $lecturer_id database column
+ * @property string $content database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \User $lecturer belongs_to \User
+ * @property Task $task belongs_to Task
 */
 class TaskFeedback extends \SimpleORMap implements \PrivacyObject
 {

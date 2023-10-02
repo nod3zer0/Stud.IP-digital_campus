@@ -12,6 +12,34 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for deskriptor_id
+ * @property string $deskriptor_id database column
+ * @property string $modul_id database column
+ * @property I18NString|null $verantwortlich database column
+ * @property I18NString|null $bezeichnung database column
+ * @property I18NString|null $voraussetzung database column
+ * @property I18NString|null $kompetenzziele database column
+ * @property I18NString|null $inhalte database column
+ * @property I18NString|null $literatur database column
+ * @property I18NString|null $links database column
+ * @property I18NString|null $kommentar database column
+ * @property I18NString|null $turnus database column
+ * @property I18NString|null $kommentar_kapazitaet database column
+ * @property I18NString|null $kommentar_sws database column
+ * @property I18NString|null $kommentar_wl_selbst database column
+ * @property I18NString|null $kommentar_wl_pruef database column
+ * @property I18NString|null $kommentar_note database column
+ * @property I18NString|null $pruef_vorleistung database column
+ * @property I18NString|null $pruef_leistung database column
+ * @property I18NString|null $pruef_wiederholung database column
+ * @property I18NString|null $ersatztext database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property Modul $modul belongs_to Modul
  */
 
 class ModulDeskriptor extends ModuleManagementModel

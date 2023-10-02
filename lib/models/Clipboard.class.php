@@ -4,6 +4,11 @@
 /**
  * Clipboard.class.php - model class for a clipboard (Merkzettel)
  *
+ * The Clipboard class extends the wish list functionality of the clipboard
+ * in the old literature management to allow it to be used in other areas of the
+ * Stud.IP system. Furthermore, clipboards managed by this class
+ * are stored permanently in the database until they are deleted.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -14,30 +19,25 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
- */
-
-
-/**
- * The Clipboard class extends the wish list functionality of the clipboard
- * in the old literature management to allow it to be used in other areas of the
- * Stud.IP system. Furthermore, clipboards managed by this class
- * are stored permanently in the database until they are deleted.
  *
- * @property string id database column
- * @property string user_id database column
- * @property string name database column: The name of the clipboard.
- * @property string allowed_item_class database column: The StudipItem class
- *     name where items have to be children of in order to be used
- *     with the clipboard.
- *     This attribute defaults to 'StudipItem' which means that by default
- *     all implementations of StudipItem can be inserted into a clipboard.
- *     If only items of a special implementation of StudipItem shall be
- *     able to be inserted into the clipboard this attribute has to be set
- *     to the class name of that implementation.
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMapCollection user belongs_to User
- * @property SimpleORMapCollection items has_many WishListItem
+ * The "allowed_item_class" column containts the StudipItem class
+ * name where items have to be children of in order to be used
+ * with the clipboard.
+ * This attribute defaults to 'StudipItem' which means that by default
+ * all implementations of StudipItem can be inserted into a clipboard.
+ * If only items of a special implementation of StudipItem shall be
+ * able to be inserted into the clipboard this attribute has to be set
+ * to the class name of that implementation.
+ *
+ * @property int $id database column
+ * @property string $user_id database column
+ * @property string $name database column
+ * @property string $handler database column
+ * @property string $allowed_item_class database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|ClipboardItem[] $items has_many ClipboardItem
+ * @property User $user belongs_to User
  */
 class Clipboard extends SimpleORMap
 {

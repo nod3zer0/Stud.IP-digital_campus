@@ -30,20 +30,22 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property array $id alias for pk
  * @property string $tour_id database column
- * @property string $step database column
+ * @property int $step database column
  * @property string $title database column
  * @property string $tip database column
  * @property string $orientation database column
- * @property string $interactive database column
+ * @property int $interactive database column
  * @property string $css_selector database column
  * @property string $route database column
+ * @property string $action_prev database column
+ * @property string $action_next database column
  * @property string $author_email database column
- * @property string $mkdate database column
- * @property string $chdate database column
- * @property string $id computed column read/write
+ * @property int $mkdate database column
+ * @property int $chdate database column
  * @property HelpTour $help_tour belongs_to HelpTour
- * @property User|null $author has_one author
+ * @property User $author has_one User
  */
 class HelpTourStep extends SimpleORMap
 {

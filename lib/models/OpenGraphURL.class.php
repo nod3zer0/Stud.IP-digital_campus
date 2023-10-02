@@ -12,17 +12,20 @@
  * A model class to handle the database table "opengraphdata", fetch data from
  * an Opengraph-URL and render a fitting box with the opengraph information to
  * the user.
- * @property string url database column
- * @property string id alias column for url
- * @property string is_opengraph database column
- * @property string title database column
- * @property string image database column
- * @property string description database column
- * @property string type database column
- * @property string data database column
- * @property string last_update database column
- * @property string chdate database column
- * @property string mkdate database column
+ *
+ * @property int $id alias column for opengraph_id
+ * @property int $opengraph_id database column
+ * @property string $hash database column
+ * @property string $url database column
+ * @property int|null $is_opengraph database column
+ * @property string|null $title database column
+ * @property string|null $image database column
+ * @property string|null $description database column
+ * @property string|null $type database column
+ * @property JSONArrayObject $data database column
+ * @property int $last_update database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
  */
 class OpenGraphURL extends SimpleORMap
 {
@@ -37,7 +40,7 @@ class OpenGraphURL extends SimpleORMap
     {
         $config['db_table'] = 'opengraphdata';
 
-        $config['serialized_fields']['data'] = 'JSONArrayObject';
+        $config['serialized_fields']['data'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

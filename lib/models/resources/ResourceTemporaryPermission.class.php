@@ -4,6 +4,9 @@
  * ResourceTemporaryPermission.class.php
  * Contains the ResourceTemporaryPermission class
  *
+ * The ResourceTemporaryPermission class represents temporary permissions
+ * granted to a user for a resource.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,23 +18,17 @@
  * @category    Stud.IP
  * @package     resources
  * @since       4.5
- */
-
-
-/**
- * The ResourceTemporaryPermission class represents temporary permissions
- * granted to a user for a resource.
  *
- * @property string id database column
- * @property string resource_id database column
- * @property string user_id database column
- * @property string begin database column
- * @property string end database column
- * @property string perms database column: The permission level granted
- *     in the specified time range.
- * @property string mkdate database column
- * @property string chdate database column
- * @property Resource resource belongs_to Resource
+ * @property int $id database column
+ * @property string $resource_id database column
+ * @property string $user_id database column
+ * @property int $begin database column
+ * @property int $end database column
+ * @property string $perms database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Resource $resource belongs_to Resource
+ * @property User $user belongs_to User
  */
 class ResourceTemporaryPermission extends SimpleORMap implements PrivacyObject
 {

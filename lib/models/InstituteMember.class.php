@@ -13,27 +13,30 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string user_id database column
- * @property string institut_id database column
- * @property string inst_perms database column
- * @property string sprechzeiten database column
- * @property string raum database column
- * @property string telefon database column
- * @property string fax database column
- * @property string externdefault database column
- * @property string priority database column
- * @property string visible database column
- * @property string vorname computed column read/write
- * @property string nachname computed column read/write
- * @property string username computed column read/write
- * @property string email computed column read/write
- * @property string title_front computed column read/write
- * @property string title_rear computed column read/write
- * @property string institute_name computed column read/write
- * @property string id computed column read/write
- * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
- * @property User user belongs_to User
- * @property Institute institute belongs_to Institute
+ * @property int $id database column
+ * @property string $user_id database column
+ * @property string $institut_id database column
+ * @property string $inst_perms database column
+ * @property I18NString $sprechzeiten database column
+ * @property I18NString $raum database column
+ * @property I18NString $telefon database column
+ * @property I18NString $fax database column
+ * @property int $externdefault database column
+ * @property int $priority database column
+ * @property int $visible database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property User $user belongs_to User
+ * @property Institute $institute belongs_to Institute
+ * @property mixed $vorname additional field
+ * @property mixed $nachname additional field
+ * @property mixed $username additional field
+ * @property mixed $email additional field
+ * @property mixed $title_front additional field
+ * @property mixed $title_rear additional field
+ * @property mixed $user_info additional field
+ * @property mixed $institute_name additional field
  */
 class InstituteMember extends SimpleORMap implements PrivacyObject
 {

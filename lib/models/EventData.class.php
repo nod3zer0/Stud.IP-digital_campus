@@ -11,6 +11,38 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.2
+ *
+ * @property string $id alias column for event_id
+ * @property string $event_id database column
+ * @property string $author_id database column
+ * @property string|null $editor_id database column
+ * @property string $uid database column
+ * @property int $start database column
+ * @property int $end database column
+ * @property string $summary database column
+ * @property string|null $description database column
+ * @property string $class database column
+ * @property string|null $categories database column
+ * @property int $category_intern database column
+ * @property int $priority database column
+ * @property string|null $location database column
+ * @property int $ts database column
+ * @property int|null $linterval database column
+ * @property int|null $sinterval database column
+ * @property string|null $wdays database column
+ * @property int|null $month database column
+ * @property int|null $day database column
+ * @property string $rtype database column
+ * @property int $duration database column
+ * @property int|null $count database column
+ * @property int $expire database column
+ * @property string|null $exceptions database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $importdate database column
+ * @property SimpleORMapCollection|CalendarEvent[] $calendars has_many CalendarEvent
+ * @property User $author belongs_to User
+ * @property User|null $editor belongs_to User
  */
 
 class EventData extends SimpleORMap implements PrivacyObject

@@ -12,6 +12,23 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.4
+ *
+ * @property int $id database column
+ * @property string $selection_id database column
+ * @property string $semester_id database column
+ * @property string $base_version_id database column
+ * @property string $comp_version_id database column
+ * @property string $fachsems database column
+ * @property string $semtypes database column
+ * @property string $user_id database column
+ * @property int $show_excluded database column
+ * @property int $mkdate database column
+ * @property SimpleORMapCollection|MvvOverlappingConflict[] $conflicts has_many MvvOverlappingConflict
+ * @property SimpleORMapCollection|MvvOverlappingExclude[] $excludes has_many MvvOverlappingExclude
+ * @property Semester $semester belongs_to Semester
+ * @property StgteilVersion $base_version belongs_to StgteilVersion
+ * @property StgteilVersion $comp_version belongs_to StgteilVersion
+ * @property User $user belongs_to User
  */
 
 class MvvOverlappingSelection extends SimpleORMap

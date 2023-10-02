@@ -12,6 +12,29 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.4
+ *
+ * @property int $id alias column for conflict_id
+ * @property int $conflict_id database column
+ * @property int $selection_id database column
+ * @property string $base_abschnitt_id database column
+ * @property string $base_modulteil_id database column
+ * @property string $base_course_id database column
+ * @property string $base_metadate_id database column
+ * @property string $comp_abschnitt_id database column
+ * @property string $comp_modulteil_id database column
+ * @property string $comp_course_id database column
+ * @property string $comp_metadate_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property MvvOverlappingSelection $selection belongs_to MvvOverlappingSelection
+ * @property StgteilAbschnitt $base_abschnitt belongs_to StgteilAbschnitt
+ * @property Modulteil $base_modulteil belongs_to Modulteil
+ * @property SeminarCycleDate $base_cycle belongs_to SeminarCycleDate
+ * @property Course $base_course belongs_to Course
+ * @property StgteilAbschnitt $comp_abschnitt belongs_to StgteilAbschnitt
+ * @property Modulteil $comp_modulteil belongs_to Modulteil
+ * @property SeminarCycleDate $comp_cycle belongs_to SeminarCycleDate
+ * @property Course $comp_course belongs_to Course
  */
 
 class MvvOverlappingConflict extends SimpleORMap

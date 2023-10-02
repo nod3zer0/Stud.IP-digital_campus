@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * FachFachbereich.php
  * Model class for assignments of Faecher to Fachbereiche (aka institutes).
  * (table mvv_fach_inst)
@@ -13,6 +13,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property array $id alias for pk
+ * @property string $fach_id database column
+ * @property string $institut_id database column
+ * @property int $position database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Fach $fach belongs_to Fach
+ * @property Fachbereich $fachbereich belongs_to Fachbereich
  */
 
 class FachFachbereich extends ModuleManagementModel

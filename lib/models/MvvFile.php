@@ -11,6 +11,21 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property string $id alias column for mvvfile_id
+ * @property string $mvvfile_id database column
+ * @property int|null $year database column
+ * @property string|null $type database column
+ * @property string|null $category database column
+ * @property string|null $tags database column
+ * @property int|null $extern_visible database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|MvvFileFileref[] $file_refs has_many MvvFileFileref
+ * @property SimpleORMapCollection|MvvFileRange[] $ranges has_many MvvFileRange
+ * @property-read mixed $count_relations additional field
  */
 
 class MvvFile extends ModuleManagementModel

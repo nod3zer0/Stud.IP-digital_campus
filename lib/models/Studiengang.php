@@ -12,6 +12,50 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for studiengang_id
+ * @property string $studiengang_id database column
+ * @property string|null $abschluss_id database column
+ * @property string $typ database column
+ * @property I18NString $name database column
+ * @property I18NString|null $name_kurz database column
+ * @property I18NString|null $beschreibung database column
+ * @property string|null $institut_id database column
+ * @property string|null $start database column
+ * @property string|null $end database column
+ * @property int|null $beschlussdatum database column
+ * @property int|null $fassung_nr database column
+ * @property string|null $fassung_typ database column
+ * @property string|null $stat database column
+ * @property string|null $kommentar_status database column
+ * @property string|null $schlagworte database column
+ * @property int|null $studienzeit database column
+ * @property int|null $studienplaetze database column
+ * @property string|null $abschlussgrad database column
+ * @property string|null $enroll database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|StudiengangStgteil[] $stgteil_assignments has_many StudiengangStgteil
+ * @property SimpleORMapCollection|MvvFile[] $documents has_many MvvFile
+ * @property SimpleORMapCollection|MvvFileRange[] $document_assignments has_many MvvFileRange
+ * @property SimpleORMapCollection|MvvContactRange[] $contact_assignments has_many MvvContactRange
+ * @property SimpleORMapCollection|StudycourseType[] $studycourse_types has_many StudycourseType
+ * @property SimpleORMapCollection|StudycourseLanguage[] $languages has_many StudycourseLanguage
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property SimpleORMapCollection|Aufbaustudiengang[] $grundstg_assignments has_many Aufbaustudiengang
+ * @property SimpleORMapCollection|Aufbaustudiengang[] $aufbaustg_assignments has_many Aufbaustudiengang
+ * @property Abschluss|null $abschluss belongs_to Abschluss
+ * @property Fachbereich|null $responsible_institute has_one Fachbereich
+ * @property SimpleORMapCollection|StudiengangTeil[] $studiengangteile has_and_belongs_to_many StudiengangTeil
+ * @property SimpleORMapCollection|StgteilBezeichnung[] $stgteil_bezeichnungen has_and_belongs_to_many StgteilBezeichnung
+ * @property-read mixed $count_dokumente additional field
+ * @property-read mixed $count_faecher additional field
+ * @property-read mixed $count_module additional field
+ * @property-read mixed $institut_name additional field
+ * @property-read mixed $kategorie_name additional field
+ * @property-read mixed $display_name additional field
  */
 
 class Studiengang extends ModuleManagementModelTreeItem

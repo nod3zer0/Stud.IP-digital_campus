@@ -15,15 +15,14 @@
  * @package     resources
  * @since       4.5
  *
- * @property string lock_id database column
- * @property string id alias for lock_id
- * @property string user_id database column
- * @property string begin database column
- * @property string end database column
- * @property string type database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property Resource resource belongs_to Resource
+ * @property string $id alias column for lock_id
+ * @property string $lock_id database column
+ * @property int $begin database column
+ * @property int $end database column
+ * @property string $type database column
+ * @property string $user_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class GlobalResourceLock extends SimpleORMap
 {

@@ -5,15 +5,20 @@
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 4.3
- * @property string slot_id database column
- * @property string id alias column for slot_id
- * @property string block_id database column
- * @property string start_time database column
- * @property string end_time database column
- * @property string note database column
- * @property SimpleORMapCollection bookings has_many ConsultationBooking
- * @property ConsultationBlock block belongs_to ConsultationBlock
- * @property SimpleORMapCollection events has_many EventData
+ *
+ * @property int $id alias column for slot_id
+ * @property int $slot_id database column
+ * @property int $block_id database column
+ * @property int $start_time database column
+ * @property int $end_time database column
+ * @property string $note database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|ConsultationBooking[] $bookings has_many ConsultationBooking
+ * @property SimpleORMapCollection|ConsultationEvent[] $events has_many ConsultationEvent
+ * @property ConsultationBlock $block belongs_to ConsultationBlock
+ * @property-read mixed $has_bookings additional field
+ * @property-read mixed $is_expired additional field
  */
 class ConsultationSlot extends SimpleORMap
 {
@@ -51,10 +56,10 @@ class ConsultationSlot extends SimpleORMap
             }
         };
 
-        $config['additional_fields']['has_bookings']['get'] = function ($slot) {
+        $config['additional_fields']['has_bookings']['get'] = function ($slot): bool {
             return count($slot->bookings) > 0;
         };
-        $config['additional_fields']['is_expired']['get'] = function ($slot) {
+        $config['additional_fields']['is_expired']['get'] = function ($slot): bool {
             return $slot->end_time < time();
         };
 

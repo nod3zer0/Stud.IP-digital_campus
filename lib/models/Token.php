@@ -6,12 +6,12 @@
  * @author    Marco Diedrich <mdiedric@uos.de>
  * @license   GPL2 or any later version
  *
- * @property string $id
- * @property string $token
- * @property string $user_id
- * @property int $expiration
- * @property int $mkdate
- * @property User $user
+ * @property string $id alias column for token
+ * @property string $token database column
+ * @property string $user_id database column
+ * @property int $expiration database column
+ * @property int|null $mkdate database column
+ * @property User $user belongs_to User
  */
 class Token extends SimpleORMap
 {

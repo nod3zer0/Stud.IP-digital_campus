@@ -10,6 +10,12 @@
  * @author      Till Glöggler <tgloeggl@uos.de>
  * @license     http://www.gnu.org/licenses/gpl-3.0.html GPL version 3
  * @category    Stud.IP
+ *
+ * @property string $id alias column for category_id
+ * @property string $category_id database column
+ * @property string $seminar_id database column
+ * @property string $entry_name database column
+ * @property int $pos database column
  */
 
 class ForumCat extends SimpleORMap

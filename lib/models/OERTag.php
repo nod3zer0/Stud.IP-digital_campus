@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * @license GPL2 or any later version
+ *
+ * @property string $id alias column for tag_hash
+ * @property string $tag_hash database column
+ * @property string $name database column
+ */
 class OERTag extends SimpleORMap
 {
     protected static function configure($config = [])

@@ -21,20 +21,20 @@
                 <fieldset class="booking-type-selection">
                     <legend><?= _('Bitte wählen Sie einen der folgenden Buchungstypen aus:') ?></legend>
                     <select name="booking_type" autofocus>
-                        <option value="0"
-                            <?= $booking_type == '0'
+                        <option value="<?= ResourceBooking::TYPE_NORMAL ?>"
+                            <?= $booking_type == ResourceBooking::TYPE_NORMAL
                                 ? 'selected="selected"'
                                 : '' ?>>
                             <?= _('Buchung') ?>
                         </option>
-                        <option value="1"
-                            <?= $booking_type == '1'
+                        <option value="<?= ResourceBooking::TYPE_RESERVATION ?>"
+                            <?= $booking_type == ResourceBooking::TYPE_RESERVATION
                                 ? 'selected="selected"'
                                 : '' ?>>
                             <?= _('Reservierung') ?>
                         </option>
-                        <option value="2"
-                            <?= $booking_type == '2'
+                        <option value="<?= ResourceBooking::TYPE_LOCK ?>"
+                            <?= $booking_type == ResourceBooking::TYPE_LOCK
                                 ? 'selected="selected"'
                                 : '' ?>>
                             <?= _('Sperrbuchung') ?>
@@ -159,7 +159,7 @@
                 </div>
 
 
-                <? if ($booking_type != '2'): ?>
+                <? if ($booking_type != ResourceBooking::TYPE_LOCK): ?>
                     <label>
                         <?= _('Rüstzeit (Minuten)') ?>
                         <input type="number" name="preparation_time"
@@ -169,7 +169,7 @@
                     </label>
                 <? endif ?>
 
-                <span class="notification-span <?= ($booking_type != '2') ? 'invisible' : '' ?>" data-booking_type="2">
+                <span class="notification-span <?= ($booking_type != ResourceBooking::TYPE_LOCK) ? 'invisible' : '' ?>" data-booking_type="<?= ResourceBooking::TYPE_LOCK ?>">
                     <label>
                         <input type="checkbox" name="notification_enabled"
                                value="1"
@@ -187,18 +187,16 @@
                             <?= $book_other_room_parts
                                 ? 'checked="checked"'
                                 : '' ?>>
-                        <span data-booking_type="2"
-                              <?= $booking_type == '2' ? '' : 'style="display:none;"' ?>>
+                        <span data-booking_type="<?= ResourceBooking::TYPE_LOCK ?>"
+                              <?= $booking_type == ResourceBooking::TYPE_LOCK ? '' : 'style="display:none;"' ?>>
                             <?= _('Alle anderen Teilräume ebenfalls sperren.') ?>
                         </span>
-                        <span data-booking_type="1"
-                              <?= $booking_type == '1' ? '' : 'style="display:none;"' ?>>
+                        <span data-booking_type="<?= ResourceBooking::TYPE_RESERVATION ?>"
+                              <?= $booking_type == ResourceBooking::TYPE_RESERVATION ? '' : 'style="display:none;"' ?>>
                             <?= _('Alle anderen Teilräume ebenfalls reservieren.') ?>
                         </span>
-                        <span data-booking_type="0"
-                              <?= (!$booking_type or $booking_type == '0')
-                                  ? ''
-                                  : 'style="display:none;"' ?>>
+                        <span data-booking_type="<?= ResourceBooking::TYPE_NORMAL ?>"
+                              <?= $booking_type == ResourceBooking::TYPE_NORMAL ? '' : 'style="display:none;"' ?>>
                             <?= _('Alle anderen Teilräume ebenfalls buchen.') ?>
                         </span>
                     </label>
@@ -514,29 +512,27 @@
         </div>
         <div class="fieldset-row">
             <fieldset class="comment-fieldset">
-                <legend data-booking_type="1"
-                    <?= $booking_type == '1' ? '' : 'style="display:none;"' ?>>
+                <legend data-booking_type="<?= ResourceBooking::TYPE_RESERVATION ?>"
+                    <?= $booking_type == ResourceBooking::TYPE_RESERVATION ? '' : 'style="display:none;"' ?>>
                     <?= _('Interner Kommentar zur Reservierung') ?>
                 </legend>
-                <legend data-booking_type="2"
-                    <?= $booking_type == '2' ? '' : 'style="display:none;"' ?>>
+                <legend data-booking_type="<?= ResourceBooking::TYPE_LOCK ?>"
+                    <?= $booking_type == ResourceBooking::TYPE_LOCK ? '' : 'style="display:none;"' ?>>
                     <?= _('Interner Kommentar zur Sperrbuchung') ?>
                 </legend>
-                <legend data-booking_type="3"
-                    <?= $booking_type == '3' ? '' : 'style="display:none;"' ?>>
+                <legend data-booking_type="<?= ResourceBooking::TYPE_PLANNED ?>"
+                    <?= $booking_type == ResourceBooking::TYPE_PLANNED ? '' : 'style="display:none;"' ?>>
                     <?= _('Interner Kommentar zur geplanten Buchung') ?>
                 </legend>
-                <legend data-booking_type="0"
-                    <?= (($booking_type == '0') || !$booking_type)
-                        ? ''
-                        : 'style="display:none;"' ?>>
+                <legend data-booking_type="<?= ResourceBooking::TYPE_NORMAL ?>"
+                    <?= $booking_type == ResourceBooking::TYPE_NORMAL ? '' : 'style="display:none;"' ?>>
                     <?= _('Interner Kommentar zur Buchung') ?>
                 </legend>
                 <label>
                     <textarea name="internal_comment"><?= htmlReady($internal_comment) ?></textarea>
                 </label>
             </fieldset>
-            <fieldset class="overwrite-fieldset <?= ($booking_type != '2') ? 'invisible' : '' ?>" data-booking_type="2">
+            <fieldset class="overwrite-fieldset <?= $booking_type != ResourceBooking::TYPE_LOCK ? 'invisible' : '' ?>" data-booking_type="<?= ResourceBooking::TYPE_LOCK ?>">
                 <legend><?= _('Vorhandene Buchungen überschreiben') ?></legend>
                 <label>
                     <input type="checkbox" value="1"

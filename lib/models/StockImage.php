@@ -1,19 +1,20 @@
 <?php
 
 /**
- * @property string $id          database column
- * @property string $title       database column
+ *
+ * @property int $id database column
+ * @property string $title database column
  * @property string $description database column
- * @property string $license     database column
- * @property string $author      database column
- * @property string $mime_type   database column
- * @property int    $size        database column
- * @property int    $width       database column
- * @property int    $height      database column
- * @property string $palette     database column
- * @property string $tags     database column
- * @property int    $mkdate      database column
- * @property int    $chdate      database column
+ * @property string $license database column
+ * @property string $author database column
+ * @property string $mime_type database column
+ * @property int $size database column
+ * @property int $width database column
+ * @property int $height database column
+ * @property string $palette database column
+ * @property string $tags database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class StockImage extends \SimpleORMap
 {

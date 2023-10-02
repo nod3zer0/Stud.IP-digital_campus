@@ -13,17 +13,28 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string semester_id database column
- * @property string id alias column for semester_id
- * @property string name database column
- * @property string semester_token database column
- * @property string beginn database column
- * @property string ende database column
- * @property string vorles_beginn database column
- * @property string vorles_ende database column
- * @property string first_sem_week computed column
- * @property string last_sem_week computed column
- * @property string past computed column
+ * @property string $id alias column for semester_id
+ * @property string $semester_id database column
+ * @property I18NString $name database column
+ * @property I18NString $semester_token database column
+ * @property I18NString $token alias column for semester_token
+ * @property int|null $beginn database column
+ * @property int|null $ende database column
+ * @property int|null $sem_wechsel database column
+ * @property int|null $vorles_beginn database column
+ * @property int|null $vorles_ende database column
+ * @property int $visible database column
+ * @property string|null $external_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property-read mixed $first_sem_week additional field
+ * @property-read mixed $last_sem_week additional field
+ * @property-read mixed $current additional field
+ * @property-read mixed $past additional field
+ * @property-read mixed $short_name additional field
+ * @property mixed $absolute_seminars_count additional field
+ * @property mixed $duration_seminars_count additional field
+ * @property mixed $continuous_seminars_count additional field
  */
 class Semester extends SimpleORMap
 {

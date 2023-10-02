@@ -10,12 +10,15 @@ namespace Courseware;
 *
 * @since   Stud.IP 5.2
 *
-* @property string                         $id                     database column
-* @property int                            $structural_element_id  database column
-* @property string                         $password               database column
-* @property int                            $expire_date            database column
-* @property int                            $mkdate                 database column
-* @property int                            $chdate                 database column
+ *
+ * @property string $id database column
+ * @property string $user_id database column
+ * @property int $structural_element_id database column
+ * @property string $password database column
+ * @property int $expire_date database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property StructuralElement $structural_element belongs_to StructuralElement
 */
 class PublicLink extends \SimpleORMap
 {

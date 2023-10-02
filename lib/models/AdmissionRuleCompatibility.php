@@ -14,10 +14,11 @@
  * @category    Stud.IP
  * @since       3.5
  *
- * @property string rule_type database column
- * @property string compat_rule_type database column
- * @property int mkdate database column
- * @property int chdate database column
+ * @property array $id alias for pk
+ * @property string $rule_type database column
+ * @property string $compat_rule_type database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class AdmissionRuleCompatibility extends SimpleORMap
 {

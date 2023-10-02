@@ -12,18 +12,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string event_id database column
- * @property string range_id database column
- * @property string group_status database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string type computed column
- * @property string name computed column
- * @property string id computed column read/write
- * @property user user belongs_to User
- * @property course course belongs_to Course
- * @property institute institute belongs_to Institute
- * @property event belongs_to CalendarEvent
+ * @property array $id alias for pk
+ * @property string $range_id database column
+ * @property string $event_id database column
+ * @property int $group_status database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|CalendarEvent[] $attendees has_many CalendarEvent
+ * @property SimpleORMapCollection|ConsultationEvent[] $consultation_events has_many ConsultationEvent
+ * @property User $user belongs_to User
+ * @property Course $course belongs_to Course
+ * @property Institute $institute belongs_to Institute
+ * @property ConsultationBooking $consultation_booking belongs_to ConsultationBooking
+ * @property EventData $event has_one EventData
+ * @property mixed $type additional field
+ * @property mixed $name additional field
+ * @property mixed $author_id additional field
+ * @property mixed $editor_id additional field
+ * @property mixed $title additional field
+ * @property mixed $start additional field
+ * @property mixed $end additional field
+ * @property-read mixed $owner additional field
  */
 class CalendarEvent extends SimpleORMap implements Event, PrivacyObject
 {

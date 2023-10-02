@@ -10,6 +10,42 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
+ * @property string $id alias for pk
+ * @property string $termin_id database column
+ * @property string $event_id alias column for termin_id
+ * @property string $range_id database column
+ * @property string $sem_id alias column for range_id
+ * @property string $autor_id database column
+ * @property string $author_id alias column for autor_id
+ * @property string $content database column
+ * @property int $date database column
+ * @property int $start alias column for date
+ * @property int $end_time database column
+ * @property int $end alias column for end_time
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $date_typ database column
+ * @property int $category_intern alias column for date_typ
+ * @property string|null $raum database column
+ * @property string|null $metadate_id database column
+ * @property SimpleORMapCollection|Folder[] $folders has_many Folder
+ * @property SimpleORMapCollection|RoomRequest[] $room_requests has_many RoomRequest
+ * @property SimpleORMapCollection|ResourceRequestAppointment[] $resource_request_appointments has_many ResourceRequestAppointment
+ * @property User $author belongs_to User
+ * @property Course $course belongs_to Course
+ * @property SeminarCycleDate|null $cycle belongs_to SeminarCycleDate
+ * @property ResourceBooking $room_booking has_one ResourceBooking
+ * @property SimpleORMapCollection|CourseTopic[] $topics has_and_belongs_to_many CourseTopic
+ * @property SimpleORMapCollection|Statusgruppen[] $statusgruppen has_and_belongs_to_many Statusgruppen
+ * @property SimpleORMapCollection|User[] $dozenten has_and_belongs_to_many User
+ * @property-read mixed $location additional field
+ * @property mixed $type additional field
+ * @property-read mixed $name additional field
+ * @property-read mixed $title additional field
+ * @property-read mixed $editor_id additional field
+ * @property-read mixed $uid additional field
+ * @property-read mixed $summary additional field
+ * @property-read mixed $description additional field
  */
 
 class CourseEvent extends CourseDate implements Event

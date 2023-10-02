@@ -17,28 +17,31 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string statusgruppe_id database column
- * @property string id alias column for statusgruppe_id
- * @property string name database column
- * @property string range_id database column
- * @property string position database column
- * @property string size database column
- * @property string selfassign database column
- * @property string selfassign_start database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string calendar_group database column
- * @property string name_w database column
- * @property string name_m database column
- * @property string children computed column
- * @property SimpleORMapCollection members has_many StatusgruppeUser
- * @property Statusgruppen parent belongs_to Statusgruppen
- * @property Course course belongs_to course
- * @property Institute institute belongs_to institute
- * @property User user belongs_to user
- *
- * @property ConsultationBlock[]|SimpleORMapCollection $consultation_blocks
- * @property ConsultationResponsibility[]|SimpleORMapCollection $consultation_responsibilities
+ * @property string $id alias column for statusgruppe_id
+ * @property string $statusgruppe_id database column
+ * @property I18NString $name database column
+ * @property string|null $description database column
+ * @property string $range_id database column
+ * @property int $position database column
+ * @property int $size database column
+ * @property int $selfassign database column
+ * @property int $selfassign_start database column
+ * @property int $selfassign_end database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $calendar_group database column
+ * @property I18NString|null $name_w database column
+ * @property I18NString|null $name_m database column
+ * @property SimpleORMapCollection|StatusgruppeUser[] $members has_many StatusgruppeUser
+ * @property SimpleORMapCollection|ConsultationBlock[] $consultation_blocks has_many ConsultationBlock
+ * @property SimpleORMapCollection|ConsultationResponsibility[] $consultation_responsibilities has_many ConsultationResponsibility
+ * @property Statusgruppen $parent belongs_to Statusgruppen
+ * @property Course $course belongs_to Course
+ * @property Institute $institute belongs_to Institute
+ * @property User $user belongs_to User
+ * @property BlubberStatusgruppeThread $blubberthread has_one BlubberStatusgruppeThread
+ * @property SimpleORMapCollection|CourseDate[] $dates has_and_belongs_to_many CourseDate
+ * @property mixed $children additional field
  */
 class Statusgruppen extends SimpleORMap implements PrivacyObject
 {

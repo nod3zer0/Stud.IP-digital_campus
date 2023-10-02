@@ -31,14 +31,14 @@
  * @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
  * @access   public
  *
- * @property string comment_id database column
- * @property string id alias column for comment_id
- * @property string object_id database column
- * @property string user_id database column
- * @property string content database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property StudipNews news belongs_to StudipNews
+ * @property string $id alias column for comment_id
+ * @property string $comment_id database column
+ * @property string $object_id database column
+ * @property string $user_id database column
+ * @property string $content database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property StudipNews $news belongs_to StudipNews
  */
 
 class StudipComment extends SimpleORMap implements PrivacyObject

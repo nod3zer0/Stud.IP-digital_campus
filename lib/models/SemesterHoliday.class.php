@@ -12,13 +12,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string holiday_id database column
- * @property string id alias column for holiday_id
- * @property string semester_id database column
- * @property string name database column
- * @property string description database column
- * @property string beginn database column
- * @property string ende database column
+ * @property string $id alias column for holiday_id
+ * @property string $holiday_id database column
+ * @property string $semester_id database column
+ * @property string $name database column
+ * @property string $description database column
+ * @property int|null $beginn database column
+ * @property int $ende database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property mixed $current additional field
  */
 
 class SemesterHoliday extends SimpleORMap

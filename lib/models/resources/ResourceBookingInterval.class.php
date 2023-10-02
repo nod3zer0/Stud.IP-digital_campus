@@ -5,6 +5,10 @@
  * all resource bookings time intervals, including those for
  * repetitions.
  *
+ * The ResourceBookingEvent class contains all
+ * time intervals of all resources where they are
+ * assigned.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -17,26 +21,17 @@
  * @package     resources
  * @since       4.1
  *
- * @property string interval_id database column (and primary key)
- * @property string id alias for event_id
- * @property string booking_id database column
- * @property string resource_id database column
- * @property string begin database column
- * @property string end database column
- * @property string takes_place database column. This is set to 1
- *     if the date specified by the interval takes place.
- *     Otherwise it is set to zero which means that the interval
- *     is an exception to the repetition in the booking.
- * @property string mkdate database column
- * @property string chdate database column
- * @property Resource resource belongs_to Resource
- */
-
-
-/**
- * The ResourceBookingEvent class contains all
- * time intervals of all resources where they are
- * assigned.
+ * @property string $id alias column for interval_id
+ * @property string $interval_id database column
+ * @property string $resource_id database column
+ * @property string $booking_id database column
+ * @property int $begin database column
+ * @property int $end database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $takes_place database column
+ * @property ResourceBooking $booking belongs_to ResourceBooking
+ * @property Resource $resource belongs_to Resource
  */
 class ResourceBookingInterval extends SimpleORMap
 {

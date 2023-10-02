@@ -4,13 +4,13 @@
  * @license GPL2 or any later version
  * @since   Stud.IP 5.1
  *
- * @property int slot_id database column
- * @property int id alias column for slot_id
- * @property string user_id database column
- * @property string event_id database column
- * @property int mkdate database column
- * @property ConsultationSlot slot belongs_to ConsultationSlot
- * @property EventData event belongs_to Event
+ * @property array $id alias for pk
+ * @property int $slot_id database column
+ * @property string $user_id database column
+ * @property string $event_id database column
+ * @property int $mkdate database column
+ * @property ConsultationSlot $slot belongs_to ConsultationSlot
+ * @property EventData $event has_one EventData
  */
 class ConsultationEvent extends SimpleORMap
 {

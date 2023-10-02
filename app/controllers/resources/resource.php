@@ -1203,21 +1203,24 @@ class Resources_ResourceController extends AuthenticatedController
         $this->show_form = false;
 
         $this->booking_type = Request::int('type');
-        if (!in_array($this->booking_type, [1, 2])) {
+        if (!in_array($this->booking_type, [
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK
+        ])) {
             PageLayout::postError(
                 _('Es wurde kein passender Buchungstyp angegeben!')
             );
             return;
         }
 
-        if ($this->booking_type == 1) {
+        if ($this->booking_type == ResourceBooking::TYPE_RESERVATION) {
             PageLayout::setTitle(
                 sprintf(
                     _('%s: Reservierung erstellen'),
                     $this->resource->getFullName()
                 )
             );
-        } elseif ($this->booking_type == 2) {
+        } elseif ($this->booking_type == ResourceBooking::TYPE_LOCK) {
             PageLayout::setTitle(
                 sprintf(
                     _('%s: Sperrbuchung erstellen'),

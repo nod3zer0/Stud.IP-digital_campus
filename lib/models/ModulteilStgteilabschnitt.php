@@ -13,6 +13,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property array $id alias for pk
+ * @property string $modulteil_id database column
+ * @property string $abschnitt_id database column
+ * @property int $fachsemester database column
+ * @property string $differenzierung database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Modulteil $modulteil belongs_to Modulteil
+ * @property StgteilAbschnitt $abschnitt belongs_to StgteilAbschnitt
  */
 
 class ModulteilStgteilabschnitt extends ModuleManagementModel

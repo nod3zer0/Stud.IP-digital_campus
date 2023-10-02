@@ -2,23 +2,26 @@
 
 namespace eTask;
 
+use JSONArrayObject;
+
 /**
  * eTask conforming assignment definition.
  *
- * @property int id database column
- * @property int test_id database column
- * @property string range_type database column
- * @property string range_id database column
- * @property string type database column
- * @property string start database column
- * @property string end database column
- * @property int active database column
- * @property string options database column
- * @property eTask\Test test belongs_to etask\Test
- * @property SimpleORMapCollection attempts has_many etask\Attempt
- * @property SimpleORMapCollection ranges has_many etask\AssignmentRange
- * @property SimpleORMapCollection responses has_many etask\Response
- * @property JSONArrayobject options serialized database column
+ * @property int $id database column
+ * @property int $test_id database column
+ * @property string|null $range_type database column
+ * @property string|null $range_id database column
+ * @property string $type database column
+ * @property int|null $start database column
+ * @property int|null $end database column
+ * @property int $active database column
+ * @property \JSONArrayObject $options database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property \SimpleORMapCollection|Attempt[] $attempts has_many Attempt
+ * @property \SimpleORMapCollection|AssignmentRange[] $ranges has_many AssignmentRange
+ * @property \SimpleORMapCollection|Response[] $responses has_many Response
+ * @property Test $test belongs_to Test
  */
 class Assignment extends \SimpleORMap
 {
@@ -59,7 +62,7 @@ class Assignment extends \SimpleORMap
             'on_store' => 'store'
         ];
 
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

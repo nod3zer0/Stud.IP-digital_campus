@@ -13,15 +13,14 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string seminar_id database column
- * @property string user_id database column
- * @property string notifications database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property User user belongs_to User
- * @property Course course belongs_to Course
- *
- * @property JSONArrayObject notification_data
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property string $seminar_id database column
+ * @property JSONArrayObject|null $notification_data database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property User $user belongs_to User
+ * @property Course $course belongs_to Course
  */
 class CourseMemberNotification extends SimpleORMap implements PrivacyObject
 {
@@ -36,7 +35,7 @@ class CourseMemberNotification extends SimpleORMap implements PrivacyObject
             'class_name'  => Course::class,
             'foreign_key' => 'seminar_id',
         ];
-        $config['serialized_fields']['notification_data'] = 'JSONArrayObject';
+        $config['serialized_fields']['notification_data'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

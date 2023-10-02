@@ -13,12 +13,12 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string seminar_id database column
- * @property string user_id database column
- * @property string status database column
- * @property string id computed column read/write
- * @property User user belongs_to User
- * @property ArchivedCourse course belongs_to ArchivedCourse
+ * @property array $id alias for pk
+ * @property string $seminar_id database column
+ * @property string $user_id database column
+ * @property string $status database column
+ * @property User $user belongs_to User
+ * @property ArchivedCourse $course belongs_to ArchivedCourse
  */
 class ArchivedCourseMember extends SimpleORMap implements PrivacyObject
 {

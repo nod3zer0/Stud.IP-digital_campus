@@ -60,7 +60,10 @@ class Resources_StatisticsController extends AuthenticatedController
 
         $sum_stmt->execute(
             [
-                'types' => [0, 1],
+                'types' => [
+                    ResourceBooking::TYPE_NORMAL,
+                    ResourceBooking::TYPE_RESERVATION,
+                ],
                 'begin' => $year_begin->getTimestamp(),
                 'end' => $year_end->getTimestamp()
             ]
@@ -69,7 +72,7 @@ class Resources_StatisticsController extends AuthenticatedController
 
         $sum_stmt->execute(
             [
-                'types' => [2],
+                'types' => [ResourceBooking::TYPE_LOCK],
                 'begin' => $year_begin->getTimestamp(),
                 'end' => $year_end->getTimestamp()
             ]

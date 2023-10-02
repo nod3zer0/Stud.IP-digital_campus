@@ -13,6 +13,19 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property array $id alias for pk
+ * @property string $lvgruppe_id database column
+ * @property string $modulteil_id database column
+ * @property int $position database column
+ * @property string|null $fn_id database column
+ * @property string|null $flexnow_id alias column for fn_id
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Lvgruppe $lvgruppe belongs_to Lvgruppe
+ * @property Modulteil $modulteil belongs_to Modulteil
  */
 
 class LvgruppeModulteil extends ModuleManagementModel

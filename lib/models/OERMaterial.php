@@ -1,37 +1,37 @@
 <?php
 
 /**
- * @property string $id
- * @property string $material_id
- * @property string|null $foreign_material_id
- * @property string|null $host_id
- * @property string $name
- * @property string $category
- * @property bool $draft
- * @property string $filename
- * @property string|null $short_description
- * @property string $description
- * @property int $difficulty_start
- * @property int $difficulty_end
- * @property string|null $player_url
- * @property string|null $tool
- * @property string $content_type
- * @property string|null $front_image_content_type
- * @property JSONArrayObject $structure
- * @property float $rating
- * @property string $license_identifier
- * @property string $uri
- * @property string $uri_hash
- * @property string|null $published_id_on_twillo
- * @property string|null $source_url
- * @property JSONArrayObject $data
- * @property int $chdate
- * @property int $mkdate
  *
- * @property OERHost $host
- * @property OERReview[]|SimpleORMapCollection $reviews
- * @property OERMaterialUser[]|SimpleORMapCollection $users
- * @property License $license
+ * @property string $id alias column for material_id
+ * @property string $material_id database column
+ * @property string|null $foreign_material_id database column
+ * @property string|null $host_id database column
+ * @property string $name database column
+ * @property string $category database column
+ * @property int $draft database column
+ * @property string $filename database column
+ * @property string|null $short_description database column
+ * @property string $description database column
+ * @property int $difficulty_start database column
+ * @property int $difficulty_end database column
+ * @property string|null $player_url database column
+ * @property string|null $tool database column
+ * @property string $content_type database column
+ * @property string|null $front_image_content_type database column
+ * @property JSONArrayObject|null $structure database column
+ * @property float|null $rating database column
+ * @property string $license_identifier database column
+ * @property string $uri database column
+ * @property string $uri_hash database column
+ * @property string|null $published_id_on_twillo database column
+ * @property string|null $source_url database column
+ * @property JSONArrayObject|null $data database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property SimpleORMapCollection|OERReview[] $reviews has_many OERReview
+ * @property SimpleORMapCollection|OERMaterialUser[] $users has_many OERMaterialUser
+ * @property OERHost|null $host belongs_to OERHost
+ * @property License $license belongs_to License
  */
 class OERMaterial extends SimpleORMap
 {
@@ -55,8 +55,8 @@ class OERMaterial extends SimpleORMap
             'class_name' => License::class,
             'foreign_key' => 'license_identifier'
         ];
-        $config['serialized_fields']['structure'] = 'JSONArrayObject';
-        $config['serialized_fields']['data'] = 'JSONArrayObject';
+        $config['serialized_fields']['structure'] = JSONArrayObject::class;
+        $config['serialized_fields']['data'] = JSONArrayObject::class;
         $config['registered_callbacks']['before_store'][] = "cbHashURI";
         $config['registered_callbacks']['before_delete'][] = "cbDeleteFile";
         parent::configure($config);

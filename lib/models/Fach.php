@@ -12,6 +12,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for fach_id
+ * @property string $fach_id database column
+ * @property I18NString $name database column
+ * @property I18NString|null $name_kurz database column
+ * @property I18NString|null $beschreibung database column
+ * @property string|null $schlagworte database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|Abschluss[] $abschluesse has_many Abschluss
+ * @property SimpleORMapCollection|StudiengangTeil[] $studiengangteile has_many StudiengangTeil
+ * @property SimpleORMapCollection|FachFachbereich[] $department_assignments has_many FachFachbereich
+ * @property SimpleORMapCollection|Fachbereich[] $departments has_and_belongs_to_many Fachbereich
+ * @property SimpleORMapCollection|Abschluss[] $degrees has_and_belongs_to_many Abschluss
+ * @property mixed $count_abschluesse additional field
+ * @property mixed $count_user additional field
+ * @property mixed $count_sem additional field
+ * @property mixed $count_stgteile additional field
+ * @property-read mixed $count_module additional field
  */
 
 class Fach extends ModuleManagementModelTreeItem implements PrivacyObject

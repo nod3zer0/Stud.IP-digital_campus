@@ -8,16 +8,15 @@ use OTPHP\TOTP;
  * @license GPL2 or any later version
  * @since   Stud.IP 4.4
  *
- * @property string $id
- * @property string $user_id
- * @property string $secret
- * @property string $type
- * @property bool $confirmed
- * @property int $mkdate
- * @property int $chdate
- *
- * @property User $user
- * @property TFAToken[]|SimpleORMapCollection $tokens
+ * @property string $id alias column for user_id
+ * @property string $user_id database column
+ * @property string $secret database column
+ * @property int $confirmed database column
+ * @property string $type database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|TFAToken[] $tokens has_many TFAToken
+ * @property User $user belongs_to User
  */
 class TFASecret extends SimpleORMap
 {

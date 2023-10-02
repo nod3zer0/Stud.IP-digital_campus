@@ -1,17 +1,20 @@
 <?php
 namespace eTask;
 
+use JSONArrayObject;
+
 /**
  * eTask conforming assignment attempt definition.
  *
- * @property int id database column
- * @property int assignment_id database column
- * @property string user_id database column
- * @property string start database column
- * @property string end database column
- * @property string options database column
- * @property eTask\Assignment assignment belongs_to etask\Assignment
- * @property JSONArrayobject options serialized database column
+ * @property int $id database column
+ * @property int $assignment_id database column
+ * @property string $user_id database column
+ * @property int|null $start database column
+ * @property int|null $end database column
+ * @property \JSONArrayObject $options database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property Assignment $assignment belongs_to Assignment
  */
 class Attempt extends \SimpleORMap implements \PrivacyObject
 {
@@ -31,7 +34,7 @@ class Attempt extends \SimpleORMap implements \PrivacyObject
             'foreign_key' => 'assignment_id'
         ];
 
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

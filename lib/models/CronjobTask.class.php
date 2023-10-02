@@ -27,18 +27,19 @@
  * @category    Stud.IP
  * @since       2.4
  *
- * @property string task_id database column
- * @property string id alias column for task_id
- * @property string filename database column
- * @property string class database column
- * @property string active database column
- * @property string execution_count database column
- * @property string assigned_count database column
- * @property SimpleORMapCollection schedules has_many CronjobSchedule
- *
- * @property string $description
- * @property string $name
- * @property array $parameters
+ * @property string $id alias column for task_id
+ * @property string $task_id database column
+ * @property string $filename database column
+ * @property string $class database column
+ * @property int $active database column
+ * @property int $execution_count database column
+ * @property int $assigned_count database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property SimpleORMapCollection|CronjobSchedule[] $schedules has_many CronjobSchedule
+ * @property-read mixed $description additional field
+ * @property-read mixed $name additional field
+ * @property-read mixed $parameters additional field
  */
 class CronjobTask extends SimpleORMap
 {

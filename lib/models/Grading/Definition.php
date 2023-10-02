@@ -2,6 +2,22 @@
 
 namespace Grading;
 
+/**
+ * @license GPL2 or any later version
+ *
+ * @property int $id database column
+ * @property string $course_id database column
+ * @property string $item database column
+ * @property string $name database column
+ * @property string $tool database column
+ * @property string $category database column
+ * @property int $position database column
+ * @property float $weight database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \SimpleORMapCollection|Instance[] $instances has_many Instance
+ * @property \Course $course belongs_to \Course
+ */
 class Definition extends \SimpleORMap
 {
     const CUSTOM_DEFINITIONS_CATEGORY = 'xyzzy';

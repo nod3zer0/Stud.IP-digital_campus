@@ -3,6 +3,10 @@
 /**
  * ResourceBooking.class.php - model class for resource bookings
  *
+ * The ResourceBooking class is responsible for storing
+ * bookings of resources in a specified time range
+ * or a time interval.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -14,54 +18,46 @@
  * @category    Stud.IP
  * @package     resources
  * @since       4.5
- */
-
-
-/**
- * The ResourceBooking class is responsible for storing
- * bookings of resources in a specified time range
- * or a time interval.
  *
- * @property string id database column
- * @property string resource_id database column
- * @property string range_id database column
- *     The user, course etc. where the booking (booking)
- *     is associated with.
- * @property string booking_user_id database column
- *     The user who created the booking (booking).
- * @property string description database column
- * @property int begin database column
- * @property int end database column
+ * The repetition_interval column contains a date interval string in a
+ * format that is accepted by the DateInterval class constructor.
+ * Examples for values of the repetition_interval column:
+ * - For an one month interval, the value is "P1M".
+ * - For an interval of two days, the value is "P2D".
+ * See the DateInterval documentation for more examples:
+ * https://secure.php.net/manual/en/class.dateinterval.php
+ *
+ * @property string $id database column
+ * @property string $resource_id database column
+ * @property string $range_id database column
+ * @property string|null $description database column
+ * @property int $begin database column
+ * @property int $end database column
+ * @property int|null $repeat_end database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property string|null $internal_comment database column
  * @property int $preparation_time database column
- * @property int booking_type database column: The booking type.
- *     The following types are defined:
- *     0 = normal booking
- *     1 = reservation
- *     2 = lock
- *     3 = planned booking (reservation from external tools)
- *
- * @property int repeat_end database column
- * @property string repetition_interval database column
- *     The repetition_interval column contains a date interval string in a
- *     format that is accepted by the DateInterval class constructor.
- *     Examples for values of the repetition_interval column:
- *     - For an one month interval, the value is "P1M".
- *     - For an interval of two days, the value is "P2D".
- *     See the DateInterval documentation for more examples:
- *     https://secure.php.net/manual/en/class.dateinterval.php
- *
- * @property string internal_comment database column
- * @property int mkdate database column
- * @property int chdate database column
- * @property Resource resource belongs_to Resource
- * @property User assigned_user belongs_to User
- * @property CourseDate assigned_course_date belongs_to CourseDate
- *
- * @property-read int $real_begin
- * @property-read DateTime $real_begin_dt
+ * @property int $booking_type database column
+ * @property string $booking_user_id database column
+ * @property string $repetition_interval database column
+ * @property SimpleORMapCollection|ResourceBookingInterval[] $time_intervals has_many ResourceBookingInterval
+ * @property Resource $resource belongs_to Resource
+ * @property User $assigned_user belongs_to User
+ * @property CourseDate $assigned_course_date belongs_to CourseDate
+ * @property User $booking_user belongs_to User
+ * @property mixed $course_id additional field
+ * @property mixed $room_name additional field
+ * @property-read mixed $real_begin additional field
+ * @property-read mixed $real_begin_dt additional field
  */
 class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calendar\EventSource
 {
+    const TYPE_NORMAL = 0;
+    const TYPE_RESERVATION = 1;
+    const TYPE_LOCK = 2;
+    const TYPE_PLANNED = 3;
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'resource_bookings';
@@ -546,7 +542,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     $other_booking = self::findByResourceAndTimeRanges(
                         $derived_resource,
                         [$time_interval],
-                        [0, 2],
+                        [self::TYPE_NORMAL, self::TYPE_LOCK],
                         [$this->id]
                     );
                     $course = null;
@@ -875,7 +871,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                     'end' => $this->end,
                 ]
             ],
-            [1, 3],
+            [self::TYPE_RESERVATION, self::TYPE_PLANNED],
             [$this->id]
         );
         foreach ($affected_reservations as $reservation) {
@@ -1634,7 +1630,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
         $text_colour = $booking_plan_booking_fg->__toString();
         $event_classes = [];
 
-        if ($this->booking_type == '0') {
+        if ($this->booking_type == self::TYPE_NORMAL) {
             $event_classes[] = 'resource-booking';
             //Check if the booking is a course booking:
             if ($this->getAssignedUserType() === 'course') {
@@ -1643,15 +1639,15 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
                 $colour = $booking_plan_course_booking_bg->__toString();
                 $text_colour = $booking_plan_course_booking_fg->__toString();
             }
-        } elseif ($this->booking_type == '1') {
+        } elseif ($this->booking_type == self::TYPE_RESERVATION) {
             $event_classes[] = 'resource-reservation';
             $colour = $booking_plan_reservation_bg->__toString();
             $text_colour = $booking_plan_reservation_fg->__toString();
-        } elseif ($this->booking_type == '2') {
+        } elseif ($this->booking_type == self::TYPE_LOCK) {
             $event_classes[] = 'resource-lock';
             $colour = $booking_plan_lock_bg->__toString();
             $text_colour = $booking_plan_lock_fg->__toString();
-        } elseif ($this->booking_type == '3') {
+        } elseif ($this->booking_type == self::TYPE_PLANNED) {
             $event_classes[] = 'resource-planned-booking';
             $colour = $booking_plan_planned_booking_bg->__toString();
             $text_colour = $booking_plan_planned_booking_fg->__toString();
@@ -1879,7 +1875,7 @@ class ResourceBooking extends SimpleORMap implements PrivacyObject, Studip\Calen
      */
     public function sendDeleteNotification()
     {
-        if ($this->booking_type != '0') {
+        if ($this->booking_type != self::TYPE_NORMAL) {
             //We only handle real bookings in this method.
             return;
         }

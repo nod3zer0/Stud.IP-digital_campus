@@ -11,15 +11,20 @@
  * @author    mlunzena
  * @copyright (c) Authors
  *
- * @property string range_id database column
- * @property string user_id database column
- * @property string keyword database column
- * @property string body database column
- * @property string ancestor database column
- * @property string chdate database column
- * @property string version database column
- * @property string id computed column read/write
- * @property User author belongs_to User
+ * @property array $id alias for pk
+ * @property string $range_id database column
+ * @property string|null $user_id database column
+ * @property string $keyword database column
+ * @property string $body database column
+ * @property string|null $ancestor database column
+ * @property int|null $chdate database column
+ * @property int $version database column
+ * @property int|null $mkdate database column
+ * @property User|null $author belongs_to User
+ * @property Course $course belongs_to Course
+ * @property-read mixed $parent additional field
+ * @property-read mixed $children additional field
+ * @property-read mixed $config additional field
  */
 class WikiPage extends SimpleORMap implements PrivacyObject
 {

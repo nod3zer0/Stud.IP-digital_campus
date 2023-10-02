@@ -209,7 +209,7 @@ class Resources_BookingController extends AuthenticatedController
 
     protected function sendLockBookingMail(ResourceBooking $booking)
     {
-        if ($booking->booking_type != '2') {
+        if ($booking->booking_type != ResourceBooking::TYPE_LOCK) {
             return false;
         }
 
@@ -306,7 +306,7 @@ class Resources_BookingController extends AuthenticatedController
         $preparation_time = 0,
         $description = '',
         $comment = '',
-        $booking_type = '0',
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $assigned_user = null,
         $repetition_interval = null,
         $notification_enabled = false,
@@ -328,7 +328,7 @@ class Resources_BookingController extends AuthenticatedController
             if ($included_room_parts) {
                 //Check if there are identical bookings in the other room parts:
                 foreach ($included_room_parts as $room_part) {
-                    if (($booking_type == '2') && $overwrite_bookings) {
+                    if ($booking_type == ResourceBooking::TYPE_LOCK && $overwrite_bookings) {
                         //Create a new booking:
                         $room_part->createBooking(
                             $user,
@@ -351,7 +351,7 @@ class Resources_BookingController extends AuthenticatedController
                             $comment,
                             $booking_type,
                             (
-                                $booking_type == '2'
+                                $booking_type == ResourceBooking::TYPE_LOCK
                                 ? $overwrite_bookings
                                 : false
                             )
@@ -396,7 +396,7 @@ class Resources_BookingController extends AuthenticatedController
                                 $comment,
                                 $booking_type,
                                 (
-                                    $booking_type == '2'
+                                    $booking_type == ResourceBooking::TYPE_LOCK
                                     ? $overwrite_bookings
                                     : false
                                 )
@@ -430,7 +430,7 @@ class Resources_BookingController extends AuthenticatedController
                 try {
                     //Enable overwriting of bookings if it is a lock booking:
                     $a->store(
-                        $booking_type == '2'
+                        $booking_type == ResourceBooking::TYPE_LOCK
                         ? $overwrite_bookings
                         : false
                     );
@@ -465,7 +465,7 @@ class Resources_BookingController extends AuthenticatedController
                     $comment,
                     $booking_type,
                     (
-                        $booking_type == '2'
+                        $booking_type == ResourceBooking::TYPE_LOCK
                         ? $overwrite_bookings
                         : false
                     )
@@ -475,7 +475,11 @@ class Resources_BookingController extends AuthenticatedController
                 $result['errors'] = [$e->getMessage()];
             }
 
-            if ($booking && ($booking_type == '2') && $notification_enabled) {
+            if (
+                $booking
+                && $booking_type == ResourceBooking::TYPE_LOCK
+                && $notification_enabled
+            ) {
                 $this->sendLockBookingMail($booking);
             }
 
@@ -509,7 +513,7 @@ class Resources_BookingController extends AuthenticatedController
                                 $comment,
                                 $booking_type,
                                 (
-                                    $booking_type == '2'
+                                    $booking_type == ResourceBooking::TYPE_LOCK
                                     ? $overwrite_bookings
                                     : false
                                 )
@@ -536,7 +540,7 @@ class Resources_BookingController extends AuthenticatedController
 
 
     protected function displayAssignResultMessages(
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $booking_count = 0,
         $errors = [],
         $room_part_errors = []
@@ -545,12 +549,12 @@ class Resources_BookingController extends AuthenticatedController
         if ($booking_count > 0) {
             if ($errors) {
                 //Bookings could not be saved.
-                if ($booking_type == '1') {
+                if ($booking_type == ResourceBooking::TYPE_RESERVATION) {
                     PageLayout::postWarning(
                         _('Es konnten nicht alle Reservierungen gespeichert werden!'),
                         $errors
                     );
-                } elseif ($booking_type == '2') {
+                } elseif ($booking_type == ResourceBooking::TYPE_LOCK) {
                     PageLayout::postWarning(
                         _('Es konnten nicht alle Sperrbuchungen gespeichert werden!'),
                         $errors
@@ -563,13 +567,13 @@ class Resources_BookingController extends AuthenticatedController
                 }
             } elseif ($room_part_errors) {
                 //Room parts could not be assigned.
-                if ($booking_type == '1') {
+                if ($booking_type == ResourceBooking::TYPE_RESERVATION) {
                     $text = ngettext(
                         'Die Reservierung wurde gespeichert, aber es traten Fehler beim Reservieren der anderen Raumteile auf:',
                         'Die Reservierungen wurden gespeichert, aber es traten Fehler beim Reservieren der anderen Raumteile auf:',
                         $booking_count
                     );
-                } elseif ($booking_type == '2') {
+                } elseif ($booking_type == ResourceBooking::TYPE_LOCK) {
                     $text = ngettext(
                         'Die Sperrbuchung wurde gespeichert, aber es traten Fehler beim Sperren der anderen Raumteile auf:',
                         'Die Sperrbuchungen wurden gespeichert, aber es traten Fehler beim Sperren der anderen Raumteile auf:',
@@ -589,7 +593,7 @@ class Resources_BookingController extends AuthenticatedController
                 );
             } else {
                 //Everything went fine:
-                if ($booking_type == '1') {
+                if ($booking_type == ResourceBooking::TYPE_RESERVATION) {
                     PageLayout::postSuccess(
                         ngettext(
                             'Die Reservierung wurde gespeichert.',
@@ -597,7 +601,7 @@ class Resources_BookingController extends AuthenticatedController
                             $booking_count
                         )
                     );
-                } elseif ($booking_type == '2') {
+                } elseif ($booking_type == ResourceBooking::TYPE_LOCK) {
                     PageLayout::postSuccess(
                         ngettext(
                             'Die Sperrbuchung wurde gespeichert.',
@@ -652,21 +656,21 @@ class Resources_BookingController extends AuthenticatedController
             $only_one_room = count($this->resources) == 1;
 
             if ($only_one_room) {
-                if ($this->booking_type == 3) {
+                if ($this->booking_type == ResourceBooking::TYPE_PLANNED) {
                     PageLayout::setTitle(
                         sprintf(
                             _('%s: Neue geplante Buchung'),
                             $this->resources[0]->getFullName()
                         )
                     );
-                } elseif ($this->booking_type == 2) {
+                } elseif ($this->booking_type == ResourceBooking::TYPE_LOCK) {
                     PageLayout::setTitle(
                         sprintf(
                             '%s: Neue Sperrbuchung',
                             $this->resources[0]->getFullName()
                         )
                     );
-                } elseif ($this->booking_type == 1) {
+                } elseif ($this->booking_type == ResourceBooking::TYPE_RESERVATION) {
                     PageLayout::setTitle(
                         sprintf(
                             '%s: Neue Reservierung',
@@ -682,15 +686,15 @@ class Resources_BookingController extends AuthenticatedController
                     );
                 }
             } else {
-                if ($this->booking_type == 3) {
+                if ($this->booking_type == ResourceBooking::TYPE_PLANNED) {
                     PageLayout::setTitle(
                         _('Neue geplante Buchung')
                     );
-                } elseif ($this->booking_type == 2) {
+                } elseif ($this->booking_type == ResourceBooking::TYPE_LOCK) {
                     PageLayout::setTitle(
                         _('Neue Sperrbuchung')
                     );
-                } elseif ($this->booking_type == 1) {
+                } elseif ($this->booking_type == ResourceBooking::TYPE_RESERVATION) {
                     PageLayout::setTitle(
                         _('Neue Reservierung')
                     );
@@ -721,7 +725,7 @@ class Resources_BookingController extends AuthenticatedController
 
             if ($mode == 'edit') {
                 if (count($this->resources) == 1) {
-                    if ($this->booking_type == 3) {
+                    if ($this->booking_type == ResourceBooking::TYPE_PLANNED) {
                         PageLayout::setTitle(
                             sprintf(
                                 _('%1$s: Geplante Buchung am %2$s bearbeiten'),
@@ -729,7 +733,7 @@ class Resources_BookingController extends AuthenticatedController
                                 $booking_date
                             )
                         );
-                    } elseif ($this->booking_type == 2) {
+                    } elseif ($this->booking_type == ResourceBooking::TYPE_LOCK) {
                         PageLayout::setTitle(
                             sprintf(
                                 _('%1$s: Sperrbuchung am %2$s bearbeiten'),
@@ -737,7 +741,7 @@ class Resources_BookingController extends AuthenticatedController
                                 $booking_date
                             )
                         );
-                    } elseif ($this->booking_type == 1) {
+                    } elseif ($this->booking_type == ResourceBooking::TYPE_RESERVATION) {
                         PageLayout::setTitle(
                             sprintf(
                                 _('%1$s: Reservierung am %2$s bearbeiten'),
@@ -755,21 +759,21 @@ class Resources_BookingController extends AuthenticatedController
                         );
                     }
                 } else {
-                    if ($this->booking_type == 3) {
+                    if ($this->booking_type == ResourceBooking::TYPE_PLANNED) {
                         PageLayout::setTitle(
                             sprintf(
                                 _('Geplante Buchung am %s bearbeiten'),
                                 $booking_date
                             )
                         );
-                    } elseif ($this->booking_type == 2) {
+                    } elseif ($this->booking_type == ResourceBooking::TYPE_LOCK) {
                         PageLayout::setTitle(
                             sprintf(
                                 _('Sperrbuchung am %s bearbeiten'),
                                 $booking_date
                             )
                         );
-                    } elseif ($this->booking_type == 1) {
+                    } elseif ($this->booking_type == ResourceBooking::TYPE_RESERVATION) {
                         PageLayout::setTitle(
                             sprintf(
                                 _('Reservierung am %s bearbeiten'),
@@ -802,7 +806,7 @@ class Resources_BookingController extends AuthenticatedController
 
         //Check permissions:
         if ($mode == 'add') {
-            if ($this->booking_type != 2) {
+            if ($this->booking_type != ResourceBooking::TYPE_LOCK) {
                 foreach ($this->resources as $resource) {
                     if (!$resource->userHasBookingRights($this->current_user)) {
                         //The permissions are insufficient for at least one
@@ -1145,7 +1149,11 @@ class Resources_BookingController extends AuthenticatedController
 
             //Validation:
 
-            if (($this->booking_type < 0) || ($this->booking_type > 2)) {
+            if (!in_aray($this->booking_type, [
+                ResourceBooking::TYPE_NORMAL,
+                ResourceBooking::TYPE_RESERVATION,
+                ResourceBooking::TYPE_LOCK,
+            ])) {
                 PageLayout::postError(
                     _('Es wurde ein ungültiger Buchungstyp gewählt.')
                 );
@@ -1909,9 +1917,9 @@ class Resources_BookingController extends AuthenticatedController
             return;
         }
 
-        if ($this->booking->booking_type == '0') {
+        if ($this->booking->booking_type == ResourceBooking::TYPE_NORMAL) {
             PageLayout::setTitle(_('Buchung in Reservierung umwandeln'));
-        } elseif ($this->booking->booking_type == '1') {
+        } elseif ($this->booking->booking_type == ResourceBooking::TYPE_RESERVATION) {
             PageLayout::setTitle(_('Reservierung in Buchung umwandeln'));
         } else {
             PageLayout::postError(
@@ -1931,7 +1939,7 @@ class Resources_BookingController extends AuthenticatedController
             return;
         }
 
-        if ($this->booking->booking_type == '1') {
+        if ($this->booking->booking_type == ResourceBooking::TYPE_RESERVATION) {
             $fully_available = true;
             foreach ($intervals as $interval) {
                 $begin = new DateTime();
@@ -1958,10 +1966,10 @@ class Resources_BookingController extends AuthenticatedController
         if (Request::submitted('transform')) {
             CSRFProtection::verifyUnsafeRequest();
 
-            if ($this->booking->booking_type == '0') {
-                $this->booking->booking_type = '1';
-            } elseif ($this->booking->booking_type == '1') {
-                $this->booking->booking_type = '0';
+            if ($this->booking->booking_type == ResourceBooking::TYPE_NORMAL) {
+                $this->booking->booking_type = ResourceBooking::TYPE_RESERVATION;
+            } elseif ($this->booking->booking_type == ResourceBooking::TYPE_RESERVATION) {
+                $this->booking->booking_type = ResourceBooking::TYPE_NORMAL;
             }
 
             $saved = false;
@@ -1971,11 +1979,11 @@ class Resources_BookingController extends AuthenticatedController
                 $saved = true;
             }
             if ($saved) {
-                if ($this->booking->booking_type == '0') {
+                if ($this->booking->booking_type == ResourceBooking::TYPE_NORMAL) {
                     PageLayout::postSuccess(
                         _('Die Buchung wurde gespeichert.')
                     );
-                } elseif ($this->booking->booking_type == '1') {
+                } elseif ($this->booking->booking_type == ResourceBooking::TYPE_RESERVATION) {
                     PageLayout::postSuccess(
                         _('Die Reservierung wurde gespeichert.')
                     );
@@ -1983,18 +1991,18 @@ class Resources_BookingController extends AuthenticatedController
                 $this->response->add_header('X-Dialog-Close', '1');
                 $this->render_nothing();
             } else {
-                if ($this->booking->booking_type == '0') {
+                if ($this->booking->booking_type == ResourceBooking::TYPE_NORMAL) {
                     PageLayout::postError(
                         _('Die Buchung konnte nicht gespeichert werden.')
                     );
-                } elseif ($this->booking->booking_type == '1') {
+                } elseif ($this->booking->booking_type == ResourceBooking::TYPE_RESERVATION) {
                     PageLayout::postError(
                         _('Die Reservierung konnte nicht gespeichert werden.')
                     );
                 }
             }
         } else {
-            if ($this->booking->booking_type == '0') {
+            if ($this->booking->booking_type == ResourceBooking::TYPE_NORMAL) {
                 PageLayout::postWarning(
                     _('Soll die folgende Buchung wirklich in eine Reservierung umgewandelt werden?')
                 );

@@ -2,6 +2,7 @@
 
 namespace Courseware;
 
+use JSONArrayObject;
 use User;
 
 /**
@@ -12,23 +13,22 @@ use User;
  *
  * @since   Stud.IP 5.3
  *
- * @property int                            $id                     database column
- * @property string                         $range_id               database column
- * @property string                         $range_type             database column
- * @property int                            $structural_element_id  database column
- * @property string                         $content_type           database column
- * @property int                            $public                 database column
- * @property string                         $creator_id             database column
- * @property int                            $release_date           database column
- * @property int                            $withdraw_date          database column
- * @property \JSONArrayObject               $config                 database column
- * @property int                            $mkdate                 database column
- * @property int                            $chdate                 database column
- * @property \User                          $creator                belongs_to User
- * @property \Courseware\StructuralElement  $structural_element     belongs_to Courseware\StructuralElement
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @property int $id database column
+ * @property string|null $range_id database column
+ * @property string|null $range_type database column
+ * @property int $structural_element_id database column
+ * @property string $content_type database column
+ * @property int $public database column
+ * @property string|null $creator_id database column
+ * @property int|null $release_date database column
+ * @property int|null $withdraw_date database column
+ * @property \JSONArrayObject $config database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \Course|null $course belongs_to \Course
+ * @property \User|null $user belongs_to \User
+ * @property \User|null $creator belongs_to \User
+ * @property StructuralElement $structural_element has_one StructuralElement
  */
 
 class Unit extends \SimpleORMap implements \PrivacyObject
@@ -37,7 +37,7 @@ class Unit extends \SimpleORMap implements \PrivacyObject
     {
         $config['db_table'] = 'cw_units';
 
-        $config['serialized_fields']['config'] = 'JSONArrayObject';
+        $config['serialized_fields']['config'] = JSONArrayObject::class;
 
         $config['has_one']['structural_element'] = [
             'class_name' => StructuralElement::class,

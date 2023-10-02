@@ -6,6 +6,15 @@
  * @author Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @copyright 2008
  * @license GPL2 or any later version
+ *
+ * @property string $id alias column for userdomain_id
+ * @property string $userdomain_id database column
+ * @property string $name database column
+ * @property int $restricted_access database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|User[] $users has_and_belongs_to_many User
+ * @property SimpleORMapCollection|Course[] $courses has_and_belongs_to_many Course
  */
 class UserDomain extends SimpleORMap
 {

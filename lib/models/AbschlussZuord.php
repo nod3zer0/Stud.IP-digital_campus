@@ -13,6 +13,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for abschluss_id
+ * @property string $abschluss_id database column
+ * @property string $kategorie_id database column
+ * @property int $position database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Abschluss $abschluss belongs_to Abschluss
+ * @property AbschlussKategorie $kategorie belongs_to AbschlussKategorie
  */
 
 class AbschlussZuord extends ModuleManagementModel

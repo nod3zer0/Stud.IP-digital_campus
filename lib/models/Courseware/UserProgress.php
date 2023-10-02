@@ -12,14 +12,14 @@ namespace Courseware;
  *
  * @since   Stud.IP 5.0
  *
- * @property array             $id       computed column read/write
- * @property string            $user_id  database column
- * @property int               $block_id database column
- * @property string            $grade    database column
- * @property string            $mkdate   database column
- * @property string            $chdate   database column
- * @property \Courseware\Block $block    belongs_to Courseware\Block
- * @property \User             $user     belongs_to User
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property int $block_id database column
+ * @property float $grade database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Block $block belongs_to Block
+ * @property \User $user belongs_to \User
  */
 class UserProgress extends \SimpleORMap implements \PrivacyObject
 {

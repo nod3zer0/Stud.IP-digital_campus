@@ -14,15 +14,16 @@
  * Use MailQueueEntry::add($mail, $message_id, $user_id) to add a mail to the queue
  * and MailQueueEntry::sendAll() or MailQueueEntry::sendNew() to flush the queue
  * and send the mails.
- * @property string mail_queue_id database column
- * @property string id alias column for mail_queue_id
- * @property string mail database column
- * @property string message_id database column
- * @property string user_id database column
- * @property string tries database column
- * @property string last_try database column
- * @property string mkdate database column
- * @property string chdate database column
+ *
+ * @property string $id alias column for mail_queue_id
+ * @property string $mail_queue_id database column
+ * @property JSONArrayObject $mail database column
+ * @property string|null $message_id database column
+ * @property string|null $user_id database column
+ * @property int $tries database column
+ * @property int $last_try database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class MailQueueEntry extends SimpleORMap
 {
@@ -30,7 +31,7 @@ class MailQueueEntry extends SimpleORMap
     {
         $config['db_table'] = 'mail_queue_entries';
 
-        $config['serialized_fields']['mail'] = 'JSONArrayObject';
+        $config['serialized_fields']['mail'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

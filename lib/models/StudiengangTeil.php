@@ -12,6 +12,26 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for stgteil_id
+ * @property string $stgteil_id database column
+ * @property string|null $fach_id database column
+ * @property string|null $kp database column
+ * @property int|null $semester database column
+ * @property I18NString $zusatz database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|StgteilVersion[] $versionen has_many StgteilVersion
+ * @property SimpleORMapCollection|MvvContactRange[] $contact_assignments has_many MvvContactRange
+ * @property SimpleORMapCollection|StudiengangStgteil[] $studiengang_assignments has_many StudiengangStgteil
+ * @property Fach|null $fach belongs_to Fach
+ * @property SimpleORMapCollection|Studiengang[] $studiengang has_and_belongs_to_many Studiengang
+ * @property-read mixed $count_versionen additional field
+ * @property-read mixed $fach_name additional field
+ * @property-read mixed $count_contacts additional field
+ * @property-read mixed $stgteil_name additional field
  */
 
 class StudiengangTeil extends ModuleManagementModelTreeItem

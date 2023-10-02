@@ -16,7 +16,11 @@
                     ),
                     'method' => 'GET',
                     'extraParams' => [
-                        'booking_types' => [0,1,2]
+                        'booking_types' => [
+                            ResourceBooking::TYPE_NORMAL,
+                            ResourceBooking::TYPE_RESERVATION,
+                            ResourceBooking::TYPE_LOCK,
+                        ],
                     ]
                 ]
             ],

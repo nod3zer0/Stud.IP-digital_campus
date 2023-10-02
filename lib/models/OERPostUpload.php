@@ -12,11 +12,14 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       5.3
- * @property string file_ref_id database column
- * @property string user_id database column
- * @property int reminder_date database column
- * @property string mkdate database column
- * @property string chdate database column
+ *
+ * @property array $id alias for pk
+ * @property string $file_ref_id database column
+ * @property string $user_id database column
+ * @property int|null $reminder_date database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property File $file belongs_to File
  */
 class OERPostUpload extends SimpleORMap
 {

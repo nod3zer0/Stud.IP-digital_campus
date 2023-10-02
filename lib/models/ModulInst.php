@@ -13,6 +13,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property array $id alias for pk
+ * @property string $modul_id database column
+ * @property string $institut_id database column
+ * @property string $gruppe database column
+ * @property int $position database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Fachbereich $institute belongs_to Fachbereich
+ * @property Modul $modul belongs_to Modul
  */
 
 class ModulInst extends ModuleManagementModel

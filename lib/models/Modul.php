@@ -12,6 +12,49 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for modul_id
+ * @property string $modul_id database column
+ * @property string|null $quelle database column
+ * @property string|null $variante database column
+ * @property string|null $flexnow_modul database column
+ * @property string|null $flexnow_id alias column for flexnow_modul
+ * @property string|null $code database column
+ * @property string|null $start database column
+ * @property string|null $end database column
+ * @property int|null $beschlussdatum database column
+ * @property int|null $fassung_nr database column
+ * @property string|null $fassung_typ database column
+ * @property string $version database column
+ * @property string|null $dauer database column
+ * @property string $kapazitaet database column
+ * @property float|null $kp database column
+ * @property int|null $wl_selbst database column
+ * @property int|null $wl_pruef database column
+ * @property string|null $pruef_ebene database column
+ * @property string $faktor_note database column
+ * @property string|null $stat database column
+ * @property string|null $kommentar_status database column
+ * @property string|null $verantwortlich database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|Modulteil[] $modulteile has_many Modulteil
+ * @property SimpleORMapCollection|ModulInst[] $assigned_institutes has_many ModulInst
+ * @property SimpleORMapCollection|MvvContactRange[] $contact_assignments has_many MvvContactRange
+ * @property SimpleORMapCollection|StgteilabschnittModul[] $abschnitte_modul has_many StgteilabschnittModul
+ * @property SimpleORMapCollection|ModulLanguage[] $languages has_many ModulLanguage
+ * @property Semester|null $start_semester belongs_to Semester
+ * @property Semester|null $end_semester belongs_to Semester
+ * @property ModulDeskriptor $deskriptoren has_one ModulDeskriptor
+ * @property Modul|null $modul_quelle has_one Modul
+ * @property Modul|null $modul_variante has_one Modul
+ * @property ModulInst $responsible_institute has_one ModulInst
+ * @property SimpleORMapCollection|StgteilAbschnitt[] $abschnitte has_and_belongs_to_many StgteilAbschnitt
+ * @property mixed $count_modulteile additional field
+ * @property mixed $languagesofinstruction additional field
+ * @property-read mixed $display_name additional field
  */
 
 class Modul extends ModuleManagementModelTreeItem

@@ -15,6 +15,7 @@ final class DescribeModels extends AbstractCommand
     protected static $defaultName = 'sorm:describe';
 
     private $progress;
+    private $reflection;
 
     protected function configure(): void
     {
@@ -86,7 +87,7 @@ final class DescribeModels extends AbstractCommand
             }
 
             try {
-                $reflection = new \ReflectionClass($class_name);
+                $this->reflection = new \ReflectionClass($class_name);
             } catch (\Error $e) {
                 $this->outputForFile(
                     $output,
@@ -95,7 +96,7 @@ final class DescribeModels extends AbstractCommand
                 continue;
             }
 
-            if ($reflection->isAbstract()) {
+            if ($this->reflection->isAbstract()) {
                 $this->outputForFile(
                     $output,
                     "Skipping abstract class {$class_name}",
@@ -104,19 +105,36 @@ final class DescribeModels extends AbstractCommand
                 continue;
             }
 
-            $model = $reflection->newInstance();
+
+            $model = $this->reflection->newInstance();
+
+            // Get configuration for class
+            $config_property = $this->reflection->getProperty('config');
+            $config_property->setAccessible(true);
+            $model_config = $config_property->getValue()[$class_name];
+
+            // Get table metadata
             $meta = $model->getTableMetaData();
 
             $properties = [];
 
+            if (!isset($meta['fields']['id']) && count($meta['pk']) > 0) {
+                $properties['id'] = [
+                    'type' => count($meta['pk']) > 1 ? 'array' : $this->getPHPType($meta['pk'][0], $meta['fields'][$meta['pk'][0]]),
+                    'description' => 'alias for pk',
+                ];
+            }
+
             foreach ($meta['fields'] as $field => $info) {
                 $name = mb_strtolower($field);
-                $type = $this->getPHPType($info);
+                $type = $this->getPHPType($field, $info, $model_config);
                 $properties[$name] = [
                     'type'        => $type,
                     'description' => 'database column',
                 ];
-                if ($alias = array_search($name, $meta['alias_fields'])) {
+
+                $alias = array_search($name, $meta['alias_fields']);
+                if ($alias) {
                     $properties[$alias] = [
                         'type'        => $type,
                         'description' => "alias column for {$name}",
@@ -127,24 +145,50 @@ final class DescribeModels extends AbstractCommand
             foreach ($meta['relations'] as $relation) {
                 $options = $model->getRelationOptions($relation);
                 $related_class_name = $options['class_name'];
-                if (in_array($options['type'], ['has_many', 'has_and_belongs_to_many'])) {
-                    $related_class_name = SimpleORMapCollection::class;
-                }
 
-                if ($reflection->inNamespace()) {
-                    $related_class_name = "\\{$related_class_name}";
-                    if (mb_strpos($related_class_name, "\\{$reflection->getNamespaceName()}") === 0) {
-                        $related_class_name = substr($related_class_name, strlen($reflection->getNamespaceName()) + 2);
+                if (in_array($options['type'], ['has_many', 'has_and_belongs_to_many'])) {
+                    $related_type = implode('|', [
+                        $this->adjustNamespaceForClass(SimpleORMapCollection::class),
+                        $this->adjustNameSpaceForClass($related_class_name) . '[]',
+                    ]);
+                } else {
+                    $related_type = $this->adjustNamespaceForClass($related_class_name);
+
+                    if (
+                        $options['foreign_key'] !== 'id'
+                        && isset($meta['fields'][$options['foreign_key']])
+                        && $meta['fields'][$options['foreign_key']]['null'] === 'YES'
+                    ) {
+                        $related_type .= '|null';
                     }
                 }
 
                 $properties[$relation] = [
-                    'type'        => $related_class_name,
-                    'description' => "{$options['type']} {$options['class_name']}",
+                    'type'        => $related_type,
+                    'description' => "{$options['type']} " . $this->adjustNamespaceForClass($related_class_name),
                 ];
             }
 
-            if ($this->updateDocBlockOfClass($reflection, $properties)) {
+            foreach ($meta['additional_fields'] as $field => $definition) {
+                if ($field === 'id') {
+                    continue;
+                }
+
+                $property_type = null;
+                if (isset($definition['get']) && !isset($definition['set'])) {
+                    $property_type = 'property-read';
+                } elseif (!isset($definition['get']) && isset($definition['set'])) {
+                    $property_type = 'property-write';
+                }
+
+                $properties[$field] = [
+                    'property_type' => $property_type,
+                    'type' => $this->getAdditionFieldType($definition),
+                    'description' => 'additional field',
+                ];
+            }
+
+            if ($this->updateDocBlockOfClass($properties)) {
                 $this->outputForFile(
                     $output,
                     '<info>Updated ' . $this->relativeFilePath($file->getPathname()) . '</info>'
@@ -172,27 +216,35 @@ final class DescribeModels extends AbstractCommand
 
     }
 
-    private function getPHPType($info)
+    private function getPHPType(string $field, array $info, array $config = []): string
     {
-        if (preg_match('/^(?:tiny|small|medium|big)?int(?:eger)?/iS', $info['type'])) {
-            return 'int';
+        $field = strtolower($field);
+
+        $type = [];
+
+        if (isset($config['serialized_fields'][$field])) {
+            $type[] = $this->adjustNamespaceForClass($config['serialized_fields'][$field]);
+        } elseif (isset($config['i18n_fields'][$field])) {
+            $type[] = $this->adjustNamespaceForClass(\I18NString::class);
+        } elseif (preg_match('/^(?:tiny|small|medium|big)?int(?:eger)?/i', $info['type'])) {
+            $type[] = 'int';
+        } elseif (preg_match('/^(?:decimal|double|float|numeric)/i', $info['type'])) {
+            $type[] = 'float';
+        } else {
+            $type[] = 'string';
         }
 
-        if (preg_match('/^(?:decimal|double|float|numeric)/iS', $info['type'])) {
-            return 'float';
+        if ($info['null'] === 'YES') {
+            $type[] = 'null';
         }
 
-        if (preg_match('/^bool(?:ean)?/iS', $info['type'])) {
-            return 'bool';
-        }
-
-        return 'string';
+        return implode('|', $type);
     }
 
-    private function updateDocBlockOfClass(\ReflectionClass $reflection, array $properties): bool
+    private function updateDocBlockOfClass(array $properties): bool
     {
-        $has_docblock = (bool) $reflection->getDocComment();
-        $docblock     = $reflection->getDocComment() ?: $this->getDefaultDocblock();
+        $has_docblock = (bool) $this->reflection->getDocComment();
+        $docblock     = $this->reflection->getDocComment() ?: $this->getDefaultDocblock();
 
         $docblock_lines = array_map('rtrim', explode("\n", $docblock));
 
@@ -214,7 +266,13 @@ final class DescribeModels extends AbstractCommand
         $docblock_lines = array_reverse($docblock_lines);
 
         $properties = array_map(function ($variable, $property) {
-            return " * @property {$property['type']} \${$variable} {$property['description']}";
+            return sprintf(
+                ' * @%s %s $%s %s',
+                $property['property_type'] ?? 'property',
+                $property['type'],
+                $variable,
+                $property['description']
+            );
         }, array_keys($properties), array_values($properties));
 
         array_unshift($properties, ' *');
@@ -226,7 +284,7 @@ final class DescribeModels extends AbstractCommand
             return false;
         }
 
-        $contents = file_get_contents($reflection->getFileName());
+        $contents = file_get_contents($this->reflection->getFileName());
         if ($has_docblock) {
             $contents = str_replace($docblock, $new_docblock, $contents);
         } else {
@@ -238,7 +296,7 @@ final class DescribeModels extends AbstractCommand
             );
         }
 
-        file_put_contents($reflection->getFileName(), $contents);
+        file_put_contents($this->reflection->getFileName(), $contents);
 
         return true;
     }
@@ -281,5 +339,27 @@ final class DescribeModels extends AbstractCommand
             }
         }
         return null;
+    }
+
+    private function adjustNamespaceForClass(string $class): string
+    {
+        if (!$this->reflection->inNamespace()) {
+            return $class;
+        }
+
+        $namespace = $this->reflection->getNamespaceName();
+        $class = "\\{$class}";
+        if (str_starts_with($class, "\\{$namespace}")) {
+            $class = substr($class, strlen($namespace) + 2);
+        }
+        return $class;
+    }
+
+    private function getAdditionFieldType($definition): string
+    {
+        // TODO: Try to get a reasonable field type
+        // $definition may either be an array with definition or a boolean value
+
+        return 'mixed';
     }
 }

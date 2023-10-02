@@ -2,6 +2,7 @@
 
 namespace Courseware;
 
+use JSONArrayObject;
 use User;
 
 /**
@@ -14,45 +15,42 @@ use User;
  *
  * @since   Stud.IP 5.0
  *
- * @property int                            $id                 database column
- * @property int                            $parent_id          database column
- * @property int                            $is_link            database column
- * @property int                            $target_id          database column
- * @property string                         $range_id           database column
- * @property string                         $range_type         database column
- * @property string                         $owner_id           database column
- * @property string                         $editor_id          database column
- * @property string                         $edit_blocker_id    database column
- * @property int                            $position           database column
- * @property string                         $title              database column
- * @property string                         $image_id           database column
- * @property string                         $image_type         database column
- * @property string                         $purpose            database column
- * @property \JSONArrayObject               $payload            database column
- * @property int                            $public             database column
- * @property string                         $release_date       database column
- * @property string                         $withdraw_date      database column
- * @property \JSONArrayObject               $read_approval      database column
- * @property \JSONArrayObject               $write_approval     database column
- * @property \JSONArrayObject               $copy_approval      database column
- * @property \JSONArrayObject               $external_relations database column
- * @property int                            $mkdate             database column
- * @property int                            $chdate             database column
- * @property \SimpleORMapCollection         $children           has_many Courseware\StructuralElement
- * @property \SimpleORMapCollection         $containers         has_many Courseware\Container
- * @property ?\Courseware\StructuralElement $parent             belongs_to Courseware\StructuralElement
- * @property \User                          $user               belongs_to User
- * @property \Course                        $course             belongs_to Course
- * @property \User                          $owner              belongs_to User
- * @property \User                          $editor             belongs_to User
- * @property ?\User                         $edit_blocker       belongs_to User
- * @property \FileRef|\StockImage|null      $image              has_one FileRef or StockImage
- * @property ?\Courseware\Task              $task               has_one Courseware\Task
- * @property \SimpleORMapCollection         $comments           has_many Courseware\StructuralElementComment
- * @property \SimpleORMapCollection         $feedback           has_many Courseware\StructuralElementFeedback
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @property int $id database column
+ * @property int|null $parent_id database column
+ * @property int $is_link database column
+ * @property int|null $target_id database column
+ * @property string $range_id database column
+ * @property string|null $range_type database column
+ * @property string $owner_id database column
+ * @property string $editor_id database column
+ * @property string|null $edit_blocker_id database column
+ * @property int $position database column
+ * @property string $title database column
+ * @property string|null $image_id database column
+ * @property string $image_type database column
+ * @property string|null $purpose database column
+ * @property \JSONArrayObject $payload database column
+ * @property int $public database column
+ * @property int $release_date database column
+ * @property int $withdraw_date database column
+ * @property \JSONArrayObject $read_approval database column
+ * @property \JSONArrayObject $write_approval database column
+ * @property \JSONArrayObject $copy_approval database column
+ * @property \JSONArrayObject $external_relations database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \SimpleORMapCollection|StructuralElement[] $children has_many StructuralElement
+ * @property \SimpleORMapCollection|Container[] $containers has_many Container
+ * @property \SimpleORMapCollection|StructuralElementComment[] $comments has_many StructuralElementComment
+ * @property \SimpleORMapCollection|StructuralElementFeedback[] $feedback has_many StructuralElementFeedback
+ * @property StructuralElement|null $parent belongs_to StructuralElement
+ * @property \User $user belongs_to \User
+ * @property \Course $course belongs_to \Course
+ * @property \User $owner belongs_to \User
+ * @property \User $editor belongs_to \User
+ * @property \User|null $edit_blocker belongs_to \User
+ * @property Task $task has_one Task
+ * @property mixed $image additional field
  */
 class StructuralElement extends \SimpleORMap implements \PrivacyObject
 {
@@ -60,11 +58,11 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
     {
         $config['db_table'] = 'cw_structural_elements';
 
-        $config['serialized_fields']['payload'] = 'JSONArrayObject';
-        $config['serialized_fields']['read_approval'] = 'JSONArrayObject';
-        $config['serialized_fields']['write_approval'] = 'JSONArrayObject';
-        $config['serialized_fields']['copy_approval'] = 'JSONArrayObject';
-        $config['serialized_fields']['external_relations'] = 'JSONArrayObject';
+        $config['serialized_fields']['payload'] = JSONArrayObject::class;
+        $config['serialized_fields']['read_approval'] = JSONArrayObject::class;
+        $config['serialized_fields']['write_approval'] = JSONArrayObject::class;
+        $config['serialized_fields']['copy_approval'] = JSONArrayObject::class;
+        $config['serialized_fields']['external_relations'] = JSONArrayObject::class;
 
         $config['has_many']['children'] = [
             'class_name' => StructuralElement::class,
@@ -898,7 +896,7 @@ SQL;
 
         $element->store();
 
-        list($containerMap, $blockMap) = $this->copyContainers($user, $element);
+        [$containerMap, $blockMap] = $this->copyContainers($user, $element);
 
         $mappingId = $recursiveId === '' ? $this->id . '_' . $element->id : $recursiveId;
         if (!isset($mapping[$mappingId])) {
@@ -1003,7 +1001,7 @@ SQL;
         $containerMap = [];
         $blockMap = [];
         foreach ($this->containers as $container) {
-            list($newContainer, $blockMapsObjs) = $container->copy($user, $newElement);
+            [$newContainer, $blockMapsObjs] = $container->copy($user, $newElement);
             $containerMap[$container->id] = $newContainer->id;
             $blockMap = $blockMap + $blockMapsObjs;
         }

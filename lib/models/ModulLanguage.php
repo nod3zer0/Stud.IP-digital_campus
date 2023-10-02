@@ -13,6 +13,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property array $id alias for pk
+ * @property string $modul_id database column
+ * @property string $lang database column
+ * @property string $language alias column for lang
+ * @property int $position database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Modul $modul belongs_to Modul
  */
 
 class ModulLanguage extends ModuleManagementModel

@@ -583,7 +583,7 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
 
         $this->preparation_time = intval($this->request->preparation_time / 60);
-        $this->reply_lecturers = $this->request->reply_recipients === 'lecturer';
+        $this->reply_lecturers = $this->request->reply_recipients === ResourceRequest::REPLY_LECTURER;
         $this->comment = $this->request->comment;
 
         $_SESSION[$request_id]['search_by'] = $this->selected_room ? 'roomname' : 'category';
@@ -612,9 +612,9 @@ class Course_RoomRequestsController extends AuthenticatedController
             $this->request->comment = Request::get('comment');
 
             if (Request::get('reply_lecturers')) {
-                $this->request->reply_recipients = 'lecturer';
+                $this->request->reply_recipients = ResourceRequest::REPLY_LECTURER;
             } else {
-                $this->request->reply_recipients = 'requester';
+                $this->request->reply_recipients = ResourceRequest::REPLY_REQUESTER;
             }
             $this->request->category_id = $_SESSION[$request_id]['room_category_id'] ?: $this->request->category_id;
 

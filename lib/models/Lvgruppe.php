@@ -12,6 +12,22 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for lvgruppe_id
+ * @property string $lvgruppe_id database column
+ * @property string $name database column
+ * @property I18NString|null $alttext database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|Modulteil[] $modulteile has_and_belongs_to_many Modulteil
+ * @property SimpleORMapCollection|Course[] $courses has_and_belongs_to_many Course
+ * @property SimpleORMapCollection|ArchivedCourse[] $archived_courses has_and_belongs_to_many ArchivedCourse
+ * @property mixed $count_seminare additional field
+ * @property mixed $count_archiv additional field
+ * @property mixed $count_modulteile additional field
+ * @property mixed $count_semester additional field
  */
 
 class Lvgruppe extends ModuleManagementModelTreeItem

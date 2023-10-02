@@ -22,57 +22,62 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string user_id database column
- * @property string id alias column for user_id
- * @property string username database column
- * @property string password database column
- * @property string perms database column
- * @property string vorname database column
- * @property string nachname database column
- * @property string email database column
- * @property string validation_key database column
- * @property string auth_plugin database column
- * @property string locked database column
- * @property string lock_comment database column
- * @property string locked_by database column
- * @property string visible database column
- * @property string hobby computed column read/write
- * @property string lebenslauf computed column read/write
- * @property string publi computed column read/write
- * @property string schwerp computed column read/write
- * @property string home computed column read/write
- * @property string privatnr computed column read/write
- * @property string privatcell computed column read/write
- * @property string privadr computed column read/write
- * @property string score computed column read/write
- * @property string geschlecht computed column read/write
- * @property string mkdate computed column read/write
- * @property string chdate computed column read/write
- * @property string title_front computed column read/write
- * @property string title_rear computed column read/write
- * @property string preferred_language computed column read/write
- * @property string smsforward_copy computed column read/write
- * @property string smsforward_rec computed column read/write
- * @property string guestbook computed column read/write
- * @property string email_forward computed column read/write
- * @property string motto computed column read/write
- * @property string lock_rule computed column read/write
- * @property SimpleORMapCollection course_memberships has_many CourseMember
- * @property SimpleORMapCollection institute_memberships has_many InstituteMember
- * @property SimpleORMapCollection admission_applications has_many AdmissionApplication
- * @property SimpleORMapCollection archived_course_memberships has_many ArchivedCourseMember
- * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
- * @property SimpleORMapCollection studycourses has_many UserStudyCourse
- * @property SimpleORMapCollection contacts has_many Contact
- * @property UserInfo   info   has_one UserInfo
- * @property UserOnline online has_one UserOnline
- * @property Kategorie[]|SimpleORMapCollection $profile_categories has_many Kategorie
- * @property UserDomain[]|SimpleORMapCollection $domains
- * @property ConsultationBlock[]|SimpleORMapCollection $consultation_blocks
- * @property ConsultationBooking[]|SimpleORMapCollection $consultation_bookings
- * @property ConsultationResponsibility[]|SimpleORMapCollection $consultation_responsibilities
- *
- * @property UserConfig config
+ * @property string $id alias column for user_id
+ * @property string $user_id database column
+ * @property string $username database column
+ * @property string $password database column
+ * @property string $perms database column
+ * @property string $vorname database column
+ * @property string $nachname database column
+ * @property string $email database column
+ * @property string $validation_key database column
+ * @property string|null $auth_plugin database column
+ * @property int $locked database column
+ * @property string|null $lock_comment database column
+ * @property string|null $locked_by database column
+ * @property string $visible database column
+ * @property SimpleORMapCollection|CourseMember[] $course_memberships has_many CourseMember
+ * @property SimpleORMapCollection|InstituteMember[] $institute_memberships has_many InstituteMember
+ * @property SimpleORMapCollection|AdmissionApplication[] $admission_applications has_many AdmissionApplication
+ * @property SimpleORMapCollection|ArchivedCourseMember[] $archived_course_memberships has_many ArchivedCourseMember
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property SimpleORMapCollection|UserStudyCourse[] $studycourses has_many UserStudyCourse
+ * @property SimpleORMapCollection|Statusgruppen[] $contactgroups has_many Statusgruppen
+ * @property SimpleORMapCollection|ResourcePermission[] $resource_permissions has_many ResourcePermission
+ * @property SimpleORMapCollection|ResourceTemporaryPermission[] $resource_temporary_permissions has_many ResourceTemporaryPermission
+ * @property SimpleORMapCollection|ConsultationBlock[] $consultation_blocks has_many ConsultationBlock
+ * @property SimpleORMapCollection|ConsultationBooking[] $consultation_bookings has_many ConsultationBooking
+ * @property SimpleORMapCollection|ConsultationResponsibility[] $consultation_responsibilities has_many ConsultationResponsibility
+ * @property SimpleORMapCollection|Kategorie[] $profile_categories has_many Kategorie
+ * @property SimpleORMapCollection|MvvContact[] $mvv_assignments has_many MvvContact
+ * @property SimpleORMapCollection|CourseMemberNotification[] $course_notifications has_many CourseMemberNotification
+ * @property UserInfo $info has_one UserInfo
+ * @property UserOnline $online has_one UserOnline
+ * @property Courseware\Unit $courseware_units has_one Courseware\Unit
+ * @property SimpleORMapCollection|User[] $contacts has_and_belongs_to_many User
+ * @property SimpleORMapCollection|UserDomain[] $domains has_and_belongs_to_many UserDomain
+ * @property-read mixed $config additional field
+ * @property mixed $hobby additional field
+ * @property mixed $lebenslauf additional field
+ * @property mixed $publi additional field
+ * @property mixed $schwerp additional field
+ * @property mixed $home additional field
+ * @property mixed $privatnr additional field
+ * @property mixed $privatcell additional field
+ * @property mixed $privadr additional field
+ * @property mixed $score additional field
+ * @property mixed $geschlecht additional field
+ * @property mixed $mkdate additional field
+ * @property mixed $chdate additional field
+ * @property mixed $title_front additional field
+ * @property mixed $title_rear additional field
+ * @property mixed $preferred_language additional field
+ * @property mixed $smsforward_copy additional field
+ * @property mixed $smsforward_rec additional field
+ * @property mixed $email_forward additional field
+ * @property mixed $motto additional field
+ * @property mixed $lock_rule additional field
+ * @property mixed $oercampus_description additional field
  */
 class User extends AuthUserMd5 implements Range, PrivacyObject
 {

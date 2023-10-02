@@ -2,7 +2,7 @@
     <header>
         <h1>
             <a href="<?= $controller->link_for('course/feedback/view/' . $feedback->id) ?>">
-                <? if ($feedback->mode != 0 && ((!$feedback->isFeedbackable() && $feedback->results_visible == 1) || $admin_perm) && count($feedback->entries) > 0) : ?>
+                <? if ($feedback->mode != FeedbackElement::MODE_NO_RATING && ((!$feedback->isFeedbackable() && $feedback->results_visible == 1) || $admin_perm) && count($feedback->entries) > 0) : ?>
                 <?= Icon::create('star') ?>
                 <span class="mean"><?= $feedback->getMeanOfRating() ?></span>
                 <? endif; ?>

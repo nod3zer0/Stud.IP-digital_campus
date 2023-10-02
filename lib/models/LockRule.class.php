@@ -23,14 +23,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string lock_id database column
- * @property string id alias column for lock_id
- * @property string permission database column
- * @property string name database column
- * @property string description database column
- * @property string attributes database column
- * @property string object_type database column
- * @property string user_id database column
+ * @property string $id alias column for lock_id
+ * @property string $lock_id database column
+ * @property string $permission database column
+ * @property string $name database column
+ * @property string $description database column
+ * @property JSONArrayObject $attributes database column
+ * @property string $object_type database column
+ * @property string $user_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
  */
 
 class LockRule extends SimpleORMap
@@ -39,7 +41,7 @@ class LockRule extends SimpleORMap
     {
         $config['db_table'] = 'lock_rules';
 
-        $config['serialized_fields']['attributes'] = 'JSONArrayObject';
+        $config['serialized_fields']['attributes'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

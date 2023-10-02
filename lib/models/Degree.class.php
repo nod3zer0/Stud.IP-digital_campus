@@ -13,12 +13,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string abschluss_id database column
- * @property string id alias column for abschluss_id
- * @property string name database column
- * @property string beschreibung database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property string $id alias column for abschluss_id
+ * @property string $abschluss_id database column
+ * @property string $name database column
+ * @property string|null $name_kurz database column
+ * @property string|null $beschreibung database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property SimpleORMapCollection|StudyCourse[] $professions has_and_belongs_to_many StudyCourse
+ * @property-read mixed $count_user additional field
  */
 class Degree extends SimpleORMap
 {

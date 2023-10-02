@@ -10,17 +10,17 @@
  * @author André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
  * @author Jan-Hendrik Willms <tleilax+studip@gmail.com>
  *
- * @property string scm_id database column
- * @property string id alias column for scm_id
- * @property string range_id database column
- * @property string user_id database column
- * @property string tab_name database column
- * @property string content database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string position database column
- * @property User user belongs_to User
- * @property Course course belongs_to Course
+ * @property string $id alias column for scm_id
+ * @property string $scm_id database column
+ * @property string $range_id database column
+ * @property string $user_id database column
+ * @property I18NString $tab_name database column
+ * @property I18NString $content database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $position database column
+ * @property User $user belongs_to User
+ * @property Course $course belongs_to Course
  */
 
 class StudipScmEntry extends SimpleORMap

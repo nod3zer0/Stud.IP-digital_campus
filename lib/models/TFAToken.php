@@ -5,6 +5,11 @@
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 4.4
+ *
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property string $token database column
+ * @property int $mkdate database column
  */
 class TFAToken extends SimpleORMap
 {

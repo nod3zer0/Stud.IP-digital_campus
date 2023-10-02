@@ -41,7 +41,7 @@
         <?= _('Nicht verfügbar') ?>
     <? endif ?>
 
-    <? if ($booking->booking_type == '2'): ?>
+    <? if ($booking->booking_type == ResourceBooking::TYPE_LOCK): ?>
         <? if ($user_has_user_perms): ?>
             <h3><?= _('Gesperrt für:') ?></h3>
             <?= htmlReady($booking->getAssignedUserName()) ?>
@@ -50,7 +50,7 @@
         <?= $booking->booking_user
           ? htmlReady($booking->booking_user->getFullName())
           : _('unbekannt') ?>
-    <? elseif ($booking->booking_type == '1'): ?>
+    <? elseif ($booking->booking_type == ResourceBooking::TYPE_RESERVATION): ?>
         <? if ($user_has_user_perms): ?>
             <h3><?= _('Reserviert für:') ?></h3>
             <?= htmlReady($booking->getAssignedUserName()) ?>

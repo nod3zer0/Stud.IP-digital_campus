@@ -14,15 +14,16 @@
  * @category    Stud.IP
  * @since       4.1
  *
- * @property string datafield_id database column
- * @property string range_id database column
- * @property string content database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string sec_range_id database column
- * @property string name computed column read/write
- * @property string id computed column read/write
- * @property Datafield datafield belongs_to Datafield
+ * @property array $id alias for pk
+ * @property string $datafield_id database column
+ * @property string $range_id database column
+ * @property I18NString|null $content database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property string $sec_range_id database column
+ * @property string $lang database column
+ * @property DataField $datafield belongs_to DataField
+ * @property mixed $name additional field
  */
 
 class DatafieldEntryModelI18N extends DatafieldEntryModel

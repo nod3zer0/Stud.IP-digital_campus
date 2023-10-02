@@ -9,6 +9,20 @@
  *
  * @author      Elmar Ludwig
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ *
+ * @property int $id database column
+ * @property int $position database column
+ * @property string $course_id database column
+ * @property string $title database column
+ * @property string $description database column
+ * @property int $tool_id database column
+ * @property string $launch_url database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property JSONArrayObject|null $options database column
+ * @property SimpleORMapCollection|LtiGrade[] $grades has_many LtiGrade
+ * @property Course $course belongs_to Course
+ * @property LtiTool $tool belongs_to LtiTool
  */
 
 class LtiData extends SimpleORMap
@@ -20,7 +34,7 @@ class LtiData extends SimpleORMap
     {
         $config['db_table'] = 'lti_data';
 
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         $config['belongs_to']['course'] = [
             'class_name'  => Course::class,

@@ -13,9 +13,9 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string user_id       database column
- * @property string id            alias column for user_id
- * @property string last_lifesign computed column read/write
+ * @property string $id alias column for user_id
+ * @property string $user_id database column
+ * @property int $last_lifesign database column
  */
 class UserOnline extends SimpleORMap
 {

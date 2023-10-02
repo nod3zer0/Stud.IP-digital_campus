@@ -13,17 +13,26 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string id database column
- * @property string user_id database column: owner of folder
- * @property string parent_id database column: parent folder
- * @property string range_id database column: user-ID, course-ID, institute-ID etc.
- * @property string range_type database column: 'course', 'institute', 'user', ...
- * @property string folder_type database column
- * @property string name database column: folder name
- * @property string data_content database column
- * @property string description database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property string $id database column
+ * @property string $user_id database column
+ * @property string $parent_id database column
+ * @property string $range_id database column
+ * @property string $range_type database column
+ * @property string $folder_type database column
+ * @property string $name database column
+ * @property JSONArrayObject $data_content database column
+ * @property string $description database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|FileRef[] $file_refs has_many FileRef
+ * @property SimpleORMapCollection|Folder[] $subfolders has_many Folder
+ * @property User $owner belongs_to User
+ * @property Folder $parentfolder belongs_to Folder
+ * @property Course $course belongs_to Course
+ * @property Institute $institute belongs_to Institute
+ * @property User $user belongs_to User
+ * @property Message $message belongs_to Message
+ * @property-read mixed $is_empty additional field
  */
 class Folder extends SimpleORMap implements FeedbackRange
 {
@@ -72,7 +81,7 @@ class Folder extends SimpleORMap implements FeedbackRange
             'class_name'  => Message::class,
             'foreign_key' => 'range_id',
         ];
-        $config['serialized_fields']['data_content'] = 'JSONArrayObject';
+        $config['serialized_fields']['data_content'] = JSONArrayObject::class;
 
         $config['registered_callbacks']['before_store'][] = 'cbMakeUniqueName';
         $config['registered_callbacks']['after_delete'][] = 'cbRemoveFeedbackElements';

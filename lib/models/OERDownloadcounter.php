@@ -1,4 +1,14 @@
 <?php
+/**
+ * @license GPL2 or any later version
+ *
+ * @property string $id alias column for counter_id
+ * @property string $counter_id database column
+ * @property string $material_id database column
+ * @property float|null $longitude database column
+ * @property float|null $latitude database column
+ * @property int|null $mkdate database column
+ */
 class OERDownloadcounter extends SimpleORMap
 {
     protected static function configure($config = [])

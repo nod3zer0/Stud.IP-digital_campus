@@ -25,7 +25,7 @@
             <? endif; ?>
         </nav>
     </header>
-    <? if ($entry->feedback->mode != 0) : ?>
+    <? if ($entry->feedback->mode != FeedbackElement::MODE_NO_RATING) : ?>
         <div class="rating">
             <span title="<?= $entry->rating ?>">
                 <? for ($i=0; $i < $entry->feedback->getMaxRating(); $i++) : ?>

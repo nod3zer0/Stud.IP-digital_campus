@@ -11,19 +11,18 @@
  * @author    mlunzena
  * @copyright (c) Authors
  *
- * @property string message_id database column
- * @property string id alias column for message_id
- * @property string chat_id database column
- * @property string autor_id database column
- * @property string subject database column
- * @property string message database column
- * @property string mkdate database column
- * @property string readed database column
- * @property string priority database column
- * @property SimpleORMapCollection receivers has_many MessageUser
- * @property SimpleORMapCollection attachment_folder has_one Folder
- * @property User author has_one User
- * @property MessageUser originator has_one MessageUser
+ * @property string $id alias column for message_id
+ * @property string $message_id database column
+ * @property string $autor_id database column
+ * @property string $subject database column
+ * @property string $message database column
+ * @property int $show_adressees database column
+ * @property int $mkdate database column
+ * @property string $priority database column
+ * @property SimpleORMapCollection|MessageUser[] $receivers has_many MessageUser
+ * @property User $author belongs_to User
+ * @property MessageUser $originator has_one MessageUser
+ * @property Folder $attachment_folder has_one Folder
  */
 
 class Message extends SimpleORMap implements PrivacyObject

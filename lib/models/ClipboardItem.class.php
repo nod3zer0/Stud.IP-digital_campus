@@ -1,9 +1,9 @@
 <?php
-
-
 /**
  * ClipboardItem.class.php - model class for clipboard items
  * (Merkzettel-Einträge)
+ *
+ * The ClipboardItem class holds single items of a clipboard.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -15,21 +15,14 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
- */
-
-
-/**
- * The ClipboardItem class holds single items of a clipboard.
  *
- * @property string id database column
- * @property string clipboard_id database column
- * @property string range_id database column: The ID of the Stud.IP object
- *     which is stored in this clipboard item.
- * @property string range_type database column: The StudipItem class
- *     corresponding to the range-ID specified in the range_id column.
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMapCollection clipboard belongs_to Clipboard
+ * @property int $id database column
+ * @property int $clipboard_id database column
+ * @property string $range_id database column
+ * @property string $range_type database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Clipboard $clipboard belongs_to Clipboard
  */
 class ClipboardItem extends SimpleORMap
 {
@@ -48,7 +41,7 @@ class ClipboardItem extends SimpleORMap
 
 
     /**
-     * @returns A string representation of this clipboard item.
+     * @returns string representation of this clipboard item.
      */
     public function __toString()
     {

@@ -11,6 +11,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property array $id alias for pk
+ * @property string $mvvfile_id database column
+ * @property string $range_id database column
+ * @property-read mixed $range_type additional field
+ * @property int|null $position database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property MvvFile $mvv_file belongs_to MvvFile
  */
 
 class MvvFileRange extends ModuleManagementModel

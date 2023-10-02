@@ -4,13 +4,12 @@
     <? if ($entries_count == 0 ) {
         print(_('Bisher wurde kein Feedback gegeben.'));
     } ?>
-    <? if ($feedback->mode == 0) {
+    <? if ($feedback->mode == FeedbackElement::MODE_NO_RATING) {
         printf(_('Insgesamt wurde %s mal Feedback gegeben.'), $entries_count);
     } ?>
-    <? if ($entries_count >= 1 && $feedback->mode != 0) : ?>
+    <? if ($entries_count >= 1 && $feedback->mode != FeedbackElement::MODE_NO_RATING) : ?>
         <?
-            $rating_scale = 5;
-            if ($feedback->mode == 2) {$rating_scale = 10;}
+            $rating_scale = $feedback->mode == FeedbackElement::MODE_5STAR_RATING ? 5 : 10;
         ?>
         <div class="ratings">
             <table class="default sortable-table feedback" data-sortlist="[[1, 1]]">

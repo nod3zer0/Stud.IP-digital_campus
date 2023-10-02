@@ -15,13 +15,13 @@
  * @package     resources
  * @since       4.5
  *
- * @property string id database column
- * @property string building_id database column
- * @property string name database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMapCollection building belongs_to Building
- * @property SimpleORMapCollection parts has_many SeparableRoomPart
+ * @property int $id database column
+ * @property string $building_id database column
+ * @property string $name database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|SeparableRoomPart[] $parts has_many SeparableRoomPart
+ * @property Building $building belongs_to Building
  */
 
 class SeparableRoom extends SimpleORMap

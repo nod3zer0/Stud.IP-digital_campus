@@ -13,25 +13,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string datafield_id database column
- * @property string id alias column for datafield_id
- * @property string name database column
- * @property string object_type database column
- * @property string object_class database column
- * @property string edit_perms database column
- * @property string view_perms database column
- * @property string institut_id database column
- * @property string system database column
- * @property string priority database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string type database column
- * @property string typeparam database column
- * @property string is_required database column
- * @property string default_value database column
- * @property string is_userfilter database column
- * @property string description database column
- * @property SimpleORMapCollection entries has_many DatafieldEntryModel
+ * @property string $id alias column for datafield_id
+ * @property string $datafield_id database column
+ * @property I18NString|null $name database column
+ * @property string|null $object_type database column
+ * @property string|null $object_class database column
+ * @property string|null $edit_perms database column
+ * @property string|null $view_perms database column
+ * @property string|null $institut_id database column
+ * @property int $priority database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property string $type database column
+ * @property string $typeparam database column
+ * @property int $is_required database column
+ * @property string|null $default_value database column
+ * @property int $is_userfilter database column
+ * @property string $description database column
+ * @property int $system database column
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $entries has_many DatafieldEntryModel
+ * @property SimpleORMapCollection|User_Visibility_Settings[] $visibility_settings has_many User_Visibility_Settings
+ * @property mixed $institution additional field
  */
 class DataField extends SimpleORMap implements PrivacyObject
 {

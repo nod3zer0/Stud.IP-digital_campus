@@ -14,27 +14,27 @@ use User;
  *
  * @since   Stud.IP 5.0
  *
- * @property int                              $id              database column
- * @property int                              $container_id    database column
- * @property string                           $owner_id        database column
- * @property string                           $editor_id       database column
- * @property string                           $edit_blocker_id database column
- * @property int                              $position        database column
- * @property string                           $block_type      database column
- * @property int                              $visible         database column
- * @property string                           $payload         database column
- * @property int                              $mkdate          database column
- * @property int                              $chdate          database column
- * @property \Courseware\BlockTypes\BlockType $type            computed column read/write
- * @property string                           $files           computed column
- * @property \SimpleORMapCollection           $data_fields     has_many Courseware\UserDataField
- * @property \SimpleORMapCollection           $comments        has_many Courseware\BlockComment
- * @property \SimpleORMapCollection           $block_feedback  has_many Courseware\BlockFeedback
- * @property \SimpleORMapCollection           $progresses      has_many Courseware\UserProgress
- * @property \User                            $owner           belongs_to User
- * @property \User                            $editor          belongs_to User
- * @property \User                            $edit_blocker    belongs_to User
- * @property \Courseware\Container            $container       belongs_to Courseware\Container
+ * @property int $id database column
+ * @property int $container_id database column
+ * @property string $owner_id database column
+ * @property string $editor_id database column
+ * @property string|null $edit_blocker_id database column
+ * @property int $position database column
+ * @property string|null $block_type database column
+ * @property int $visible database column
+ * @property string $payload database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \SimpleORMapCollection|UserDataField[] $data_fields has_many UserDataField
+ * @property \SimpleORMapCollection|BlockComment[] $comments has_many BlockComment
+ * @property \SimpleORMapCollection|BlockFeedback[] $block_feedback has_many BlockFeedback
+ * @property \SimpleORMapCollection|UserProgress[] $progresses has_many UserProgress
+ * @property \User $owner belongs_to \User
+ * @property \User $editor belongs_to \User
+ * @property \User|null $edit_blocker belongs_to \User
+ * @property Container $container belongs_to Container
+ * @property mixed $type additional field
+ * @property-read mixed $files additional field
  */
 class Block extends \SimpleORMap implements \PrivacyObject
 {

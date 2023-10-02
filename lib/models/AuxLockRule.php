@@ -14,15 +14,16 @@
  * @category    Stud.IP
  * @since       3.0
  *
- * @property string lock_id database column
- * @property string id alias column for lock_id
- * @property string name database column
- * @property string description database column
- * @property JSONArrayObject attributes database column
- * @property JSONArrayObject sorting database column
- * @property array datafields computed column
- * @property string order computed column
- * @property Course[]|SimpleORMapCollection courses has_and_belongs_to_many Courses
+ * @property string $id alias column for lock_id
+ * @property string $lock_id database column
+ * @property I18NString $name database column
+ * @property I18NString $description database column
+ * @property JSONArrayObject $attributes database column
+ * @property JSONArrayObject $sorting database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property SimpleORMapCollection|Course[] $courses has_many Course
+ * @property mixed $datafields additional field
  */
 class AuxLockRule extends SimpleORMap
 {

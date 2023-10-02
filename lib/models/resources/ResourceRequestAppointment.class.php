@@ -4,6 +4,9 @@
  * ResourceRequestAppointment.class.php - Contains a model class for
  * the resource_request_appointments table.
  *
+ * ResourceRequestAppointment is a model class to connect
+ * resource requests to CourseDate objects.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,21 +18,14 @@
  * @category    Stud.IP
  * @package     resources
  * @since       4.5
- */
-
-
-/**
- * ResourceRequestAppointment is a model class to connect
- * resource requests to CourseDate objects.
  *
- * @property string id database column
- * @property string request_id database column
- * @property string appointment_id database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property ResourceRequest resource_request belongs_to ResourceRequest
- * @property CourseDate appointment belongs_to CourseDate
- *
+ * @property int $id database column
+ * @property string $request_id database column
+ * @property string $appointment_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property ResourceRequest $resource_request belongs_to ResourceRequest
+ * @property CourseDate $appointment belongs_to CourseDate
  */
 class ResourceRequestAppointment extends SimpleORMap
 {

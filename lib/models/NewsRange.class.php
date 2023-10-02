@@ -12,14 +12,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string news_id database column
- * @property string range_id database column
- * @property string type computed column
- * @property string name computed column
- * @property string id computed column read/write
- * @property User user belongs_to User
- * @property Course course belongs_to Course
- * @property Institute institute belongs_to Institute
+ * @property array $id alias for pk
+ * @property string $news_id database column
+ * @property string $range_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property User $user belongs_to User
+ * @property Course $course belongs_to Course
+ * @property Institute $institute belongs_to Institute
+ * @property mixed $type additional field
+ * @property mixed $name additional field
  */
 class NewsRange extends SimpleORMap
 {

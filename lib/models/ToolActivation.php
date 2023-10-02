@@ -13,13 +13,16 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string range_id database column
- * @property string range_type database column
- * @property string plugin_id database column
- * @property string position database column
- * @property array metadata database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property array $id alias for pk
+ * @property string $range_id database column
+ * @property string $range_type database column
+ * @property int $plugin_id database column
+ * @property int $position database column
+ * @property JSONArrayObject|null $metadata database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Institute $institute belongs_to Institute
+ * @property Course $course belongs_to Course
  */
 class ToolActivation extends SimpleORMap
 {
@@ -36,7 +39,7 @@ class ToolActivation extends SimpleORMap
             'foreign_key' => 'range_id',
         ];
 
-        $config['serialized_fields']['metadata'] = 'JSONArrayObject';
+        $config['serialized_fields']['metadata'] = JSONArrayObject::class;
 
         $config['registered_callbacks']['before_create'][] = 'setMaxPosition';
 

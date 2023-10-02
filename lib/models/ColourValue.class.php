@@ -4,6 +4,9 @@
  * ColorValue.class.php
  * model class for table color_values
  *
+ * Objects of this class holds a colour's name (its purpose)
+ * and the value for the colour.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -14,28 +17,13 @@
  * @since       4.5
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- */
-
-
-/**
- * Objects of this class holds a colour's name (its purpose)
- * and the value for the colour.
  *
- * @property string colour_id database column: An unique identifier for the colour.
- *     Recommendation for identifier naming for core system colours:
- *     <component>.<sub-component (optional)>.<colour name>.<colour variant>
- *     Example:
- *     Resources.BookingPlan.Reservation.Bg for the background colour
- *     of a reservation in a resource's booking plan.
- *
- *     Plugins should use the plugin name as component.
- *
- * @property string value database column:
- *     The colour value in the hexadecimal format RRGGBBAA
- *     (see CSS Color Module Level 4).
- * @property string description database column
- * @property string mkdate database column
- * @property string chdate database column
+ * @property string $id alias column for colour_id
+ * @property string $colour_id database column
+ * @property I18NString $description database column
+ * @property string $value database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class ColourValue extends SimpleORMap
 {

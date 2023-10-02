@@ -13,14 +13,26 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string range_id database column
- * @property string user_id database column
- * @property string gruppe database column
- * @property string notification database column
- * @property string edit_about database column
- * @property User deputy belongs_to User
- * @property Course course belongs_to Course
- * @property User boss has_one User
+ * @property array $id alias for pk
+ * @property string $range_id database column
+ * @property string $user_id database column
+ * @property int $gruppe database column
+ * @property int $notification database column
+ * @property int $edit_about database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property User $deputy belongs_to User
+ * @property Course $course belongs_to Course
+ * @property User $boss belongs_to User
+ * @property mixed $vorname additional field
+ * @property mixed $nachname additional field
+ * @property mixed $username additional field
+ * @property mixed $perms additional field
+ * @property mixed $boss_vorname additional field
+ * @property mixed $boss_nachname additional field
+ * @property mixed $boss_username additional field
+ * @property mixed $course_name additional field
+ * @property mixed $course_number additional field
  */
 class Deputy extends SimpleORMap
 {

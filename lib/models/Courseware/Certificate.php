@@ -12,10 +12,13 @@ use \User, \Course;
  *
  * @since   Stud.IP 5.3
  *
- * @property string     $id             database column
- * @property string     $user_id        database column
- * @property string     $course_id      database column
- * @property int        $mkdate         database column
+ * @property string $id database column
+ * @property string $user_id database column
+ * @property string $course_id database column
+ * @property int $unit_id database column
+ * @property int $mkdate database column
+ * @property \User $user belongs_to \User
+ * @property \Course $course belongs_to \Course
  */
 class Certificate extends \SimpleORMap
 {

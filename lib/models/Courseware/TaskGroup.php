@@ -12,18 +12,18 @@ use User;
  *
  * @since   Stud.IP 5.1
  *
- * @property int                           $id                    database column
- * @property string                        $seminar_id            database column
- * @property string                        $lecturer_id           database column
- * @property int                           $structural_element_id database column
- * @property int                           $solver_may_add_blocks database column
- * @property string                        $title                 database column
- * @property int                           $mkdate                database column
- * @property int                           $chdate                database column
- * @property \User                         $lecturer              belongs_to User
- * @property \Course                       $course                belongs_to Course
- * @property \Courseware\StructuralElement $structural_element    belongs_to Courseware\StructuralElement
- * @property \SimpleORMapCollection        $tasks                 has_many Courseware\Task
+ * @property int $id database column
+ * @property string $seminar_id database column
+ * @property string $lecturer_id database column
+ * @property int $target_id database column
+ * @property int $task_template_id database column
+ * @property int $solver_may_add_blocks database column
+ * @property string $title database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \SimpleORMapCollection|Task[] $tasks has_many Task
+ * @property \User $lecturer belongs_to \User
+ * @property \Course $course belongs_to \Course
  */
 class TaskGroup extends \SimpleORMap implements \PrivacyObject
 {

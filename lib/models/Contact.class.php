@@ -5,15 +5,14 @@
  *
  * @author      <mlunzena@uos.de>
  * @license GPL 2 or later
- * @property string contact_id database column
- * @property string id alias column for contact_id
- * @property string owner_id database column
- * @property string user_id database column
- * @property string buddy database column
- * @property string calpermission database column
- * @property SimpleORMapCollection group_assignments has_many StatusgruppeUser
- * @property User owner belongs_to User
- * @property User friend belongs_to User
+ *
+ * @property array $id alias for pk
+ * @property string $owner_id database column
+ * @property string $user_id database column
+ * @property int|null $mkdate database column
+ * @property SimpleORMapCollection|StatusgruppeUser[] $group_assignments has_many StatusgruppeUser
+ * @property User $owner belongs_to User
+ * @property User $friend belongs_to User
  */
 class Contact extends SimpleORMap
 {

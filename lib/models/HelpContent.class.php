@@ -26,22 +26,22 @@
  * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
+ * @property string $id alias column for content_id
+ * @property string $global_content_id database column
  * @property string $content_id database column
  * @property string $language database column
- * @property string $label database column
- * @property string $icon database column
  * @property string $content database column
- * @property string $comment database column
  * @property string $route database column
  * @property string $studip_version database column
- * @property string $position database column
- * @property string $custom database column
- * @property string $visible database column
+ * @property int $position database column
+ * @property int $custom database column
+ * @property int $visible database column
  * @property string $author_email database column
  * @property string $installation_id database column
- * @property string $mkdate database column
- * @property string $chdate database column
- * @property User|null $author has_one author
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property string|null $comment database column
+ * @property User $author has_one User
  */
 class HelpContent extends SimpleORMap
 {

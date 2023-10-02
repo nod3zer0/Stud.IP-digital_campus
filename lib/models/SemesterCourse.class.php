@@ -16,15 +16,13 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string semester_id The ID of a semester.
- * @property string course_id The ID of a course.
- * @property string mkdate The database entry's creation date.
- * @property string chdate The database entry's last modification date.
- *
- * @property Semester $semester
- * @property Course $course
- *
- * The combination of semester_id and course_id form the primary key.
+ * @property array $id alias for pk
+ * @property string $semester_id database column
+ * @property string $course_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Semester $semester belongs_to Semester
+ * @property Course $course belongs_to Course
  */
 class SemesterCourse extends SimpleORMap
 {

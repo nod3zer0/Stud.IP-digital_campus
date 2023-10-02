@@ -9,6 +9,15 @@
  *
  * @author      Elmar Ludwig
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ *
+ * @property array $id alias for pk
+ * @property int $link_id database column
+ * @property string $user_id database column
+ * @property float $score database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property LtiData $link belongs_to LtiData
+ * @property User $user belongs_to User
  */
 
 class LtiGrade extends SimpleORMap

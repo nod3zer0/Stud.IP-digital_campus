@@ -10,12 +10,13 @@ namespace Courseware;
 *
 * @since   Stud.IP 5.1
 *
-* @property int                            $id                     database column
-* @property string                         $name                   database column
-* @property string                         $purpose                database column
-* @property string                         $structure              database column
-* @property int                            $mkdate                 database column
-* @property int                            $chdate                 database column
+ *
+ * @property int $id database column
+ * @property string $name database column
+ * @property string|null $purpose database column
+ * @property string $structure database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
 */
 class Template extends \SimpleORMap
 {

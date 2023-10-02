@@ -13,6 +13,15 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.4
+ *
+ * @property array $id alias for pk
+ * @property string $studiengang_id database column
+ * @property string $type database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Studiengang $studycourse belongs_to Studiengang
  */
 
 class StudycourseType extends ModuleManagementModel

@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * @license GPL2 or any later version
+ *
+ * @property string $id alias column for answer_id
+ * @property string $answer_id database column
+ * @property string $question_id database column
+ * @property string|null $user_id database column
+ * @property JSONArrayObject $answerdata database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property QuestionnaireQuestion $question belongs_to QuestionnaireQuestion
+ * @property User|null $user belongs_to User
+ */
 class QuestionnaireAnswer extends SimpleORMap implements PrivacyObject
 {
     protected static function configure($config = [])
@@ -13,7 +26,7 @@ class QuestionnaireAnswer extends SimpleORMap implements PrivacyObject
             'class_name' => User::class,
             'foreign_key' => 'user_id'
         ];
-        $config['serialized_fields']['answerdata'] = "JSONArrayObject";
+        $config['serialized_fields']['answerdata'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

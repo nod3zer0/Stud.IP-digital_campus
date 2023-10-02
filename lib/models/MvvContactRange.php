@@ -12,24 +12,22 @@
  * @category    Stud.IP
  * @since       4.5
  *
- * @property string $id
- * @property string $contact_range_id
- * @property string $contact_id
- * @property string $range_id
- * @property string $range_type
- * @property string $type
- * @property string $category
- * @property int|null $position
- * @property string $author_id
- * @property string $editor_id
- * @property int $mkdate
- * @property int $chdate
- *
- * @property MvvContact $contact
- *
- * @property int $count_relations
- * @property string $name
- * @property string $contact_status
+ * @property string $id alias column for contact_range_id
+ * @property string $contact_range_id database column
+ * @property string $contact_id database column
+ * @property string $range_id database column
+ * @property string $range_type database column
+ * @property string $type database column
+ * @property string $category database column
+ * @property int|null $position database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property MvvContact $contact belongs_to MvvContact
+ * @property-read mixed $count_relations additional field
+ * @property-read mixed $name additional field
+ * @property-read mixed $contact_status additional field
  */
 
 class MvvContactRange extends ModuleManagementModel

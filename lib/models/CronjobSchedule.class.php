@@ -27,28 +27,28 @@
  * @category    Stud.IP
  * @since       2.4
  *
- * @property string schedule_id database column
- * @property string id alias column for schedule_id
- * @property string task_id database column
- * @property string active database column
- * @property string title database column
- * @property string description database column
- * @property string parameters database column
- * @property string priority database column
- * @property string type database column
- * @property string minute database column
- * @property string hour database column
- * @property string day database column
- * @property string month database column
- * @property string day_of_week database column
- * @property string next_execution database column
- * @property string last_execution database column
- * @property string last_result database column
- * @property string execution_count database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMapCollection logs has_many CronjobLog
- * @property CronjobTask task belongs_to CronjobTask
+ * @property string $id alias column for schedule_id
+ * @property string $schedule_id database column
+ * @property string $task_id database column
+ * @property int $active database column
+ * @property string|null $title database column
+ * @property string|null $description database column
+ * @property string|null $parameters database column
+ * @property string $priority database column
+ * @property string $type database column
+ * @property int|null $minute database column
+ * @property int|null $hour database column
+ * @property int|null $day database column
+ * @property int|null $month database column
+ * @property int|null $day_of_week database column
+ * @property int $next_execution database column
+ * @property int|null $last_execution database column
+ * @property string|null $last_result database column
+ * @property int $execution_count database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|CronjobLog[] $logs has_many CronjobLog
+ * @property CronjobTask $task belongs_to CronjobTask
  */
 
 class CronjobSchedule extends SimpleORMap

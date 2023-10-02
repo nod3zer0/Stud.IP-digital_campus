@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * @license GPL2 or any later version
+ *
+ * @property array $id alias for pk
+ * @property string $material_id database column
+ * @property string $user_id database column
+ * @property int $external_contact database column
+ * @property int $position database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property ExternalUser $oeruser belongs_to ExternalUser
+ * @property OERMaterial $material belongs_to OERMaterial
+ */
 class OERMaterialUser extends SimpleORMap
 {
     protected static function configure($config = [])

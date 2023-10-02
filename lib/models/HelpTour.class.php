@@ -29,21 +29,24 @@ require_once 'lib/object.inc.php';
  * @author   Arne Schröder <schroeder@data-quest>
  * @access   public
  *
- * @property string $tour_id database column
  * @property string $id alias column for tour_id
+ * @property string $global_tour_id database column
+ * @property string $tour_id database column
  * @property string $name database column
  * @property string $description database column
  * @property string $type database column
  * @property string $roles database column
- * @property string $version database column
+ * @property int $version database column
  * @property string $language database column
  * @property string $studip_version database column
  * @property string $installation_id database column
- * @property string $mkdate database column
- * @property SimpleORMapCollection $steps has_many HelpTourStep
- * @property SimpleORMapCollection $audiences has_many HelpTourAudience
+ * @property string $author_email database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|HelpTourStep[] $steps has_many HelpTourStep
+ * @property SimpleORMapCollection|HelpTourAudience[] $audiences has_many HelpTourAudience
  * @property HelpTourSettings $settings has_one HelpTourSettings
- * @property User|null $author has_one author
+ * @property User $author has_one User
  */
 class HelpTour extends SimpleORMap
 {

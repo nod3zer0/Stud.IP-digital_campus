@@ -30,11 +30,13 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string tour_id database column
- * @property string user_id database column
- * @property string step_nr database column
- * @property string completed database column
- * @property string id computed column read/write
+ * @property array $id alias for pk
+ * @property string $tour_id database column
+ * @property string $user_id database column
+ * @property int $step_nr database column
+ * @property int $completed database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
  */
 class HelpTourUser extends SimpleORMap implements PrivacyObject
 {

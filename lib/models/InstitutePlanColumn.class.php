@@ -12,12 +12,14 @@
  * @license GPL2 or any version
  * @since   Stud.IP 4.5
  * *
- * @property string range_id database column
- * @property string column database column
- * @property string name database column
- * @property string visible database column
- * @property string mkdate database column
- * @property string chdate database column
+ *
+ * @property array $id alias for pk
+ * @property string $range_id database column
+ * @property int $column database column
+ * @property string|null $name database column
+ * @property int $visible database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class InstitutePlanColumn extends SimpleORMap
 {

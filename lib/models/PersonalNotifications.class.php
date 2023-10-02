@@ -29,13 +29,15 @@
  * @category    Stud.IP
  * @since       2.4
  *
- * @property string personal_notification_id database column
- * @property string id alias column for personal_notification_id
- * @property string url database column
- * @property string text database column
- * @property string avatar database column
- * @property string html_id database column
- * @property string mkdate database column
+ * @property int $id alias column for personal_notification_id
+ * @property int $personal_notification_id database column
+ * @property string $url database column
+ * @property string $text database column
+ * @property string $avatar database column
+ * @property int $dialog database column
+ * @property string $html_id database column
+ * @property int $mkdate database column
+ * @property mixed $more_unseen additional field
  */
 class PersonalNotifications extends SimpleORMap
 {

@@ -1458,7 +1458,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         }
 
         $this->notification_settings = 'creator';
-        if ($this->request->reply_recipients == 'lecturer') {
+        if ($this->request->reply_recipients === ResourceRequest::REPLY_LECTURER) {
             $this->notification_settings = 'creator_and_lecturers';
         }
         $this->reply_comment = $this->request->reply_comment;

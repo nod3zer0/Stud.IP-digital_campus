@@ -472,7 +472,7 @@ class SingleDate
     {
         $message = '';
 
-        if ($booking->booking_type == '2') {
+        if ($booking->booking_type == ResourceBooking::TYPE_LOCK) {
             $message .= sprintf(
                 _('Vom %1$s, %2$s Uhr bis zum %3$s, %4$s Uhr (Sperrzeit)') . "\n",
                 date("d.m.Y", $booking->begin),

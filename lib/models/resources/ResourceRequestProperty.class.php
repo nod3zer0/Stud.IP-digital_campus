@@ -16,15 +16,17 @@
  * @package     resources
  * @since       4.1
  *
- * @property string id database column
- * @property string request_id database column
- * @property string property_id database column
- * @property string state database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property ResourceRequest request belongs_to ResourceRequest
- * @property ResourcePropertyDefinition definition belongs_to
- *     ResourcePropertyDefinition
+ * @property array $id alias for pk
+ * @property string $request_id database column
+ * @property string $property_id database column
+ * @property string|null $state database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property ResourcePropertyDefinition $definition belongs_to ResourcePropertyDefinition
+ * @property ResourceRequest $request belongs_to ResourceRequest
+ * @property mixed $name additional field
+ * @property mixed $display_name additional field
+ * @property mixed $type additional field
  */
 class ResourceRequestProperty extends SimpleORMap
 {

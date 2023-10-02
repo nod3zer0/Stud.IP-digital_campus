@@ -149,7 +149,11 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $request_rights_c = 0;
         $booking_rights_c = 0;
         $admin_rights_c = 0;
-        $this->booking_types = [0, 1, 2];
+        $this->booking_types = [
+            ResourceBooking::TYPE_NORMAL,
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK,
+        ];
 
         foreach ($rooms as $room) {
             if ($room->userHasRequestRights($current_user)) {
@@ -183,7 +187,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $all_rooms_admin = ($room_c == $admin_rights_c);
         if ($all_rooms_admin) {
             //Display planned bookings, too:
-            $this->booking_types[] = 3;
+            $this->booking_types[] = ResourceBooking::TYPE_PLANNED;
         }
         if (!$this->all_rooms_booking_rights && $this->display_all_requests) {
             throw new AccessDeniedException(
@@ -447,7 +451,11 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $requestable_rooms_c = 0;
         $booking_rights_c = 0;
         $admin_rights_c = 0;
-        $this->booking_types = [0, 1, 2];
+        $this->booking_types = [
+            ResourceBooking::TYPE_NORMAL,
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK,
+        ];
 
         foreach ($rooms as $room) {
             if ($room->userHasBookingRights($current_user)) {
@@ -471,7 +479,7 @@ class RoomManagement_PlanningController extends AuthenticatedController
         $all_rooms_admin = ($room_c == $admin_rights_c);
         if ($all_rooms_admin) {
             //Display planned bookings, too:
-            $this->booking_types[] = 3;
+            $this->booking_types[] = ResourceBooking::TYPE_PLANNED;
         }
 
         if (!$all_rooms_booking_rights && $this->display_all_requests) {

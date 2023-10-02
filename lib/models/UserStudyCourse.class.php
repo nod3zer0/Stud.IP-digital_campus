@@ -13,16 +13,19 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string user_id database column
- * @property string studiengang_id database column
- * @property string semester database column
- * @property string abschluss_id database column
- * @property string degree_name computed column read/write
- * @property string studycourse_name computed column read/write
- * @property string id computed column read/write
- * @property User user belongs_to User
- * @property Degree degree belongs_to Degree
- * @property StudyCourse studycourse belongs_to StudyCourse
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property string $fach_id database column
+ * @property int|null $semester database column
+ * @property string $abschluss_id database column
+ * @property string|null $version_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property User $user belongs_to User
+ * @property Abschluss $degree belongs_to Abschluss
+ * @property Fach $studycourse belongs_to Fach
+ * @property mixed $degree_name additional field
+ * @property mixed $studycourse_name additional field
  */
 class UserStudyCourse extends SimpleORMap implements PrivacyObject
 {

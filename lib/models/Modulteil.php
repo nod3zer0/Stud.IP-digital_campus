@@ -12,6 +12,38 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for modulteil_id
+ * @property string $modulteil_id database column
+ * @property string $modul_id database column
+ * @property int $position database column
+ * @property string|null $flexnow_modul database column
+ * @property string|null $nummer database column
+ * @property string|null $num_bezeichnung database column
+ * @property string|null $lernlehrform database column
+ * @property string|null $semester database column
+ * @property string|null $kapazitaet database column
+ * @property float|null $kp database column
+ * @property int|null $sws database column
+ * @property int|null $wl_praesenz database column
+ * @property int|null $wl_bereitung database column
+ * @property int|null $wl_selbst database column
+ * @property int|null $wl_pruef database column
+ * @property int|null $anteil_note database column
+ * @property int $ausgleichbar database column
+ * @property int $pflicht database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|ModulteilStgteilabschnitt[] $abschnitt_assignments has_many ModulteilStgteilabschnitt
+ * @property SimpleORMapCollection|LvgruppeModulteil[] $lvgruppen_assignments has_many LvgruppeModulteil
+ * @property SimpleORMapCollection|ModulteilLanguage[] $languages has_many ModulteilLanguage
+ * @property Modul $modul belongs_to Modul
+ * @property ModulteilDeskriptor $deskriptoren has_one ModulteilDeskriptor
+ * @property SimpleORMapCollection|StgteilAbschnitt[] $abschnitte has_and_belongs_to_many StgteilAbschnitt
+ * @property SimpleORMapCollection|Lvgruppe[] $lvgruppen has_and_belongs_to_many Lvgruppe
+ * @property mixed $count_lvgruppen additional field
  */
 
 class Modulteil extends ModuleManagementModelTreeItem

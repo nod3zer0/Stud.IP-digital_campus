@@ -5,6 +5,16 @@
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 3.4
+ *
+ * @property string $id alias column for asset_id
+ * @property string $asset_id database column
+ * @property int $plugin_id database column
+ * @property string|null $type database column
+ * @property string $filename database column
+ * @property string $storagename database column
+ * @property int|null $size database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class PluginAsset extends SimpleORMap
 {

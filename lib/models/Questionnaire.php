@@ -1,23 +1,23 @@
 <?php
 /**
- * @property string $id
- * @property string $questionnaire_id
- * @property string $title
- * @property string $description
- * @property string $user_id
- * @property int|null $startdate
- * @property int|null $stopdate
- * @property bool $visible
- * @property bool $anonymous
- * @property string $resultvisibility
- * @property bool $editanswers
- * @property bool $copyable
- * @property string $chdate
- * @property string $mkdate
  *
- * @property QuestionnaireQuestion[]|SimpleORMapCollection $questions
- * @property QuestionnaireAssignment[]|SimpleORMapCollection $assignments
- * @property QuestionnaireAnonymousAnswer[]|SimpleORMapCollection $anonymousanswers
+ * @property string $id alias column for questionnaire_id
+ * @property string $questionnaire_id database column
+ * @property string $title database column
+ * @property string|null $description database column
+ * @property string $user_id database column
+ * @property int|null $startdate database column
+ * @property int|null $stopdate database column
+ * @property int $visible database column
+ * @property int $anonymous database column
+ * @property string $resultvisibility database column
+ * @property int $editanswers database column
+ * @property int $copyable database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ * @property SimpleORMapCollection|QuestionnaireQuestion[] $questions has_many QuestionnaireQuestion
+ * @property SimpleORMapCollection|QuestionnaireAssignment[] $assignments has_many QuestionnaireAssignment
+ * @property SimpleORMapCollection|QuestionnaireAnonymousAnswer[] $anonymousanswers has_many QuestionnaireAnonymousAnswer
  */
 class Questionnaire extends SimpleORMap implements PrivacyObject
 {

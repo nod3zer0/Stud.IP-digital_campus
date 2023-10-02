@@ -24,18 +24,20 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string api_key database column
- * @property string method database column
- * @property string ip_range database column
- * @property string type database column
- * @property string id database column
+ * @property string $api_key database column
+ * @property string $method database column
+ * @property CSVArrayObject $ip_range database column
+ * @property string $type database column
+ * @property int $id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
  */
 class WebserviceAccessRule extends SimpleORMap
 {
     protected static function configure($config = [])
     {
         $config['db_table'] = 'webservice_access_rules';
-        $config['serialized_fields']['ip_range'] = 'CSVArrayObject';
+        $config['serialized_fields']['ip_range'] = CSVArrayObject::class;
         parent::configure($config);
     }
 

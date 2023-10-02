@@ -1,5 +1,22 @@
 <?php
 
+/**
+ * @license GPL2 or any later version
+ *
+ * @property string $id alias column for host_id
+ * @property string $host_id database column
+ * @property string $sorm_class database column
+ * @property string $name database column
+ * @property string $url database column
+ * @property string $public_key database column
+ * @property string|null $private_key database column
+ * @property int $active database column
+ * @property int $index_server database column
+ * @property int $allowed_as_index_server database column
+ * @property int $last_updated database column
+ * @property int $chdate database column
+ * @property int $mkdate database column
+ */
 class OERHost extends OERIdentity
 {
 

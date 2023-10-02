@@ -12,6 +12,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for stgteil_bez_id
+ * @property string $stgteil_bez_id database column
+ * @property I18NString $name database column
+ * @property I18NString $name_kurz database column
+ * @property int $position database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property mixed $count_stgteile additional field
+ * @property mixed $count_studiengaenge additional field
  */
 
 class StgteilBezeichnung extends ModuleManagementModel

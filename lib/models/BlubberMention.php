@@ -3,6 +3,15 @@
  * @author    Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license   GPL2 or any later version
  * @since     4.5
+ *
+ * @property int $id alias column for mention_id
+ * @property int $mention_id database column
+ * @property string $thread_id database column
+ * @property string $user_id database column
+ * @property int $external_contact database column
+ * @property int $mkdate database column
+ * @property BlubberThread $thread belongs_to BlubberThread
+ * @property User $user belongs_to User
  */
 
 class BlubberMention extends SimpleORMap

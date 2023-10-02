@@ -24,7 +24,7 @@
     </label>
     <label>
         <input id="comment-only" type="checkbox" name="comment_only" value="1"
-            <?= $feedback->mode == 0 ? 'checked' : '' ?> <? if ($this->current_action ==
+            <?= $feedback->mode == FeedbackElement::MODE_NO_RATING ? 'checked' : '' ?> <? if ($this->current_action ==
         'edit_form') {echo ('disabled');} else { echo('data-deactivates="#comment-activated, .feedback-mode"');}?>>
         <?= _('Nur Kommentare (keine numerische Bewertung)') ?>
     </label>
@@ -34,13 +34,15 @@
         <?= _('Bewertungsmodus') ?>
     </legend>
     <label>
-        <input class="feedback-mode" type="radio" name="mode" value="1" <?= $feedback->mode == 1 ? 'checked' : '' ?>
-            required <? if ($this->current_action ==
-        'edit_form') {echo ('disabled');}?>><?= _('Sternbewertung von 1 bis 5') ?>
+        <input class="feedback-mode" type="radio" name="mode" value="<?= FeedbackElement::MODE_5STAR_RATING ?>"
+            <?= $feedback->mode == FeedbackElement::MODE_5STAR_RATING ? 'checked' : '' ?>
+            required <? if ($current_action === 'edit_form') echo ('disabled'); ?>>
+        <?= _('Sternbewertung von 1 bis 5') ?>
     </label>
     <label>
-        <input class="feedback-mode" type="radio" name="mode" value="2" <?= $feedback->mode == 2 ? 'checked' : '' ?> <?
-            if ($this->current_action ==
-        'edit_form') {echo ('disabled');}?>><?= _('Sternbewertung von 1 bis 10') ?>
+        <input class="feedback-mode" type="radio" name="mode" value="<?= FeedbackElement::MODE_10STAR_RATING ?>"
+            <?= $feedback->mode == FeedbackElement::MODE_10STAR_RATING ? 'checked' : '' ?> <?
+            if ($current_action === 'edit_form') echo ('disabled'); ?>>
+        <?= _('Sternbewertung von 1 bis 10') ?>
     </label>
 </fieldset>

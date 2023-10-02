@@ -29,11 +29,13 @@
  * @author      Arne Schröder <schroeder@data-quest>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * 
- * @property string tour_id database column
- * @property string range_id database column
- * @property string type database column
- * @property string id computed column read/write
+ *
+ * @property array $id alias for pk
+ * @property string $tour_id database column
+ * @property string $range_id database column
+ * @property string $type database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
  */
 class HelpTourAudience extends SimpleORMap
 {

@@ -12,6 +12,24 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property string $id alias column for thread_id
+ * @property string $thread_id database column
+ * @property string $context_type database column
+ * @property string $context_id database column
+ * @property string $user_id database column
+ * @property int $external_contact database column
+ * @property string|null $content database column
+ * @property string|null $display_class database column
+ * @property int $visible_in_stream database column
+ * @property int $commentable database column
+ * @property JSONArrayObject|null $metadata database column
+ * @property int|null $chdate database column
+ * @property int|null $mkdate database column
+ * @property SimpleORMapCollection|BlubberComment[] $comments has_many BlubberComment
+ * @property SimpleORMapCollection|BlubberMention[] $mentions has_many BlubberMention
+ * @property SimpleORMapCollection|ObjectUserVisit[] $visits has_many ObjectUserVisit
+ * @property User $user belongs_to User
  */
 
 class BlubberThread extends SimpleORMap implements PrivacyObject
@@ -47,7 +65,7 @@ class BlubberThread extends SimpleORMap implements PrivacyObject
             'on_delete'         => 'delete',
         ];
 
-        $config['serialized_fields']['metadata'] = 'JSONArrayObject';
+        $config['serialized_fields']['metadata'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

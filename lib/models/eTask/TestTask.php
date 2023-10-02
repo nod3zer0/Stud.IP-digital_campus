@@ -2,17 +2,21 @@
 
 namespace eTask;
 
+use JSONArrayObject;
+
 /**
  * eTask conforming test task relation.
  *
- * @property int test_id database column
- * @property int task_id database column
- * @property int position database column
- * @property float points database column
- * @property string options database column
- * @property eTask\Test test belongs_to etask\Test
- * @property eTask\Task task belongs_to etask\Task
- * @property JSONArrayobject options serialized database column
+ * @property array $id alias for pk
+ * @property int $test_id database column
+ * @property int $task_id database column
+ * @property int $position database column
+ * @property float|null $points database column
+ * @property \JSONArrayObject $options database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property Test $test belongs_to Test
+ * @property Task $task belongs_to Task
  */
 class TestTask extends \SimpleORMap
 {
@@ -35,7 +39,7 @@ class TestTask extends \SimpleORMap
             'class_name' => $config['relationTypes']['Task'],
             'foreign_key' => 'task_id'];
 
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

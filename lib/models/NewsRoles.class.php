@@ -14,8 +14,10 @@
  * @package     admin
  * @since       5.1
  *
- * @property string news_id database column
- * @property int roleid database column
+ * @property array $id alias for pk
+ * @property string $news_id database column
+ * @property int $roleid database column
+ * @property StudipNews $news_ranges belongs_to StudipNews
  */
 
 class NewsRoles extends SimpleORMap

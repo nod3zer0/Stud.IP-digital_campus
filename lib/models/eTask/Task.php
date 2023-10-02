@@ -2,24 +2,25 @@
 
 namespace eTask;
 
+use JSONArrayObject;
+use User;
+
 /**
  * eTask conforming task definition.
  *
- * @property int id database column
- * @property string type database column
- * @property string title database column
- * @property string description database column
- * @property string task database column
- * @property string user_id database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string options database column
- * @property User owner belongs_to User
- * @property SimpleORMapCollection tests additional field etask\Test
- * @property SimpleORMapCollection test_tasks has_many etask\TestTask
- * @property SimpleORMapCollection responses has_many etask\Response
- * @property JSONArrayobject task serialized database column
- * @property JSONArrayobject options serialized database column
+ * @property int $id database column
+ * @property string $type database column
+ * @property string $title database column
+ * @property string $description database column
+ * @property \JSONArrayObject $task database column
+ * @property string $user_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \JSONArrayObject $options database column
+ * @property \SimpleORMapCollection|TestTask[] $test_tasks has_many TestTask
+ * @property \SimpleORMapCollection|Response[] $responses has_many Response
+ * @property \User $owner belongs_to \User
+ * @property \SimpleORMapCollection|Test[] $tests has_and_belongs_to_many Test
  */
 class Task extends \SimpleORMap implements \PrivacyObject
 {
@@ -35,7 +36,7 @@ class Task extends \SimpleORMap implements \PrivacyObject
         $config['relationTypes'] = self::configureClassNames($config);
 
         $config['belongs_to']['owner'] = [
-            'class_name' => '\\User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id'
         ];
 
@@ -61,8 +62,8 @@ class Task extends \SimpleORMap implements \PrivacyObject
             'on_store' => 'store'
         ];
 
-        $config['serialized_fields']['task'] = 'JSONArrayObject';
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['task'] = JSONArrayObject::class;
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         parent::configure($config);
     }

@@ -11,6 +11,13 @@
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 3.3
+ *
+ * @property array $id alias for pk
+ * @property string $cache_key database column
+ * @property string $operation database column
+ * @property string $parameters database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 class StudipCacheOperation extends SimpleORMap
 {

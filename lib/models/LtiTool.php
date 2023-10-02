@@ -9,6 +9,20 @@
  *
  * @author      Elmar Ludwig
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ *
+ * @property int $id database column
+ * @property string $name database column
+ * @property string $launch_url database column
+ * @property string $consumer_key database column
+ * @property string $consumer_secret database column
+ * @property string $custom_parameters database column
+ * @property int $allow_custom_url database column
+ * @property int $deep_linking database column
+ * @property int $send_lis_person database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property string $oauth_signature_method database column
+ * @property SimpleORMapCollection|LtiData[] $links has_many LtiData
  */
 
 class LtiTool extends SimpleORMap

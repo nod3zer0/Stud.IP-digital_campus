@@ -15,15 +15,17 @@
  * @category    Stud.IP
  * @since       5.3
  *
- *
- * @property string id database column
- * @property string item_id database column
- * @property string parent_id database column
- * @property int level database column
- * @property int priority database column
- * @property string name database column
- * @property string studip_object database column
- * @property string studip_object_id database column
+ * @property string $id alias column for item_id
+ * @property string $item_id database column
+ * @property string $parent_id database column
+ * @property int $level database column
+ * @property int $priority database column
+ * @property string $name database column
+ * @property string|null $studip_object database column
+ * @property string|null $studip_object_id database column
+ * @property SimpleORMapCollection|RangeTreeNode[] $children has_many RangeTreeNode
+ * @property Institute|null $institute belongs_to Institute
+ * @property RangeTreeNode $parent belongs_to RangeTreeNode
  */
 class RangeTreeNode extends SimpleORMap implements StudipTreeNode
 {

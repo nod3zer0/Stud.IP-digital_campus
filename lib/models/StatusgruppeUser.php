@@ -15,14 +15,22 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string statusgruppe_id database column
- * @property string user_id database column
- * @property string position database column
- * @property string visible database column
- * @property string inherit database column
- * @property string id computed column read/write
- * @property Statusgruppen group belongs_to Statusgruppen
- * @property User user belongs_to User
+ * @property array $id alias for pk
+ * @property string $statusgruppe_id database column
+ * @property string $user_id database column
+ * @property int $position database column
+ * @property int $visible database column
+ * @property int $inherit database column
+ * @property int|null $mkdate database column
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property Statusgruppen $group belongs_to Statusgruppen
+ * @property User $user belongs_to User
+ * @property mixed $vorname additional field
+ * @property mixed $nachname additional field
+ * @property mixed $username additional field
+ * @property mixed $email additional field
+ * @property mixed $title_front additional field
+ * @property mixed $title_rear additional field
  */
 class StatusgruppeUser extends SimpleORMap implements PrivacyObject
 {

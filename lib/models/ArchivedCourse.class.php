@@ -13,27 +13,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string seminar_id database column
- * @property string id alias column for seminar_id
- * @property string name database column
- * @property string untertitel database column
- * @property string beschreibung database column
- * @property string start_time database column
- * @property string semester database column
- * @property string heimat_inst_id database column
- * @property string institute database column
- * @property string dozenten database column
- * @property string fakultaet database column
- * @property string dump database column
- * @property string archiv_file_id database column
- * @property string archiv_protected_file_id database column
- * @property string mkdate database column
- * @property string forumdump database column
- * @property string wikidump database column
- * @property string studienbereiche database column
- * @property string veranstaltungsnummer database column
- * @property SimpleORMapCollection members has_many ArchivedCourseMember
- * @property Institute home_institut belongs_to Institute
+ * @property string $id alias column for seminar_id
+ * @property string $seminar_id database column
+ * @property string $name database column
+ * @property string $untertitel database column
+ * @property string $beschreibung database column
+ * @property int $start_time database column
+ * @property string $semester database column
+ * @property string $heimat_inst_id database column
+ * @property string $institute database column
+ * @property string $dozenten database column
+ * @property string $fakultaet database column
+ * @property string $dump database column
+ * @property string $archiv_file_id database column
+ * @property string $archiv_protected_file_id database column
+ * @property int $mkdate database column
+ * @property string $forumdump database column
+ * @property string|null $wikidump database column
+ * @property string $studienbereiche database column
+ * @property string $veranstaltungsnummer database column
+ * @property SimpleORMapCollection|ArchivedCourseMember[] $members has_many ArchivedCourseMember
+ * @property Institute $home_institut belongs_to Institute
  */
 
 class ArchivedCourse extends SimpleORMap implements PrivacyObject

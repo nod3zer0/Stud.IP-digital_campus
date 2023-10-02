@@ -12,14 +12,14 @@ use User;
  *
  * @since   Stud.IP 5.1
  *
- * @property int                            $id                      database column
- * @property int                            $structural_element_id   database column
- * @property string                         $user_id                 database column
- * @property string                         $comment                 database column
- * @property int                            $mkdate                  database column
- * @property int                            $chdate                  database column
- * @property \User                          $user                    belongs_to User
- * @property \Courseware\StructuralElement  $structural_element      belongs_to Courseware\StructuralElement
+ * @property int $id database column
+ * @property int $structural_element_id database column
+ * @property string $user_id database column
+ * @property string $comment database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \User $user belongs_to \User
+ * @property StructuralElement $structural_element belongs_to StructuralElement
  */
 class StructuralElementComment extends \SimpleORMap implements \PrivacyObject
 {

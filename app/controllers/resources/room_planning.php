@@ -148,7 +148,11 @@ class Resources_RoomPlanningController extends AuthenticatedController
         //The booking plan is also visible when the resource is a room
         //and its booking plan is publicly available.
         $this->anonymous_view = true;
-        $this->booking_types  = [0, 1, 2];
+        $this->booking_types  = [
+            ResourceBooking::TYPE_NORMAL,
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK,
+        ];
         if ($this->user instanceof User) {
             if ($this->display_all_requests) {
                 $plan_is_visible = $this->resource->userHasPermission(
@@ -160,7 +164,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
             }
             $this->anonymous_view = false;
             if ($this->resource->userHasPermission($this->user, 'admin')) {
-                $this->booking_types[] = 3;
+                $this->booking_types[] = ResourceBooking::TYPE_PLANNED;
             }
         } else {
             //If the plan visibility cannot be determined by the user,
@@ -551,9 +555,13 @@ class Resources_RoomPlanningController extends AuthenticatedController
         $this->user_is_global_resource_admin = ResourceManager::userHasGlobalPermission($this->user, 'admin');
         $this->show_global_admin_actions     = $this->user_is_global_resource_admin;
         $this->user_has_booking_permissions  = $this->resource->userHasBookingRights($this->user);
-        $this->booking_types                 = [0, 1, 2];
+        $this->booking_types = [
+            ResourceBooking::TYPE_NORMAL,
+            ResourceBooking::TYPE_RESERVATION,
+            ResourceBooking::TYPE_LOCK,
+        ];
         if ($this->resource->userHasPermission($this->user, 'admin')) {
-            $this->booking_types[] = 3;
+            $this->booking_types[] = ResourceBooking::TYPE_PLANNED;
         }
         if ($this->user_has_booking_permissions) {
             URLHelper::addLinkParam('display_single_bookings', Request::get("display_single_bookings"));

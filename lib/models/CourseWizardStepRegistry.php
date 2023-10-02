@@ -12,6 +12,14 @@
  * @copyright   2015 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ *
+ * @property string $id database column
+ * @property string $name database column
+ * @property string $classname database column
+ * @property int $number database column
+ * @property int $enabled database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 
 class CourseWizardStepRegistry extends SimpleORMap

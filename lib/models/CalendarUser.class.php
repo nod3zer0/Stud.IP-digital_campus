@@ -11,6 +11,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.2
+ *
+ * @property array $id alias for pk
+ * @property string $owner_id database column
+ * @property string $user_id database column
+ * @property int $permission database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property User $user belongs_to User
+ * @property User $owner has_one User
+ * @property-read mixed $nachname additional field
+ * @property-read mixed $vorname additional field
  */
 
 class CalendarUser extends SimpleORMap

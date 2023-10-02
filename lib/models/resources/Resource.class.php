@@ -3,6 +3,11 @@
 /**
  * Resource.class.php - model class for a resource
  *
+ * The Resource class is the base class of the new
+ * Room and Resource management system in Stud.IP.
+ * It provides core functionality for handling general resources
+ * and can be derived for handling special resources.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -15,31 +20,25 @@
  * @package     resources
  * @since       4.5
  *
- * @property string resource_id database column
- * @property string id alias column for resource_id
- * @property string parent_id database column
- * @property string category_id database column
- * @property string level database column
- * @property string name database column
- * @property string description database column
- * @property string requestable database column
- * @property string sort_position database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMapCollection category belongs_to ResourceCategory
- * @property SimpleORMapCollection properties has_many ResourceProperty
- * @property SimpleORMapCollection permissions has_many ResourcePermission
- * @property SimpleORMapCollection bookings has_many ResourceBooking
- * @property SimpleORMapCollection children has_many Resource
- * @property FolderType folder
- */
-
-
-/**
- * The Resource class is the base class of the new
- * Room and Resource management system in Stud.IP.
- * It provides core functionality for handling general resources
- * and can be derived for handling special resources.
+ * @property string $id database column
+ * @property string $parent_id database column
+ * @property string $category_id database column
+ * @property int|null $level database column
+ * @property string $name database column
+ * @property I18NString|null $description database column
+ * @property int $requestable database column
+ * @property int $lockable database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $sort_position database column
+ * @property SimpleORMapCollection|ResourceProperty[] $properties has_many ResourceProperty
+ * @property SimpleORMapCollection|ResourcePermission[] $permissions has_many ResourcePermission
+ * @property SimpleORMapCollection|ResourceRequest[] $requests has_many ResourceRequest
+ * @property SimpleORMapCollection|ResourceBooking[] $bookings has_many ResourceBooking
+ * @property SimpleORMapCollection|Resource[] $children has_many Resource
+ * @property ResourceCategory $category belongs_to ResourceCategory
+ * @property Resource $parent belongs_to Resource
+ * @property mixed $class_name additional field
  */
 class Resource extends SimpleORMap implements StudipItem
 {
@@ -454,7 +453,7 @@ class Resource extends SimpleORMap implements StudipItem
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0
+        $booking_type = ResourceBooking::TYPE_NORMAL
     )
     {
         return $this->createBooking(
@@ -505,7 +504,7 @@ class Resource extends SimpleORMap implements StudipItem
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $prepend_preparation_time = false,
         $notify_lecturers = false
     )
@@ -684,7 +683,7 @@ class Resource extends SimpleORMap implements StudipItem
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $force_booking = false
     )
     {
@@ -1275,7 +1274,7 @@ class Resource extends SimpleORMap implements StudipItem
         }
 
         $lock                   = new ResourceBooking();
-        $lock->booking_type     = '2';
+        $lock->booking_type     = ResourceBooking::TYPE_LOCK;
         $lock->range_id         = $user->id;
         $lock->resource_id      = $this->id;
         $lock->begin            = $begin->getTimestamp();

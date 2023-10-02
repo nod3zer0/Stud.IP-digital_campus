@@ -13,28 +13,27 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string seminar_id database column
- * @property string user_id database column
- * @property string status database column
- * @property string position database column
- * @property string gruppe database column
- * @property string notification database column
- * @property string mkdate database column
- * @property string comment database column
- * @property string visible database column
- * @property string label database column
- * @property string bind_calendar database column
- * @property string vorname computed column read/write
- * @property string nachname computed column read/write
- * @property string username computed column read/write
- * @property string email computed column read/write
- * @property string title_front computed column read/write
- * @property string title_rear computed column read/write
- * @property string course_name computed column read/write
- * @property string id computed column read/write
- * @property SimpleORMapCollection datafields has_many DatafieldEntryModel
- * @property User user belongs_to User
- * @property Course course belongs_to Course
+ * @property array $id alias for pk
+ * @property string $seminar_id database column
+ * @property string $user_id database column
+ * @property string $status database column
+ * @property int $position database column
+ * @property int $gruppe database column
+ * @property int $mkdate database column
+ * @property string $comment database column
+ * @property string $visible database column
+ * @property string $label database column
+ * @property int $bind_calendar database column
+ * @property SimpleORMapCollection|DatafieldEntryModel[] $datafields has_many DatafieldEntryModel
+ * @property User $user belongs_to User
+ * @property Course $course belongs_to Course
+ * @property mixed $vorname additional field
+ * @property mixed $nachname additional field
+ * @property mixed $username additional field
+ * @property mixed $email additional field
+ * @property mixed $title_front additional field
+ * @property mixed $title_rear additional field
+ * @property mixed $course_name additional field
  */
 class CourseMember extends SimpleORMap implements PrivacyObject
 {

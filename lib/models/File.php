@@ -13,20 +13,21 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- *
- * @property string id database column
- * @property string user_id database column
- * @property string mime_type database column
- * @property string name database column
- * @property string size database column
- * @property string filetype database column
- * @property string metadata database column
- * @property string author_name database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property SimpleORMap owner belongs_to User
- * @property SimpleORMap url has_one FileURL
- * @property SimpleORMapCollection refs has_many FileReference
+ * @property string $id database column
+ * @property string $user_id database column
+ * @property string $mime_type database column
+ * @property string $name database column
+ * @property string|null $filetype database column
+ * @property int $size database column
+ * @property JSONArrayObject|null $metadata database column
+ * @property string $author_name database column
+ * @property int|null $is_accessible database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|FileRef[] $refs has_many FileRef
+ * @property User $owner belongs_to User
+ * @property mixed $extension additional field
+ * @property mixed $path additional field
  */
 class File extends SimpleORMap
 {
@@ -48,7 +49,7 @@ class File extends SimpleORMap
         $config['additional_fields']['extension'] = true;
         $config['additional_fields']['path'] = true;
 
-        $config['serialized_fields']['metadata'] = 'JSONArrayObject';
+        $config['serialized_fields']['metadata'] = JSONArrayObject::class;
 
         $config['registered_callbacks']['after_delete'][] = 'deleteDataFile';
         $config['registered_callbacks']['before_create'][] = 'cbSetAuthor';

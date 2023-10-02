@@ -71,7 +71,7 @@ class Course_FeedbackController extends AuthenticatedController
             'range_type'        => $range_type,
             'results_visible'   => 1,
             'commentable'       => 1,
-            'mode'              => 1
+            'mode'              => FeedbackElement::MODE_5STAR_RATING,
         ]);
     }
 
@@ -83,12 +83,12 @@ class Course_FeedbackController extends AuthenticatedController
         if (!Feedback::hasRangeAccess($range_id, $range_type)) {
             throw new AccessDeniedException();
         } elseif ($this->create_perm) {
-            if(Request::get('comment_only') === 1) {
-                $mode = 0;
+            if (Request::bool('comment_only')) {
+                $mode = FeedbackElement::MODE_NO_RATING;
                 $commentable = 1;
             } else {
-                $mode           = intval(Request::get('mode'));
-                $commentable    = intval(Request::get('commentable'));
+                $mode           = Request::int('mode', FeedbackElement::MODE_NO_RATING);
+                $commentable    = Request::bool('commentable');
             }
             $feedback = FeedbackElement::build([
                 'range_id'          => $range_id,

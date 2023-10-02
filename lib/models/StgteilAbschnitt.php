@@ -12,6 +12,24 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       3.5
+ *
+ * @property string $id alias column for abschnitt_id
+ * @property string $abschnitt_id database column
+ * @property string $version_id database column
+ * @property int $position database column
+ * @property I18NString $name database column
+ * @property I18NString|null $kommentar database column
+ * @property float|null $kp database column
+ * @property I18NString|null $ueberschrift database column
+ * @property string $author_id database column
+ * @property string $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|StgteilabschnittModul[] $modul_zuordnungen has_many StgteilabschnittModul
+ * @property SimpleORMapCollection|ModulteilStgteilabschnitt[] $modulteil_abschnitte has_many ModulteilStgteilabschnitt
+ * @property StgteilVersion $version belongs_to StgteilVersion
+ * @property SimpleORMapCollection|Modul[] $module has_and_belongs_to_many Modul
+ * @property mixed $count_module additional field
  */
 
 class StgteilAbschnitt extends ModuleManagementModelTreeItem

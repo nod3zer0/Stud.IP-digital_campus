@@ -27,15 +27,15 @@
  * @category    Stud.IP
  * @since       2.4
  *
- * @property string log_id database column
- * @property string id alias column for log_id
- * @property string schedule_id database column
- * @property string scheduled database column
- * @property string executed database column
- * @property string exception database column
- * @property string output database column
- * @property string duration database column
- * @property CronjobSchedule schedule belongs_to CronjobSchedule
+ * @property string $id alias column for log_id
+ * @property string $log_id database column
+ * @property string $schedule_id database column
+ * @property int $scheduled database column
+ * @property int $executed database column
+ * @property string|null $exception database column
+ * @property string|null $output database column
+ * @property float $duration database column
+ * @property CronjobSchedule $schedule belongs_to CronjobSchedule
  */
 
 class CronjobLog extends SimpleORMap

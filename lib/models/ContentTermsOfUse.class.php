@@ -20,19 +20,24 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  *
- * @property string id database column: ID of the content terms of use object
- * @property string name database column: Short name of the terms of use object
- * @property string position database column: sorting of the entries can be made possible with this attribute
- * @property string description database column: Description text of the terms of use object
- * @property int download_condition: database column
- *      0 = no conditions (downloadable by anyone)
- *      1 = closed groups (e.g. courses with signup rules)
- *      2 = only for owner
- * @property string icon database column: either the name of the icon or the URL that points to the icon
+ * @property string $id database column
+ * @property I18NString $name database column
+ * @property int $position database column
+ * @property I18NString $description database column
+ * @property I18NString $student_description database column
+ * @property int $download_condition database column
+ * @property string $icon database column
+ * @property int $is_default database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
  */
 
 class ContentTermsOfUse extends SimpleORMap
 {
+    const DOWNLOAD_CONDITION_NONE = 0; // no conditions (downloadable by anyone)
+    const DOWNLOAD_CONDITION_CLOSED_GROUPS = 1; // closed groups (e.g. courses with signup rules)
+    const DOWNLOAD_CONDITION_OWNER_ONLY = 2; // only for owner
+
     /**
      * @var
      */
@@ -49,7 +54,7 @@ class ContentTermsOfUse extends SimpleORMap
         $config['i18n_fields']['description'] = true;
         $config['i18n_fields']['student_description'] = true;
 
-        $config['default_values']['download_condition'] = 0;
+        $config['default_values']['download_condition'] = self::DOWNLOAD_CONDITION_NONE;
         $config['default_values']['icon'] = 'license';
         $config['default_values']['position'] = 0;
         $config['default_values']['is_default'] = false;
@@ -104,9 +109,9 @@ class ContentTermsOfUse extends SimpleORMap
     public static function getConditions()
     {
         return [
-            0 => _('Ohne Bedingung'),
-            1 => _('Nur innerhalb geschlossener Veranstaltungen erlaubt'),
-            2 => _('Nur für EigentümerIn erlaubt'),
+            self::DOWNLOAD_CONDITION_NONE => _('Ohne Bedingung'),
+            self::DOWNLOAD_CONDITION_CLOSED_GROUPS => _('Nur innerhalb geschlossener Veranstaltungen erlaubt'),
+            self::DOWNLOAD_CONDITION_OWNER_ONLY => _('Nur für EigentümerIn erlaubt'),
         ];
     }
 
@@ -119,9 +124,7 @@ class ContentTermsOfUse extends SimpleORMap
     public static function describeCondition($condition)
     {
         $conditions = self::getConditions();
-        return isset($conditions[$condition])
-             ? $conditions[$condition]
-             : _('Nicht definiert');
+        return $conditions[$condition] ?? _('Nicht definiert');
     }
 
     /**
@@ -192,7 +195,7 @@ class ContentTermsOfUse extends SimpleORMap
                 return true;
             }
         }
-        if ($this->download_condition == 1) {
+        if ($this->download_condition == self::DOWNLOAD_CONDITION_CLOSED_GROUPS) {
 
             //the content is only downloadable when the user is inside a closed group
             //(referenced by range_id). If download_condition is set to 2
@@ -213,7 +216,7 @@ class ContentTermsOfUse extends SimpleORMap
             return false;
         }
 
-        if ($this->download_condition == 2) {
+        if ($this->download_condition == self::DOWNLOAD_CONDITION_OWNER_ONLY) {
             return false;
         }
 

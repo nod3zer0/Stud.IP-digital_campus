@@ -14,58 +14,54 @@
  * @category    Stud.IP
  * @package     resources
  * @since       4.5
- */
-
-
-/**
- * ResourceRequest is a model class for resource requests.
- *
- * @property string id database column
- * @property string resource_id database column
- * @property string category_id database column
- * @property string course_id database column
- * @property string termin_id database column
- * @property string metadate_id database column
- * @property string begin database column
- * @property string end database column
- * @property string preparation_time databasse column
- * @property string marked database column
- *     There are four marking states:
- *     0 - not marked
- *     1 - red state
- *     2 - yellow state
- *     3 - green state
- * @property string user_id database column
- * @property string last_modified_by database column
- * @property string comment database column
- * @property string reply_comment database column
- * @property string reply_recipients database column:
- *     enum('requester', 'lecturer')
- * @property string closed database column, possible states are:
- *     0 - room-request is open
- *     1 - room-request has been processed, but no confirmation has been sent
- *     2 - room-request has been processed and a confirmation has been sent
- *     3 - room-request has been declined
- *
- * @property string mkdate database column
- * @property string chdate database column
- * @property Resource resource belongs_to Resource
- * @property ResourceCategory $category belongs_to Category
- * @property User requester belongs_to User
- * @property User last_modifier belongs_to User
- * @property Course $course belongs_to Course
- * @property SeminarCycleDate $cycle belongs_to SeminarCycleDate
- * @property CourseDate $date belongs_to CourseDate
- * @property ResourceRequestProperty[]|SimpleORMapCollection $properties has_many ResourceRequestProperty
- * @property ResourceRequestAppointment[]|SimpleORMapCollection $appointments has_many ResourceRequestAppointment
- *
  *
  * The attributes begin and end are only used in simple resource requests.
  * The "traditional" resource requests use either course_id, metadate_id
  * or termin_id to store the time ranges connected to the request.
+ *
+ * @property string $id database column
+ * @property string $course_id database column
+ * @property string $termin_id database column
+ * @property string $metadate_id database column
+ * @property string $user_id database column
+ * @property string $last_modified_by database column
+ * @property string $resource_id database column
+ * @property string|null $category_id database column
+ * @property string|null $comment database column
+ * @property string|null $reply_comment database column
+ * @property string $reply_recipients database column
+ * @property int $closed database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property int $begin database column
+ * @property int $end database column
+ * @property int $preparation_time database column
+ * @property int $marked database column
+ * @property SimpleORMapCollection|ResourceRequestProperty[] $properties has_many ResourceRequestProperty
+ * @property SimpleORMapCollection|ResourceRequestAppointment[] $appointments has_many ResourceRequestAppointment
+ * @property Resource $resource belongs_to Resource
+ * @property ResourceCategory|null $category belongs_to ResourceCategory
+ * @property User $user belongs_to User
+ * @property User $last_modifier belongs_to User
+ * @property Course $course belongs_to Course
+ * @property SeminarCycleDate $cycle belongs_to SeminarCycleDate
+ * @property CourseDate $date belongs_to CourseDate
  */
 class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calendar\EventSource
 {
+    const MARK_NONE = 0;
+    const MARK_RED = 1;
+    const MARK_YELLOW = 2;
+    const MARK_GREEN = 3;
+
+    const REPLY_REQUESTER = 'requester';
+    const REPLY_LECTURER = 'lecturer';
+
+    const STATE_OPEN = 0; // room-request is open
+    const STATE_PENDING = 1; // room-request has been processed, but no confirmation has been sent
+    const STATE_CLOSED = 2; // room-request has been processed and a confirmation has been sent
+    const STATE_DECLINED = 3; // room-request has been declined
+
     /**
      * The amount of defined marking states.
      */
@@ -192,7 +188,10 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      */
     public static function findOpen()
     {
-        return self::findBySql("closed = '0' ORDER BY mkdate ASC");
+        return self::findBySql(
+            'closed = ? ORDER BY mkdate ASC',
+            [self::STATE_OPEN]
+        );
     }
 
     /**
@@ -473,16 +472,17 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
     public static function existsByCourse($course_id, $request_is_open = false)
     {
+        $parameters = [':course_id' => $course_id];
+
         $sql = '';
         if ($request_is_open) {
-            $sql .= "closed = '0' AND ";
+            $sql .= "closed = :closed_state AND ";
+            $parameters[':closed_state'] = self::STATE_OPEN;
         }
 
         $request = self::findOneBySql(
             $sql . "termin_id = '' AND metadate_id = '' AND course_id = :course_id",
-            [
-                'course_id' => $course_id
-            ]
+            $parameters
         );
 
         if ($request) {
@@ -494,16 +494,17 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
     public static function existsByDate($date_id, $request_is_open = false)
     {
+        $parameters = [':date_id' => $date_id];
+
         $sql = '';
         if ($request_is_open) {
-            $sql .= "closed = '0' AND ";
+            $sql .= "closed = :closed_state AND ";
+            $parameters[':closed_state'] = self::STATE_OPEN;
         }
 
         $request = self::findOneBySql(
             $sql . "termin_id = :date_id",
-            [
-                'date_id' => $date_id
-            ]
+            $parameters
         );
 
         if ($request) {
@@ -515,16 +516,17 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
 
     public static function existsByMetadate($metadate_id, $request_is_open = false)
     {
+        $parameters = [':metadate_id' => $metadate_id];
+
         $sql = '';
         if ($request_is_open) {
-            $sql .= "closed = '0' AND ";
+            $sql .= "closed = :closed_state AND ";
+            $parameters[':closed_state'] = self::STATE_OPEN;
         }
 
         $request = self::findOneBySql(
             $sql . "metadate_id = :metadate_id",
-            [
-                'metadate_id' => $metadate_id
-            ]
+            $parameters
         );
 
         if ($request) {
@@ -551,10 +553,10 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
     public function cbAfterStore()
     {
         if ($this->isFieldDirty('closed')) {
-            if ((int)$this->closed === 3) {
+            if ($this->closed == self::STATE_DECLINED) {
                 $this->sendRequestDeniedMail();
                 StudipLog::log('RES_REQUEST_DENY', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
-            } elseif ((int)$this->closed === 1 || (int)$this->closed === 2) {
+            } elseif ($this->closed == self::STATE_PENDING || $this->closed == self::STATE_CLOSED) {
                 StudipLog::log('RES_REQUEST_RESOLVE', $this->course_id, $this->resource_id, $this->getLoggingInfoText());
             }
         } else {
@@ -669,12 +671,15 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
      */
     public function closeRequest($notify_lecturers = false, $bookings = [])
     {
-        if ($this->closed >= 2) {
+        if (
+            $this->closed == self::STATE_CLOSED
+            || $this->closed == self::STATE_DECLINED
+        ) {
             //The request has already been closed.
             return true;
         }
 
-        $this->closed = 1;
+        $this->closed = self::STATE_PENDING;
         if ($this->isDirty()) {
             $this->store();
         }
@@ -687,7 +692,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         }
 
         //Sending successful: The request is closed.
-        $this->closed = 2;
+        $this->closed = self::STATE_CLOSED;
         if ($this->isDirty()) {
             return $this->store();
         }
@@ -706,7 +711,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             return self::findByResourceAndTimeRanges(
                 $this->resource,
                 $this->getTimeIntervals(true),
-                0,
+                self::STATE_OPEN,
                 [$this->id]
             );
         }
@@ -725,7 +730,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             return self::countByResourceAndTimeRanges(
                 $this->resource,
                 $this->getTimeIntervals(true),
-                0,
+                self::STATE_OPEN,
                 [$this->id]
             );
         }
@@ -744,7 +749,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             return ResourceBooking::findByResourceAndTimeRanges(
                 $this->resource,
                 $this->getTimeIntervals(true),
-                [0, 2]
+                [ResourceBooking::TYPE_NORMAL, ResourceBooking::TYPE_LOCK]
             );
         }
         return [];
@@ -762,7 +767,7 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
             return ResourceBooking::countByResourceAndTimeRanges(
                 $this->resource,
                 $this->getTimeIntervals(true),
-                [0, 2]
+                [ResourceBooking::TYPE_NORMAL, ResourceBooking::TYPE_LOCK]
             );
         }
         return 0;
@@ -1386,13 +1391,13 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
     public function getStatus()
     {
         switch ($this->closed) {
-            case '0':
+            case self::STATE_OPEN:
                 return 'open';
-            case '1':
+            case self::STATE_PENDING:
                 return 'pending';
-            case '2':
+            case self::STATE_CLOSED:
                 return 'closed';
-            case '3':
+            case self::STATE_DECLINED:
                 return 'declined';
             default:
                 return '';
@@ -1408,9 +1413,9 @@ class ResourceRequest extends SimpleORMap implements PrivacyObject, Studip\Calen
         if ($this->isNew()) {
             return _('Diese Anfrage wurde noch nicht gespeichert.');
         }
-        if ((int)$this->closed === 0) {
+        if ($this->closed == self::STATE_OPEN) {
             return _('Die Anfrage wurde noch nicht bearbeitet.');
-        } else if ((int)$this->closed === 3) {
+        } else if ($this->closed == self::STATE_DECLINED) {
             return _('Die Anfrage wurde bearbeitet und abgelehnt.');
         } else {
             return _('Die Anfrage wurde bearbeitet.');

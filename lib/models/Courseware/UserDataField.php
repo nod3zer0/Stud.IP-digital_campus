@@ -2,6 +2,8 @@
 
 namespace Courseware;
 
+use JSONArrayObject;
+
 /**
  * Courseware's user data fields.
  *
@@ -12,14 +14,14 @@ namespace Courseware;
  *
  * @since   Stud.IP 5.0
  *
- * @property array             $id       computed column read/write
- * @property string            $user_id  database column
- * @property id                $block_id database column
- * @property \JSONArrayObject  $payload  database column
- * @property int               $mkdate   database column
- * @property int               $chdate   database column
- * @property \Courseware\Block $block    belongs_to Courseware\Block
- * @property \User             $user     belongs_to User
+ * @property array $id alias for pk
+ * @property string $user_id database column
+ * @property int $block_id database column
+ * @property \JSONArrayObject $payload database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property Block $block belongs_to Block
+ * @property \User $user belongs_to \User
  */
 class UserDataField extends \SimpleORMap implements \PrivacyObject
 {
@@ -27,7 +29,7 @@ class UserDataField extends \SimpleORMap implements \PrivacyObject
     {
         $config['db_table'] = 'cw_user_data_fields';
 
-        $config['serialized_fields']['payload'] = 'JSONArrayObject';
+        $config['serialized_fields']['payload'] = JSONArrayObject::class;
 
         $config['belongs_to']['block'] = [
             'class_name' => Block::class,

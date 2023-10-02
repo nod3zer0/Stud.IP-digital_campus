@@ -13,6 +13,14 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.4
+ *
+ * @property array $id alias for pk
+ * @property string $selection_id database column
+ * @property string $course_id database column
+ * @property int|null $mkdate database column
+ * @property int|null $chdate database column
+ * @property MvvOverlappingSelection $selection belongs_to MvvOverlappingSelection
+ * @property Course $course belongs_to Course
  */
 
 class MvvOverlappingExclude extends SimpleORMap

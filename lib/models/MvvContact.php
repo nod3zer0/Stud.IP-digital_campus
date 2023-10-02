@@ -11,6 +11,18 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       4.5
+ *
+ * @property string $id alias column for contact_id
+ * @property string $contact_id database column
+ * @property string $contact_status database column
+ * @property string $alt_mail database column
+ * @property string|null $author_id database column
+ * @property string|null $editor_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property SimpleORMapCollection|MvvContactRange[] $ranges has_many MvvContactRange
+ * @property-read mixed $name additional field
+ * @property-read mixed $count_relations additional field
  */
 
 class MvvContact extends ModuleManagementModel

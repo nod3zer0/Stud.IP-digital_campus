@@ -140,10 +140,10 @@ class Resources_PrintController extends AuthenticatedController
 
         // All available booking types.
         $this->booking_types = [
-            0 => _('Buchung'),
-            1 => _('Reservierung'),
-            2 => _('Sperrbuchung'),
-            3 => _('geplante Buchung')
+            ResourceBooking::TYPE_NORMAL      => _('Buchung'),
+            ResourceBooking::TYPE_RESERVATION => _('Reservierung'),
+            ResourceBooking::TYPE_LOCK        => _('Sperrbuchung'),
+            ResourceBooking::TYPE_PLANNED     => _('geplante Buchung'),
         ];
 
         // Get additional text to print

@@ -1,13 +1,14 @@
 <?php
 
 /**
- * @property array $id
- * @property string $object_id
- * @property string $user_id
- * @property int $plugin_id
- * @property int $visitdate
- * @property int $last_visitdate
- * @property User $user
+ *
+ * @property array $id alias for pk
+ * @property string $object_id database column
+ * @property string $user_id database column
+ * @property int $plugin_id database column
+ * @property int $visitdate database column
+ * @property int $last_visitdate database column
+ * @property User $user belongs_to User
  */
 class ObjectUserVisit extends SimpleORMap
 {

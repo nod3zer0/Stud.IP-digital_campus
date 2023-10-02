@@ -3,6 +3,11 @@
 /**
  * ResourceLabel.class.php - model class for a resource label
  *
+ * The ResourceLabel class represents headings or subheadings whose
+ * only purpose is helping with organising the resource tree.
+ * ResourceLabel instances must not be booked, reserved or locked.
+ * Furthermore, they cannot be requested.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -16,14 +21,26 @@
  * @since       4.5
  *
  * All properties are inherited from the parent class (Resource).
- */
-
-
-/**
- * The ResourceLabel class represents headings or subheadings whose
- * only purpose is helping with organising the resource tree.
- * ResourceLabel instances must not be booked, reserved or locked.
- * Furthermore, they cannot be requested.
+ *
+ * @property string $id database column
+ * @property string $parent_id database column
+ * @property string $category_id database column
+ * @property int|null $level database column
+ * @property string $name database column
+ * @property I18NString|null $description database column
+ * @property int $requestable database column
+ * @property int $lockable database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property int $sort_position database column
+ * @property SimpleORMapCollection|ResourceProperty[] $properties has_many ResourceProperty
+ * @property SimpleORMapCollection|ResourcePermission[] $permissions has_many ResourcePermission
+ * @property SimpleORMapCollection|ResourceRequest[] $requests has_many ResourceRequest
+ * @property SimpleORMapCollection|ResourceBooking[] $bookings has_many ResourceBooking
+ * @property SimpleORMapCollection|Resource[] $children has_many Resource
+ * @property ResourceCategory $category belongs_to ResourceCategory
+ * @property Resource $parent belongs_to Resource
+ * @property mixed $class_name additional field
  */
 class ResourceLabel extends Resource
 {
@@ -49,7 +66,7 @@ class ResourceLabel extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0
+        $booking_type = ResourceBooking::TYPE_NORMAL
     )
     {
         return null;
@@ -61,7 +78,7 @@ class ResourceLabel extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $prepend_preparation_time = false,
         $notify_lecturers = false
     )
@@ -79,7 +96,7 @@ class ResourceLabel extends Resource
         $preparation_time = 0,
         $description = '',
         $internal_comment = '',
-        $booking_type = 0,
+        $booking_type = ResourceBooking::TYPE_NORMAL,
         $force_booking = false
     )
     {
@@ -223,7 +240,7 @@ class ResourceLabel extends Resource
         return [];
     }
 
-    public function getResourceBookings(DateTime $begin, DateTime $end, array $booking_types = [0])
+    public function getResourceBookings(DateTime $begin, DateTime $end, array $booking_types = [ResourceBooking::TYPE_NORMAL])
     {
         return [];
     }

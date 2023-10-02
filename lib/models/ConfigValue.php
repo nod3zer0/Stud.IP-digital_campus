@@ -13,15 +13,14 @@
  *
  * @category    Stud.IP
  *
- * @property array $id
- * @property string $field
- * @property string $range_id
- * @property string $value
- * @property int $mkdate
- * @property int $chdate
- * @property string $comment
- *
- * @property ConfigEntry $entry
+ * @property array $id alias for pk
+ * @property string $field database column
+ * @property string $range_id database column
+ * @property string $value database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property string $comment database column
+ * @property ConfigEntry $entry belongs_to ConfigEntry
  */
 
 class ConfigValue extends SimpleORMap

@@ -38,13 +38,13 @@ trait ConfigureTrait
     private static function configureClassNames($config = [])
     {
         $defaultTypes = [
-            'Assignment' => '\\eTask\\Assignment',
-            'AssignmentRange' => '\\eTask\\AssignmentRange',
-            'Attempt' => '\\eTask\\Attempt',
-            'Response' => '\\eTask\\Response',
-            'Task' => '\\eTask\\Task',
-            'Test' => '\\eTask\\Test',
-            'TestTask' => '\\eTask\\TestTask'
+            'Assignment'      => Assignment::class,
+            'AssignmentRange' => AssignmentRange::class,
+            'Attempt'         => Attempt::class,
+            'Response'        => Response::class,
+            'Task'            => Task::class,
+            'Test'            => Test::class,
+            'TestTask'        => TestTask::class,
         ];
 
         $types = [];

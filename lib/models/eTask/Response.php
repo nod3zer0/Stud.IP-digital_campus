@@ -1,27 +1,29 @@
 <?php
 namespace eTask;
 
+use JSONArrayObject;
+use StoredUserData;
+use User;
+
 /**
  * eTask conforming assignment definition.
  *
- *  @property int id database column
- *  @property int assignment_id database column
- *  @property int task_id database column
- *  @property string user_id database column
- *  @property string response database column
- *  @property int state database column
- *  @property float points database column
- *  @property string feedback database column
- *  @property string grader_id database column
- *  @property string mkdate database column
- *  @property string chdate database column
- *  @property string options database column
- *  @property eTask\Assignment assignment belongs_to etask\Assignment
- *  @property eTask\Task task belongs_to etask\Task
- *  @property User user belongs_to User
- *  @property User grader belongs_to User
- *  @property JSONArrayobject response serialized database column
- *  @property JSONArrayobject options serialized database column
+ * @property int $id database column
+ * @property int $assignment_id database column
+ * @property int $task_id database column
+ * @property string $user_id database column
+ * @property \JSONArrayObject $response database column
+ * @property int|null $state database column
+ * @property float|null $points database column
+ * @property string|null $feedback database column
+ * @property string|null $grader_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \JSONArrayObject $options database column
+ * @property Assignment $assignment belongs_to Assignment
+ * @property Task $task belongs_to Task
+ * @property \User $user belongs_to \User
+ * @property \User $grader belongs_to \User
  */
 class Response extends \SimpleORMap implements \PrivacyObject
 {
@@ -47,17 +49,17 @@ class Response extends \SimpleORMap implements \PrivacyObject
         ];
 
         $config['belongs_to']['user'] = [
-            'class_name' => '\\User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id'
         ];
 
         $config['belongs_to']['grader'] = [
-            'class_name' => '\\User',
+            'class_name' => User::class,
             'foreign_key' => 'user_id'
         ];
 
-        $config['serialized_fields']['response'] = 'JSONArrayObject';
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['response'] = JSONArrayObject::class;
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         parent::configure($config);
     }
@@ -68,7 +70,7 @@ class Response extends \SimpleORMap implements \PrivacyObject
      *
      * @param StoredUserData $storage object to store data into
      */
-    public static function exportUserData(\StoredUserData $storage)
+    public static function exportUserData(StoredUserData $storage)
     {
         $sorm = self::findBySQL("user_id = ?", [$storage->user_id]);
         if ($sorm) {

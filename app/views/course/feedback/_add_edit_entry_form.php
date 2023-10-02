@@ -4,10 +4,10 @@
  * @var FeedbackEntry|null $entry
  */
 ?>
-<? if ($feedback->mode != 0) : ?>
+<? if ($feedback->mode != FeedbackElement::MODE_NO_RATING) : ?>
 <?php
     $n = 5;
-    if ($feedback->mode == 2) {
+    if ($feedback->mode == FeedbackElement::MODE_10STAR_RATING) {
         $n = 10;
     }
 ?>

@@ -2,21 +2,23 @@
 
 namespace eTask;
 
+use JSONArrayObject;
+use User;
+
 /**
  * eTask conforming test definition.
  *
- * @property int id database column
- * @property string title database column
- * @property string description database column
- * @property string user_id database column
- * @property string mkdate database column
- * @property string chdate database column
- * @property string options database column
- * @property SimpleORMapCollection tasks additional field etask\Task
- * @property SimpleORMapCollection testtasks has_many etask\TestTask
- * @property User owner belongs_to User
- * @property SimpleORMapCollection assignments has_many etask\Assignment
- * @property JSONArrayobject options serialized database column
+ * @property int $id database column
+ * @property string $title database column
+ * @property string $description database column
+ * @property string $user_id database column
+ * @property int $mkdate database column
+ * @property int $chdate database column
+ * @property \JSONArrayObject $options database column
+ * @property \SimpleORMapCollection|TestTask[] $testtasks has_many TestTask
+ * @property \SimpleORMapCollection|Assignment[] $assignments has_many Assignment
+ * @property \User $owner belongs_to \User
+ * @property \SimpleORMapCollection|Task[] $tasks has_and_belongs_to_many Task
  */
 class Test extends \SimpleORMap implements \PrivacyObject
 {
@@ -48,7 +50,7 @@ class Test extends \SimpleORMap implements \PrivacyObject
         ];
 
         $config['belongs_to']['owner'] = [
-            'class_name'  => '\\User',
+            'class_name'  => User::class,
             'foreign_key' => 'user_id'
         ];
 
@@ -59,7 +61,7 @@ class Test extends \SimpleORMap implements \PrivacyObject
             'on_store' => 'store'
         ];
 
-        $config['serialized_fields']['options'] = 'JSONArrayObject';
+        $config['serialized_fields']['options'] = JSONArrayObject::class;
 
         parent::configure($config);
     }
