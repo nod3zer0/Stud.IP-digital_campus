@@ -66,4 +66,19 @@ class StudipMemoryCache implements StudipCache
 
         return true;
     }
+
+    public static function getDisplayName(): string
+    {
+        return 'Memory cache';
+    }
+
+    public function getStats(): array
+    {
+        return [];
+    }
+
+    public static function getConfig(): array
+    {
+        return [];
+    }
 }

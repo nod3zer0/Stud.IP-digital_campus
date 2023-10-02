@@ -31,7 +31,7 @@
  * @author    André Noack <noack@data-quest.de>
  * @version   2
  */
-class StudipFileCache implements StudipSystemCache
+class StudipFileCache implements StudipCache
 {
     use StudipCacheKeyTrait;
 
@@ -236,8 +236,6 @@ class StudipFileCache implements StudipSystemCache
     /**
      * Return statistics.
      *
-     * @StudipSystemCache::getStats()
-     *
      * @return array|array[]
      */
     public function getStats(): array
@@ -252,8 +250,6 @@ class StudipFileCache implements StudipSystemCache
 
     /**
      * Return the Vue component name and props that handle configuration.
-     *
-     * @see StudipSystemCache::getConfig()
      *
      * @return array
      */

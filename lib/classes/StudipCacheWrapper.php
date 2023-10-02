@@ -67,4 +67,19 @@ class StudipCacheWrapper implements StudipCache
             return false;
         }
     }
+
+    public static function getDisplayName(): string
+    {
+        return static::class;
+    }
+
+    public function getStats(): array
+    {
+        return $this->actual_cache->getStats();
+    }
+
+    public static function getConfig(): array
+    {
+        return [];
+    }
 }

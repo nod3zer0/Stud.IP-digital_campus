@@ -99,4 +99,19 @@ class StudipCacheProxy implements StudipCache
 
         return $this->actual_cache->write($key, $content, $expires);
     }
+
+    public static function getDisplayName(): string
+    {
+        return static::class;
+    }
+
+    public function getStats(): array
+    {
+        return $this->actual_cache->getStats();
+    }
+
+    public static function getConfig(): array
+    {
+        return [];
+    }
 }

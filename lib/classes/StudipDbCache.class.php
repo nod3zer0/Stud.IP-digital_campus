@@ -7,7 +7,7 @@
  *
  * @author    Elmar Ludwig <elmar.ludwig@uos.de>
  */
-class StudipDbCache implements StudipSystemCache
+class StudipDbCache implements StudipCache
 {
 
     /**

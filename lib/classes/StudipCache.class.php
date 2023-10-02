@@ -59,4 +59,36 @@ interface StudipCache
      * @return bool     returns TRUE on success or FALSE on failure.
      */
     public function write($name, $content, $expires = self::DEFAULT_EXPIRATION);
+
+    /**
+     * @return string A translateable display name for this cache class.
+     */
+    public static function getDisplayName(): string;
+
+    /**
+     * Get some statistics from cache, like number of entries, hit rate or
+     * whatever the underlying cache provides.
+     * Results are returned in form of an array like
+     *      "[
+     *          [
+     *              'name' => <displayable name>
+     *              'value' => <value of the current stat>
+     *          ]
+     *      ]"
+     *
+     * @return array
+     */
+    public function getStats(): array;
+
+    /**
+     * Return the Vue component name and props that handle configuration.
+     * The associative array is of the form
+     *  [
+     *      'component' => <Vue component name>,
+     *      'props' => <Properties for component>
+     *  ]
+     *
+     * @return array
+     */
+    public static function getConfig(): array;
 }
