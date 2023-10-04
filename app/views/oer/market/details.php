@@ -73,6 +73,7 @@
         <? if (!$material['host_id'] && ($material->isMine() || $GLOBALS['perm']->have_perm("root"))) : ?>
             <?= \Studip\LinkButton::create(_('Bearbeiten'), $controller->link_for("oer/mymaterial/edit/".$material->getId()), ['data-dialog' => "1"]) ?>
             <form action="<?= $controller->link_for("oer/mymaterial/edit/".$material->getId()) ?>" method="post" style="display: inline;">
+                <?= CSRFProtection::tokenTag() ?>
                 <?= \Studip\Button::create(_('Löschen'), "delete", ['value' => 1, 'data-confirm' => _('Wirklich löschen?')]) ?>
             </form>
         <? endif ?>

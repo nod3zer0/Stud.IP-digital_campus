@@ -4,7 +4,7 @@
       onsubmit="$(window).off('beforeunload')"
       data-secure
       enctype="multipart/form-data">
-
+    <?= CSRFProtection::tokenTag() ?>
     <div class="oercampus_editmaterial">
         <fieldset>
             <legend><?= _('Grunddaten') ?></legend>
