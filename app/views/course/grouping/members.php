@@ -1,6 +1,7 @@
 <? if (!empty($courses)) : ?>
     <form class="default" action="<?= $controller->url_for('course/grouping/action') ?>" method="post"
           data-dialog="size=auto">
+        <?= CSRFProtection::tokenTag() ?>
         <section class="studip">
             <? foreach ($courses as $child) : ?>
                 <article class="studip toggle" id="<?= $child->id ?>">
@@ -8,6 +9,7 @@
                         <h1>
                             <input type="checkbox" name="courses[]" value="<?= $child->id ?>" class="courses"
                                    data-activates="#actions-courses">
+
                             <a href="<?= ContentBoxHelper::href($child->id, ['contentbox_type' => 'news']) ?>"
                                data-course-id="<?= $child->id ?>"
                                data-get-members-url="<?= $controller->url_for('course/grouping/child_course_members', $child->id) ?>"

@@ -1,4 +1,5 @@
 <form class="default" method="post" action="<?= $controller->url_for('course/grouping/assign_child') ?>">
+    <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
             <?= _('Bereits zugeordnet') ?>

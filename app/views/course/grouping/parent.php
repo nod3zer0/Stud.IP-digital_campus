@@ -1,5 +1,6 @@
 <? if ($parent) : ?>
 <form class="default" method="post" action="<?= $controller->url_for('course/grouping/unassign_parent') ?>">
+    <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Veranstaltung zuordnen') ?></legend>
         <section>

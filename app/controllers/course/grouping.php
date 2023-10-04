@@ -267,6 +267,7 @@ class Course_GroupingController extends AuthenticatedController
      */
     public function action_action()
     {
+        CSRFProtection::verifyUnsafeRequest();
         if (Request::submitted('single_action')) {
             list($course_id, $permission) = explode('-', Request::get('single_action'));
 
@@ -327,6 +328,8 @@ class Course_GroupingController extends AuthenticatedController
      */
     public function move_members_action($source_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
+
         $source = Seminar::getInstance($source_id);
         $target = Seminar::getInstance(Request::option('target'));
 
@@ -459,6 +462,7 @@ class Course_GroupingController extends AuthenticatedController
      */
     public function unassign_parent_action()
     {
+        CSRFProtection::verifyUnsafeRequest();
         $parent = $this->course->parent_course;
         $this->course->parent_course = null;
         NotificationCenter::postNotification('CourseWillRemoveFromGroup', $this->course->id, $parent);
@@ -477,6 +481,8 @@ class Course_GroupingController extends AuthenticatedController
      */
     public function assign_child_action()
     {
+        CSRFProtection::verifyUnsafeRequest();
+
         if ($child = Request::option('child')) {
 
             $child_course = Course::find($child);

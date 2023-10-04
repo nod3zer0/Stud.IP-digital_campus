@@ -1,4 +1,5 @@
 <form class="default" action="<?= $controller->url_for('course/grouping/move_members', $source_id) ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Personen verschieben') ?></legend>
 
