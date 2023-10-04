@@ -36,7 +36,12 @@ class Oer_MymaterialController extends AuthenticatedController
         } elseif (Request::isPost()) {
             $was_new = $material->isNew();
             $was_on_twillo = (bool) $material['published_id_on_twillo'];
-            $material->setData(Request::getArray('data'));
+            $data = Request::getArray('data');
+            $material->setData($data);
+            if ($data['player_url'] && !$material->hasValidPreviewUrl()) {
+                PageLayout::postWarning(_('Die angegebene URL muss mit http(s) beginnen.'));
+                $material->player_url = '';
+            }
             $material['host_id'] = null;
             $material['license_identifier'] = Request::get('license', 'CC-BY-SA-4.0');
             if (!empty($_FILES['file']['tmp_name'])) {

@@ -187,19 +187,19 @@ class OERMaterial extends SimpleORMap
 
         $url = $material->getDownloadUrl();
 
-        if ($material['player_url'] || $material->isPDF()) {
-            if ($material['player_url']) {
+        if ($material->hasValidPreviewUrl() || $material->isPDF()) {
+            if ($material->hasValidPreviewUrl()) {
                 OERDownloadcounter::addCounter($material->id);
                 $url = $material['player_url'];
             }
             $htmlid = "oercampus_".$material->id."_".uniqid();
-            $output = "<iframe id='".$htmlid."' src=\"". htmlReady($url). "\" style=\"width: 100%; height: 70vh; border: none;\"></iframe>";
+            $output = "<iframe sandbox=\"allow-forms allow-popups allow-pointer-lock allow-same-origin allow-scripts\" id='".$htmlid."' src=\"". htmlReady($url). "\" style=\"width: 100%; height: 70vh; border: none;\"></iframe>";
 
             return $output;
         }
 
         $tf = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH']."/app/views");
-        if ($material['player_url'] || $material->isPDF()) {
+        if ($material->hasValidPreviewUrl() || $material->isPDF()) {
             $template = $tf->open("oer/embed/url");
         } elseif ($material->isVideo()) {
             $template = $tf->open("oer/embed/video");
@@ -361,6 +361,24 @@ class OERMaterial extends SimpleORMap
     public function isFolder()
     {
         return (bool) $this['structure'];
+    }
+
+    /**
+     * Checks the URL scheme of the preview URL (player_url).
+     * HTTP, HTTPS, Gopher and Gemini are supported schemes.
+     *
+     * @return bool True, if the URL scheme matches the allowced ones,
+     *     false otherwise.
+     */
+    public function hasValidPreviewUrl() : bool
+    {
+        if ($this->player_url) {
+            $scheme = parse_url($this->player_url, PHP_URL_SCHEME);
+            if (in_array($scheme, ['http', 'https'])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function isImage()

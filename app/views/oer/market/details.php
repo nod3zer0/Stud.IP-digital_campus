@@ -2,7 +2,7 @@
 
 <? $url = $material->getDownloadUrl() ?>
 
-<? if ($material['player_url']) : ?>
+<? if ($material->hasValidPreviewUrl()) : ?>
     <iframe src="<?= htmlReady($material['player_url']) ?>"
             class="lernmarktplatz_player"></iframe>
     <? OERDownloadcounter::addCounter($material->id) ?>
