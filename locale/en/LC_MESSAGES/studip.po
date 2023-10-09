@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-04 14:31+0200\n"
-"PO-Revision-Date: 2023-09-20 09:29+0000\n"
-"Last-Translator: Ron Lucke <lucke@elan-ev.de>\n"
+"PO-Revision-Date: 2023-10-09 16:12+0000\n"
+"Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main/en/>\n"
 "Language: en\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.0.2\n"
 
 #: app/controllers/news.php:40
 msgid "Stud.IP (systemweit)"
@@ -12561,9 +12561,8 @@ msgid "Lehrendenfilter"
 msgstr "Lecturer filter"
 
 #: app/controllers/admin/courses.php:1806
-#, fuzzy
 msgid "Keine Lehrenden in der gewählten Einrichtung"
-msgstr "No student found for the specified search terms"
+msgstr "No lecturers in the selected institute"
 
 #: app/controllers/admin/courses.php:1830
 #: app/views/admin/courses/sidebar.php:16
@@ -15430,24 +15429,21 @@ msgid "Persönliche Benachrichtigungen"
 msgstr "Personal notifications"
 
 #: app/controllers/studyarea.php:27
-#, fuzzy
 msgid "Studienbereich anlegen"
 msgstr "Create study area"
 
 #: app/controllers/studyarea.php:27
-#, fuzzy
 msgid "Studienbereich bearbeiten"
 msgstr "Edit study area"
 
 #: app/controllers/studyarea.php:33
-#, fuzzy
 msgid "Neuer Studienbereich"
-msgstr "Field of study"
+msgstr "New study area"
 
 #: app/controllers/studyarea.php:34
-#, fuzzy, php-format
+#, php-format
 msgid "Studienbereich %s"
-msgstr "Field of study"
+msgstr "Study area %s"
 
 #: app/controllers/studiengaenge/abschluesse.php:19
 msgid "Studiengänge gruppiert nach Abschlüssen"
@@ -22681,9 +22677,8 @@ msgid "Keine einstellbaren Zusatzdaten vorhanden"
 msgstr "No additional information"
 
 #: app/views/course/room_requests/_new_request_form_footer.php:5
-#, fuzzy
 msgid "Zurück auf Anfang"
-msgstr "Entry upon request, only"
+msgstr "Back to start"
 
 #: app/views/course/room_requests/_new_request_form_footer.php:11
 #, fuzzy
@@ -27065,9 +27060,9 @@ msgstr "Edit permission"
 
 #: app/views/resources/admin/user_permissions.php:159
 #: app/views/resources/admin/user_permissions.php:252
-#, fuzzy, php-format
+#, php-format
 msgid "Sollen die gewählten Berechtigungen von %s wirklich gelöscht werden?"
-msgstr "Do you really want to delete the vacation period?"
+msgstr "Do you really want to delete the selected permissions of %s?"
 
 #: app/views/resources/admin/user_permissions.php:179
 msgid "Dauerhafte Berechtigungen"
@@ -29289,9 +29284,8 @@ msgid "Zugriffsrechte bearbeiten"
 msgstr "Edit access permissions"
 
 #: app/views/admin/plugin/index.php:110 app/views/admin/plugin/index.php:111
-#, fuzzy
 msgid "Beschreibung und Hervorhebung"
-msgstr "Description and notes"
+msgstr "Description and highlighting"
 
 #: app/views/admin/plugin/index.php:120 app/views/admin/plugin/index.php:123
 msgid "Automatisches Update verwalten (eingerichtet)"
@@ -38921,9 +38915,8 @@ msgstr[0] "%u questionnaire"
 msgstr[1] "%u questionnaires"
 
 #: lib/classes/MyRealmModel.php:807 lib/meine_seminare_func.inc.php:56
-#, fuzzy
 msgid "Keinem Modul zugeordnet"
-msgstr "Not assigned to a degree"
+msgstr "Not assigned to a module"
 
 #: lib/classes/PageLayout.php:129
 msgid "Hilfe zur Textformatierung"
@@ -40705,14 +40698,12 @@ msgid "Person, Veranstaltung oder Einrichtung suchen"
 msgstr "Search for person, course or institute"
 
 #: lib/classes/searchtypes/TreeSearch.class.php:52
-#, fuzzy
 msgid "Studienbereich suchen"
-msgstr "Fields of study"
+msgstr "Search study area"
 
 #: lib/classes/searchtypes/TreeSearch.class.php:54
-#, fuzzy
 msgid "Eintrag in der Einrichtungshierarchie suchen"
-msgstr "Institute hierarchy"
+msgstr "Search entry in the institute hierarchy"
 
 #: lib/classes/searchtypes/NewsRangesSearch.php:11
 msgid "Bereich suchen"
@@ -43926,9 +43917,8 @@ msgstr "upload"
 
 #: lib/models/Courseware/BlockTypes/Document.php:101
 #: lib/models/Courseware/BlockTypes/Folder.php:144
-#, fuzzy
 msgid "einstellen"
-msgstr "create"
+msgstr "insert"
 
 #: lib/models/Courseware/BlockTypes/Document.php:101
 #: lib/models/Courseware/BlockTypes/Folder.php:144
@@ -44054,9 +44044,8 @@ msgstr "Learning material"
 
 #: lib/models/Courseware/BlockTypes/Download.php:105
 #: lib/models/Courseware/BlockTypes/Folder.php:148
-#, fuzzy
 msgid "Semesterapparat"
-msgstr "Semester plan"
+msgstr "Semester apparatus"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:29
 msgid "Bilder aus einem Ordner im Dateibereich zeigen."
@@ -44068,7 +44057,7 @@ msgstr "Show pictures from a folder in the file area."
 #: lib/models/Courseware/BlockTypes/KeyPoint.php:68
 #: lib/models/Courseware/BlockTypes/Headline.php:116
 msgid "Gestaltung"
-msgstr "Layout"
+msgstr "Design"
 
 #: lib/models/Courseware/BlockTypes/Gallery.php:161
 msgid "Bilderkarussell"
@@ -44131,9 +44120,8 @@ msgid ""
 msgstr "Creates a link inside the Courseware or to another webpage."
 
 #: lib/models/Courseware/BlockTypes/Link.php:67
-#, fuzzy
 msgid "Verlinkung"
-msgstr "Link to module"
+msgstr "Link"
 
 #: lib/models/Courseware/BlockTypes/Link.php:67
 #: lib/models/Courseware/BlockTypes/Embed.php:120
@@ -44229,7 +44217,7 @@ msgstr "Job"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:70
 msgid "Geburtsort"
-msgstr "Birthplace"
+msgstr "Place of birth"
 
 #: lib/models/Courseware/BlockTypes/BiographyPersonalInformation.php:71
 #: lib/models/Courseware/BlockTypes/BiographyGoals.php:68
@@ -44335,19 +44323,16 @@ msgid "Liniendiagramm"
 msgstr "Line chart"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:68
-#, fuzzy
 msgid "Informationsvisualisierung"
-msgstr "Information page"
+msgstr "Information visualisation"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:68
-#, fuzzy
 msgid "Datenvisualisierung"
-msgstr "Update file"
+msgstr "Data visualisation"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:69
-#, fuzzy
 msgid "deskriptiv"
-msgstr "Module descriptor"
+msgstr "descriptive"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:69
 msgid "Datensatz"
@@ -44358,9 +44343,8 @@ msgid "Skala"
 msgstr "Scale"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:70
-#, fuzzy
 msgid "Datenpunkt"
-msgstr "Database"
+msgstr "Data point"
 
 #: lib/models/Courseware/BlockTypes/Chart.php:70
 #, fuzzy
@@ -44414,14 +44398,12 @@ msgid "Review"
 msgstr "Review"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:64
-#, fuzzy
 msgid "Kontrolle"
-msgstr "Context"
+msgstr "Control"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:64
-#, fuzzy
 msgid "Häkchen"
-msgstr "Delete"
+msgstr "Checkbox"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:65
 msgid "Sperre"
@@ -44432,9 +44414,8 @@ msgid "Lesebestätigung"
 msgstr "Read confirmation"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:65
-#, fuzzy
 msgid "Selbstkontrolle"
-msgstr "Self entry"
+msgstr "Self control"
 
 #: lib/models/Courseware/BlockTypes/Confirm.php:65
 msgid "Check"
@@ -44549,9 +44530,8 @@ msgid "FAQ"
 msgstr "FAQ"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
-#, fuzzy
 msgid "wenden"
-msgstr "Quit"
+msgstr "flip"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
 msgid "umdrehen"
@@ -44566,18 +44546,16 @@ msgid "Quiz"
 msgstr "Quiz"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:125
-#, fuzzy
 msgid "Selbsttest"
-msgstr "Self entry"
+msgstr "Self test"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:126
 msgid "Memory"
 msgstr "Memory"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:126
-#, fuzzy
 msgid "Frage Antwort"
-msgstr "Questionnaire answers"
+msgstr "Question answer"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:127
 #, fuzzy
@@ -44610,9 +44588,8 @@ msgid "Countdown"
 msgstr "Countdown"
 
 #: lib/models/Courseware/BlockTypes/Date.php:66
-#, fuzzy
 msgid "Ziffer"
-msgstr "Research results"
+msgstr "Digit"
 
 #: lib/models/Courseware/BlockTypes/Date.php:67
 #, fuzzy
@@ -44624,9 +44601,8 @@ msgid "live"
 msgstr "live"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
-#, fuzzy
 msgid "Treffen"
-msgstr "Research results"
+msgstr "Meeting"
 
 #: lib/models/Courseware/BlockTypes/Date.php:68
 msgid "VK"
@@ -44685,14 +44661,12 @@ msgid "PowerPoint"
 msgstr "Powerpoint"
 
 #: lib/models/Courseware/BlockTypes/Video.php:101
-#, fuzzy
 msgid "Lernvideo"
-msgstr "Learning modules"
+msgstr "Learning video"
 
 #: lib/models/Courseware/BlockTypes/Video.php:101
-#, fuzzy
 msgid "Lehrvideo"
-msgstr "Teaching"
+msgstr "Teaching video"
 
 #: lib/models/Courseware/BlockTypes/Video.php:101
 #, fuzzy
@@ -44766,9 +44740,8 @@ msgstr ""
 "recordings directly in the block."
 
 #: lib/models/Courseware/BlockTypes/Audio.php:106
-#, fuzzy
 msgid "Sprachnachricht"
-msgstr "System message"
+msgstr "Voice message"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:106
 msgid "Audiogalerie"
@@ -44806,9 +44779,8 @@ msgid "Zitat"
 msgstr "Quote"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:108
-#, fuzzy
 msgid "Sprachmemo"
-msgstr "Language"
+msgstr "Voice memo"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:109
 msgid "Tonaufnahme"
@@ -44824,14 +44796,12 @@ msgid "Audioforum"
 msgstr "Audio forum"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:110
-#, fuzzy
 msgid "Sprachaufzeichnung"
-msgstr "Notation"
+msgstr "Voice recording"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:111
-#, fuzzy
 msgid "Studierende interagieren"
-msgstr "Simulate student's view"
+msgstr "Interacting students"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:112
 msgid "Aufnahme"
@@ -44862,9 +44832,8 @@ msgid "Stimme"
 msgstr "Voice"
 
 #: lib/models/Courseware/BlockTypes/Audio.php:113
-#, fuzzy
 msgid "Sprachaufnahme"
-msgstr "Language"
+msgstr "Voice recording"
 
 #: lib/models/Courseware/BlockTypes/BiographyGoals.php:25
 msgid "Ziele"
@@ -45279,9 +45248,8 @@ msgid "bewegen"
 msgstr "move"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:113
-#, fuzzy
 msgid "anfassen"
-msgstr "Write mail"
+msgstr "touch"
 
 #: lib/models/Courseware/BlockTypes/BeforeAfter.php:113
 msgid "Webbild"
@@ -55957,9 +55925,8 @@ msgid "Den Inhalt des Ordners können nur Lehrende und TutorInnen verändern."
 msgstr "Only lecturers and tutors may modify the folder's content."
 
 #: templates/filesystem/root_folder/edit.php:6
-#, fuzzy
 msgid "Upload für Studierende sperren"
-msgstr "Students"
+msgstr "Lock upload for students"
 
 #: templates/filesystem/root_folder/edit.php:8
 msgid "Uploads sind weiterhin in entsprechenden Unterordnern möglich"
