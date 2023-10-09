@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-09-04 14:31+0200\n"
-"PO-Revision-Date: 2023-10-09 16:12+0000\n"
+"PO-Revision-Date: 2023-10-10 16:29+0000\n"
 "Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main/en/>\n"
@@ -22681,9 +22681,8 @@ msgid "Zurück auf Anfang"
 msgstr "Back to start"
 
 #: app/views/course/room_requests/_new_request_form_footer.php:11
-#, fuzzy
 msgid "Angaben bearbeiten"
-msgstr "Edit questionnaire"
+msgstr "Edit data"
 
 #: app/views/course/room_requests/_new_request_form_footer.php:30
 msgid "Raumanfrage speichern"
@@ -44038,9 +44037,8 @@ msgstr "Backup"
 
 #: lib/models/Courseware/BlockTypes/Download.php:105
 #: lib/models/Courseware/BlockTypes/Folder.php:148
-#, fuzzy
 msgid "Zusatzmaterial"
-msgstr "Learning material"
+msgstr "Additional material"
 
 #: lib/models/Courseware/BlockTypes/Download.php:105
 #: lib/models/Courseware/BlockTypes/Folder.php:148
@@ -44474,9 +44472,8 @@ msgid "Podcast"
 msgstr "Podcast"
 
 #: lib/models/Courseware/BlockTypes/Embed.php:121
-#, fuzzy
 msgid "bereitstellen"
-msgstr "create"
+msgstr "provide"
 
 #: lib/models/Courseware/BlockTypes/Embed.php:122
 #: lib/models/Courseware/BlockTypes/DialogCards.php:126
@@ -44558,14 +44555,12 @@ msgid "Frage Antwort"
 msgstr "Question answer"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:127
-#, fuzzy
 msgid "Lernhilfe"
-msgstr "Learning modules"
+msgstr "Learning aid"
 
 #: lib/models/Courseware/BlockTypes/DialogCards.php:127
-#, fuzzy
 msgid "Lerntest"
-msgstr "Learning cards"
+msgstr "Learning test"
 
 #: lib/models/Courseware/BlockTypes/Date.php:29
 msgid "Zeigt einen Termin oder Countdown an."
