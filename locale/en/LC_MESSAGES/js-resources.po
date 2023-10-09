@@ -2,15 +2,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"PO-Revision-Date: 2023-09-20 09:29+0000\n"
-"Last-Translator: Ron Lucke <lucke@elan-ev.de>\n"
+"PO-Revision-Date: 2023-10-10 16:29+0000\n"
+"Last-Translator: Moritz Strohm <strohm@data-quest.de>\n"
 "Language-Team: English <https://weblate.uni-vechta.de/projects/stud-ip/"
 "stud-ip-main-js/en/>\n"
 "Language: en\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 5.0.2\n"
 "Generated-By: easygettext\n"
 
 #: resources/assets/javascripts/lib/multi_person_search.js:70
@@ -62,9 +62,8 @@ msgstr[0] "%{ count } notification"
 msgstr[1] "%{ count } notifications"
 
 #: resources/vue/components/tree/StudipTreeTable.vue:129
-#, fuzzy
 msgid "%{ count } Unterebenen"
-msgstr "Sub-layer display"
+msgstr "%{ count } sub-layers"
 
 #: resources/vue/components/stock-images/ImagesList.vue:40
 msgid "%{ n } Bild gefunden"
@@ -285,11 +284,10 @@ msgstr "<%= count %> selected"
 #: resources/vue/components/tree/TreeNodeCourseInfo.vue:11
 #: resources/vue/components/tree/TreeNodeCourseInfo.vue:15
 #: resources/vue/components/tree/TreeNodeCourseInfo.vue:1
-#, fuzzy
 msgid "<strong>Eine</strong> Veranstaltung auf allen Unterebenen."
 msgid_plural "<strong>%{count}</strong> Veranstaltungen auf allen Unterebenen."
-msgstr[0] "enrol <strong>%s</strong> in the course"
-msgstr[1] "enrol <strong>%s</strong> in the course"
+msgstr[0] "<strong>One</strong> course in all sub-layers."
+msgstr[1] "<strong>%{count}</strong> courses in all sub-layers."
 
 #: resources/vue/components/tree/TreeNodeCourseInfo.vue:3
 #: resources/vue/components/tree/TreeNodeCourseInfo.vue:7
@@ -309,9 +307,8 @@ msgid "14-tägig"
 msgstr "14-day"
 
 #: resources/vue/components/courseware/CoursewareHeadlineBlock.vue:200
-#, fuzzy
 msgid "2. Untertitel"
-msgstr "Subtitle"
+msgstr "2nd subtitle"
 
 #: resources/vue/components/courseware/CoursewareBlockEdit.vue:27
 #: resources/vue/components/courseware/CoursewareClipboardItem.vue:41
@@ -793,9 +790,8 @@ msgstr "No further sub-levels exist below this level."
 
 #: resources/vue/components/tree/StudipTreeList.vue:142
 #: resources/vue/components/tree/StudipTreeTable.vue:96
-#, fuzzy
 msgid "Auf dieser Ebene sind keine Veranstaltungen zugeordnet."
-msgstr "This folder is assigned to a course date."
+msgstr "No courses are assigned on this layer."
 
 #: resources/vue/components/courseware/CoursewareExportWidget.vue:50
 msgid "Auf OER Campus veröffentlichen"
@@ -1947,13 +1943,12 @@ msgid "Der Benutzername ist zu kurz, er sollte mindestens 4 Zeichen lang sein."
 msgstr "The username is too short - it must comprise at least 4 characters."
 
 #: resources/vue/components/courseware/CoursewareGalleryBlock.vue:255
-#, fuzzy
 msgid ""
 "Der Beschreibungstext wird angezeigt, wenn Sie den Mauszeiger über das Bild "
 "bewegen."
 msgstr ""
-"The file name will be displayed when you move the mouse pointer over the "
-"content."
+"The description will be displayed when you move the mouse pointer over the "
+"image."
 
 #: resources/vue/components/courseware/CoursewareBlockadderItem.vue:74
 #: resources/vue/components/courseware/CoursewareClipboardItem.vue:19
@@ -2402,13 +2397,13 @@ msgstr[1] "%{count} entries found for the term \"%{searchterm}\""
 msgid ""
 "Ein technisches Problem verhindert, dass Ihr Kommentar erstellt werden "
 "konnte."
-msgstr ""
+msgstr "A technical problem prevents the creation of your comment."
 
 #: resources/vue/components/blubber/Panel.vue:106
 msgid ""
 "Ein technisches Problem verhindert, dass Ihre Datei hochgeladen werden "
 "konnte."
-msgstr ""
+msgstr "A technical problem prevents the upload of your file."
 
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:25
 #: resources/vue/components/courseware/CoursewareShelfDialogAdd.vue:19
@@ -2697,7 +2692,7 @@ msgstr "An error occurred while uploading the file(s):"
 
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:329
 msgid "Es gab einen Fehler. Bitte versuchen Sie es erneut!"
-msgstr "An error occurred during upload. Please try again!"
+msgstr "An error occurred. Please try again!"
 
 #: resources/assets/javascripts/lib/dialog.js:307
 msgid "Es ist ein Fehler aufgetreten"
@@ -3327,7 +3322,7 @@ msgstr "Birthday"
 #: resources/vue/components/courseware/CoursewareBiographyPersonalInformationBlock.vue:6
 #: resources/vue/components/courseware/CoursewareBiographyPersonalInformationBlock.vue:7
 msgid "Geburtsort"
-msgstr "Birthplace"
+msgstr "Place of birth"
 
 #: resources/vue/components/courseware/CoursewareDocumentBlock.vue:350
 msgid "gedreht"
@@ -3381,7 +3376,7 @@ msgstr "Speed"
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:76
 #: resources/vue/components/courseware/CoursewareToolsBlockadder.vue:75
 msgid "Gestaltung"
-msgstr "Layout"
+msgstr "Design"
 
 #: resources/vue/components/courseware/CoursewareSharedItems.vue:16
 #: resources/vue/components/courseware/CoursewareSharedItems.vue:17
@@ -3620,9 +3615,8 @@ msgstr ""
 "interesting if the page is shared as OER."
 
 #: resources/assets/javascripts/bootstrap/forms.js:333
-#, fuzzy
 msgid "Hier muss ein Wert eingetragen werden."
-msgstr "Persons to be added to the group"
+msgstr "A value must be entered here."
 
 #: resources/vue/components/blubber/Comment.vue:69
 #: resources/vue/components/BlubberThread.vue:190
@@ -6253,13 +6247,16 @@ msgid ""
 "Sind sie sicher, dass der Eintrag \"%{ node }\" gelöscht werden soll? Er hat "
 "%{ children } Unterelemente."
 msgstr ""
+"Are you sure that the entry \"%{ node }\" shall be deleted? It has %{ "
+"children } sub-elements."
 
 #: resources/vue/components/tree/TreeBreadcrumb.vue:118
-#, fuzzy
 msgid ""
 "Sind sie sicher, dass der Eintrag \"%{ node }\" gelöscht werden soll? Er hat "
 "%{ courses } Veranstaltungszuordnungen."
-msgstr "Delete admission \"%s\"? All assigned courses will be opened."
+msgstr ""
+"Are you sure that the entry \"%{ node }\" shall be deleted? It has %{ "
+"courses } course assignments."
 
 #: resources/assets/javascripts/lib/forum.js:110
 msgid "Sind sie sicher, dass Sie diese Kategorie entfernen möchten? "
@@ -6321,6 +6318,8 @@ msgid ""
 "Sortierelement für Element %{node}. Drücken Sie die Tasten Pfeil-nach-oben "
 "oder Pfeil-nach-unten, um dieses Element in der Liste zu verschieben."
 msgstr ""
+"Sorting element for the element %{node}. Press the up or down arrow key to "
+"move this element inside the list."
 
 #: resources/assets/javascripts/chunks/tablesorter.js:26
 msgid "Sortieren ist deaktiviert"
@@ -6858,9 +6857,8 @@ msgid "Unterebene %{ node } öffnen"
 msgstr "Open all sub-elements"
 
 #: resources/vue/components/tree/StudipTreeList.vue:99
-#, fuzzy
 msgid "Unterebenen"
-msgstr "Sub-pages"
+msgstr "Sub-layers"
 
 #: resources/vue/components/courseware/CoursewareStructuralElementDialogAdd.vue:66
 #: resources/vue/components/courseware/CoursewareStructuralElement.vue:202
@@ -7661,9 +7659,8 @@ msgid "Zoom Stufe ausgweählt"
 msgstr "Zoom level selected"
 
 #: resources/vue/components/stock-images/ImagesList.vue:71
-#, fuzzy
 msgid "Zu diesem Suchbegriff konnten keine Bilder gefunden werden."
-msgstr "No results in this area."
+msgstr "No images could be found for this search term."
 
 #: resources/vue/components/courseware/CoursewareIframeBlock.vue:171
 #: resources/vue/components/courseware/CoursewareIframeBlock.vue:43
@@ -7711,14 +7708,12 @@ msgid "Zum Start"
 msgstr "Go to start"
 
 #: resources/vue/components/tree/AssignLinkWidget.vue:14
-#, fuzzy
 msgid "Zuordnung"
-msgstr "Assignments"
+msgstr "Assignment"
 
 #: resources/vue/components/tree/StudipTreeNode.vue:48
-#, fuzzy
 msgid "Zuordnung ändern"
-msgstr "Assignments"
+msgstr "Change assignment"
 
 #: resources/vue/components/courseware/CoursewareDialogCardsBlock.vue:90
 #: resources/vue/components/courseware/CoursewareDialogCardsBlock.vue:102
