@@ -68,18 +68,17 @@ class Course_StudygroupController extends AuthenticatedController
     /**
      * shows details of a studygroup
      *
-     * @param string id of a studygroup
+     * @param string $id of a studygroup
      * @return void
      */
     public function details_action($id = null)
     {
-        global $perm;
-
         if (!$id) {
             $id = Context::getId();
         }
 
         $studygroup = new Seminar($id);
+        $this->sidebarActions = [];
         if (Request::isXhr()) {
             PageLayout::setTitle(_('Studiengruppendetails'));
         } else {
