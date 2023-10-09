@@ -55,6 +55,13 @@ class ResourcePropertyDefinition extends SimpleORMap
             'class_name' => ResourcePropertyGroup::class,
             'foreign_key' => 'property_group_id'
         ];
+
+        $config['has_many']['properties'] = [
+            'class_name'        => ResourceProperty::class,
+            'assoc_foreign_key' => 'property_id',
+            'on_delete'         => 'delete',
+        ];
+
         $config['i18n_fields']['display_name'] = true;
         $config['i18n_fields']['description'] = true;
 
