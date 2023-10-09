@@ -28,7 +28,7 @@
         "mishal/iless": "^2.2",
         "ezyang/htmlpurifier": "^4.13",
         "davefx/phplot": "^6.2",
-        "jasig/phpcas": "^1.3",
+        "jasig/phpcas": "1.5",
         "phpxmlrpc/phpxmlrpc": "^4.4",
         "phpxmlrpc/extras": "^0.6.2",
         "algo26-matthias/idna-convert": "^3.0",
