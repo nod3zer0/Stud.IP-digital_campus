@@ -47,8 +47,8 @@ class Keys extends Command
         $this->storeKeyContentsToFile($encryptionKey, $this->generateEncryptionKey());
 
         $keys = RSA::createKey(4096);
-        $this->storeKeyContentsToFile($publicKey, $keys['publickey']);
-        $this->storeKeyContentsToFile($privateKey, $keys['privatekey']);
+        $this->storeKeyContentsToFile($publicKey, $keys->getPublicKey()->toString('PKCS1'));
+        $this->storeKeyContentsToFile($privateKey, $keys->toString('PKCS1'));
 
         $io->info('Schlüsseldateien erfolgreich angelegt.');
 
