@@ -93,7 +93,7 @@ class OptionsWidget extends ListWidget
      */
     public function addSelect(
         string $label,
-        string $url,
+        $url,
         string $name,
         array $options,
         $selected_option = false,
