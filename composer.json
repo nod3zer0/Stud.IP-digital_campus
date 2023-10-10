@@ -46,7 +46,7 @@
         "ext-mbstring": "*",
         "ext-dom": "*",
         "opis/json-schema": "^1.0",
-        "slim/psr7": "1.4",
+        "slim/psr7": "^1.4",
         "slim/slim": "^4.7.1",
         "php-di/php-di": "^6.3.4",
         "symfony/console": "^5.3.16",
