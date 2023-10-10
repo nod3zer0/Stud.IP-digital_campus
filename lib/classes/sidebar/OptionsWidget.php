@@ -31,7 +31,7 @@ class OptionsWidget extends ListWidget
      */
     public function addCheckbox(
         string $label,
-        bool $state,
+        $state,
         string $toggle_url,
         ?string $toggle_url_off = null,
         array $attributes = []
@@ -64,7 +64,7 @@ class OptionsWidget extends ListWidget
     public function addRadioButton(
         string $label,
         string $url,
-        bool $checked = false,
+        $checked = false,
         array $attributes = []
     ): ButtonElement {
         // TODO: Remove this some versions after 5.0
