@@ -112,6 +112,67 @@
     }
 }
 
+html {
+    &:not(.responsive-display) {
+        #admin-courses-index {
+            #sidebar {
+                top: 50px;
+                transition: all var(--transition-duration) ease-in-out;
+
+                &.was-oversized {
+                    height: calc(100vh - 250px);
+                    overflow-y: auto;
+                    position: fixed;
+                    top: 155px;
+
+                    &.no-footer {
+                        height: calc(100vh - 200px);
+                    }
+                }
+
+                .widget-links {
+                    li.active {
+                        &::before,
+                        &::after {
+                            border: 0;
+                        }
+                    }
+                }
+            }
+
+            &.fixed {
+                #sidebar {
+                    height: calc(100vh - 125px);
+                    top: 35px;
+
+                    &.no-footer {
+                        height: calc(100vh - 100px);
+                    }
+                }
+            }
+
+            &.fullscreen-sidebar-shown {
+                #sidebar {
+                    top: 110px;
+
+                    &.was-oversized {
+                        height: calc(100vh - 200px);
+
+                        &.no-footer {
+                            height: calc(100vh - 150px);
+                        }
+
+                        &.fixed {
+                            top: 110px;
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}
+
 ul.widget-list {
     list-style: none;
     margin: 0;
