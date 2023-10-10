@@ -46,8 +46,8 @@ class AdminCourseOptionsWidget extends ListWidget
                 sprintf(
                     'STUDIP.AdminCourses.App.changeFilter({%s: $(this).is(".options-checked") ? %s : %s});',
                     json_encode($filter_name),
-                    json_encode($true_value),
-                    json_encode($false_value)
+                    json_encode($false_value),
+                    json_encode($true_value)
                 ),
                 "return false;",
             ]);
