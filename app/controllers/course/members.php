@@ -999,6 +999,13 @@ class Course_MembersController extends AuthenticatedController
             throw new AccessDeniedException();
         }
 
+        if (
+            !$this->is_dozent
+            && in_array($target_status, ['tutor', 'dozent'])
+        ) {
+            throw new AccessDeniedException(_('Sie dürfen keine Lehrenden oder Tutor/-innen in diese Veranstaltung eintragen.'));
+        }
+
         if (isset($this->flash['consider_contingent'])) {
             Request::set('consider_contingent', $this->flash['consider_contingent']);
         }
@@ -1055,11 +1062,16 @@ class Course_MembersController extends AuthenticatedController
         if (!$this->is_tutor) {
             throw new AccessDeniedException();
         }
+
         $course = Seminar::GetInstance($this->course_id);
         if (!Request::submitted('no')) {
             if (Request::submitted('yes')) {
                 CSRFProtection::verifyUnsafeRequest();
                 $users = Request::getArray('users');
+
+                if (!$this->is_dozent) {
+                    $this->validateTutorPermission($users, $this->course_id);
+                }
                 if (!empty($users)) {
                     if (in_array($status, words('accepted awaiting claiming'))) {
                         $msgs = $course->cancelAdmissionSubscription($users, $status);
@@ -2246,4 +2258,24 @@ class Course_MembersController extends AuthenticatedController
 
         return sprintf('%s %s', $directionString, $log_level);
     }
+
+
+    /**
+     * Checks whether a tutor is attempting to add or remove tutors or
+     * instructors.
+     *
+     * @param array $users Selected users
+     * @param string $course_id ID of the course
+     */
+    private function validateTutorPermission(array $users, string $course_id): void
+    {
+        $invalid_user_ids = array_filter($users, function ($user_id) use ($course_id): bool {
+            return $GLOBALS['perm']->have_studip_perm('tutor', $course_id, $user_id);
+        });
+
+        if (count($invalid_user_ids) > 0) {
+            throw new AccessDeniedException(_('Sie dürfen keine Lehrenden oder Tutor/-innen aus dieser Veranstaltungen austragen.'));
+        }
+    }
+
 }
