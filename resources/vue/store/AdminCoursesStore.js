@@ -81,7 +81,7 @@ export default {
             Screenreader.notify('');
 
             let params = {
-                ...state.filters,
+                filters: state.filters,
                 action: state.actionArea,
                 activated_fields: state.activatedFields,
                 without_limit: withoutLimit ? 1 : null,

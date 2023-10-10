@@ -235,6 +235,17 @@ class Admin_CoursesController extends AuthenticatedController
             )->asDialog('size=auto');
             $sidebar->addWidget($export);
         }
+
+        foreach (PluginEngine::getPlugins(AdminCourseWidgetPlugin::class) as $plugin) {
+            foreach ($plugin->getWidgets() as $name => $widget) {
+                $position = $widget->getPositionInSidebar();
+                if ($position) {
+                    $sidebar->insertWidget($widget, $position, $name);
+                } else {
+                    $sidebar->addWidget($widget, $name);
+                }
+            }
+        }
     }
 
 
@@ -315,21 +326,23 @@ class Admin_CoursesController extends AuthenticatedController
                      ? $configuration->MY_INSTITUTES_DEFAULT
                      : null;
 
+        $filters = array_merge(
+            array_merge(...PluginEngine::sendMessage(AdminCourseWidgetPlugin::class, 'getFilters')),
+            $this->getDatafieldFilters(),
+            [
+                'institut_id'    => $institut_id,
+                'search'         => $configuration->ADMIN_COURSES_SEARCHTEXT,
+                'semester_id'    => $configuration->MY_COURSES_SELECTED_CYCLE,
+                'course_type'    => $configuration->MY_COURSES_TYPE_FILTER,
+                'stgteil'        => $configuration->MY_COURSES_SELECTED_STGTEIL,
+                'teacher_filter' => $configuration->ADMIN_COURSES_TEACHERFILTER,
+            ]
+        );
 
         return [
             'setActivatedFields' => $this->getFilterConfig(),
             'setActionArea' => $configuration->MY_COURSES_ACTION_AREA ?? '1',
-            'setFilter' => array_filter(array_merge(
-                $this->getDatafieldFilters(),
-                [
-                    'institut_id'    => $institut_id,
-                    'search'         => $configuration->ADMIN_COURSES_SEARCHTEXT,
-                    'semester_id'    => $configuration->MY_COURSES_SELECTED_CYCLE,
-                    'course_type'    => $configuration->MY_COURSES_TYPE_FILTER,
-                    'stgteil'        => $configuration->MY_COURSES_SELECTED_STGTEIL,
-                    'teacher_filter' => $configuration->ADMIN_COURSES_TEACHERFILTER,
-                ]
-            )),
+            'setFilter' => array_filter($filters),
         ];
     }
 
@@ -357,59 +370,14 @@ class Admin_CoursesController extends AuthenticatedController
 
     public function search_action()
     {
-        $activeSidebarElements = $this->getActiveElements();
-        if (Request::get('search')) {
-            $GLOBALS['user']->cfg->store('ADMIN_COURSES_SEARCHTEXT', Request::get('search'));
-        } else {
-            $GLOBALS['user']->cfg->delete('ADMIN_COURSES_SEARCHTEXT');
-        }
-        if (Request::option('institut_id') && Request::option('institut_id') !== 'all') {
-            $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', Request::option('institut_id'));
-        } else {
-            $GLOBALS['user']->cfg->delete('MY_INSTITUTES_DEFAULT');
-        }
-
-        if (Request::option('semester_id')) {
-            $GLOBALS['user']->cfg->store('MY_COURSES_SELECTED_CYCLE', Request::option('semester_id'));
-        } else {
-            $GLOBALS['user']->cfg->delete('MY_COURSES_SELECTED_CYCLE');
-        }
-
-        if (Request::option('course_type') && Request::option('course_type') !== 'all') {
-            $GLOBALS['user']->cfg->store('MY_COURSES_TYPE_FILTER', Request::option('course_type'));
-        } else {
-            $GLOBALS['user']->cfg->delete('MY_COURSES_TYPE_FILTER');
-        }
-
-        if (Request::option('stgteil')) {
-            $GLOBALS['user']->cfg->store('MY_COURSES_SELECTED_STGTEIL', Request::option('stgteil'));
-        } else {
-            $GLOBALS['user']->cfg->delete('MY_COURSES_SELECTED_STGTEIL');
-        }
-
-        if (Request::option('teacher_filter')) {
-            $GLOBALS['user']->cfg->store('ADMIN_COURSES_TEACHERFILTER', Request::option('teacher_filter'));
-        } else {
-            $GLOBALS['user']->cfg->delete('ADMIN_COURSES_TEACHERFILTER');
-        }
-
-        $datafields_filters = $GLOBALS['user']->cfg->ADMIN_COURSES_DATAFIELDS_FILTERS;
-        foreach (DataField::getDataFields('sem') as $datafield) {
-            if (
-                Request::get('df_'.$datafield->getId())
-                && in_array($datafield->getId(), $activeSidebarElements['datafields'])
-            ) {
-                $datafields_filters[$datafield->getId()] = Request::get('df_'.$datafield->getId());
-            } else {
-                unset($datafields_filters[$datafield->getId()]);
-            }
-        }
-        $GLOBALS['user']->cfg->store('ADMIN_COURSES_DATAFIELDS_FILTERS', $datafields_filters);
+        $this->processFilters();
 
         $filter = AdminCourseFilter::get();
         if (Request::option('course_id')) { //we have only one course and want to see if that course is part of the result set
             $filter->query->where('course_id', 'seminare.Seminar_id = :course_id', ['course_id' => Request::option('course_id')]);
         }
+        PluginEngine::sendMessage(AdminCourseWidgetPlugin::class, 'applyFilters', $filter);
+
         $count = $filter->countCourses();
         if ($count > $this->max_show_courses && !Request::submitted('without_limit')) {
             $this->render_json([
@@ -524,6 +492,57 @@ class Admin_CoursesController extends AuthenticatedController
         }
 
          $this->render_json($data);
+    }
+
+    private function processFilters(): void
+    {
+        $filters = Request::getArray('filters');
+        $config = User::findCurrent()->getConfiguration();
+
+        // Simple filters
+        $mapping = [
+            'search'         => 'ADMIN_COURSES_SEARCHTEXT',
+            'semester_id'    => 'MY_COURSES_SELECTED_CYCLE',
+            'stgteil'        => 'MY_COURSES_SELECTED_STGTEIL',
+            'teacher_filter' => 'ADMIN_COURSES_TEACHERFILTER',
+            'course_type'    => 'MY_COURSES_TYPE_FILTER',
+            'institut_id'    => 'MY_INSTITUTES_DEFAULT',
+        ];
+
+        foreach ($mapping as $key => $field) {
+            if (isset($filters[$key])) {
+                $config->store($field, $filters[$key]);
+            }
+
+            unset($filters[$key]);
+        }
+
+        // Datafield filters
+        $activeSidebarElements = $this->getActiveElements();
+
+        $datafields_filters = $GLOBALS['user']->cfg->ADMIN_COURSES_DATAFIELDS_FILTERS;
+        foreach (DataField::getDataFields('sem') as $datafield) {
+            $key = "df_{$datafield->id}";
+
+            if (
+                !empty($filters[$key])
+                && in_array($datafield->id, $activeSidebarElements['datafields'])
+            ) {
+                $datafields_filters[$datafield->id] = $filters[$key];
+            } else {
+                unset($datafields_filters[$datafield->id]);
+            }
+        }
+        $config->store('ADMIN_COURSES_DATAFIELDS_FILTERS', $datafields_filters);
+
+        // Plugin filters
+        foreach (PluginEngine::getPlugins(AdminCourseWidgetPlugin::class) as $plugin) {
+            $plugin_filters = array_intersect_key(
+                $filters,
+                $plugin->getFilters()
+            );
+            $plugin->setFilters($plugin_filters);
+        }
     }
 
     protected function getCourseData(Course $course, $activated_fields)

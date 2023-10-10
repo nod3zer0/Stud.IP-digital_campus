@@ -41,25 +41,31 @@ class Widget
     /**
      * Add an element to the widget.
      *
-     * @param WidgetElement $element The actual element
-     * @param String        $index   Index/name of the element
+     * @template E of WidgetElement
+     * @param E $element The actual element
+     * @param String $index   Index/name of the element
+     * @return E
      */
-    public function addElement(WidgetElement $element, $index = null)
+    public function addElement(WidgetElement $element, $index = null): WidgetElement
     {
         $index = $index ?: $this->guessIndex($element);
 
         $this->elements[$index] = $element;
+
+        return $element;
     }
 
     /**
      * Insert an element before a specific other element or at the end of the
      * list if the specified position is invalid.
      *
-     * @param WidgetElement $element      The actual element
+     * @template E of WidgetElement
+     * @param E $element The actual element
      * @param String        $before_index Insert element before this element.
      * @param String        $index        Index/name of the element
+     * @return E
      */
-    public function insertElement(WidgetElement $element, $before_index, $index = null)
+    public function insertElement(WidgetElement $element, $before_index, $index = null): WidgetElement
     {
         $index = $index ?: $this->guessIndex($element);
 
@@ -79,6 +85,8 @@ class Widget
         }
 
         $this->elements = $elements;
+
+        return $element;
     }
 
     /**

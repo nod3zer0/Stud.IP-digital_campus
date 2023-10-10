@@ -70,9 +70,10 @@ class PluginEngine
      * returns all enabled plugins. The optional context parameter can be
      * used to get only plugins that are activated in the given context.
      *
-     * @param string $type plugin type or null (all types)
+     * @template T
+     * @param T $type plugin type or null (all types)
      * @param string $context context range id (optional)
-     * @return array all plugins of the specified type
+     * @return T[] all plugins of the specified type
      */
     public static function getPlugins ($type, $context = null)
     {

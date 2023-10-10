@@ -8,9 +8,9 @@ class OptionsWidget extends ListWidget
     const INDEX = 'options';
 
     /**
-     * @param String $title Optional alternative title
+     * @param string|null $title Optional alternative title
      */
-    public function __construct($title = null)
+    public function __construct(?string $title = null)
     {
         parent::__construct();
 
@@ -19,85 +19,90 @@ class OptionsWidget extends ListWidget
     }
 
     /**
-     * @param String $label
-     * @param bool   $state
-     * @param String $toggle_url     Url to execute the action
-     * @param String $toggle_url_off Optional alternative url to explicitely
-     *                               turn off the checkbox ($toggle_url will
-     *                               then act as $toggle_url_on)
-     * @param Array  $attributes  Optional additional attributes for the anchor
+     * @param string      $label
+     * @param bool        $state
+     * @param string      $toggle_url     Url to execute the action
+     * @param string|null $toggle_url_off Optional alternative url to explicitely
+     *                                    turn off the checkbox ($toggle_url will
+     *                                    then act as $toggle_url_on)
+     * @param Array       $attributes     Optional additional attributes for the anchor
+     *
+     * @return ButtonElement
      */
-    public function addCheckbox($label, $state, $toggle_url, $toggle_url_off = null, array $attributes = [])
-    {
+    public function addCheckbox(
+        string $label,
+        bool $state,
+        string $toggle_url,
+        ?string $toggle_url_off = null,
+        array $attributes = []
+    ): ButtonElement {
         // TODO: Remove this some versions after 5.0
         $toggle_url = html_entity_decode($toggle_url);
         $toggle_url_off = isset($toggle_url_off) ? html_entity_decode($toggle_url_off) : null;
 
-        $content = sprintf(
-            '<button formaction="%s" role="checkbox" aria-checked="%s" class="options-checkbox options-%s" %s>%s</button>',
-            htmlReady($state && $toggle_url_off !== null ? $toggle_url_off : $toggle_url),
-            $state ? 'true' : 'false',
-            $state ? 'checked' : 'unchecked',
-            arrayToHtmlAttributes($attributes),
-            htmlReady($label)
+        $attributes['class'] = trim(($attributes['class'] ?? '') . ' options-checkbox options-' . ($state ? 'checked' : 'unchecked'));
+
+        return $this->addElement(
+            new ButtonElement($label, null, $attributes + [
+                'aria-checked' => $state ? 'true' : 'false',
+                'formaction'   => $state && $toggle_url_off !== null ? $toggle_url_off : $toggle_url,
+                'role'         => 'checkbox',
+            ])
         );
-        $this->addElement(new WidgetElement($content));
     }
 
     /**
-     * @param String $label
-     * @param String $url
+     * Adds a radio button to the widget.
+     *
+     * @param string $label
+     * @param string $url
      * @param bool   $checked
+     * @param array $attributes
+     *
+     * @return ButtonElement
      */
-    public function addRadioButton($label, $url, $checked = false, array $attributes = [])
-    {
+    public function addRadioButton(
+        string $label,
+        string $url,
+        bool $checked = false,
+        array $attributes = []
+    ): ButtonElement {
         // TODO: Remove this some versions after 5.0
         $url = html_entity_decode($url);
 
-        $content = sprintf(
-            '<button formaction="%s" role="radio" aria-checked="%s" class="options-radio options-%s" %s>%s</button>',
-            htmlReady($url),
-            $checked ? 'true' : 'false',
-            $checked ? 'checked' : 'unchecked',
-            arrayToHtmlAttributes($attributes),
-            htmlReady($label)
+        $attributes['class'] = trim(($attributes['class'] ?? '') . ' options-radio options-' . ($checked ? 'checked' : 'unchecked'));
+
+        return $this->addElement(
+            new ButtonElement($label, null, $attributes + [
+                'aria-checked' => $checked ? 'true' : 'false',
+                'formaction'   => $url,
+                'role'         => 'radio',
+            ])
         );
-        $this->addElement(new WidgetElement($content));
     }
 
     /**
      * Adds a select element to the widget.
      *
-     * @param String $label
-     * @param String $url
-     * @param String $name            Attribute name
+     * @param string $label
+     * @param string $url
+     * @param string $name            Attribute name
      * @param array  $options         Array of associative options (value => label)
      * @param mixed  $selected_option Currently selected option
      * @param array  $attributes      Additional attributes
      */
-    public function addSelect($label, $url, $name, $options, $selected_option = false, $attributes = [])
-    {
-        $option_content = '';
+    public function addSelect(
+        string $label,
+        string $url,
+        string $name,
+        array $options,
+        $selected_option = false,
+        array $attributes = []
+    ): SelectListElement {
+        $attributes['data-formaction'] = $url;
 
-        foreach ($options as $value => $option) {
-            $selected = $value === $selected_option ? 'selected' : '';
-            $option_content .= sprintf(
-                '<option value="%s" %s>%s</option>', 
-                htmlReady($value),
-                $selected, 
-                htmlReady($option)
-            );
-        }
-
-        $content = sprintf(
-            '<select data-formaction="%s" class="sidebar-selectlist submit-upon-select" name="%s" aria-label="%s" %s>%s</select>',
-            htmlReady($url),
-            htmlReady($name),
-            htmlReady($label),
-            arrayToHtmlAttributes($attributes),
-            $option_content
+        return $this->addElement(
+            new SelectListElement($label, $name, $options, $selected_option, $attributes)
         );
-
-        $this->addElement(new WidgetElement($content));
     }
 }
