@@ -31,8 +31,6 @@ $commands = [
     Commands\Cronjobs\CronjobWorker::class,
     Commands\Cronjobs\CronjobWorker::class,
     Commands\DB\Dump::class,
-    Commands\DB\MigrateEngine::class,
-    Commands\DB\MigrateFileFormat::class,
     Commands\Files\Dump::class,
     Commands\Fix\Biest7789::class,
     Commands\Fix\Biest7866::class,
