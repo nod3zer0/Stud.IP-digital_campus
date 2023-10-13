@@ -46,7 +46,6 @@ import Messages from './lib/messages.js';
 import MultiPersonSearch from './lib/multi_person_search.js';
 import MultiSelect from './lib/multi_select.js';
 import NavigationShrinker from './lib/navigation_shrinker.js';
-import News from './lib/news.js';
 import OER from './lib/oer.js';
 import OldUpload from './lib/old_upload.js';
 import Overlapping from './lib/overlapping.js';
@@ -136,7 +135,6 @@ window.STUDIP = _.assign(window.STUDIP || {}, {
     MultiPersonSearch,
     MultiSelect,
     NavigationShrinker,
-    News,
     OER,
     OldUpload,
     Overlapping,
