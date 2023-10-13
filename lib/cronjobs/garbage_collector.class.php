@@ -148,6 +148,15 @@ class GarbageCollectorJob extends CronJob
 
         Studip\Activity\Activity::doGarbageCollect();
 
+        // remove old entries from the table "object_user_visits".
+        if (Config::get()->NEW_INDICATOR_THRESHOLD) {
+            $query = "DELETE FROM `object_user_visits`
+                      WHERE GREATEST(`visitdate`, `last_visitdate`) < UNIX_TIMESTAMP(NOW() - INTERVAL :expires DAY)";
+            $statement = DBManager::get()->prepare($query);
+            $statement->bindValue(':expires', (int) Config::get()->NEW_INDICATOR_THRESHOLD, PDO::PARAM_INT);
+            $statement->execute();
+        }
+
         // clean db cache
         $cache = new StudipDbCache();
         $cache->purge();
