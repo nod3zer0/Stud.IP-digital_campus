@@ -15,11 +15,14 @@
  * the License, or (at your option) any later version.
  */
 
+use PhpXmlRpc\Extras\XmlrpcSmartyTemplate;
+use PhpXmlRpc\PhpXmlRpc;
+
 require '../lib/bootstrap.php';
 require '../lib/webservices/webservices_bootstrap.php';
 
 // Bootstrap documenting server
-class StudipDocumentingXmlRpcServer extends documenting_xmlrpc_server
+class StudipDocumentingXmlRpcServer extends \PhpXmlRpc\Extras\SelfDocumentingServer
 {
     public function checkAuth()
     {
@@ -45,27 +48,35 @@ class StudipDocumentingXmlRpcServer extends documenting_xmlrpc_server
         return parent::service($data, $return_payload, $doctype);
     }
 
-    public function generateDocs($server, $doctype='html', $lang='en', $editorpath='')
+    public function generateDocs($doctype='html', $lang='en', $editorpath='')
     {
         if ($doctype === 'html' && isset($_GET['methodName'])) {
             $_GET['methodName'] = preg_replace('/[^a-zA-Z0-9_.:\/]/', '', $_GET['methodName']);
         }
 
-        parent::generateDocs($server, $doctype, $lang, $editorpath);
-    }
-
-    public function __get($key)
-    {
-        if ($key === 'dmap') {
-            return $this->allow_system_funcs
-                 ? array_merge($this->dmap, $this->getSystemDispatchMap())
-                 : $this->dmap;
-        }
+        $documentationGenerator = new StudipServerDocumentor(new XmlrpcSmartyTemplate(null));
+        return $documentationGenerator->generateDocs($this, $doctype, $lang, $editorpath);
     }
 }
 
-$GLOBALS['_xmlrpcs_dmap'] = [];
-$GLOBALS['xmlrpcdocparts']['html']['docheader'] .= '<link href="assets/stylesheets/webservices.css" type="text/css" rel="stylesheet">';
+class StudipServerDocumentor extends \PhpXmlRpc\Extras\ServerDocumentor
+{
+    public static function templates()
+    {
+        return array_merge(parent::templates(), [
+            'docheader' => '<!DOCTYPE html>
+<html lang="{$lang}">
+<head>
+<meta name="generator" content="' . PhpXmlRpc::$xmlrpcName . '" />
+<link href="assets/stylesheets/webservices.css" type="text/css" rel="stylesheet" />
+{$extras}
+<title>{$title}</title>
+</head>
+<body>',
+        ]);
+    }
+}
+
 
 # create server
 $dispatcher = new Studip_Ws_XmlrpcDispatcher($AVAILABLE_SERVICES);

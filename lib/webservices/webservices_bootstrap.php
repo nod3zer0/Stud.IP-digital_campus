@@ -23,10 +23,6 @@ require_once 'vendor/studip_ws/soap_dispatcher.php';
 require_once 'vendor/studip_ws/studip_ws.php';
 require_once 'vendor/studip_ws/xmlrpc_dispatcher.php';
 
-# requiring jsonrpc_dispatcher
-require_once 'vendor/studip_ws/studip_ws.php';
-require_once 'vendor/studip_ws/jsonrpc_dispatcher.php';
-
 # requiring all the webservices
 require_once 'lib/webservices/services/access_controlled_webservice.php';
 require_once 'lib/webservices/services/user_webservice.php';
