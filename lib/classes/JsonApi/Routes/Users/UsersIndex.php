@@ -37,12 +37,11 @@ class UsersIndex extends JsonApiController
 
         list($offset, $limit) = $this->getOffsetAndLimit();
         $partSQL = \GlobalSearchUsers::getSQL($filters['search'], [], $limit + $offset);
+        $search_result = \DBManager::get()->fetchAll($partSQL);
         $total = (int) \DBManager::get()->fetchColumn('SELECT FOUND_ROWS() as found_rows');
-        $users = \User::findMany(
-            array_map(function ($array) {
-                return $array['user_id'];
-            }, \DBManager::get()->fetchAll($partSQL))
-        );
+
+        $user_ids = array_column($search_result, 'user_id');
+        $users = \User::findMany($user_ids);
 
         return $this->getPaginatedContentResponse($users, $total);
     }
