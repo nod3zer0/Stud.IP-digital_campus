@@ -115,6 +115,8 @@ class RouteMap
         $group->get('/config-values/{id}', Routes\ConfigValues\ConfigValuesShow::class);
         $group->patch('/config-values/{id}', Routes\ConfigValues\ConfigValuesUpdate::class);
 
+        $group->get('/status-groups/{id}', Routes\StatusgroupShow::class);
+
         $this->addAuthenticatedBlubberRoutes($group);
         $this->addAuthenticatedConsultationRoutes($group);
         $this->addAuthenticatedContactsRoutes($group);

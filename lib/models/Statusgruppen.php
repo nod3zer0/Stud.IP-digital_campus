@@ -42,6 +42,7 @@
  * @property BlubberStatusgruppeThread $blubberthread has_one BlubberStatusgruppeThread
  * @property SimpleORMapCollection|CourseDate[] $dates has_and_belongs_to_many CourseDate
  * @property mixed $children additional field
+ * @property-read Range|null $range
  */
 class Statusgruppen extends SimpleORMap implements PrivacyObject
 {
@@ -95,6 +96,12 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         ];
 
         $config['additional_fields']['children'] = true;
+
+        $config['additional_fields']['range'] = [
+            'get' => function (Statusgruppen $group): ?Range {
+                return RangeFactory::find($group->range_id);
+            },
+        ];
 
         $config['default_values']['position'] = null;
 
