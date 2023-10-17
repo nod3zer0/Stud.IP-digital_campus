@@ -9,10 +9,10 @@ export const loadScript = function (script_name) {
 };
 
 export const loadChunk = (function () {
-    var mathjax_promise = null;
+    let mathjax_promise = null;
 
     return function (chunk) {
-        var promise = null;
+        let promise = null;
         switch (chunk) {
 
             case 'code-highlight':
@@ -22,6 +22,16 @@ export const loadChunk = (function () {
                 ).then(({default: hljs}) => {
                     return hljs;
                 });
+                break;
+
+            case 'courseware':
+                promise = Promise.all([
+                    STUDIP.loadChunk('vue'),
+                    import(
+                        /* webpackChunkName: "courseware" */
+                        './chunks/courseware'
+                    ),
+                ]).then(([Vue]) => Vue);
                 break;
 
             case 'chartist':

@@ -1,6 +1,6 @@
 STUDIP.domReady(() => {
     if (document.getElementById('courseware-shelf-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-shelf-app" */
                 '@/vue/courseware-shelf-app.js'
@@ -11,7 +11,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-index-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-index-app" */
                 '@/vue/courseware-index-app.js'
@@ -22,7 +22,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-activities-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-activities-app" */
                 '@/vue/courseware-activities-app.js'
@@ -33,7 +33,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-tasks-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-tasks-app" */
                 '@/vue/courseware-tasks-app.js'
@@ -44,7 +44,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-content-bookmark-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-content-bookmark-app" */
                 '@/vue/courseware-content-bookmark-app.js'
@@ -55,7 +55,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-admin-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-content-bookmark-app" */
                 '@/vue/courseware-admin-app.js'
@@ -66,7 +66,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-public-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-public-app" */
                 '@/vue/courseware-public-app.js'
@@ -77,7 +77,7 @@ STUDIP.domReady(() => {
     }
 
     if (document.getElementById('courseware-content-releases-app')) {
-        STUDIP.Vue.load().then(({ createApp }) => {
+        STUDIP.loadChunk('courseware').then(({ createApp }) => {
             import(
                 /* webpackChunkName: "courseware-content-releases-app" */
                 '@/vue/courseware-content-releases-app.js'

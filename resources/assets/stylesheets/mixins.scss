@@ -1,6 +1,8 @@
 $image-path: "../images" !default;
 $icon-path: "#{$image-path}/icons" !default;
 
+@import "scss/variables";
+
 @import "mixins/misc";
 @import "mixins/colors";
 @import "mixins/studip";

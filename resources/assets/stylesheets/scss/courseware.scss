@@ -1,7 +1,7 @@
-@import "courseware_gradients.scss";
-
-
 /* definitions */
+@use '../mixins.scss' as *;
+@import './drag-handle.scss';
+@import "courseware_gradients.scss";
 
 $companion-types: (
     default: basic,

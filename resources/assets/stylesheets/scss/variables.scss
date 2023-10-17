@@ -1,5 +1,6 @@
 @import '../mixins/colors.scss';
 
+// Typography
 $text-color:              #000;
 
 $font-family-base:        "Lato", sans-serif;
@@ -41,6 +42,23 @@ $drag_and_drop_z_index: 1000;
 $drag_and_drop_border: 1px solid $base-color;
 
 $transition-duration: .3s;
+
+// Layout
+$page-margin: 15px;
+
+$sidebar-padding: 12px;
+$sidebar-width: 270px;
+
+$content-width: 400px;
+$content-margin: 12px;
+$max-content-width: 4 * $sidebar-width + $page-margin;
+
+$footer-height: 32px;
+
+$site-width: ($page-margin * 2 + $sidebar-width + $sidebar-padding * 2 + $sidebar-border-width * 2 + $content-width + $content-margin * 2);
+$page-width: ($sidebar-width + $sidebar-padding * 2 + $sidebar-border-width * 2 + $content-width + $content-margin * 2);
+
+$grid-gap: 0;
 
 :root {
     // The special handling for -- as #{"--"} seems to be neccessary to make
