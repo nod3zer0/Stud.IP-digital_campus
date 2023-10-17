@@ -24,7 +24,11 @@ class CalendarNavigation extends Navigation
 
         parent::__construct(_('Planer'));
 
-        if (!$perm->have_perm('admin') && Config::get()->SCHEDULE_ENABLE) {
+        if (
+            isset($perm)
+            && !$perm->have_perm('admin')
+            && Config::get()->SCHEDULE_ENABLE
+        ) {
             $planerinfo = _('Stundenplan');
         } else {
             $planerinfo = _('Termine');

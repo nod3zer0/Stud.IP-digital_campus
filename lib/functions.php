@@ -1521,6 +1521,13 @@ function studip_default_exception_handler($exception) {
 
 
     try {
+        if (!isset($GLOBALS['user'])) {
+            $GLOBALS['user'] = new Seminar_User('nobody');
+            $GLOBALS['perm'] = new Seminar_Perm();
+        }
+        if (empty($_SESSION['_language'])) {
+            $_SESSION['_language'] = 'de_DE';
+        }
         $args = compact('exception', 'status');
         ob_start();
         echo $GLOBALS['template_factory']->render($template, $args, $layout);
