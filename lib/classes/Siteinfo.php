@@ -49,6 +49,16 @@ class Siteinfo {
         }
     }
 
+    public function get_detail_draft_status($id) {
+        $sql = "SELECT draft_status
+                FROM siteinfo_details
+                WHERE detail_id = :id";
+        $statement = DBManager::get()->prepare($sql);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+
     function get_detail_name($id) {
         $sql = "SELECT name
                 FROM siteinfo_details
@@ -66,7 +76,7 @@ class Siteinfo {
     }
 
     function get_all_details() {
-        $sql = "SELECT detail_id, rubric_id, name
+        $sql = "SELECT detail_id, rubric_id, name, draft_status
                 FROM siteinfo_details
                 ORDER BY position, detail_id ASC";
         $result = $this->db->query($sql);
@@ -137,25 +147,27 @@ class Siteinfo {
         switch ($type) {
             case 'update_detail':
                 $query = "UPDATE siteinfo_details
-                          SET rubric_id = :rubric_id, name = :name, content = :content
+                          SET rubric_id = :rubric_id, name = :name, content = :content, draft_status = :draft_status
                           WHERE detail_id = :detail_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);
                 $statement->bindValue(':name', $input['detail_name']);
                 $statement->bindValue(':content', $input['content']);
                 $statement->bindValue(':detail_id', $input['detail_id'], PDO::PARAM_INT);
+                $statement->bindValue(':draft_status', $input['draft_status']);
                 $statement->execute();
 
                 $rubric = $input['rubric_id'];
                 $detail = $input['detail_id'];
                 break;
             case 'insert_detail':
-                $query = "INSERT INTO siteinfo_details (rubric_id, name, content)
-                          VALUES (:rubric_id, :name, :content)";
+                $query = "INSERT INTO siteinfo_details (rubric_id, name, content, draft_status)
+                          VALUES (:rubric_id, :name, :content, :draft_status)";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);
                 $statement->bindValue(':name', $input['detail_name']);
                 $statement->bindValue(':content', $input['content']);
+                $statement->bindValue(':draft_status', $input['draft_status']);
                 $statement->execute();
 
                 $rubric = $input['rubric_id'];

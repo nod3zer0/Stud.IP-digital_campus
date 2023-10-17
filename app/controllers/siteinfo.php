@@ -71,8 +71,16 @@ class SiteinfoController extends StudipController
             if ($detail[2] == '') {
                 $detail[2] = _('unbenannt');
             }
-            Navigation::addItem('/footer/siteinfo/'.$detail[1].'/'.$detail[0],
-                new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
+
+            // check draft status and possibly hide site in navigation
+            if ($detail[3] == 1 && $GLOBALS['perm']->have_perm('root')) {
+
+                Navigation::addItem('/footer/siteinfo/'.$detail[1].'/'.$detail[0],
+                    new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
+            } else if ($detail[3] != 1) {
+                Navigation::addItem('/footer/siteinfo/'.$detail[1].'/'.$detail[0],
+                    new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
+            }
         }
 
         if ($action != 'new') {
@@ -127,6 +135,10 @@ class SiteinfoController extends StudipController
      */
     public function show_action()
     {
+        $draft_status = $this->si->get_detail_draft_status($this->currentdetail);
+        if ($draft_status == 1 && !$GLOBALS['perm']->have_perm('root')) {
+            throw new AccessDeniedException();
+        }
         $this->output = $this->si->get_detail_content_processed($this->currentdetail);
     }
 
@@ -148,10 +160,11 @@ class SiteinfoController extends StudipController
     public function edit_action($givenrubric = null, $givendetail = null)
     {
         if (is_numeric($givendetail)) {
-            $this->rubrics     = $this->si->get_all_rubrics();
-            $this->rubric_id   = $this->si->rubric_for_detail($this->currentdetail);
-            $this->detail_name = $this->si->get_detail_name($this->currentdetail);
-            $this->content     = $this->si->get_detail_content($this->currentdetail);
+            $this->rubrics      = $this->si->get_all_rubrics();
+            $this->rubric_id    = $this->si->rubric_for_detail($this->currentdetail);
+            $this->detail_name  = $this->si->get_detail_name($this->currentdetail);
+            $this->content      = $this->si->get_detail_content($this->currentdetail);
+            $this->draft_status = $this->si->get_detail_draft_status($this->currentdetail);
         } else {
             $this->edit_rubric = true;
             $this->rubric_id = $this->currentrubric;
@@ -161,17 +174,19 @@ class SiteinfoController extends StudipController
 
     public function save_action()
     {
-        $detail_name = Request::get('detail_name');
-        $rubric_name = Request::get('rubric_name');
-        $content     = Request::get('content');
-        $rubric_id   = Request::int('rubric_id');
-        $detail_id   = Request::int('detail_id');
+        $detail_name    = Request::get('detail_name');
+        $rubric_name    = Request::get('rubric_name');
+        $content        = Request::get('content');
+        $rubric_id      = Request::int('rubric_id');
+        $detail_id      = Request::int('detail_id');
+        $draft_status   = Request::get('draft_status');
+
         if ($rubric_id) {
             if ($detail_id) {
-                list($rubric, $detail) = $this->si->save('update_detail', compact('rubric_id', 'detail_name', 'content', 'detail_id'));
+                list($rubric, $detail) = $this->si->save('update_detail', compact('rubric_id', 'detail_name', 'content', 'detail_id', 'draft_status'));
             } else {
                 if ($content) {
-                    list($rubric, $detail) = $this->si->save('insert_detail', compact('rubric_id', 'detail_name','content'));
+                    list($rubric, $detail) = $this->si->save('insert_detail', compact('rubric_id', 'detail_name','content', 'draft_status'));
                 } else {
                     list($rubric, $detail) = $this->si->save('update_rubric', compact('rubric_id', 'rubric_name'));
                 }

@@ -83,6 +83,7 @@ if ($bg_mobile) {
                     <?= tooltipIcon(_('Aktiviert einen hohen Kontrast gemäß WCAG 2.1. Diese Einstellung wird nach dem Login übernommen.
                     Sie können sie in Ihren persönlichen Einstellungen ändern.')); ?>
                 <? endif ?>
+
             </div>
 
             <div class="login_info">
@@ -118,3 +119,4 @@ if ($bg_mobile) {
     </div>
 <? endif; ?>
 </main>
+

@@ -24,7 +24,6 @@ use Studip\Button, Studip\LinkButton;
             <label>
                 <?= _('Rubrik-Zuordnung')?>
                 <select name="rubric_id">
-
                 <? foreach ($rubrics as $option): ?>
                     <option value="<?= htmlReady($option['rubric_id']) ?>" <? if ($currentrubric == $option['rubric_id']) echo 'selected'; ?>>
                         <?= htmlReady(language_filter($option['name'])) ?>
@@ -36,6 +35,11 @@ use Studip\Button, Studip\LinkButton;
             <label>
                 <?= _('Seitentitel')?>
                 <input type="text" name="detail_name" id="detail_name" value="<?= htmlReady($detail_name) ?>">
+            </label>
+
+            <label>
+                <input type="checkbox" name="draft_status" id="draft_status" value="1" <?= $draft_status ? 'checked' : ''?>>
+                <?= _('Entwurfsmodus (nur sichtbar für root)') ?>
             </label>
 
             <label>

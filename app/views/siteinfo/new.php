@@ -39,6 +39,11 @@ use Studip\Button, Studip\LinkButton;
             </label>
 
             <label>
+                <input type="checkbox" name="draft_status" id="draft_status" value="1" <?= $draft_status ? 'checked' : ''?>>
+                <?= _('Entwurfsmodus (nur sichtbar für root)') ?>
+            </label>
+
+            <label>
                 <?= _('Seiteninhalt') ?>
                 <textarea style="width: 90%;height: 15em;" name="content" id="content"></textarea><br>
             </label>

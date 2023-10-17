@@ -40,17 +40,19 @@ class FooterNavigation extends Navigation
 
         // Datenschutzerklärung
 
-        //Check if the privacy url is one of the Stud.IP pages:
         $privacy_url = Config::get()->PRIVACY_URL;
-        if (is_internal_url($privacy_url)) {
-            //It is a Stud.IP page. Add the cancel_login URL parameter.
-            $privacy_url = URLHelper::getURL($privacy_url, ['cancel_login' => '1']);
+        if ($this->checkSiteinfoURL($privacy_url)) {
+            $this->addSubNavigation(
+                'privacy',
+                new Navigation(
+                    _('Datenschutz'),
+                    URLHelper::getURL($privacy_url, ['cancel_login' => 1], true)
+                )
+            );
         }
 
-        $this->addSubNavigation('privacy', new Navigation(_('Datenschutz'), $privacy_url));
-
         $a11yurl = Config::get()->ACCESSIBILITY_DISCLAIMER_URL;
-        if ($a11yurl) {
+        if ($this->checkSiteinfoURL($a11yurl)) {
             $this->addSubNavigation(
                 'a11ydisclaimer',
                 new Navigation(
@@ -70,5 +72,30 @@ class FooterNavigation extends Navigation
                 )
             )
         );
+
+        $easy_read_url = Config::get()->EASY_READ_URL;
+        if ($this->checkSiteinfoURL($easy_read_url)) {
+            $this->addSubNavigation(
+                'easy_read',
+                new Navigation(
+                    _('Leichte Sprache'),
+                    URLHelper::getURL($easy_read_url, ['cancel_login' => 1], true)
+                )
+            );
+        }
+    }
+
+    private function checkSiteinfoURL($url)
+    {
+        if (str_starts_with($url, 'dispatch.php/siteinfo')) {
+            $url_parts = explode('/', $url);
+            $detail_id = $url_parts[4];
+            $si = new Siteinfo();
+            $isdraft = $si->get_detail_draft_status($detail_id);
+            if ($isdraft) {
+                return '';
+            }
+        }
+        return $url;
     }
 }
