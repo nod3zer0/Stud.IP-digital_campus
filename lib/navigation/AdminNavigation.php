@@ -162,8 +162,6 @@ class AdminNavigation extends Navigation
 
         if ($GLOBALS['perm']->have_perm('admin')) {
             $pool = new Navigation(_('Bilder-Pool'), 'dispatch.php/stock_images', []);
-            $pool->setImage(Icon::create('picture'));
-            $pool->setDescription(_('Verwalten Sie den Pool frei verfügbarer Bilder.'));
             $navigation->addSubNavigation('stock_images', $pool);
         }
 
