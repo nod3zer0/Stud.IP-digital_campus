@@ -402,7 +402,8 @@
                     URLHelper::getURL(
                         'dispatch.php/course/room_requests/request_show_summary/' . $request->id,
                         ['cid' => $request->getRangeId()]
-                    )
+                    ),
+                    ['data-dialog' => 'size=big']
                 ) ?>
             <? endif ?>
             <?= \Studip\LinkButton::create(
