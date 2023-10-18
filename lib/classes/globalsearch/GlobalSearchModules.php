@@ -141,7 +141,7 @@ class GlobalSearchModules extends GlobalSearchModule
                 true
             ),
             'img'        => Icon::create('learnmodule', $icon_role)->asImagePath(),
-            'date'       => $duration,
+            'date'       => htmlReady($duration),
             'expand'     => self::getSearchURL($search),
             'additional' => $additional,
         ];
