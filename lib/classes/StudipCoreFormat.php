@@ -148,7 +148,7 @@ class StudipCoreFormat extends TextFormat
             'callback' => 'StudipCoreFormat::markupCode'
         ],
         'media' => [
-            'start'    => '\[(img|flash|audio|video)(.*?)\](.*?)(?=\s|$)',
+            'start'    => '\[(img|audio|video)(.*?)\](.*?)(?=\s|$)',
             'callback' => 'StudipCoreFormat::markupMedia'
         ],
         'emails' => [
@@ -524,7 +524,7 @@ class StudipCoreFormat extends TextFormat
     }
 
     /**
-     * Stud.IP markup for images, audio, video and flash-films
+     * Stud.IP markup for images, audio and video
      */
     protected static function markupMedia($markup, $matches)
     {
@@ -598,24 +598,12 @@ class StudipCoreFormat extends TextFormat
             $media_url = idna_link($url);
         }
 
-        if ($tag === "flash") {
-            $width = $width ? $width : 200;
-            $height = round($width * 0.75);
-            $flash_config = $width > 200 ? $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MAX'] : $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MIN'];
-            $media = '<object type="application/x-shockwave-flash" id="FlashPlayer" data="'.Assets::url().'flash/player_flv.swf" width="'.$width.'" height="'.$height.'">
-                        <param name="movie" value="'.Assets::url().'flash/player_flv.swf">
-                        <param name="allowFullScreen" value="true">
-                        <param name="FlashVars" value="flv='.urlencode(decodeHTML($media_url)).'&amp;startimage='.$link.$flash_config.'">
-                        <embed src="'.Assets::url().'flash/player_flv.swf" movie="$media_url" type="application/x-shockwave-flash" FlashVars="flv='.urlencode(decodeHTML($media_url)).'&amp;startimage='.$link.$flash_config.'">
-                        </object>';
-        } else {
-            $media = sprintf($format_strings[$tag],
-                $media_url,
-                isset($width) ? "width: ".$width."px;" : "",
-                $title,
-                $title
-            );
-        }
+        $media = sprintf($format_strings[$tag],
+            $media_url,
+            isset($width) ? "width: ".$width."px;" : "",
+            $title,
+            $title
+        );
 
         if ($tag === 'audio') {
             $random_id = 'audio-' . mb_substr(md5(uniqid('audio', true)), -8);

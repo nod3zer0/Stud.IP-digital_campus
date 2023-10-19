@@ -35,8 +35,6 @@
 // +---------------------------------------------------------------------------+
 
 global
-  $FLASHPLAYER_DEFAULT_CONFIG_MIN,
-  $FLASHPLAYER_DEFAULT_CONFIG_MAX,
   $INST_ADMIN_DATAFIELDS_VIEW,
   $INST_MODULES,
   $INST_TYPE,
@@ -265,11 +263,6 @@ $SYMBOL_SHORT = array(
 ----------------------------------------------------------------
 this options are only needed, if you are using the addional Stud.IP modules (please see in config_local.inc.php
 which modules are activated). It's a good idea to leave this settings untouched...*/
-
-
-// cofiguration for flash player
-$FLASHPLAYER_DEFAULT_CONFIG_MIN = "&amp;showstop=1&amp;showvolume=1&amp;bgcolor=A6B6C6&amp;bgcolor1=A6B6C6&amp;bgcolor2=7387AC&amp;playercolor=7387AC&amp;buttoncolor=254580&amp;buttonovercolor=E9EFFD&amp;slidercolor1=CAD7E1&amp;slidercolor2=A6B6C6&amp;sliderovercolor=E9EFFD&amp;loadingcolor=E9B21A&amp;buffer=5&amp;buffercolor=white&amp;buffershowbg=0&amp;playeralpha=90&amp;playertimeout=500&amp;shortcut=1&amp;phpstream=0&amp;onclick=playpause&amp;showloading=always";
-$FLASHPLAYER_DEFAULT_CONFIG_MAX = "&amp;showstop=1&amp;showvolume=1&amp;bgcolor=A6B6C6&amp;bgcolor1=A6B6C6&amp;bgcolor2=7387AC&amp;playercolor=7387AC&amp;buttoncolor=254580&amp;buttonovercolor=E9EFFD&amp;slidercolor1=CAD7E1&amp;slidercolor2=A6B6C6&amp;sliderovercolor=E9EFFD&amp;loadingcolor=E9B21A&amp;buffer=5&amp;buffercolor=white&amp;buffershowbg=0&amp;playeralpha=90&amp;playertimeout=500&amp;shortcut=1&amp;showtime=1&amp;showfullscreen=1&amp;showplayer=always&amp;phpstream=0&amp;onclick=playpause&amp;showloading=always";
 
 /*
  * use this to customize the fields shown in the standard/extended view on the instiute member page
