@@ -52,7 +52,7 @@ class Admin_AdditionalController extends AuthenticatedController
             }
             // purge data
             if (Request::submitted('delete')) {
-                DatafieldEntryModel::deleteBySQL('sec_rage_id = ?', [$this->course->id]);
+                DatafieldEntryModel::deleteBySQL('sec_range_id = ?', [$this->course->id]);
             }
 
             if ($this->course->store()) {
