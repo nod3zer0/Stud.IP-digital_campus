@@ -70,16 +70,16 @@
                                     ]
                                 ) ?>
                             <? endif ?>
-                            <? if ($folder->isWritable($GLOBALS['user']->id)): ?>
-                                <?= Studip\LinkButton::create(
-                                    _('Dokument hinzufügen'),
-                                    '#',
-                                    [
-                                        'onclick' => 'STUDIP.Files.openAddFilesWindow(); return false;'
-                                    ]
-                                ) ?>
-                            <? endif ?>
                         </span>
+                        <? if ($folder->isWritable($GLOBALS['user']->id)): ?>
+                            <?= Studip\LinkButton::create(
+                                _('Dokument hinzufügen'),
+                                '#',
+                                [
+                                    'onclick' => 'STUDIP.Files.openAddFilesWindow(); return false;'
+                                ]
+                            ) ?>
+                        <? endif ?>
                     </td>
                 </tr>
             </tfoot>

@@ -51,10 +51,6 @@
             <h1><?= _('Dateien') ?></h1>
         </header>
         <table class="default sortable-table" data-sortlist="[[2, 0]]">
-            <colgroup>
-                <col style="width: 70%">
-                <col>
-            </colgroup>
             <?= $this->render_partial('files/_files_thead') ?>
             <? foreach ($resource_folder->getFiles() as $file): ?>
                 <? if ($file->isVisible($GLOBALS['user']->id)) : ?>

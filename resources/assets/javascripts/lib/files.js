@@ -241,6 +241,11 @@ const Files = {
     },
 
     addFileDisplay: (html, delay = 0) => {
+        // Prevent undefined filesapp errors
+        if (STUDIP.Files.filesapp === undefined) {
+            return;
+        }
+
         if (!Array.isArray(html)) {
             html = html === null ? [] : [html];
         }

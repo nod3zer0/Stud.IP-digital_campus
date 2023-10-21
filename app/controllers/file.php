@@ -149,6 +149,10 @@ class FileController extends AuthenticatedController
                     $changes['redirect'] = $this->url_for("file/edit_license/{$folder->getId()}", [
                         'file_refs' => $ref_ids,
                     ]);
+                } elseif ($folder->range_type === 'Resource') {
+                    $changes['close_dialog'] = [
+                        'reload-on-close' => true
+                    ];
                 } else {
                     $changes['close_dialog'] = true;
                 }

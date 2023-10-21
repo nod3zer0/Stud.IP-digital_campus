@@ -24,7 +24,7 @@
 
             <table class="default">
                 <colgroup>
-                    <col style="width: 70%">
+                    <col style="width: 30%">
                     <col>
                 </colgroup>
                 <thead>
