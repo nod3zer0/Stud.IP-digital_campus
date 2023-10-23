@@ -115,7 +115,10 @@
             <? foreach ($room_requests as $room_request): ?>
                 <?= $this->render_partial(
                     'resources/_common/_request_tr',
-                    ['request' => $room_request]
+                    [
+                        'request' => $room_request,
+                        'current_user' => $user
+                    ]
                 )?>
             <? endforeach ?>
         </tbody>
