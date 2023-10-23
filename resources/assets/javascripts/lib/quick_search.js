@@ -43,9 +43,12 @@ const QuickSearch = {
                       },
                 source: function(input, add) {
                     //get the variables that should be sent:
-                    var send_vars = jQuery('#' + name)
-                        .closest('form')
-                        .serializeArray();
+                    let node = jQuery('#' + name);
+                    let form = jQuery(node[0].form);
+                    if (node.data('context') !== undefined) {
+                        form = form.find(node.data('context'))
+                    }
+                    let send_vars = form.serializeArray();
                     send_vars.push({
                         name: 'request',
                         value: input.term

@@ -27,6 +27,7 @@
         <div class="message-search-wrapper">
         <?= QuickSearch::get('user_id', new StandardSearch('user_id'))
             ->fireJSFunctionOnSelect('STUDIP.Messages.add_adressee')
+            ->setAttributes(['data-context' => ''])
             ->withButton()
             ->render();
 
