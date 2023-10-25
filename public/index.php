@@ -95,19 +95,10 @@ foreach ($portalplugins as $portalplugin) {
 
 
 $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
-$cache = StudipCacheFactory::getCache();
-$stat = $cache->read('LOGINFORM_STATISTICS');
-if (!is_array($stat)) {
-    $stat = [];
-    $stat['num_active_courses'] = Course::countBySQL();
-    $stat['num_registered_users'] = User::countBySQL();
-    $cache->write('LOGINFORM_STATISTICS', $stat, 3600);
-}
-$index_nobody_template->set_attributes(array_merge($stat, [
-    'num_online_users' => get_users_online_count(),
+$index_nobody_template->set_attributes([
     'plugin_contents'  => $plugin_contents,
     'logout'           =>  Request::bool('logout'),
-]));
+]);
 
 echo $index_nobody_template->render();
 

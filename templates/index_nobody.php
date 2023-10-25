@@ -1,8 +1,5 @@
 <?php
 /**
- * @var int $num_active_courses
- * @var int $num_registered_users
- * @var int $num_online_users
  * @var bool $logout
  * @var string[] $plugin_contents
  */
@@ -84,29 +81,6 @@ if ($bg_mobile) {
                     Sie können sie in Ihren persönlichen Einstellungen ändern.')); ?>
                 <? endif ?>
 
-            </div>
-
-            <div class="login_info">
-                <div>
-                    <?= _('Aktive Veranstaltungen') ?>:
-                    <?= number_format($num_active_courses, 0, ',', '.') ?>
-                </div>
-
-                <div>
-                    <?= _('Registrierte NutzerInnen') ?>:
-                    <?= number_format($num_registered_users, 0, ',', '.') ?>
-                </div>
-
-                <div>
-                    <?= _('Davon online') ?>:
-                    <?= number_format($num_online_users, 0, ',', '.') ?>
-                </div>
-
-                <div>
-                    <a href="dispatch.php/siteinfo/show">
-                        <?= _('mehr') ?> &hellip;
-                    </a>
-                </div>
             </div>
         </footer>
     </article>
