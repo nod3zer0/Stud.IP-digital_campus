@@ -204,6 +204,7 @@ class QuestionnaireController extends AuthenticatedController
         }
         $this->questionnaire = new Questionnaire();
         $this->questionnaire->setData($this->old_questionnaire->toArray());
+        $this->questionnaire->title .= sprintf(' [%s]', _('Kopie'));
         $this->questionnaire->setId($this->questionnaire->getNewId());
         $this->questionnaire['user_id'] = $GLOBALS['user']->id;
         $this->questionnaire['startdate'] = null;
