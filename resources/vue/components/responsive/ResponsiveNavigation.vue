@@ -151,7 +151,7 @@ export default {
             showMenu: false,
             activeItem: this.navigation.activated.at(-1) ?? 'start',
             currentNavigation: this.findItem(this.navigation.activated.at(0) ?? 'start', studipNavigation)
-                ?? this.studipNavigation,
+                ?? studipNavigation,
             initialNavigation: {},
             initialTitle: '',
             isAdmin: ['root','admin'].includes(this.me.perm),
