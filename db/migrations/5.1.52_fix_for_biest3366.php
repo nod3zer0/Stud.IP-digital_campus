@@ -9,12 +9,12 @@ class FixForBiest3366 extends Migration
 
     public function up()
     {
-        DBManager::get()->exec('DROP TABLE `globalsearch_buzzwords`');
+        DBManager::get()->exec('DROP TABLE IF EXISTS `globalsearch_buzzwords`');
     }
 
     public function down()
     {
-        DBManager::get()->exec("CREATE TABLE `globalsearch_buzzwords` (
+        DBManager::get()->exec("CREATE TABLE IF NOT EXISTS `globalsearch_buzzwords` (
             `id` CHAR(32) COLLATE latin1_bin NOT NULL,
             `rights` ENUM('user','autor','tutor','dozent','admin','root') NOT NULL DEFAULT 'user',
             `name` varchar(255) NOT NULL DEFAULT '',
