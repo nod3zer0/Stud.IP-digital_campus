@@ -254,10 +254,10 @@ class ResponsiveHelper
                     if ($studip_module instanceof StudipModule) {
                         $tool_nav = $studip_module->getTabNavigation($course->id) ?: [];
                         foreach ($tool_nav as $nav_name => $navigation) {
-                            if (!empty($tool->metadata['displayname'])) {
-                                $navigation->setTitle($tool->getDisplayname());
-                            }
                             if ($nav_name && is_a($navigation, 'Navigation')) {
+                                if (!empty($tool->metadata['displayname'])) {
+                                    $navigation->setTitle($tool->getDisplayname());
+                                }
                                 $cnav['children'][$path . '/' . $nav_name] = [
                                     'icon'     => $navigation->getImage() ? $navigation->getImage()->asImagePath() : '',
                                     'title'    => $navigation->getTitle(),
