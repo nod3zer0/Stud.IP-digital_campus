@@ -105,7 +105,7 @@
         "jquery.qrcode": "^1.0.3",
         "jquery.scrollto": "2.1.2",
         "jspdf": "^2.5.1",
-        "jszip": "^3.6.0",
+        "jszip": "^3.8.0",
         "less": "^3.12.2",
         "less-loader": "7.1.0",
         "lodash": "^4.17.20",
