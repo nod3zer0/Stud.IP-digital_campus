@@ -69,7 +69,7 @@ $UNI_URL = "http://www.studip.de";
 $UNI_LOGIN_ADD='';
 $UNI_LOGOUT_ADD=sprintf(_("Und hier geht's zur %sStud.IP Portalseite%s&nbsp;"), "<a href=\"http://www.studip.de\"><b>", "</b></a>");
 $UNI_CONTACT = "<please insert your general contact mail-adress here>";
-$UNI_INFO = "Stud.IP 5.1 - Studienbegleitender Internetsupport von Präsenzlehre";
+$UNI_INFO = "Stud.IP 5.4 - Studienbegleitender Internetsupport von Präsenzlehre";
 
 
 /* $SEM_CLASS and $SEM_TYPE configuration moved to database
@@ -263,6 +263,7 @@ $SYMBOL_SHORT = array(
 ----------------------------------------------------------------
 this options are only needed, if you are using the addional Stud.IP modules (please see in config_local.inc.php
 which modules are activated). It's a good idea to leave this settings untouched...*/
+
 
 /*
  * use this to customize the fields shown in the standard/extended view on the instiute member page
