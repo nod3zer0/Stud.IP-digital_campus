@@ -640,6 +640,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = [];
         do  {
             $clone = clone $record;
+            $clone->setNew(false);
             $stmt->setFetchMode(PDO::FETCH_INTO, $clone);
 
             if ($clone = $stmt->fetch()) {
@@ -694,6 +695,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = [];
         do {
             $clone = clone $record;
+            $clone->setNew(false);
             $st->setFetchMode(PDO::FETCH_INTO, $clone);
 
             if ($clone = $st->fetch()) {
@@ -719,10 +721,6 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $sql = "WHERE {$sql}";
         }
 
-        $class = get_called_class();
-        $record = new $class();
-        $record->setNew(false);
-
         $db_table = static::db_table();
         $st = DBManager::get()->prepare("SELECT `{$db_table}`.* FROM `{$db_table}` {$sql}");
         $st->execute($params);
@@ -735,6 +733,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $ret = 0;
         do {
             $clone = clone $record;
+            $clone->setNew(false);
             $st->setFetchMode(PDO::FETCH_INTO, $clone);
 
             if ($clone = $st->fetch()) {
@@ -1045,6 +1044,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
      */
     function __clone()
     {
+        $this->setNew(true);
         //all references link still to old object => reset all aliases
         foreach ($this->alias_fields() as $alias => $field) {
             if (isset($this->db_fields()[$field])) {
