@@ -432,7 +432,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
             }
 
             // generic datafields
-            $generic_datafields = $this->module->config->getValue("Main", "genericdatafields");
+            $generic_datafields = $this->module->config->getValue("TemplateGeneric", "genericdatafields");
 
             $content['__GLOBAL__']['LECTURES-COUNT'] = count($sem_data);
             $group_by_name = $this->module->config->getValue("Main", "aliasesgrouping");

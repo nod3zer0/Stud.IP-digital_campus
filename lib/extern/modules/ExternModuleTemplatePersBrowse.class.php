@@ -348,6 +348,8 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             $content['PERSONS']['PERSON'][$j]['PERSON-NO'] = $j + 1;
 
             // generic data fields
+            $generic_datafields = $this->config->getValue('TemplateListPersons', 'genericdatafields');
+
             if (is_array($generic_datafields)) {
                 $localEntries = DataFieldEntry::getDataFieldEntries($row['user_id'], 'user');
                 $k = 1;

@@ -401,7 +401,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
             $content['LECTUREDETAILS']['STUDIP-DATA'] = $this->getStudipData();
 
             // generic data fields
-            if ($generic_datafields = $this->config->getValue('Main', 'genericdatafields')) {
+            if ($generic_datafields = $this->config->getValue('TemplateLectureData', 'genericdatafields')) {
                 $localEntries = DataFieldEntry::getDataFieldEntries($this->seminar_id, 'sem');
                 $k = 1;
                 foreach ($generic_datafields as $datafield) {
