@@ -1,3 +1,20 @@
+# 02.11.2023 v 5.3.3
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.3.3&state=all
+- CKEditor mit mehrsprachiger Eingabe: Toolbar bricht um [#2471]
+- Sidebar rutscht beim Öffnen von Dialogen nach unten [#2929]
+- Positionierung der Sidebar beim Scrollen gelegentlich falsch [#2930]
+- Sidebar rutscht beim Anspringen von Elementen auf der Seite nach unten [#2934]
+- Sidebar nur auf der Veranstaltungsübersicht für Admins/Roots scrollbar machen, falls sie zu lang ist [#2936]
+- CKEditor: zweite Zeile der Toolbar hat Abstand nach links [#3211]
+- CKEditor: Toolbar läuft nach links aus dem Eingabefeld hinaus [#3212]
+- PHP-Warnungen in der Detailansicht von Studiengruppen [#3308]
+- Fragebögen: linke Navigation schiebt sich aus dem Dialog heraus [#3330]
+- Mathematische Formel wird in den Ankündigungen nicht/falsch gerendert [#3362]
+- Zusatzangaben: Fehler beim Löschen von Eingaben [#3368]
+- Fehlermeldung TypeError: this.initialNavigation is null auf Seiten, die sich nicht in die Navigation einhängen [#3399]
+- Fatal Error in ResponsiveHelper, leere Anzeige auf allen Seiten [#3403]
+
 # 02.11.2023 v 5.2.5
 
 https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.2.5&state=all
