@@ -252,7 +252,8 @@ test-functional:
     <<: *composer-cache
     policy: pull
   services:
-    - mariadb
+    - name: mariadb
+      command: ["--sql_mode="]
   allow_failure: false
   interruptible: true
   before_script:
@@ -276,7 +277,8 @@ test-jsonapi:
     <<: *composer-cache
     policy: pull
   services:
-    - mariadb
+    - name: mariadb
+      command: ["--sql_mode="]
   variables:
     JSONAPI_XML_REPORT: $REPORT_DIR/jsonapi-report.xml
   interruptible: true
@@ -310,7 +312,8 @@ test-e2e:
   #  needs: [lint-css, lint-js, lint-php]
   image: mcr.microsoft.com/playwright:v1.33.0-jammy
   services:
-    - mariadb
+    - name: mariadb
+      command: ["--sql_mode="]
   variables:
     PHP_WEBSERVER_URL: localhost:65432
     E2E_REPORT: $REPORT_DIR/e2e.xml
