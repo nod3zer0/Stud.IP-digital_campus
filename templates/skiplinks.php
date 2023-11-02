@@ -2,7 +2,7 @@
 # Lifter010: TODO
 ?>
 <? if ($navigation instanceof Navigation && iterator_count($navigation) > 0) : ?>
-    <ul role="navigation" id="skiplink_list">
+    <ul id="skiplink_list">
     <? foreach ($navigation as $index => $nav) : ?>
         <li>
         <? if (mb_substr($url = $nav->getURL(), 0, 1) == '#') : ?>
