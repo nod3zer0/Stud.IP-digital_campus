@@ -1,3 +1,43 @@
+# 02.11.2023 v 5.2.5
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.2.5&state=all
+- Paket league/oauth2-server sollte aufgrund eines Sicherheitsupdate aktualisiert werden [#3334]
+- Nicht mehr verwendete JS-Dateien der Ankündigungen entfernen [#3351]
+- XSS-Schwachstelle bei der globalen Suche [#3353]
+
+# 01.11.2023 v 5.1.6
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.1.6&state=all
+- Insecure header validation in slim/psr7 [#3304]
+
+# 01.11.2023 v 5.0.8
+
+https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.0.8&state=all
+- Dateibereich: „Im OER Campus veröffentlichen“ wird angezeigt, obwohl der OER-Campus erst ab einer höheren Rechtestufe verfügbar ist [#2638]
+- Raumverwaltung: Fehler beim Hinzufügen von Dokumenten zu Räumen [#2829]
+- Hauptnavigation: Größeres Logo macht Probleme [#2920]
+- Kopierte Fragebögen sollen mit „[Kopie]“ am Ende des Titels gekennzeichnet werden [#3198]
+- Tutor kann Dozenten austragen [#3250]
+- Wert von meta.page.total in der Route /users ist falsch [#3281]
+- Ressourcenverwaltung: Löschen eines Attributs löscht die Werte nicht aus der DB [#3282]
+- Fatal Error bei Anzeige von Trails_RoutingError [#3284]
+- code injection in phpxmlrpc/phpxmlrpc [#3299]
+- XML-RPC for PHP allows access to local files via malicious argument to the Client::send method [#3300]
+- XML-RPC for PHP's `Wrapper::buildClientWrapperCode` method allows code injection via malicious `$client` argument [#3301]
+- XML-RPC for PHP's debugger vulnerable to possible XSS attack [#3302]
+- phpxmlrpc vulnerable to argument injection [#3303]
+- Regular Expression Denial of Service (ReDoS) in lodash [#3305]
+- Command Injection in lodash [#3306]
+- CLI-Skript db:migrate-engine wirft einen Fatal Error am Ende [#3335]
+- JSON-API: Abfrage nach Gruppen in einer Einrichtung liefert defekten self-Link [#3357]
+- Bearbeiten von Raumanfragen öffnet sich nicht in einem Dialog [#3363]
+- fehlendes Escaping bei der Anzeige in der globalen Suche [#3366]
+- Mail schreiben: QuickSearch zur Empfängersuche erhält alle Felder des Dialoges [#3381]
+- Admins mit admin-Rechten in der Raumverwaltung sehen eine Exception in der Übersicht der Raumverwaltung, wenn es eine freie Raumanfrage (ohne Veranstaltungsbezug) gibt [#3385]
+- public/assets/images/oernds_oer_use_blue.svg wird nicht verwendet [#3389]
+- Migration von 5.0 auf 5.4: Base table or view not found: 1051 Unknown table 'studip_test54.globalsearch_buzzwords' [#3407]
+- JSZip-Version ist zu alt [#3410]
+
 # 04.10.2023 v 5.3.2
 
 https://gitlab.studip.de/studip/studip/-/issues?milestone_title=Stud.IP+5.3.2&state=all
