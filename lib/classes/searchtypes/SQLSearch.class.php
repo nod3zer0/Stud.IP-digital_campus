@@ -37,7 +37,6 @@ class SQLSearch extends SearchType
     protected $sql;
     protected $avatarLike;
     protected $title;
-    public $extendedLayout = false;
 
     /**
      *

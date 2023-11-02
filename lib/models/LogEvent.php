@@ -279,7 +279,7 @@ class LogEvent extends SimpleORMap implements PrivacyObject
     protected function formatSemester($field) {
         $all_semester = Semester::findAllVisible(false);
         foreach ($all_semester as $val) {
-            if (!empty($val['beginn']) && ($val['beginn'] == $this->$field)) {
+            if ($val['beginn'] == $this->$field) {
                 return '<em>' . htmlReady($val['name']) . '</em>';
             }
         }

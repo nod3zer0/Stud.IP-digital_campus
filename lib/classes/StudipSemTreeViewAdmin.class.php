@@ -46,8 +46,8 @@ class StudipSemTreeViewAdmin extends TreeView
     var $marked_item;
     var $marked_sem;
     var $mode;
-    var $move_item_id;
-    var $edit_item_id;
+    var $move_item_id = null;
+    var $edit_item_id = null;
 
     /**
     * constructor
@@ -492,12 +492,14 @@ class StudipSemTreeViewAdmin extends TreeView
     }
 
     function getItemContent($item_id){
-        if (!empty($this->edit_item_id) && ($item_id == $this->edit_item_id)) return $this->getEditItemContent();
-        if(empty($GLOBALS['SEM_TREE_TYPES'][$this->tree->getValue($item_id, 'type')]['editable'])){
+        if ($item_id == $this->edit_item_id) {
+            return $this->getEditItemContent();
+        }
+        if (empty($GLOBALS['SEM_TREE_TYPES'][$this->tree->getValue($item_id, 'type')]['editable'])){
             $is_not_editable = true;
             $this->msg[$item_id] = "info§" . sprintf(_("Der Typ dieses Elementes verbietet eine Bearbeitung."));
         }
-        if (!empty($this->move_item_id) && ($item_id == $this->move_item_id)) {
+        if ($item_id == $this->move_item_id) {
             $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte wählen Sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), Icon::create('arr_2right', 'sort', ['title' => "Einfügesymbol"])->asImg(16, ["alt" => "Einfügesymbol"]));
         }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt;\">";
@@ -521,7 +523,7 @@ class StudipSemTreeViewAdmin extends TreeView
                         URLHelper::getURL($this->getSelf('cmd=AssertDeleteItem&item_id=' . $item_id)),
                         ['title' => _('Dieses Element löschen')]) . '&nbsp;';
 
-                if (!empty($this->move_item_id) && ($this->move_item_id == $item_id) && ($this->mode == "MoveItem" || $this->mode == "CopyItem")){
+                if ($this->move_item_id == $item_id && ($this->mode == "MoveItem" || $this->mode == "CopyItem")){
                     $content .= LinkButton::create(_('Abbrechen'),
                             URLHelper::getURL($this->getSelf('cmd=Cancel&item_id=' . $item_id)),
                             ['title' => _('Verschieben / Kopieren abbrechen')]) . '&nbsp;';
@@ -562,19 +564,13 @@ class StudipSemTreeViewAdmin extends TreeView
             $content .= formatReady($this->tree->tree_data[$item_id]['info']) . "</td></tr>";
         }
         $content .= "<tr><td style=\"font-size:10pt;\"colspan=\"3\">&nbsp;</td></tr>";
-        if (!empty($this->tree->tree_data[$item_id]['lonely_sem']) && ($this->tree->getNumEntries($item_id) - $this->tree->tree_data[$item_id]['lonely_sem'])) {
+        if ($this->tree->getNumEntries($item_id)) {
             $content .= "<tr><td class=\"table_row_even\" style=\"font-size:10pt;\" align=\"left\" colspan=\"3\"><b>" . _("Einträge auf dieser Ebene:");
             $content .= "</b>\n</td></tr>";
             $entries = $this->tree->getSemData($item_id);
             $content .= $this->getSemDetails($entries,$item_id);
         } else {
             $content .= "\n<tr><td class=\"table_row_even\" style=\"font-size:10pt;\" colspan=\"3\">" . _("Keine Einträge auf dieser Ebene vorhanden!") . "</td></tr>";
-        }
-        if (!empty($this->tree->tree_data[$item_id]['lonely_sem'])) {
-            $content .= "<tr><td class=\"table_row_even\" align=\"left\" style=\"font-size:10pt;\" colspan=\"3\"><b>" . _("Nicht zugeordnete Veranstaltungen auf dieser Ebene:");
-            $content .= "</b>\n</td></tr>";
-            $entries = $this->tree->getLonelySemData($item_id);
-            $content .= $this->getSemDetails($entries,$item_id,true);
         }
         $content .= "</table>";
         return $content;
@@ -776,7 +772,7 @@ class StudipSemTreeViewAdmin extends TreeView
         if ($item_id != "root"){
             $head .= " (" . $this->tree->getNumEntries($item_id,true) . ") " ;
         }
-        if ($item_id != $this->start_item_id && $this->isParentAdmin($item_id) && !empty($this->edit_item_id) && ($item_id != $this->edit_item_id)){
+        if ($item_id != $this->start_item_id && $this->isParentAdmin($item_id) && $item_id != $this->edit_item_id){
             $head .= "</td><td nowrap align=\"right\" valign=\"bottom\" class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= "<a href=\"". URLHelper::getLink($this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id")) .

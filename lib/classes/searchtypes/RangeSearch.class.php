@@ -4,17 +4,8 @@
  * @license     GPL2 or any later version
  * @category    Stud.IP
  */
-class RangeSearch extends SQLSearch
+class RangeSearch extends SearchType
 {
-    public $search;
-
-    public function __construct()
-    {
-        $this->avatarLike = $this->search = '';
-        $this->sql = $this->getSQL();
-    }
-
-
     /**
      * returns the title/description of the searchfield
      *
