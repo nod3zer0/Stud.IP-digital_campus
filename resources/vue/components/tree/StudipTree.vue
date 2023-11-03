@@ -31,7 +31,7 @@
             <tree-search-result :search-config="searchConfig"></tree-search-result>
         </div>
         <MountingPortal v-if="withSearch" mountTo="#search-widget" name="sidebar-search">
-            <search-widget :min-length="3"></search-widget>
+            <search-widget v-if="currentNode" :min-length="3" ref="searchWidget"></search-widget>
         </MountingPortal>
     </div>
 </template>
@@ -175,6 +175,18 @@ export default {
         },
         exportUrl() {
             return STUDIP.URLHelper.getURL('dispatch.php/tree/export_csv');
+        },
+        injectSearchterm(targetId, searchterm) {
+            const form = document.getElementById(targetId).querySelector('form');
+            let input = form.querySelector('input[type="hidden"][name="search"]');
+            if (!input) {
+                input = document.createElement('input');
+                input.setAttribute('id', `${targetId}-searchterm`);
+                input.setAttribute('type', 'hidden');
+                input.setAttribute('name', 'search');
+                form.appendChild(input);
+            }
+            input.setAttribute('value', searchterm);
         }
     },
     mounted() {
@@ -202,14 +214,20 @@ export default {
             this.searchConfig = {
                 searchterm,
                 semester: this.semester,
+                semclass: this.semClass,
                 classname: this.startNode.attributes.classname,
                 startId: this.currentNode.id,
             };
+            this.injectSearchterm('semester-selector', searchterm);
+            this.injectSearchterm('semclass-selector', searchterm);
             this.isSearching = true;
         });
 
         this.globalOn('cancel-search', () => {
             this.searchConfig = {};
+            this.searchterm = '';
+            document.getElementById('semester-selector-searchterm')?.remove();
+            document.getElementById('semclass-selector-searchterm')?.remove();
             this.isSearching = false;
         });
     }

@@ -30,6 +30,7 @@ class Search_CoursesController extends AuthenticatedController
         $this->type = Request::option('type', 'semtree');
         $this->semester = Request::option('semester', Semester::findCurrent()->id);
         $this->semClass = Request::int('semclass', 0);
+        $this->search = Request::get('search', '');
     }
 
     public function index_action()
@@ -69,17 +70,30 @@ class Search_CoursesController extends AuthenticatedController
     {
         $sidebar = Sidebar::Get();
 
-        $semWidget = new SemesterSelectorWidget($this->url_for(''), 'semester');
+        $semWidget = new SemesterSelectorWidget(URLHelper::getURL('', ['type' => $this->type, 'semclass' => $this->semClass]), 'semester');
         $semWidget->includeAll(false);
         $semWidget->setId('semester-selector');
         $semWidget->setSelection($this->semester);
         $sidebar->addWidget($semWidget);
 
+        $params = [
+            'type' => $this->type
+        ];
+        if ($this->semClass !== 0) {
+            $params['semclass'] = $this->semClass;
+        }
+        if ($this->semester !== '') {
+            $params['semester'] = $this->semester;
+        }
+        if ($this->search !== '') {
+            $params['search'] = $this->search;
+        }
         $classWidget = $sidebar->addWidget(new SelectWidget(
             _('Veranstaltungskategorie'),
-            URLHelper::getURL('', ['type' => $this->type, 'semester' => $this->semester]),
+            URLHelper::getURL('', $params),
             'semclass'
         ));
+        $classWidget->setId('semclass-selector');
         $classWidget->addElement(new SelectElement(0, _('Alle')));
         foreach (SemClass::getClasses() as $class) {
             if (!$class['studygroup_mode']) {

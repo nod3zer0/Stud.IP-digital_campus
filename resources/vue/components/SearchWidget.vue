@@ -71,6 +71,13 @@ export default {
             this.searchterm = '';
             STUDIP.eventBus.emit('cancel-search');
         }
+    },
+    mounted() {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('search')) {
+            this.searchterm = url.searchParams.get('search');
+            this.doSearch();
+        }
     }
 }
 </script>

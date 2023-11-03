@@ -101,7 +101,13 @@ export default {
                     );
 
                     this.getNode(this.searchConfig.startId).then(response => {
-                        return this.getNodeCourses(response.data.data, this.searchConfig.semester, 0, this.searchConfig.searchterm, true);
+                        return this.getNodeCourses(
+                            response.data.data,
+                            this.searchConfig.semester,
+                            this.searchConfig.semclass,
+                            this.searchConfig.searchterm,
+                            true
+                        );
                     }).then(courses => {
                         this.courses = courses.data.data;
 
