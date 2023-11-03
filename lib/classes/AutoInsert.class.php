@@ -149,15 +149,7 @@ class AutoInsert
 
     private function addUser($user_id, $seminar)
     {
-        $course_member = new CourseMember([$seminar['Seminar_id'], $user_id]);
-        $course_member->setData([
-            'Seminar_id' => $seminar['Seminar_id'],
-            'user_id'    => $user_id,
-            'status'     => 'autor',
-            'gruppe'     => select_group($seminar['start_time']),
-        ]);
-
-        return $course_member->store() > 0;
+        return CourseMember::insertCourseMember($seminar['Seminar_id'], $user_id, 'autor');
     }
 
     private function removeUser($user_id, $seminar)

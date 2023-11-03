@@ -414,11 +414,7 @@ class BlubberController extends AuthenticatedController
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$this->thread->id]);
             foreach ($statement->fetchFirst() as $user_id) {
-                $member = new CourseMember();
-                $member['user_id'] = $user_id;
-                $member['seminar_id'] = $course->getId();
-                $member['status'] = $user_id === $this->thread['user_id'] ? 'dozent' : 'tutor';
-                $member->store();
+                CourseMember::insertCourseMember($course->getId(), $user_id, $user_id === $this->thread['user_id'] ? 'dozent' : 'tutor');
             }
 
             $this->thread['context_type'] = 'course';

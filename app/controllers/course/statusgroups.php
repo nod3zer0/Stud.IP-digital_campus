@@ -418,11 +418,7 @@ class Course_StatusgroupsController extends AuthenticatedController
         foreach ($mp->getAddedUsers() as $a) {
 
             if (!CourseMember::exists([$this->course_id, $a])) {
-                $m = new CourseMember();
-                $m->seminar_id = $this->course_id;
-                $m->user_id = $a;
-                $m->status = User::find($a)->perms == 'user' ? 'user' : 'autor';
-                $m->store();
+                CourseMember::insertCourseMember($this->course_id, $a, User::find($a)->perms == 'user' ? 'user' : 'autor');
             }
 
             $s = new StatusgruppeUser();

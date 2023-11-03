@@ -197,32 +197,18 @@ class AdmissionApplication extends SimpleORMap implements PrivacyObject
                     "seminar_id = ? AND status = 'awaiting' ORDER BY position LIMIT {$count}",
                     [$seminar_id]
                 );
+                $log_message = 'Wurde automatisch aus der Warteliste in die Veranstaltung eingetragen.';
                 foreach ($memberships as $membership) {
-                    //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
-                    $group = select_group($seminar->getSemesterStartTime());
                     if (!$sem_preliminary) {
-                        $course_membership = new CourseMember([$seminar_id, $membership->id]);
-                        $course_membership->setData([
-                            'status'     => 'autor',
-                            'gruppe'     => $group,
-                        ]);
-                        $affected = $course_membership->store();
-
-                        NotificationCenter::postNotification('UserDidEnterCourse', $seminar->getId(), $membership->user_id);
+                        $affected = CourseMember::insertCourseMember($seminar_id, $membership->user_id, 'autor', false, false, $log_message);
                     } else {
                         $membership->status = 'accepted';
                         $affected = $membership->store();
+                        StudipLog::log('SEM_USER_ADD', $seminar->getId(), $membership->user_id,'accepted', $log_message);
                     }
-                    if ($affected > 0) {
-                        $log_message = 'Wurde automatisch aus der Warteliste in die Veranstaltung eingetragen.';
-                        StudipLog::log('SEM_USER_ADD', $seminar->getId(), $membership->user_id, $sem_preliminary ? 'accepted' : 'autor', $log_message);
-                        if (!$sem_preliminary) {
-                            $affected = $membership->delete();
-                        } else {
-                            $affected = 0;
-                        }
+                    if ($affected) {
                         //User benachrichtigen
-                        if (($sem_preliminary || $affected > 0) && $send_message) {
+                        if ($send_message) {
                             setTempLanguage($membership->user_id);
                             if (!$sem_preliminary) {
                                 $message = sprintf (_('Sie sind in die Veranstaltung **%s (%s)** eingetragen worden, da für Sie ein Platz frei geworden ist. Damit sind Sie für die Teilnahme an der Veranstaltung zugelassen. Ab sofort finden Sie die Veranstaltung in der Übersicht Ihrer Veranstaltungen.'), $seminar->getName(), $seminar->getFormattedTurnus(true));
