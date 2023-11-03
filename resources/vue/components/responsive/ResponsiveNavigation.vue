@@ -400,24 +400,25 @@ export default {
                 });
             }
         },
-        onChangeViewMode(tagName, classes) {
+        onChangeViewMode(tagName, classes, oldClasses) {
             const classList = classes.split(' ');
+            const oldClassList = oldClasses ? oldClasses.split(' ') : [];
 
             switch (tagName) {
                 // watch for "consuming_mode" or "fixed" class changes
                 case 'BODY':
-                    if (classList.includes('consuming_mode')) {
+                    if (classList.includes('consuming_mode') && !oldClassList.includes('consuming_mode')) {
                         this.isFocusMode = true;
                         STUDIP.eventBus.emit('consuming-mode-enabled');
                         this.setCompactNavigation(false);
-                    } else {
+                    } else if (!classList.includes('consuming_mode') && oldClassList.includes('consuming_mode')) {
                         this.isFocusMode = false;
                         STUDIP.eventBus.emit('consuming-mode-disabled');
                     }
-                    if (classList.includes('fixed')) {
+                    if (classList.includes('fixed') && !oldClassList.includes('fixed')) {
                         this.headerMagic = true;
                         STUDIP.eventBus.emit('header-magic-enabled');
-                    } else {
+                    } else if (!classList.includes('fixed') && oldClassList.includes('fixed')) {
                         this.headerMagic = false;
                         this.showMenu = false;
                         STUDIP.eventBus.emit('header-magic-disabled');
@@ -425,7 +426,7 @@ export default {
                     break;
                 // Watch for "responsive-display" and "fullscreen-mode" class changes
                 case 'HTML':
-                    if (classList.includes('responsive-display')) {
+                    if (classList.includes('responsive-display') && !oldClassList.includes('responsive-display')) {
                         this.isResponsive = true;
 
                         if (classList.includes('fullscreen-mode')) {
@@ -436,7 +437,7 @@ export default {
                         this.$nextTick(() => {
                             this.moveHelpbar();
                         })
-                    } else {
+                    } else if (!classList.includes('responsive-display') && oldClassList.includes('responsive-display')) {
                         this.isResponsive = false;
                         STUDIP.eventBus.emit('responsive-display-disabled');
                         this.$nextTick(() => {
@@ -444,11 +445,11 @@ export default {
                         })
                     }
 
-                    if (classList.includes('fullscreen-mode')) {
+                    if (classList.includes('fullscreen-mode') && !oldClassList.includes('fullscreen-mode')) {
                         this.isFullscreen = true;
 
                         STUDIP.eventBus.emit('fullscreen-enabled');
-                    } else {
+                    } else if (!classList.includes('fullscreen-mode') && oldClassList.includes('fullscreen-mode')) {
                         this.isFullscreen = false;
                         STUDIP.eventBus.emit('fullscreen-disabled');
                     }
@@ -544,21 +545,21 @@ export default {
         this.classObserver = new MutationObserver(mutations => {
             for (const m of mutations) {
                 const newValue = m.target.getAttribute(m.attributeName);
-                this.onChangeViewMode(m.target.tagName, newValue);
+                this.onChangeViewMode(m.target.tagName, newValue, m.oldValue);
             }
         });
 
         // Observe <html> for class changes.
         this.classObserver.observe(document.documentElement, {
             attributes: true,
-            attributeOldValue : false,
+            attributeOldValue : true,
             attributeFilter: ['class']
         });
 
         // Observe <body> for class changes.
         this.classObserver.observe(document.body, {
             attributes: true,
-            attributeOldValue : false,
+            attributeOldValue : true,
             attributeFilter: ['class']
         });
 
