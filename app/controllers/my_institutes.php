@@ -89,14 +89,8 @@ class MyInstitutesController extends AuthenticatedController
 
     protected function check_institute($institute): bool
     {
-        if ($institute['visitdate'] || $institute['last_modified']) {
-            if ($institute['visitdate'] <= $institute["chdate"] || (!empty($institute['last_modified']) && $institute['last_modified'] > 0)) {
-                $last_modified = ($institute['visitdate'] <= $institute["chdate"]
-                && $institute["chdate"] > $institute['last_modified'] ? $institute["chdate"] : $institute['last_modified']);
-                if ($last_modified) {
-                    return true;
-                }
-            }
+        if ($institute['visitdate'] <= $institute['chdate']) {
+            return true;
         }
 
         $plugins = $institute['navigation'];
