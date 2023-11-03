@@ -321,8 +321,7 @@ export default {
                 this.showMenu = false;
                 cache.remove('fullscreen-mode');
                 document.getElementById('responsive-toggle-focusmode').style.display = 'none';
-                document.body.classList.remove('fullscreen-sidebar-shown');
-                document.body.style.display = '';
+                document.body.style.display = null;
 
                 const siteTitle = document.getElementById('site-title');
                 if (siteTitle.dataset.originalTitle) {
