@@ -17,7 +17,8 @@ class Consultation_AdminController extends ConsultationController
         parent::before_filter($action, $args);
 
         if (!$this->range->isEditableByUser()) {
-            throw new AccessDeniedException();
+            $this->redirect('consultation/overview');
+            return;
         }
 
         $this->activateNavigation('admin');
@@ -846,6 +847,18 @@ class Consultation_AdminController extends ConsultationController
             $this->url_for('consultation/export/all', $action === 'expired'),
             Icon::create('export')
         );
+
+        if ($action !== 'expired') {
+            $share = new ShareWidget();
+            $share->addCopyableLink(
+                _('Link zur Terminübersicht kopieren'),
+                $this->url_for('consultation/overview', [
+                    'again'  => 'yes',
+                ]),
+                Icon::create('clipboard')
+            );
+            $sidebar->addWidget($share);
+        }
     }
 
     private function getDateAndTime($index)

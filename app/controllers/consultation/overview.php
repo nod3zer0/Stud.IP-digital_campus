@@ -16,6 +16,7 @@ class Consultation_OverviewController extends ConsultationController
 
         if ($this->range->isEditableByUser()) {
             $this->redirect('consultation/admin');
+            return;
         }
 
         PageLayout::setTitle(sprintf(
