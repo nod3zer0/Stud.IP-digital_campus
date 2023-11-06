@@ -34,7 +34,7 @@ const wysiwyg = {
     replace(textarea) {
         if (!hasEditor(textarea)) {
             if (isTextareaVisible(textarea)) {
-                replaceTextarea(textarea);
+                return replaceTextarea(textarea);
             }
         } else if (isEditorHidden(textarea)) {
             destroyTextarea(textarea);
