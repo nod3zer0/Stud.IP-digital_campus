@@ -12,6 +12,7 @@ class Institute extends SchemaProvider
     const REL_BLUBBER = 'blubber-threads';
     const REL_FILES = 'file-refs';
     const REL_FOLDERS = 'folders';
+    const REL_MEMBERSHIPS = 'memberships';
     const REL_STATUS_GROUPS = 'status-groups';
 
     public function getId($institute): ?string
@@ -57,6 +58,12 @@ class Institute extends SchemaProvider
         $relationships[self::REL_BLUBBER] = [
             self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_BLUBBER),
+            ],
+        ];
+
+        $relationships[self::REL_MEMBERSHIPS] = [
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_MEMBERSHIPS),
             ],
         ];
 

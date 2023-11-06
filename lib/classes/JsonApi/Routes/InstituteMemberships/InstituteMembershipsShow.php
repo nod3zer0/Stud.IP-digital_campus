@@ -22,7 +22,7 @@ class InstituteMembershipsShow extends JsonApiController
         }
 
         $user = $this->getUser($request);
-        if ($user->id !== $membership->user_id) {
+        if ($user->id !== $membership->user_id && !get_visibility_by_id($membership->user_id)) {
             throw new AuthorizationFailedException();
         }
 

@@ -253,6 +253,7 @@ class RouteMap
         $group->get('/institutes/{id}', Routes\Institutes\InstitutesShow::class);
         $group->get('/institutes', Routes\Institutes\InstitutesIndex::class);
 
+        $group->get('/institutes/{id}/memberships', Routes\Institutes\InstituteMembershipsIndex::class);
         $group->get('/institutes/{id}/status-groups', Routes\Institutes\StatusGroupsOfInstitutes::class);
     }
 
