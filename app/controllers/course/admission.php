@@ -121,6 +121,7 @@ class Course_AdmissionController extends AuthenticatedController
         CSRFProtection::verifyUnsafeRequest();
         PageLayout::setTitle(_('Anmeldemodus ändern'));
         $request = null;
+        $question = null;
         if (Request::submitted('change_admission_prelim')) {
             $request = Request::extract('admission_prelim int, admission_binding submitted, admission_prelim_txt');
             $request = array_diff_key($request, array_filter($this->is_locked));
