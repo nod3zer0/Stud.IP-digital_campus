@@ -78,11 +78,14 @@ class Course_LtiController extends StudipController
     /**
      * Display the launch form for a tool as an iframe.
      */
-    public function iframe_action()
+    public function iframe_action(string $position)
     {
-        $this->launch_url  = Request::get('launch_url');
-        $this->launch_data = Request::getArray('launch_data');
-        $this->signature   = Request::get('signature');
+        $lti_data = LtiData::findByCourseAndPosition($this->course_id, $position);
+        $lti_link = $this->getLtiLink($lti_data);
+
+        $this->launch_url = $lti_data->getLaunchURL();
+        $this->launch_data = $lti_link->getBasicLaunchData();
+        $this->signature = $lti_link->getLaunchSignature($this->launch_data);
 
         $this->set_layout(null);
     }

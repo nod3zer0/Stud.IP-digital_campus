@@ -56,6 +56,8 @@ class LtiData extends SimpleORMap
 
     /**
      * Find a single entry by course_id and position.
+     *
+     * @return static|null
      */
     public static function findByCourseAndPosition($course_id, $position)
     {

@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var string $launch_url
+ * @var array $launch_data
+ * @var string $signature
+ */
+?>
 <!DOCTYPE html>
 <html>
 <head>

@@ -1,14 +1,16 @@
+<?php
+/**
+ * @var Course_LtiController $controller
+ * @var LtiData[] $lti_data_array
+ * @var bool $edit_perm
+ */
+?>
 <? if (empty($lti_data_array)): ?>
     <?= MessageBox::info(_('Es wurden noch keine Inhalte angelegt.')) ?>
 <? endif ?>
 
 <? foreach ($lti_data_array as $lti_data): ?>
     <? $launch_url = $lti_data->getLaunchURL() ?>
-    <? if ($launch_url): ?>
-        <? $lti_link = $controller->getLtiLink($lti_data) ?>
-        <? $launch_data = $lti_link->getBasicLaunchData() ?>
-        <? $signature = $lti_link->getLaunchSignature($launch_data) ?>
-    <? endif ?>
 
     <article class="studip">
         <header>
@@ -47,20 +49,19 @@
         <section>
             <?= formatReady($lti_data->description) ?>
 
-            <? if ($launch_url && $lti_data->options['document_target'] == 'iframe'): ?>
+            <? if ($launch_url && $lti_data->options['document_target'] === 'iframe'): ?>
                 <iframe style="border: none; height: 640px; width: 100%;"
-                        src="<?= $controller->link_for('course/lti/iframe', compact('launch_url', 'launch_data', 'signature')) ?>"></iframe>
+                        src="<?= $controller->link_for('course/lti/iframe', $lti_data->position) ?>"></iframe>
             <? endif ?>
         </section>
 
-        <? if ($launch_url && $lti_data->options['document_target'] != 'iframe'): ?>
+        <? if ($launch_url && $lti_data->options['document_target'] !== 'iframe'): ?>
             <footer>
-                <form class="default" action="<?= htmlReady($launch_url) ?>" method="post" target="_blank">
-                    <? foreach ($launch_data as $key => $value): ?>
-                        <input type="hidden" name="<?= htmlReady($key) ?>" value="<?= htmlReady($value, false) ?>">
-                    <? endforeach ?>
-                    <?= Studip\Button::create(_('Anwendung starten'), 'oauth_signature', ['value' => $signature]) ?>
-                </form>
+                <?= Studip\LinkButton::create(
+                    _('Anwendung starten'),
+                    $controller->link_for('course/lti/iframe', $lti_data->position),
+                    ['target' => '_blank']
+                ) ?>
             </footer>
         <? endif ?>
     </article>
