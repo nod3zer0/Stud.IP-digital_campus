@@ -146,6 +146,8 @@ class Course_LtiController extends StudipController
      */
     public function edit_action($position = '')
     {
+        $this->lti_data = new LtiData();
+
         if ($position !== '') {
             $this->lti_data = LtiData::findByCourseAndPosition($this->course_id, $position);
         }
