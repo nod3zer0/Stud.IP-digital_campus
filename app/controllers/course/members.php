@@ -129,7 +129,7 @@ class Course_MembersController extends AuthenticatedController
         // Check autor-perms
         if (!$this->is_tutor) {
             // filter invisible user
-            $this->invisibles = count($filtered_members['autor']->findBy('visible', 'no')) + count($filtered_members['user']->findBy('visible', 'no'));
+            $user_count = count($filtered_members['autor']) + count($filtered_members['user']);
             $current_user_id = $this->user_id;
             $exclude_invisibles =
                     function ($user) use ($current_user_id) {
@@ -137,10 +137,8 @@ class Course_MembersController extends AuthenticatedController
                     };
             $filtered_members['autor'] = $filtered_members['autor']->filter($exclude_invisibles);
             $filtered_members['user'] = $filtered_members['user']->filter($exclude_invisibles);
+            $this->invisibles = $user_count - count($filtered_members['autor']) - count($filtered_members['user']);
             $this->my_visibility = $this->getUserVisibility();
-            if (!$this->my_visibility['iam_visible']) {
-                $this->invisibles--;
-            }
         }
 
         // get member informations
