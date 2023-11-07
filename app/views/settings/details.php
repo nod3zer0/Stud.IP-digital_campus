@@ -48,22 +48,22 @@
         </label>
         <label>
             <?= _('Hobbys') ?>
-            <?= I18N::textarea('hobby', $user->hobby, ['class' => 'add_toolbar wysiwyg'] + (!$controller->shallChange('user_info.hobby') ? ['disabled' => true] : [])) ?>
+            <?= I18N::textarea('hobby', $user->hobby, ['class' => 'wysiwyg'] + (!$controller->shallChange('user_info.hobby') ? ['disabled' => true] : [])) ?>
         </label>
         <a name="lebenslauf"></a>
         <label>
             <?= _('Lebenslauf') ?>
-            <?= I18N::textarea('lebenslauf', $user->lebenslauf, ['class' => 'add_toolbar wysiwyg'] + (!$controller->shallChange('user_info.lebenslauf') ? ['disabled' => true] : [])) ?>
+            <?= I18N::textarea('lebenslauf', $user->lebenslauf, ['class' => 'wysiwyg'] + (!$controller->shallChange('user_info.lebenslauf') ? ['disabled' => true] : [])) ?>
         </label>
         <? if ($is_dozent): ?>
             <a name="schwerpunkte"></a>
             <label>
                 <?= _('Schwerpunkte') ?>
-                <?= I18N::textarea('schwerp', $user->schwerp, ['class' => 'add_toolbar wysiwyg'] + (!$controller->shallChange('user_info.schwerp') ? ['disabled' => true] : [])) ?>
+                <?= I18N::textarea('schwerp', $user->schwerp, ['class' => 'wysiwyg'] + (!$controller->shallChange('user_info.schwerp') ? ['disabled' => true] : [])) ?>
             <a name="publikationen"></a>
             <label>
                 <?= _('Publikationen') ?>
-                <?= I18N::textarea('publi', $user->publi, ['class' => 'add_toolbar wysiwyg'] + (!$controller->shallChange('user_info.publi') ? ['disabled' => true] : [])) ?>
+                <?= I18N::textarea('publi', $user->publi, ['class' => 'wysiwyg'] + (!$controller->shallChange('user_info.publi') ? ['disabled' => true] : [])) ?>
             </label>
         <? endif; ?>
         <? if (Config::get()->OERCAMPUS_ENABLED) : ?>

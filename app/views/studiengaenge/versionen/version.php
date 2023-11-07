@@ -102,7 +102,7 @@ $perm = MvvPerm::get($version)
         <legend>
             <?= _('Beschreibung') ?>
         </legend>
-        <?= MvvI18N::textarea('beschreibung', $version->beschreibung, ['class' => 'add_toolbar ui-resizable wysiwyg', 'id' => 'beschreibung'])->checkPermission($version) ?>
+        <?= MvvI18N::textarea('beschreibung', $version->beschreibung, ['class' => 'wysiwyg', 'id' => 'beschreibung'])->checkPermission($version) ?>
     </fieldset>
 
     <fieldset class="collapsable collapsed">
@@ -133,9 +133,9 @@ $perm = MvvPerm::get($version)
         <? endforeach; ?>
         <label for="kommentar_status" style="vertical-align: top;"><?= _('Kommentar:') ?></label>
         <? if($perm->haveFieldPerm('kommentar_status', MvvPerm::PERM_WRITE)) : ?>
-        <textarea cols="60" rows="5" name="kommentar_status" id="kommentar_status" class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($version->kommentar_status) ?></textarea>
+        <textarea cols="60" rows="5" name="kommentar_status" id="kommentar_status" class="wysiwyg"><?= htmlReady($version->kommentar_status) ?></textarea>
         <? else : ?>
-        <textarea disabled cols="60" rows="5" name="kommentar_status" id="kommentar_status" class="ui-resizable"><?= htmlReady($version->kommentar_status) ?></textarea>
+        <textarea disabled cols="60" rows="5" name="kommentar_status" id="kommentar_status"><?= htmlReady($version->kommentar_status) ?></textarea>
         <? endif; ?>
     </fieldset>
 

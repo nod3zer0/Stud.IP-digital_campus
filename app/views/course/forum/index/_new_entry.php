@@ -34,7 +34,7 @@
                 <? endif; ?>
 
                 <label>
-                    <textarea class="add_toolbar wysiwyg size-l" data-textarea="new_entry" name="content" required tabindex="3"
+                    <textarea class="wysiwyg size-l" data-textarea="new_entry" name="content" required tabindex="3"
                         placeholder="<?= _('Schreiben Sie hier Ihren Beitrag.') ?>"></textarea>
                 </label>
 
@@ -52,16 +52,11 @@
                 <?= Studip\LinkButton::createCancel(_('Abbrechen'), '', [
                     'onClick' => "return STUDIP.Forum.cancelNewEntry();",
                     'tabindex' => '4']) ?>
-
-                <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('new_entry', 'new_entry_preview');", ['tabindex' => '5', 'class' => 'js']) ?>
             </footer>
 
             <input type="hidden" name="parent" value="<?= $topic_id ?>">
             <input type="text" name="nixda" style="display: none;">
             <?= CSRFProtection::tokenTag() ?>
         </form>
-
-        <?= $this->render_partial('course/forum/index/_preview', ['preview_id' => 'new_entry_preview']) ?>
-        <br>
     </div>
 </script>

@@ -11,7 +11,7 @@
         </label>
         <label>
             <?= _('Alternativtext') ?>
-            <?= MvvI18N::textarea('alttext', $lvgruppe->alttext, ['class' => 'add_toolbar ui-resizable wysiwyg'])->checkPermission($lvgruppe) ?>
+            <?= MvvI18N::textarea('alttext', $lvgruppe->alttext, ['class' => 'wysiwyg'])->checkPermission($lvgruppe) ?>
         </label>
     </fieldset>
     <footer data-dialog-button>

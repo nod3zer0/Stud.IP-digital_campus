@@ -46,7 +46,8 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
                              is_object($GLOBALS['perm']) &&
                              $GLOBALS['perm']->have_perm('autor') &&
                              PersonalNotifications::isActivated()) ?>,
-            wysiwyg_enabled: <?= json_encode((bool) Config::get()->WYSIWYG) ?>,
+            wysiwyg_enabled: true,
+            editor_enabled: true,
             server_timestamp: <?= time() ?>,
             config: <?= json_encode([
                 'ACTIONMENU_THRESHOLD' => Config::get()->ACTION_MENU_THRESHOLD,
@@ -59,15 +60,13 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
     <?= PageLayout::getHeadElements() ?>
 
     <script>
-    window.STUDIP.editor_enabled = <?= json_encode((bool) Studip\Markup::editorEnabled()) ?>;
-
-    setTimeout(() => {
-        // This needs to be put in a timeout since otherwise it will not match
-        if (STUDIP.Responsive.isResponsive()) {
-            document.querySelector('html').classList.add('responsive-display');
-        }
-    }, 0);
-</script>
+        setTimeout(() => {
+            // This needs to be put in a timeout since otherwise it will not match
+            if (STUDIP.Responsive.isResponsive()) {
+                document.querySelector('html').classList.add('responsive-display');
+            }
+        }, 0);
+    </script>
 </head>
 
 <body id="<?= PageLayout::getBodyElementId() ?>" <? if (!PageLayout::isSidebarEnabled()) echo 'class="no-sidebar"'; ?>>

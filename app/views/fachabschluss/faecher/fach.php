@@ -19,7 +19,7 @@
         </label>
         <label>
             <?= _('Beschreibung') ?>
-            <?= MvvI18N::textarea('beschreibung', $fach->beschreibung, ['class' => 'add_toolbar ui-resizable wysiwyg'])->checkPermission($fach) ?>
+            <?= MvvI18N::textarea('beschreibung', $fach->beschreibung, ['class' => 'wysiwyg'])->checkPermission($fach) ?>
         </label>
     </fieldset>
 
@@ -86,10 +86,10 @@
         <label><?= _('Schlagworte') ?>
             <? if ($perm->haveFieldPerm('schlagworte')) : ?>
                 <textarea cols="60" rows="5" name="schlagworte" id="schlagworte"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($fach->schlagworte) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($fach->schlagworte) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="schlagworte" id="schlagworte"
-                          class="ui-resizable"><?= htmlReady($fach->schlagworte) ?></textarea>
+                          ><?= htmlReady($fach->schlagworte) ?></textarea>
             <? endif; ?>
             <?= _('Hier können zusätzlich Schlagworte angegeben werden, die in der Suche berücksichtigt werden.') ?>
         </label>

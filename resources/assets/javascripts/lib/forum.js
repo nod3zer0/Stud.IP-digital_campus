@@ -308,10 +308,7 @@ const Forum = {
         // usually the wysiwyg editor does this automatically,
         // but since there is no submit event the editor does not
         // get notified
-        if (STUDIP.editor_enabled) {
-            // wysiwyg is active, ensure HTML markers are set
-            textarea.val(STUDIP.wysiwyg.markAsHtml(textarea.val()));
-        }
+        textarea.val(STUDIP.wysiwyg.markAsHtml(textarea.val()));
 
         // remember current textarea value
         textarea.data('reset', textarea.val());
@@ -332,7 +329,6 @@ const Forum = {
                 STUDIP.Markup.element('span[data-topic-content=' + topic_id +']');
 
                 // hide the other stuff
-                jQuery('div[id*=preview]').parent().hide();
                 jQuery('span[data-edit-topic=' + topic_id +']').hide();
                 jQuery('span[data-show-topic=' + topic_id +']').show();
 
@@ -349,8 +345,6 @@ const Forum = {
     },
 
     cancelEditEntry: function (topic_id) {
-        jQuery('div[id*=preview]').parent().hide();
-
         jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').val(
             jQuery('span[data-edit-topic=' + topic_id +'] input[name=name]').data('reset')
         );
@@ -457,28 +451,14 @@ const Forum = {
         // - studipQuotePlugin > insertStudipQuote
         //   public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
 
-        if (STUDIP.editor_enabled) {
-            // quote with HTML markup
-            var author = '';
-            if (name) {
-                var writtenBy = $gettext('%s hat geschrieben:');
-                author = '<div class="author">'
-                    + writtenBy.replace('%s', name)
-                    + '</div>';
-            }
-            return '<blockquote>' + author + text + '</blockquote><p>&nbsp;</p>';
-        }
-
-        if (STUDIP.wysiwyg.isHtml(text)) {
-            // remove HTML before quoting
-            text = jQuery(text).text();
-        }
-
-        // quote with Stud.IP markup
+        var author = '';
         if (name) {
-            return '[quote=' + name + ']\n' + text + '\n[/quote]\n';
+            var writtenBy = $gettext('%s hat geschrieben:');
+            author = '<div class="author">'
+                + writtenBy.replace('%s', name)
+                + '</div>';
         }
-        return '[quote]\n' + text + '\n[/quote]\n';
+        return '<blockquote>' + author + text + '</blockquote><p>&nbsp;</p>';
     },
 
     forwardEntry: function(topic_id) {
@@ -534,25 +514,6 @@ const Forum = {
 
         element.on('dialog-close', function () {
             $(this).removeClass('selected').off('dialog-close');
-        });
-    },
-
-    preview: function (text_element_id, preview_id) {
-        var posting = {};
-        posting.posting = jQuery('textarea[data-textarea=' + text_element_id + ']').val();
-        if (STUDIP.editor_enabled) {
-            posting.posting = STUDIP.wysiwyg.markAsHtml(posting.posting);
-        }
-
-        jQuery.ajax(STUDIP.URLHelper.getURL('dispatch.php/course/forum/index/preview?cid=' + STUDIP.Forum.seminar_id), {
-            type: 'POST',
-            data: posting,
-            success: function (html) {
-                jQuery('div[id*=preview]').parent().hide();
-                jQuery('#' + preview_id).html(html);
-                STUDIP.Markup.element('#' + preview_id);
-                jQuery('#' + preview_id).parent().show();
-            }
         });
     },
 

@@ -13,6 +13,6 @@
                    value="<?= htmlReady($value) ?>"
                    @allinputs="setInputs"
                    @selectlanguage="(language_id) => selectLanguage('<?= htmlReady($this->name) ?>', language_id)"
-                   :wysiwyg_disabled="<?= \Config::get()->WYSIWYG ? 'false' : 'true' ?>" <?= $required ? 'required' : '' ?>>
+                   <?= $required ? 'required' : '' ?>>
     </i18n-textarea>
     </div>

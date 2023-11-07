@@ -16,12 +16,10 @@ $(document).on('click', '#wiki button[name="submit-and-edit"]', function(event) 
         i,
         wysiwyg_editor = false;
 
-    if (STUDIP.editor_enabled) {
-        const textarea = $('textarea[name="body"]', form).get(0);
-        if (textarea) {
-            wysiwyg_editor = STUDIP.wysiwyg.getEditor(textarea);
-            wysiwyg_editor.sourceElement.value = STUDIP.wysiwyg.markAsHtml(wysiwyg_editor.getData());
-        }
+    const textarea = $('textarea[name="body"]', form).get(0);
+    if (textarea) {
+        wysiwyg_editor = STUDIP.wysiwyg.getEditor(textarea);
+        wysiwyg_editor.sourceElement.value = STUDIP.wysiwyg.markAsHtml(wysiwyg_editor.getData());
     }
 
     form_data = form.serializeArray();
@@ -113,20 +111,6 @@ $(document).on('click', '#wiki button[name="submit-and-edit"]', function(event) 
         });
 
     event.preventDefault();
-});
-
-$(document).on('keyup change', '#wiki textarea[name=body]', function() {
-    // Disable "save and edit" button if text was not changed
-    $('#wiki button[name="submit-and-edit"]').prop('disabled', this.value === this.defaultValue);
-});
-
-STUDIP.domReady(() => {
-    if (!STUDIP.editor_enabled) {
-        // Trigger above disable mechanism only when not using wysiwyg
-        $('#wiki textarea[name=body]').change();
-    } else {
-        $(document).off('keyup change', '#wiki textarea[name=body]');
-    }
 });
 
 $(document).on('change', '#wiki-config .global-permissions :checkbox', function () {

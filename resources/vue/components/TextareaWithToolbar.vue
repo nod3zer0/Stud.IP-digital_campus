@@ -24,9 +24,6 @@ export default {
                 this.$emit('input', newContent);
             }
         }
-    },
-    mounted () {
-        $(this.$refs.textarea).addToolbar();
     }
 }
 </script>

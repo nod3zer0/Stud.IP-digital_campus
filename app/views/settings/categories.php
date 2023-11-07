@@ -55,7 +55,7 @@
 
                 <?= I18n::textarea("category-content-{$category->id}", $category->content, [
                     'aria-label' => _('Inhalt der Kategorie:'),
-                    'class'      => 'resizable add_toolbar wysiwyg size-l',
+                    'class'      => 'resizable wysiwyg size-l',
                     'id'         => "content{$index}",
                 ]) ?>
             </label>

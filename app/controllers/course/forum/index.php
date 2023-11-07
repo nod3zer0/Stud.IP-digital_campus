@@ -335,17 +335,6 @@ class Course_Forum_IndexController extends ForumController
     /* * * * * * * * * * * * * * * * * * * * * * * * * */
 
     /**
-     * this action renders a preview of the submitted text
-     */
-    function preview_action() {
-        if (Request::isXhr()) {
-            $this->render_text(formatReady(Request::get('posting')));
-        } else {
-            $this->render_text(ForumEntry::getContentAsHtml(Request::get('posting')));
-        }
-    }
-
-    /**
      * Add a new entry. Has a simple spambot protection and checks
      * the parent_id to add the entry to, throwing an exception if missing.
      *

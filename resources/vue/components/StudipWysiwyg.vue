@@ -1,24 +1,15 @@
 <template>
     <ckeditor
-        v-if="enabled"
         :editor="editor"
         :config="editorConfig"
         @ready="prefill"
         v-model="currentText"
         @input="onInput"
     />
-    <textarea
-        v-else
-        :value="text"
-        @input="$emit('input', $event.target.value)"
-        ref="textarea"
-        class="studip-wysiwyg wysiwyg"
-    ></textarea>
 </template>
 
 <script>
 import { ClassicEditor, BalloonEditor } from '../../assets/javascripts/chunks/wysiwyg.js';
-import Toolbar from '../../assets/javascripts/lib/toolbar.js';
 
 export default {
     name: 'studip-wysiwyg',
@@ -55,9 +46,6 @@ export default {
             }
             throw new Error('Unknown `editorType`');
         },
-        enabled() {
-            return STUDIP.editor_enabled;
-        },
     },
     methods: {
         prefill(editor) {
@@ -70,11 +58,6 @@ export default {
     },
     created() {
         STUDIP.loadChunk('mathjax');
-    },
-    mounted() {
-        if (!this.enabled) {
-            Toolbar.initialize(this.$refs.textarea);
-        }
     },
 };
 </script>

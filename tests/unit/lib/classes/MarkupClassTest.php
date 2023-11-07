@@ -55,8 +55,6 @@ class MarkupClassTest extends \Codeception\Test\Unit
      */
     public function testRemoveHTML(string $input, string $expected): void
     {
-        Config::set(new Config(['WYSIWYG' => true]));
-
         $this->assertEquals($expected, Studip\Markup::removeHtml(Studip\Markup::markAsHtml($input)));
     }
 
@@ -165,7 +163,6 @@ class MarkupClassTest extends \Codeception\Test\Unit
             # fake Stud.IP web server set-up
             fakeServer($test['uri'], $test['domains']);
             Config::get()->LOAD_EXTERNAL_MEDIA = $test['externalMedia'];
-            //echoWebGlobals(); // call to help with debugging
 
             # test getMediaUrl
             try {

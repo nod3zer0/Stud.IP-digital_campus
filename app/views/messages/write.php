@@ -60,7 +60,7 @@
     <div>
         <label>
             <?= _("Nachricht") ?>
-            <textarea name="message_body" class="add_toolbar wysiwyg"><?= wysiwygReady($default_message['message'],false) ?></textarea>
+            <textarea name="message_body" class="wysiwyg"><?= wysiwygReady($default_message['message'],false) ?></textarea>
         </label>
     </div>
     <div>
@@ -88,15 +88,6 @@
                     <strong><?= _("Optionen") ?></strong>
                 </a>
             </li>
-            <? if (!\Studip\Markup::editorEnabled()) : ?>
-            <li>
-                <a href="" onClick="STUDIP.Messages.toggleSetting('preview'); STUDIP.Messages.previewComposedMessage(); return false;">
-                    <?= Icon::create('visibility-visible', 'clickable')->asImg(40) ?>
-                    <br>
-                    <strong><?= _("Vorschau") ?></strong>
-                </a>
-            </li>
-            <? endif ?>
         </ul>
     </div>
 
@@ -164,13 +155,6 @@
         <? endif ?>
     </div>
     </fieldset>
-
-    <? if (!\Studip\Markup::editorEnabled()) : ?>
-    <div id="preview" style="display: none;">
-        <?= _("Vorschau") ?>
-        <p class="message_body"></p>
-    </div>
-    <? endif ?>
 
     <footer data-dialog-button>
         <?= Studip\Button::createAccept(_('Abschicken'), null, ['onclick' => "STUDIP.Messages.checkAdressee();"]) ?>

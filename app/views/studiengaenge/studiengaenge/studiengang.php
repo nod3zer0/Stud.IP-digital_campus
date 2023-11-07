@@ -206,10 +206,10 @@ use Studip\Button, Studip\LinkButton;
         <label for="kommentar_status" style="vertical-align: top;"><?= _('Kommentar Bearbeitungsstatus') ?>
             <? if ($perm->haveFieldPerm('kommentar_status', MvvPerm::PERM_WRITE)): ?>
                 <textarea cols="60" rows="5" name="kommentar_status" id="kommentar_status"
-                      class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($studiengang->kommentar_status) ?></textarea>
+                      class="wysiwyg"><?= htmlReady($studiengang->kommentar_status) ?></textarea>
             <? else: ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_status" id="kommentar_status"
-                      class="ui-resizable"><?= htmlReady($studiengang->kommentar_status) ?></textarea>
+                      ><?= htmlReady($studiengang->kommentar_status) ?></textarea>
             <? endif ?>
         </label>
 
@@ -323,7 +323,7 @@ use Studip\Button, Studip\LinkButton;
         </legend>
         <label>
             <?= _('Beschreibung') ?>
-            <?= MvvI18N::textarea('beschreibung', $studiengang->beschreibung, ['class' => 'add_toolbar ui-resizable wysiwyg'])->checkPermission($studiengang) ?>
+            <?= MvvI18N::textarea('beschreibung', $studiengang->beschreibung, ['class' => 'wysiwyg'])->checkPermission($studiengang) ?>
         </label>
         <? foreach ($datafields as $df) : ?>
             <? if (mb_strpos($df->model->object_class, 'info') !== false) : ?>
@@ -336,7 +336,7 @@ use Studip\Button, Studip\LinkButton;
             <? endif ?>
         <? endforeach ?>
         <label><?= _('Schlagwörter') ?>
-        <textarea <?= $perm->disable('schlagworte') ?> cols="60" rows="5" name="schlagworte" id="schlagworte" class="ui-resizable"><?= htmlReady($studiengang->schlagworte) ?></textarea>
+        <textarea <?= $perm->disable('schlagworte') ?> cols="60" rows="5" name="schlagworte" id="schlagworte"><?= htmlReady($studiengang->schlagworte) ?></textarea>
         <div><?= _('Hier können zusätzlich Schlagwörter angegeben werden, die in der Suche berücksichtigt werden.') ?></div>
         </label>
     </fieldset>

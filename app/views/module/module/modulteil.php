@@ -193,10 +193,10 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label id="mvv-field-modulteil-kommentar_kapazitaet"><?= _('Kommentar') ?>
             <? if ($perm_d->haveFieldPerm('kommentar_kapazitaet', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="kommentar_kapazitaet" id="kommentar_kapazitaet"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar_kapazitaet) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->kommentar_kapazitaet) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_kapazitaet" id="kommentar_kapazitaet"
-                          class="ui-resizable"><?= htmlReady($deskriptor->kommentar_kapazitaet) ?></textarea>
+                          ><?= htmlReady($deskriptor->kommentar_kapazitaet) ?></textarea>
             <? endif; ?>
         </label>
 
@@ -231,9 +231,9 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         </legend>
         <label><?= _('Teilnahmevoraussetzung') ?>
         <? if ($perm_d->haveFieldPerm('voraussetzung', MvvPerm::PERM_WRITE)) : ?>
-            <textarea cols="60" rows="5" name="voraussetzung" id="voraussetzung" class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->voraussetzung) ?></textarea>
+            <textarea cols="60" rows="5" name="voraussetzung" id="voraussetzung" class="wysiwyg"><?= htmlReady($deskriptor->voraussetzung) ?></textarea>
         <? else : ?>
-            <textarea readonly cols="60" rows="5" name="voraussetzung" id="voraussetzung" class="ui-resizable"><?= htmlReady($deskriptor->voraussetzung) ?></textarea>
+            <textarea readonly cols="60" rows="5" name="voraussetzung" id="voraussetzung"><?= htmlReady($deskriptor->voraussetzung) ?></textarea>
         <? endif; ?>
         </label>
     </fieldset>
@@ -244,9 +244,9 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         </legend>
         <label><?= _('Kommentar') ?>
         <? if ($perm_d->haveFieldPerm('kommentar', MvvPerm::PERM_WRITE)) : ?>
-            <textarea cols="60" rows="5" name="kommentar" id="kommentar" class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar) ?></textarea>
+            <textarea cols="60" rows="5" name="kommentar" id="kommentar" class="wysiwyg"><?= htmlReady($deskriptor->kommentar) ?></textarea>
         <? else : ?>
-            <textarea readonly cols="60" rows="5" name="kommentar" id="kommentar" class="ui-resizable"><?= htmlReady($deskriptor->kommentar) ?></textarea>
+            <textarea readonly cols="60" rows="5" name="kommentar" id="kommentar"><?= htmlReady($deskriptor->kommentar) ?></textarea>
         <? endif; ?>
         </label>
     </fieldset>
@@ -271,10 +271,10 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label for="kommentar_wl_praesenz" style="vertical-align: top;"><?= _('Kommentar') ?>
             <? if ($perm_d->haveFieldPerm('kommentar_wl_praesenz', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="kommentar_wl_praesenz" id="kommentar_wl_praesenz"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_praesenz) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_praesenz) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_wl_praesenz" id="kommentar_wl_praesenz"
-                          class="ui-resizable"><?= htmlReady($deskriptor->kommentar_wl_praesenz) ?></textarea>
+                          ><?= htmlReady($deskriptor->kommentar_wl_praesenz) ?></textarea>
             <? endif; ?>
         </label>
 
@@ -291,10 +291,10 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label><?= _('Kommentar') ?>
             <? if ($perm_d->haveFieldPerm('kommentar_wl_bereitung', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="kommentar_wl_bereitung" id="kommentar_wl_bereitung"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_bereitung) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_bereitung) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_wl_bereitung" id="kommentar_wl_bereitung"
-                          class="ui-resizable"><?= htmlReady($deskriptor->kommentar_wl_bereitung) ?></textarea>
+                          ><?= htmlReady($deskriptor->kommentar_wl_bereitung) ?></textarea>
             <? endif; ?>
         </label>
 
@@ -311,10 +311,10 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label><?= _('Kommentar') ?>
             <? if ($perm_d->haveFieldPerm('kommentar_wl_selbst', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="kommentar_wl_selbst" id="kommentar_wl_selbst"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_selbst) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_selbst) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_wl_selbst" id="kommentar_wl_selbst"
-                          class="ui-resizable"><?= htmlReady($deskriptor->kommentar_wl_selbst) ?></textarea>
+                          ><?= htmlReady($deskriptor->kommentar_wl_selbst) ?></textarea>
             <? endif; ?>
         </label>
 
@@ -329,10 +329,10 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label><?= _('Kommentar') ?>
             <? if ($perm_d->haveFieldPerm('kommentar_wl_pruef', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="kommentar_wl_pruef" id="kommentar_wl_pruef"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_pruef) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->kommentar_wl_pruef) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_wl_pruef" id="kommentar_wl_pruef"
-                          class="ui-resizable"><?= htmlReady($deskriptor->kommentar_wl_pruef) ?></textarea>
+                          ><?= htmlReady($deskriptor->kommentar_wl_pruef) ?></textarea>
             <? endif; ?>
         </label>
     </fieldset>
@@ -344,19 +344,19 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label><?= _('Prüfungsvorleistung') ?>
             <? if ($perm_d->haveFieldPerm('pruef_vorleistung', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="pruef_vorleistung" id="pruef_vorleistung"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->pruef_vorleistung) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->pruef_vorleistung) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="pruef_vorleistung" id="pruef_vorleistung"
-                          class="ui-resizable"><?= htmlReady($deskriptor->pruef_vorleistung) ?></textarea>
+                          ><?= htmlReady($deskriptor->pruef_vorleistung) ?></textarea>
             <? endif; ?>
         </label>
         <label><?= _('Prüfungsleistung Modulteil') ?>
             <? if ($perm_d->haveFieldPerm('pruef_leistung', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="pruef_leistung" id="pruef_leistung"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->pruef_leistung) ?></textarea>
+                          class="wysiwyg"><?= htmlReady($deskriptor->pruef_leistung) ?></textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="pruef_leistung" id="pruef_leistung"
-                          class="ui-resizable"><?= htmlReady($deskriptor->pruef_leistung) ?></textarea>
+                          ><?= htmlReady($deskriptor->pruef_leistung) ?></textarea>
             <? endif; ?>
         </label>
         <label><?= _('Anteil an Modulnote') ?>
@@ -418,11 +418,11 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
         <label><?= _('Kommentar') ?>
             <? if ($perm_d->haveFieldPerm('kommentar_pflicht', MvvPerm::PERM_WRITE)) : ?>
                 <textarea cols="60" rows="5" name="kommentar_pflicht" id="kommentar_pflicht"
-                          class="add_toolbar ui-resizable wysiwyg"><?= htmlReady($deskriptor->kommentar_pflicht) ?>
+                          class="wysiwyg"><?= htmlReady($deskriptor->kommentar_pflicht) ?>
                 </textarea>
             <? else : ?>
                 <textarea readonly cols="60" rows="5" name="kommentar_pflicht" id="kommentar_pflicht"
-                          class="ui-resizable"><?= htmlReady($deskriptor->kommentar_pflicht) ?>
+                          ><?= htmlReady($deskriptor->kommentar_pflicht) ?>
                 </textarea>
             <? endif; ?>
         </label>

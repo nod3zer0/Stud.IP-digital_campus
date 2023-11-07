@@ -13,7 +13,7 @@
                     id="name" type="text" name="name" value="<?= htmlReady($lvgruppe->name) ?>" size="50">
         </label>
         <label><?= _('Alternativtext') ?>
-            <?= MvvI18N::textarea('alttext', $lvgruppe->alttext, ['class' => 'add_toolbar resizable'])->checkPermission($lvgruppe) ?>
+            <?= MvvI18N::textarea('alttext', $lvgruppe->alttext, ['class' => 'resizable'])->checkPermission($lvgruppe) ?>
     </fieldset>
     <footer data-dialog-button>
         <? if ($lvgruppe->isNew()) : ?>

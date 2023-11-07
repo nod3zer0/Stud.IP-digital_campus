@@ -70,10 +70,6 @@ class Settings_GeneralController extends Settings_SettingsController
             $this->config->store('RESOURCES_CONFIRM_PLAN_DRAG_AND_DROP', Request::int('resources_confirm_plan_drag_and_drop'));
         }
 
-        if (Config::get()->WYSIWYG) {
-            $this->config->store('WYSIWYG_DISABLED', !Request::int('wysiwyg_enabled'));
-        }
-
         if (Request::int('personal_notifications_activated')) {
             PersonalNotifications::activate($this->user->id);
         } else {

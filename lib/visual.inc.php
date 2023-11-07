@@ -59,9 +59,6 @@ function jsReady ($what, $target = 'script-single') {
 /**
  * Quote a piece of text, optionally include the author's name.
  *
- * Applies Stud.IP-Markup if WYSIWYG/HTML is disabled and HTML
- * if it is enabled.
- *
  * @param string $text Text that is to be quoted.
  * @param string $author Name of the text's author (optional).
  *
@@ -78,28 +75,14 @@ function quotes_encode($text, $author = '')
     // - studipQuotePlugin > insertStudipQuote
     //   public/assets/javascripts/ckeditor/plugins/studip-quote/plugin.js
 
-    if (Markup::editorEnabled()) {
-        // quote with HTML markup
-        $text = Markup::markupToHtml($text);
+    $text = Markup::markupToHtml($text);
 
-        if ($author) {
-            $title = sprintf(_('%s hat geschrieben:'), htmlReady($author));
-            $text = '<div class="author">' . $title . '</div>' . $text;
-        }
-        $text = sprintf('<blockquote>%s</blockquote><p>&nbsp;</p>', $text);
-        return Markup::markAsHtml($text);
-    }
-
-    if (Markup::isHtml($text)) {
-        // remove HTML before quoting
-        $text = Markup::removeHtml($text);
-    }
-
-    // quote with Stud.IP markup
     if ($author) {
-        return "[quote=" . $author . "]\n" . $text . "\n[/quote]\n";
+        $title = sprintf(_('%s hat geschrieben:'), htmlReady($author));
+        $text = '<div class="author">' . $title . '</div>' . $text;
     }
-    return "[quote]\n" . $text . "\n[/quote]\n";
+    $text = sprintf('<blockquote>%s</blockquote><p>&nbsp;</p>', $text);
+    return Markup::markAsHtml($text);
 }
 
 /**

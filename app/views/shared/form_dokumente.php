@@ -66,7 +66,7 @@
                             <?= MvvI18N::textarea(
                                 'beschreibung',
                                 $dokument->kommentar,
-                                ['class' => 'add_toolbar ui-resizable wysiwyg']
+                                ['class' => 'wysiwyg']
                             ) ?>
                         </label>
                         <?= _('Die Änderungen werden erst gespeichert, wenn das Hauptformular gespeichert wurde!') ?>

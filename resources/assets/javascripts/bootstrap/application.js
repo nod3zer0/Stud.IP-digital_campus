@@ -97,8 +97,6 @@ STUDIP.domReady(function () {
 });
 
 STUDIP.ready((event) => {
-    jQuery('.add_toolbar', event.target).addToolbar();
-
     STUDIP.Forms.initialize(event.target);
     STUDIP.Markup.element(event.target);
 });

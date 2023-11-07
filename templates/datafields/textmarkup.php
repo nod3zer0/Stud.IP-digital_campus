@@ -9,7 +9,7 @@
 
     <textarea name="<?= $name ?>[<?= $model->id ?>]"
               id="<?= $name ?>_<?= $model->id ?>"
-              class="add_toolbar wysiwyg"
+              class="wysiwyg"
               <?= !$entry->isEditable() ? "disabled" : "" ?>
               <? if ($model->is_required) echo 'required'; ?>
     ><?= wysiwygReady($value) ?></textarea>

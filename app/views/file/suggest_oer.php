@@ -8,7 +8,7 @@
         <p><?= _('Schreiben Sie der Autorin/dem Autoren:') ?></p>
 
         <label for="additional_text">
-            <textarea   class = "add_toolbar wysiwyg"
+            <textarea   class = "wysiwyg"
                         name  = "additional_text"
                         id    = "additional_text"
                         rows  = "3"

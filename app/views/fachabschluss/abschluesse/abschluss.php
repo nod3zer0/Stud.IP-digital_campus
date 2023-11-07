@@ -14,7 +14,7 @@
         </label>
         <label>
             <?= _('Beschreibung') ?>
-            <?= MvvI18N::textarea('beschreibung', $abschluss->beschreibung, ['class' => 'add_toolbar ui-resizable wysiwyg'])->checkPermission($abschluss) ?>
+            <?= MvvI18N::textarea('beschreibung', $abschluss->beschreibung, ['class' => 'wysiwyg'])->checkPermission($abschluss) ?>
     </fieldset>
     <fieldset>
         <legend><?= _('Abschluss-Kategorie wählen') ?></legend>

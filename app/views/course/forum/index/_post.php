@@ -86,7 +86,7 @@
         <!-- Postinginhalt -->
         <div class="content">
             <span data-edit-topic="<?= $post['topic_id'] ?>" <?= $edit_posting == $post['topic_id'] ? '' : 'style="display: none;"' ?>>
-                <textarea data-textarea="<?= $post['topic_id'] ?>" data-reset="<?= wysiwygReady($post['content_raw']) ?>" name="content" class="add_toolbar wysiwyg"><?= wysiwygReady($post['content_raw']) ?></textarea>
+                <textarea data-textarea="<?= $post['topic_id'] ?>" data-reset="<?= wysiwygReady($post['content_raw']) ?>" name="content" class="wysiwyg"><?= wysiwygReady($post['content_raw']) ?></textarea>
             </span>
 
             <span data-show-topic="<?= $post['topic_id'] ?>" data-topic-content="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
@@ -106,8 +106,6 @@
 
             <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->link_for('course/forum/index/index/'. $post['topic_id'] .'#'. $post['topic_id']),
                 ['onClick' => "STUDIP.Forum.cancelEditEntry('". $post['topic_id'] ."'); return false;"]) ?>
-
-            <?= Studip\LinkButton::create(_('Vorschau'), "javascript:STUDIP.Forum.preview('". $post['topic_id'] ."', 'preview_". $post['topic_id'] ."');") ?>
         </span>
 
         <span data-show-topic="<?= $post['topic_id'] ?>" <?= $edit_posting != $post['topic_id'] ? '' : 'style="display: none;"' ?>>
@@ -262,5 +260,3 @@
     <div class="clear"></div>
 </div>
 </form>
-
-<?= $this->render_partial('course/forum/index/_preview', ['preview_id' => 'preview_' . $post['topic_id']]) ?>

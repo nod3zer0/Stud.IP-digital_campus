@@ -30,7 +30,7 @@
                 <?= _('Beschreibung') ?>
                 <?= MvvI18N::textarea(
                     'beschreibung',
-                    $abschluss_kategorie->beschreibung, ['class' => 'add_toolbar ui-resizable wysiwyg']
+                    $abschluss_kategorie->beschreibung, ['class' => 'wysiwyg']
                 )->checkPermission($abschluss_kategorie) ?>
             </label>
     </fieldset>

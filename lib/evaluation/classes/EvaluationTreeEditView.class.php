@@ -2304,7 +2304,7 @@ class EvaluationTreeEditView
         $label->addContent($text_label);
         $label->addHTMLContent($this->createImage(EVAL_PIC_HELP, $text_info));
 
-        $textarea = "<br><textarea class=\"add_toolbar wysiwyg\" name=\"text\" rows=\"4\" "
+        $textarea = "<br><textarea class=\"wysiwyg\" name=\"text\" rows=\"4\" "
             . "style=\"vertical-align:top; width: 100%;\">";
         $textarea .= ($text)
             ? $text

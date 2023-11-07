@@ -9,7 +9,7 @@
     </label>
     <label>
         <?= _('Beschreibung') ?>
-        <textarea name="description" class="add_toolbar wysiwyg"
+        <textarea name="description" class="wysiwyg"
             placeholder="<?= _('Optionale Beschreibung') ?>"><?= wysiwygReady($feedback->description); ?></textarea>
     </label>
     <label>

@@ -18,7 +18,7 @@
             <?= _("Beschreibung") ?>
 
             <?= I18N::textarea('description', $topic->description, [
-                'class' => 'add_toolbar wysiwyg size-l',
+                'class' => 'wysiwyg size-l',
             ]) ?>
         </label>
 

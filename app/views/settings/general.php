@@ -107,17 +107,6 @@ $start_pages = [
         </label>
     </fieldset>
 
-<? if (Config::get()->WYSIWYG): ?>
-    <fieldset>
-        <legend><?= _('WYSIWYG-Editor') ?></legend>
-
-        <label>
-            <input type="checkbox" name="wysiwyg_enabled" value="1"
-                   <? if (!$config->WYSIWYG_DISABLED) echo 'checked'; ?>>
-            <?= _('WYSIWYG-Editor aktivieren') ?>
-    </fieldset>
-<? endif; ?>
-
     <? if ($show_room_management_autor_config) : ?>
         <fieldset>
             <legend><?= _('Raumverwaltung') ?></legend>

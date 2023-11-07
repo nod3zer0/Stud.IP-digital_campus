@@ -25,14 +25,7 @@
                             v-bind="$attrs"
                             v-on="$listeners"
                             :required="required && defaultLanguage === selectedLanguage.id"
-                            v-else-if="type === 'wysiwyg' && !wysiwyg_disabled"></studip-wysiwyg>
-            <textarea-with-toolbar :name="nameOfInput(selectedLanguage.id)"
-                                   ref="inputfield"
-                                   v-else
-                                   v-model="values[selectedLanguage.id]"
-                                   v-bind="$attrs"
-                                   :required="required && defaultLanguage === selectedLanguage.id"
-                                   v-on="$listeners"></textarea-with-toolbar>
+                            v-else></studip-wysiwyg>
         </div>
         <input type="hidden"
                v-for="language in otherLanguages"
@@ -72,14 +65,7 @@
                         v-bind="$attrs"
                         v-on="$listeners"
                         :required="required"
-                        v-else-if="type === 'wysiwyg' && !wysiwyg_disabled"></studip-wysiwyg>
-        <textarea-with-toolbar :name="name"
-                               ref="inputfield"
-                               v-else
-                               v-model="values[selectedLanguage.id]"
-                               v-bind="$attrs"
-                               :required="required"
-                               v-on="$listeners"></textarea-with-toolbar>
+                        v-else></studip-wysiwyg>
     </div>
 </template>
 
@@ -108,11 +94,6 @@ export default {
         value: {
             required: false,
             default: ""
-        },
-        wysiwyg_disabled: {
-            type: Boolean,
-            required: false,
-            default: false
         },
         required: {
             type: Boolean,
@@ -200,7 +181,7 @@ export default {
                     let name = this.nameOfInput(this.languages[i].id);
                     let value = newValue[this.languages[i].id];
 
-                    if (this.type === 'wysiwyg' && STUDIP.editor_enabled && value !== null) {
+                    if (this.type === 'wysiwyg' && value !== null) {
                         value = STUDIP.wysiwyg.markAsHtml(value);
                     }
 

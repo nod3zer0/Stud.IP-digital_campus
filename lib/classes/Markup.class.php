@@ -53,12 +53,13 @@ class Markup
 
     /**
      * Return `true` if the WYSIWYG editor is enabled for this user.
+     * @deprecated since Stud.IP 5.5
      *
-     * @return boolean  `true` if the editor is enabled.
+     * @return boolean  always returns `true`.
      */
     public static function editorEnabled()
     {
-        return \Config::get()->WYSIWYG && !$GLOBALS['user']->cfg->WYSIWYG_DISABLED;
+        return true;
     }
 
     /**

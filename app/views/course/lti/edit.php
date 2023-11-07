@@ -21,7 +21,7 @@
 
         <label>
             <?= _('Beschreibung') ?>
-            <textarea name="description" class="add_toolbar wysiwyg"><?= wysiwygReady($lti_data->description) ?></textarea>
+            <textarea name="description" class="wysiwyg"><?= wysiwygReady($lti_data->description) ?></textarea>
         </label>
 
         <label>

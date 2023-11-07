@@ -438,13 +438,7 @@ class MessagesController extends AuthenticatedController {
                         }
                     }
                     $message .= "\n\n";
-                    if (Studip\Markup::editorEnabled()) {
-                        $message = Studip\Markup::markupToHtml($message, false) . Studip\Markup::markupToHtml($old_message['message']);
-                    } else if (Studip\Markup::isHtml($old_message['message'])) {
-                        $message .= Studip\Markup::removeHtml($old_message['message']);
-                    } else {
-                        $message .= $old_message['message'];
-                    }
+                    $message = Studip\Markup::markupToHtml($message, false) . Studip\Markup::markupToHtml($old_message['message']);
                     $this->default_message['message'] = $message;
                 }
                 $this->default_message['subject'] = mb_substr($old_message['subject'], 0, 4) === "RE: " ? $old_message['subject'] : "RE: ".$old_message['subject'];
@@ -492,13 +486,7 @@ class MessagesController extends AuthenticatedController {
                     }
                 }
                 $message .= "\n\n";
-                if (Studip\Markup::editorEnabled()) {
-                    $message = Studip\Markup::markupToHtml($message, false) . Studip\Markup::markupToHtml($old_message['message']);
-                } else if (Studip\Markup::isHtml($old_message['message'])) {
-                    $message .= Studip\Markup::removeHtml($old_message['message']);
-                } else {
-                    $message .= $old_message['message'];
-                }
+                $message = Studip\Markup::markupToHtml($message, false) . Studip\Markup::markupToHtml($old_message['message']);
                 if ($old_message->getNumAttachments()) {
                     //there is at least one attachment: we must copy it
                     $old_attachment_folder = MessageFolder::findTopFolder($old_message->id);
@@ -534,11 +522,7 @@ class MessagesController extends AuthenticatedController {
             }
         }
         if (Request::get('default_body')) {
-            if (Studip\Markup::editorEnabled()) {
-                $this->default_message['message'] = Studip\Markup::markupToHtml(Request::get("default_body"));
-            } else {
-                $this->default_message['message'] = Studip\Markup::removeHtml(Request::get("default_body"));
-            }
+            $this->default_message['message'] = Studip\Markup::markupToHtml(Request::get("default_body"));
         }
         if (Request::get('default_subject')) {
             $this->default_message['subject'] = Request::get("default_subject");
@@ -550,11 +534,8 @@ class MessagesController extends AuthenticatedController {
             $this->show_adressees = null;
         }
         if (trim($settings['sms_sig'])) {
-            if (Studip\Markup::editorEnabled()) {
-                $sms_sig = Studip\Markup::markAsHtml('<br><br><hr>' . Studip\Markup::markupToHtml($settings['sms_sig']) . '<br><br>');
-            } else {
-                $sms_sig =  "\n\n--\n" . $settings['sms_sig'] . "\n\n";
-            }
+            $sms_sig = Studip\Markup::markAsHtml('<br><br><hr>' . Studip\Markup::markupToHtml($settings['sms_sig']) . '<br><br>');
+
             if ($forward_message || $quoted_message) {
                 $this->default_message['message'] = $sms_sig . $this->default_message['message'];
             } else {
@@ -907,13 +888,6 @@ class MessagesController extends AuthenticatedController {
             $attachment->delete();
         }
         $this->render_nothing();
-    }
-
-    public function preview_action()
-    {
-        if (Request::isXhr()) {
-            $this->render_text(formatReady(Request::get('text')));
-        }
     }
 
     public function delete_tag_action()

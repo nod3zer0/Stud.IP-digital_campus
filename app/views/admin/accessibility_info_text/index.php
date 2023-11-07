@@ -8,7 +8,7 @@
                 <?= _('Die angegebene Information wird im Datei-Hochladen-Dialog unter der Checkbox angezeigt.') ?>
             </label>
             <?= I18N::textarea('accessbility_info_text', Config::get()->ACCESSIBILITY_INFO_TEXT,
-                ['class' => 'add_toolbar wysiwyg', 'data-editor' => 'toolbar=small']) ?>
+                ['class' => 'wysiwyg', 'data-editor' => 'toolbar=small']) ?>
         </section>
     </fieldset>
 

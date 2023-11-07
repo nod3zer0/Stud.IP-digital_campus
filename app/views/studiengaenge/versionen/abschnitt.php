@@ -18,7 +18,7 @@ $perm = MvvPerm::get($abschnitt)
         </label>
         <label>
             <?= _('Kommentar') ?>
-            <?= MvvI18N::textarea('kommentar', $abschnitt->kommentar, ['class' => 'add_toolbar resizable ui-resizable'])->checkPermission($abschnitt) ?>
+            <?= MvvI18N::textarea('kommentar', $abschnitt->kommentar, ['class' => 'resizable'])->checkPermission($abschnitt) ?>
             <label><?= _('Kreditpunkte') ?>
                 <input <?= $perm->disable('kp') ?>
                         type="text" name="kp" id="kp"
