@@ -1,14 +1,30 @@
+__08.11.2023 V 5.4__
+- System: Komplett neu entwickelte Verzeichnisstrukturen
+- System: Systemweiter Pool von Bilder 
+- System: Barrierefreiheitserklärung und Meldefunktion integriert
+- System: WYSWIG-Editor hat einen kompakten Modus zur Nutzung auf Mobilgeräten bekommen
+- Raumverwaltung: Vereinfachte Raumanfragen 
+- Raumverwaltung: Sammelaktionen
+- Veranstaltungen: "Mehr"-Seite gibt es nicht mehr als separaten Reiter. Die Verwaltung der Veranstaltungswerkzeuge passiert jetzt auf der Verwaltungsseite
+- Veranstaltungen: Hauptordner im Dateibereich lässt sich für Uploads von Teilnehmenden sperren.
+- Courseware: Jede Courseware ist nun ein einzelnes Lernmaterial und kann kopiert, exportiert, importiert und mit einem eigenen Lernfortschritt versehen werden.
+- Courseware: Sammelmappe für Abschnitte und Blöcke
+- Courseware: Übersichtsseite für Feedback und Kommentare
+- Courseware: Neue Blöcke zur Darstellung eines Lebenslaufs
+- Courseware: Funktionen zum Teilen von Seiten an Peers 
+- Courseware: Übersichtsseite für verteilte Aufgaben mit Bearbeitungsstatus, Feedbackfunktion und Fristverlängerungsanfrage
+
 __11.03.2023 V 5.3__
-System: Komplett neue Navigation auf Mobilgeräten
-System: Kompatibilität mit PHP 8.0
-System: Optionaler Virenscan beim Upload von Dateien
-System: Usabilityverbesserung von Drag&Drop-Elementen
-Fragebögen: Neue Fragetypen
-Courseware: Zertifikatsversand
-Courseware: Vereinfachtes Anordnen von Blöcken und Abschnitten, Verschieben von Blöcken im Inhaltsverzeichnis
-Courseware: Optimierte Darstellung mehrerer Lernmaterialien
-Raumverwaltung: Usability beim Stellen von Raumanfragen verbessert
-Barrierefreiheit: Neue HTML-Strukturen
+- System: Komplett neue Navigation auf Mobilgeräten
+- System: Kompatibilität mit PHP 8.0
+- System: Optionaler Virenscan beim Upload von Dateien
+- System: Usabilityverbesserung von Drag&Drop-Elementen
+- Fragebögen: Neue Fragetypen
+- Courseware: Zertifikatsversand
+- Courseware: Vereinfachtes Anordnen von Blöcken und Abschnitten, Verschieben von Blöcken im Inhaltsverzeichnis
+- Courseware: Optimierte Darstellung mehrerer Lernmaterialien
+- Raumverwaltung: Usability beim Stellen von Raumanfragen verbessert
+- Barrierefreiheit: Neue HTML-Strukturen
 
 __18.11.2022 V 5.2__
 - Courseware: Verknüpfung von einem Lernmaterial in beliebig viele Bereiche
