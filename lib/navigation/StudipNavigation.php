@@ -64,16 +64,20 @@ class StudipNavigation extends Navigation
         }
 
         // contents pages
-        if ($user->id !== 'nobody') {
+        if (isset($user) && $user->id !== 'nobody') {
             $this->addSubNavigation('contents', new ContentsNavigation());
         }
 
         // contents pages
-        if (Config::get()->OERCAMPUS_ENABLED && $perm && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS)) {
+        if (
+            Config::get()->OERCAMPUS_ENABLED
+            && isset($perm)
+            && $perm->have_perm(Config::get()->OER_PUBLIC_STATUS)
+        ) {
             $this->addSubNavigation('oer', new OERNavigation());
         }
 
-        if ($user->id !== 'nobody') {
+        if (isset($user) && $user->id !== 'nobody') {
             // internal message system
             $this->addSubNavigation('messaging', new MessagingNavigation());
 
@@ -140,7 +144,7 @@ class StudipNavigation extends Navigation
         $links = new Navigation('Links');
 
         // login / logout
-        if ($user->id === 'nobody') {
+        if (!isset($user) || $user->id === 'nobody') {
             if (in_array('CAS', $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
                 $links->addSubNavigation('login_cas', new Navigation(_('Login CAS'), Request::url(), ['again' => 'yes', 'sso' => 'cas']));
             }

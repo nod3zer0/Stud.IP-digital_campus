@@ -69,8 +69,9 @@ class MVV implements Loggable {
      */
     public static function isVisibleSearch()
     {
-        return ($GLOBALS['perm']->have_perm('autor') || Config::get()->COURSE_SEARCH_IS_VISIBLE_NOBODY)
-                && Modul::publicModulesAvailable();
+        return isset($GLOBALS['perm'])
+            && ($GLOBALS['perm']->have_perm('autor') || Config::get()->COURSE_SEARCH_IS_VISIBLE_NOBODY)
+            && Modul::publicModulesAvailable();
     }
 
     /**
