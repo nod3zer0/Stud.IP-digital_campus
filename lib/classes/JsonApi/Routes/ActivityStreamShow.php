@@ -16,11 +16,11 @@ use Studip\Activity\UserContext;
 
 function canShowActivityStream(\User $observer, string $userId): bool
 {
-    if (!$GLOBALS['perm']->have_perm('root', $observer->id)) {
+    if ($GLOBALS['perm']->have_perm('root', $observer->id)) {
         return true;
     }
 
-    return $observer->id == $userId;
+    return $observer->id === $userId;
 }
 
 class ActivityStreamShow extends JsonApiController
@@ -37,12 +37,12 @@ class ActivityStreamShow extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-        if (!$user = \User::find($userId)) {
+        $user = \User::find($userId);
+        if (!$user) {
             throw new RecordNotFoundException();
         }
 
         $urlFilter = $this->getUrlFilter();
-        /** @var \User $user */
         $contexts = $this->createContexts($user);
         $filter = $this->createFilter($urlFilter);
 
