@@ -67,11 +67,11 @@ class Course_DetailsController extends AuthenticatedController
 
     public function index_action()
     {
-
         $this->prelim_discussion = vorbesprechung($this->course->id);
         $this->title             = $this->course->getFullname();
         $this->course_domains    = UserDomain::getUserDomainsForSeminar($this->course->id);
         $this->sem = new Seminar($this->course);
+        $this->links = [];
 
         //public folders
         $folders = Folder::findBySQL("range_type='course' AND range_id = ? AND folder_type = 'CoursePublicFolder'", [$this->course->id]);
@@ -233,6 +233,12 @@ class Course_DetailsController extends AuthenticatedController
                     ['data-dialog' => 'size=big']
                 );
 
+                $this->links[] = [
+                    'label'      => $abo_msg,
+                    'url'        => $this->url_for("course/enrolment/apply/{$this->course->id}"),
+                    'attributes' => ['data-dialog' => 'size=big'],
+                ];
+
             }
 
             if (Config::get()->SCHEDULE_ENABLE
@@ -253,6 +259,12 @@ class Course_DetailsController extends AuthenticatedController
                         $this->url_for("calendar/schedule/addvirtual/{$this->course->id}"),
                         Icon::create('info')
                     );
+
+                    $this->links[] = [
+                        'label'      => _('Nur im Stundenplan vormerken'),
+                        'url'        => $this->url_for("calendar/schedule/addvirtual/{$this->course->id}"),
+                        'attributes' => [],
+                    ];
                 }
             }
 

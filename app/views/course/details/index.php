@@ -1,3 +1,14 @@
+<?php
+/**
+ * @var array<array{label: string, url: string, attributes: array}> $links
+ * @var Course $course
+ * @var Course[] $siblings
+ * @var Course_DetailsController $controller
+ * @var Seminar $sem
+ * @var string $prelim_discussion
+ * @var stdClass $id_sfx
+ */
+?>
 <style>
     /* This should be done by an own class (maybe not table? maybe dd?) */
     #tablefix {
@@ -498,9 +509,17 @@ if (!empty($mvv_tree)) : ?>
 <? endforeach ?>
 
 
-<? if (Request::get('from')) : ?>
+<? if (count($links) > 0 || Request::get('from')) : ?>
     <footer data-dialog-button>
-        <?= \Studip\LinkButton::createCancel(_('Zurück'), URLHelper::getURL(Request::get('from')))?>
+    <? foreach ($links as $link): ?>
+        <?= Studip\LinkButton::create(
+            $link['label'],
+            URLHelper::getURL($link['url'], $link['attributes'] ?? [])
+        ) ?>
+    <? endforeach ?>
+    <? if (Request::get('from')): ?>
+        <?= Studip\LinkButton::createCancel(_('Zurück'), URLHelper::getURL(Request::get('from')))?>
+    <? endif ?>
     </footer>
 <? endif ?>
-<?= Feedback::getHTML($course->id, 'Course'); ?>
+<?= Feedback::getHTML($course->id, Course::class) ?>
