@@ -29,27 +29,54 @@ class NewsRangesSearch extends SearchType
         $user = \User::findCurrent();
 
         // Courses
+        $number_sql = Config::get()->IMPORTANT_SEMNUMBER ? "CONCAT(IFNULL(s.VeranstaltungsNummer, ''), ' '), " : '';
+        $semester_sql = " CONCAT(' (',IFNULL(GROUP_CONCAT(DISTINCT semester_data.name ORDER BY semester_data.beginn SEPARATOR '-'),'" . _('unbegrenzt') . "'),')')";
+
         if ($GLOBALS['perm']->have_perm('root')) {
-            $sql_searches[] = "SELECT CONCAT(`Seminar_id`, '__seminar') AS `range_id`, `name`
-                               FROM `seminare`
-                               WHERE `name` LIKE :input";
+            $sql_searches[] = "SELECT *
+                               FROM (
+                                   SELECT CONCAT(s.`Seminar_id`, '__seminar') AS `range_id`,
+                                          TRIM(CONCAT({$number_sql} s.`name`, {$semester_sql})) AS `name`
+                                   FROM `seminare` AS s
+                                   LEFT JOIN `semester_courses` AS sc ON s.`Seminar_id` = sc.`course_id`
+                                   LEFT JOIN `semester_data` USING (`semester_id`)
+                                   WHERE s.`name` LIKE :input
+                                   GROUP BY s.`Seminar_id`
+                                   ORDER BY s.`start_time` DESC
+                               ) AS course_select";
         } elseif ($GLOBALS['perm']->have_perm('admin')) {
             $sem_inst = Config::get()->ALLOW_ADMIN_RELATED_INST ? 'si' : 's';
 
-            $sql_searches[] = "SELECT CONCAT(`Seminar_id`, '__seminar') AS `range_id`, `name`
-                               FROM `seminare` AS s
-                               JOIN `seminar_inst` si USING (Seminar_id)
-                               WHERE {$sem_inst}.`institut_id` IN (:institutes)
-                                 AND `name` LIKE :input";
+            $sql_searches[] = "SELECT *
+                               FROM (
+                                   SELECT CONCAT(s.`Seminar_id`, '__seminar') AS `range_id`,
+                                          TRIM(CONCAT({$number_sql} s.`name`, {$semester_sql})) AS `name`
+                                   FROM `seminare` AS s
+                                   JOIN `seminar_inst` si USING (Seminar_id)
+                                   LEFT JOIN `semester_courses` AS sc ON s.`Seminar_id` = sc.`course_id`
+                                   LEFT JOIN `semester_data` USING (`semester_id`)
+                                   WHERE {$sem_inst}.`institut_id` IN (:institutes)
+                                     AND `name` LIKE :input
+                                   GROUP BY s.`Seminar_id`
+                                   ORDER BY s.`start_time` DESC
+                               ) AS course_select";
 
             $parameters[':institutes'] = $this->getAdminInstitutes($user);
         } else {
-            $sql_searches[] = "SELECT CONCAT(`Seminar_id`, '__seminar') AS `range_id`, `name`
-                               FROM `seminare`
-                               JOIN `seminar_user` USING (`Seminar_id`)
-                               WHERE `name` LIKE :input
-                                 AND `seminar_user`.`user_id` = :user_id 
-                                 AND `seminar_user`.`status` IN ('tutor', 'dozent')";
+            $sql_searches[] = "SELECT *
+                               FROM (
+                                   SELECT CONCAT(s.`Seminar_id`, '__seminar') AS `range_id`,
+                                          TRIM(CONCAT({$number_sql} s.`name`, {$semester_sql})) AS `name`
+                                   FROM `seminare` AS s
+                                   JOIN `seminar_user` USING (`Seminar_id`) AS su
+                                   LEFT JOIN `semester_courses` AS sc ON s.`Seminar_id` = sc.`course_id`
+                                   LEFT JOIN `semester_data` USING (`semester_id`)
+                                   WHERE s.`name` LIKE :input
+                                     AND su.`user_id` = :user_id
+                                     AND su.`status` IN ('tutor', 'dozent')
+                                   GROUP BY s.`Seminar_id`
+                                   ORDER BY s.`start_time` DESC
+                               ) AS course_select ";
             $parameters[':user_id'] = $user->id;
         }
 
