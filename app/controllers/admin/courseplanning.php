@@ -768,69 +768,7 @@ class Admin_CourseplanningController extends AuthenticatedController
      */
     private function getCourses($params = [], $display_all = false): array
     {
-        // Init
-        if ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === "all") {
-            $inst = new SimpleCollection($this->insts);
-            $inst->filter(function ($a) use (&$inst_ids) {
-                $inst_ids[] = $a->Institut_id;
-            });
-        } else {
-            //We must check, if the institute ID belongs to a faculty
-            //and has the string _i appended to it.
-            //In that case we must display the courses of the faculty
-            //and all its institutes.
-            //Otherwise we just display the courses of the faculty.
-
-            $inst_id = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
-
-            $institut = new Institute($inst_id);
-
-            if (!$institut->isFaculty() || $GLOBALS['user']->cfg->MY_INSTITUTES_INCLUDE_CHILDREN) {
-                // If the institute is not a faculty or the child insts are included,
-                // pick the institute IDs of the faculty/institute and of all sub-institutes.
-                $inst_ids[] = $inst_id;
-                if ($institut->isFaculty()) {
-                    foreach ($institut->sub_institutes->pluck("Institut_id") as $institut_id) {
-                        $inst_ids[] = $institut_id;
-                    }
-                }
-            } else {
-                // If the institute is a faculty and the child insts are not included,
-                // pick only the institute id of the faculty:
-                $inst_ids[] = $inst_id;
-            }
-        }
-
-        $active_elements = $this->getActiveElements();
-
         $filter = AdminCourseFilter::get(true);
-
-        $filter->where("sem_classes.studygroup_mode = '0'");
-
-
-        if (is_object($this->semester)) {
-            $filter->filterBySemester($this->semester->getId());
-        }
-        if ($params['typeFilter'] && $params['typeFilter'] !== "all") {
-            list($class_filter,$type_filter) = explode('_', $params['typeFilter']);
-            if (!$type_filter && !empty($GLOBALS['SEM_CLASS'][$class_filter])) {
-                $type_filter = array_keys($GLOBALS['SEM_CLASS'][$class_filter]->getSemTypes());
-            }
-            $filter->filterByType($type_filter);
-        }
-
-        if ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER && ($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER !== "all")) {
-            $filter->filterByDozent($GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER);
-        }
-        if ($active_elements['institute'] && $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT !== "all") {
-            $filter->filterByInstitute($inst_ids);
-        }
-
-        if ($GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL && $GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL !== 'all') {
-            $filter->filterByStgTeil($GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL);
-        }
-
-        $filter->storeSettings();
         $this->count_courses = $filter->countCourses();
         if ($this->count_courses && ($this->count_courses <= $filter->max_show_courses || $display_all)) {
             $courses = $filter->getCourses();
@@ -842,41 +780,42 @@ class Admin_CourseplanningController extends AuthenticatedController
             $sem_types = SemType::getTypes();
         }
 
-        $seminars = array_map('current', $courses);
+        $seminars = [];
+        foreach ($courses as $course) {
+            $seminars[$course->id] = $course->toArray();
 
-        foreach ($seminars as $seminar_id => $seminar) {
-            $seminars[$seminar_id]['seminar_id'] = $seminar_id;
-            $seminars[$seminar_id]['obj_type'] = 'sem';
-            $dozenten = $this->getTeacher($seminar_id);
-            $seminars[$seminar_id]['dozenten'] = $dozenten;
+            $seminars[$course->id]['seminar_id'] = $course->id;
+            $seminars[$course->id]['obj_type'] = 'sem';
+            $dozenten = $this->getTeacher($course->id);
+            $seminars[$course->id]['dozenten'] = $dozenten;
 
             if (in_array('contents', $params['view_filter'])) {
-                $tools = new SimpleCollection(ToolActivation::findbyRange_id($seminar_id, "ORDER BY position"));
-                $visit_data = get_objects_visits([$seminar_id], 0, null, null, $tools->pluck('plugin_id'));
-                $seminars[$seminar_id]['tools'] = $tools;
-                $seminars[$seminar_id]['visitdate'] = $visit_data[$seminar_id][0]['visitdate'];
-                $seminars[$seminar_id]['last_visitdate'] = $visit_data[$seminar_id][0]['last_visitdate'];
-                $seminars[$seminar_id]['sem_class'] = $sem_types[$seminar['status']]->getClass();
-                $seminars[$seminar_id]['navigation'] = MyRealmModel::getAdditionalNavigations(
-                    $seminar_id,
-                    $seminars[$seminar_id],
-                    $seminars[$seminar_id]['sem_class'],
+                $tools = new SimpleCollection(ToolActivation::findbyRange_id($course->id, "ORDER BY position"));
+                $visit_data = get_objects_visits([$course->id], 0, null, null, $tools->pluck('plugin_id'));
+                $seminars[$course->id]['tools'] = $tools;
+                $seminars[$course->id]['visitdate'] = $visit_data[$course->id][0]['visitdate'];
+                $seminars[$course->id]['last_visitdate'] = $visit_data[$course->id][0]['last_visitdate'];
+                $seminars[$course->id]['sem_class'] = $sem_types[$course->status]->getClass();
+                $seminars[$course->id]['navigation'] = MyRealmModel::getAdditionalNavigations(
+                    $course->id,
+                    $seminars[$course->id],
+                    $seminars[$course->id]['sem_class'],
                     $GLOBALS['user']->id,
-                    $visit_data[$seminar_id]
+                    $visit_data[$course->id]
                 );
             }
             //add last activity column:
             if (in_array('last_activity', $params['view_filter'])) {
-                $seminars[$seminar_id]['last_activity'] = lastActivity($seminar_id);
+                $seminars[$course->id]['last_activity'] = lastActivity($course->id);
             }
             if ($this->selected_action == 17) {
-                $seminars[$seminar_id]['admission_locked'] = false;
-                if ($seminar['course_set']) {
-                    $set = new CourseSet($seminar['course_set']);
+                $seminars[$course->id]['admission_locked'] = false;
+                if ($course->course_set) {
+                    $set = new CourseSet($course->course_set);
                     if (!is_null($set) && $set->hasAdmissionRule('LockedAdmission')) {
-                        $seminars[$seminar_id]['admission_locked'] = 'locked';
+                        $seminars[$course->id]['admission_locked'] = 'locked';
                     } else {
-                        $seminars[$seminar_id]['admission_locked'] = 'disable';
+                        $seminars[$course->id]['admission_locked'] = 'disable';
                     }
                     unset($set);
                 }

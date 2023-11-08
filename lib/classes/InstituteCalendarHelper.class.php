@@ -346,8 +346,8 @@ class InstituteCalendarHelper
         ) {
             $semtype = $course->getSemType();
 
-            $event_columns = self::getCourseEventcolumns($course);
-            $event_colors = self::getCourseEventcolors($course);
+            $event_columns = self::getCourseEventcolumns($course) ?: [];
+            $event_colors = self::getCourseEventcolors($course) ?: [];
 
             if (in_array($course->institut_id, $user_insts)) {
                 $is_editable = true;
