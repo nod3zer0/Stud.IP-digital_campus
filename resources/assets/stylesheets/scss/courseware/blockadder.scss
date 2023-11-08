@@ -1,0 +1,319 @@
+.cw-tools-element-adder-tabs {
+    .cw-tabs-nav {
+        margin-top: 4px;
+        border: none;
+        border-bottom: solid thin var(--content-color-40);
+
+        button {
+            max-width: unset;
+            padding: 1em 1.5em 4px 1.5em;
+            margin: 0px 2em;
+        }
+    }
+    .cw-tabs-content {
+        border: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--base-color) var(--dark-gray-color-5);
+
+        .input-group.files-search {
+            &.search {
+                border: thin solid var(--dark-gray-color-30);
+                margin-bottom: 0px;
+                input {
+                    border: none;
+                }
+            }
+
+            .input-group-append {
+                .button {
+                    border: none;
+                    border-left: thin solid var(--dark-gray-color-30);
+                    &.active {
+                        background-color: var(--base-color);
+                    }
+                }
+                .reset-search {
+                    border: none;
+                    background-color: var(--white);
+                }
+            }
+
+            .active-filter {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border: solid thin var(--black);
+                background-color: var(--content-color-10);
+                margin: 3px;
+                padding: 2px 3px;
+
+                .removefilter {
+                    border: none;
+                    background-color: transparent;
+                }
+            }
+        }
+
+        .cw-block-search {
+            width: inherit;
+        }
+
+        .filterpanel {
+            margin-bottom: 5px;
+            padding: 2px;
+            border: thin solid var(--dark-gray-color-30);
+            border-top: none;
+            background-color: var(--white);
+
+            .button {
+                min-width: inherit;
+                margin: 4px 2px;
+
+                &.button-active {
+                    background-color: var(--base-color);
+                    color: var(--white);
+                }
+            }
+        }
+    }
+
+    .cw-collapsible {
+        .cw-collapsible-content {
+            display: none;
+            &.cw-collapsible-content-open {
+                display: block;
+            }
+        }
+    }
+}
+
+.cw-element-adder-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.cw-blockadder-item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-auto-rows: auto;
+    grid-gap: 4px;
+
+    .cw-blockadder-item-wrapper {
+        display: flex;
+        border: solid thin var(--content-color-40);
+        max-width: 254px;
+
+        &:hover {
+            border-color: var(--base-color);
+        }
+        .cw-blockadder-item {
+            padding: 64px 10px 4px 10px;
+            @include background-icon(unit-test, clickable, 48);
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+
+            @each $item, $icon in $blockadder-items {
+                &.cw-blockadder-item-#{$item} {
+                    @include background-icon($icon, clickable, 48);
+                }
+            }
+            .cw-clipboard-item-title,
+            .cw-blockadder-item-title {
+                display: inline-block;
+                font-weight: 600;
+                margin-bottom: 2px;
+            }
+            .cw-blockadder-item-description {
+                display: inline-block;
+                margin: 0 0 4px;
+            }
+        }
+        .cw-blockadder-item-fav {
+            height: 32px;
+            padding: 8px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    }
+}
+
+.cw-block-adder-area {
+    background-color: var(--white);
+    border: solid thin var(--content-color-40);
+    padding: 1em 0;
+    color: var(--base-color);
+    text-align: center;
+    width: 100%;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--base-color);
+    }
+
+    &.cw-block-adder-active {
+        border: solid thin var(--base-color);
+        background-color: var(--base-color);
+        color: var(--white);
+    }
+
+    img {
+        vertical-align: text-bottom;
+    }
+}
+.cw-block-helper-buttons {
+    display: inline-block;
+    width: 100%;
+
+    .cw-block-helper-reset {
+        float: right;
+    }
+
+    .button.cw-block-helper-reset::before {
+        content: '';
+        @include background-icon(refresh);
+        background-repeat: no-repeat;
+        float: left;
+        height: 16px;
+        width: 16px;
+        margin: 1px 5px 0 -8px;
+    }
+}
+
+.cw-block-helper-results {
+    margin-top: 5px;
+}
+
+.cw-containeradder-item {
+    margin-bottom: 4px;
+    padding: 1em 1em 1em 6em;
+    @include background-icon(unit-test, clickable, 48);
+    background-position: 12px center;
+    background-repeat: no-repeat;
+    border: solid thin var(--content-color-40);
+    cursor: pointer;
+
+    &:hover {
+        border-color: var(--base-color);
+    }
+
+    @each $item, $icon in $containeradder-items {
+        &.cw-containeradder-item-#{$item} {
+            @include background-icon($icon, clickable, 48);
+        }
+    }
+
+    .cw-containeradder-item-title {
+        font-weight: 600;
+    }
+}
+
+.cw-container-style-selector {
+    display: flex;
+    margin-bottom: 8px;
+
+    label {
+        border: solid thin var(--content-color-40);
+        padding: calc(0.5em + 32px) 1em 0.5em 1em;
+        color: var(--base-color);
+        text-align: center;
+        width: 33%;
+        background-position: center 0.5em;
+        background-repeat: no-repeat;
+        cursor: pointer;
+
+        &.full {
+            @include background-icon(column-full, clickable, 32);
+        }
+        &.half {
+            @include background-icon(column-half, clickable, 32);
+        }
+        &.half-center {
+            @include background-icon(column-half-centered, clickable, 32);
+        }
+        &:hover {
+            color: var(--active-color);
+        }
+        &:not(:first-child) {
+            border-left: solid thin transparent;
+        }
+        &.cw-container-style-selector-active {
+            background-color: var(--content-color-20);
+            border: solid thin var(--base-color);
+        }
+
+    }
+    input[type=radio] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+
+        &:focus + label {
+            outline-color: Highlight;
+            outline-color: -webkit-focus-ring-color;
+            outline-style: auto;
+            outline-width: 1px;
+        }
+    }
+}
+.cw-element-inserter-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+.cw-clipboard-item-wrapper {
+    display: flex;
+    width: calc(50% - 4px);
+    border: solid thin var(--content-color-40);
+    margin-bottom: 4px;
+
+    &:hover {
+        border-color: var(--base-color);
+    }
+
+    .cw-clipboard-item {
+        width: 207px;
+        padding: 64px 10px 4px 10px;
+        @include background-icon(unit-test, clickable, 48);
+        background-position: 10px 10px;
+        background-repeat: no-repeat;
+        cursor: pointer;
+        background-color: var(--white);
+        border: none;
+        text-align: left;
+        color: var(--base-color);
+
+        @each $item, $icon in $blockadder-items {
+            &.cw-clipboard-item-#{$item} {
+                @include background-icon($icon, clickable, 48);
+            }
+        }
+        @each $item, $icon in $containeradder-items {
+            &.cw-clipboard-item-#{$item} {
+                @include background-icon($icon, clickable, 48);
+            }
+        }
+    
+        .cw-clipboard-item-title {
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+    }
+    .cw-clipboard-item-action-menu-wrapper {
+        padding: 8px;
+    }
+}
+.action-menu.is-open,
+.action-menu-wrapper.is-open {
+    &.cw-clipboard-item-action-menu {
+        z-index: 42;
+    }
+}

@@ -102,10 +102,10 @@
     </div>
 </template>
 <script>
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import StudipIcon from './../StudipIcon.vue';
-import StudipActionMenu from './../StudipActionMenu.vue';
-import StudipDialog from './../StudipDialog.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
+import StudipIcon from '../StudipIcon.vue';
+import StudipActionMenu from '../StudipActionMenu.vue';
+import StudipDialog from '../StudipDialog.vue';
 import taskHelperMixin from '../../mixins/courseware/task-helper.js';
 import { mapActions, mapGetters } from 'vuex';
 

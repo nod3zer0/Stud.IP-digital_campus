@@ -1,0 +1,176 @@
+.cw-block-document {
+    .cw-pdf-main-container {
+        width: calc(100% - 2px);
+        border: solid thin var(--content-color-40);
+
+        .cw-block-title {
+            border: none;
+            border-bottom: solid thin var(--content-color-40);
+        }
+    }
+    .cw-pdf-toolbar {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: baseline;
+        align-content: space-around;
+        background-color: var(--content-color-20);
+        padding: 4px 8px;
+
+        button {
+            height: 100%;
+            margin: 0 2px 0 0;
+            padding: 4px;
+
+            &.active {
+                background-color: var(--base-color);
+            }
+        }
+
+        .cw-pdf-toolbar-left {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: baseline;
+            align-content: space-between;
+            width: 33%;
+        }
+
+        .cw-pdf-toolbar-middle {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            width: 34%;
+
+            .cw-pdf-zoom-buttons {
+                margin-right: 8px;
+
+                button {
+                    margin: 0;
+                    padding: 4px 0;
+                }
+            }
+        }
+
+        .cw-pdf-toolbar-right {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: baseline;
+            align-content: space-between;
+            position: relative;
+            width: 33%;
+            margin-right: 4px;
+        }
+
+        .cw-pdf-page-nav {
+            margin: 0 4px;
+
+            button {
+                margin: 0;
+                padding: 4px 0;
+            }
+
+            .cw-pdf-page-num {
+                text-align: right;
+                width: 2em;
+            }
+        }
+
+        .cw-pdf-search-box {
+            position: absolute;
+            top: 33px;
+            left: 22px;
+            width: auto;
+            background-color: var(--content-color-20);
+            border-top: none;
+            padding: 6px;
+            z-index: 2;
+            line-height: normal;
+
+            .cw-pdf-search-num {
+                margin: 4px 0 0 0;
+                display: block;
+            }
+
+            .cw-pdf-search-navs {
+                display: inline-block;
+
+                button {
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    .cw-pdf-outer-container {
+        position: relative;
+        width: 100%;
+
+        .cw-pdf-content {
+            display: flex;
+            flex-direction: row;
+
+            .cw-pdf-sidebar {
+                width: 25%;
+                min-width: 270px;
+                align-self: stretch;
+                background-color: var(--white);
+                border-right: solid 1px var(--content-color-40);
+
+                ul.cw-pdf-toc-list,
+                ul.cw-pdf-toc-sub-list {
+                    padding: 0;
+                    list-style: none;
+
+                    li {
+                        padding: 0.5em 1em;
+                    }
+                }
+
+                ul.cw-pdf-toc-list {
+                    margin-top: 1em;
+                }
+            }
+
+            .cw-pdf-viewer-container {
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                cursor: text;
+
+                &.hand-cursor-grab {
+                    cursor: grab;
+
+                    &.grabbing {
+                        cursor: grabbing;
+                    }
+                }
+
+                &.has-error {
+                    display: none;
+                }
+
+                .page {
+                    position: relative;
+                    margin: 0 auto;
+                }
+            }
+        }
+
+        .cw-pdf-viewer-fake-container {
+            position: absolute;
+        }
+
+        .cw-pdf-error-page {
+            overflow: hidden;
+            width: calc(100% - 16px);
+            height: 100%;
+            padding: 8px;
+            display: table;
+        }
+    }
+}

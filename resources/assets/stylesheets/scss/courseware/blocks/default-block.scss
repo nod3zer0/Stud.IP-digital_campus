@@ -1,0 +1,134 @@
+.cw-default-block {
+    display: flex;
+    flex-flow: row;
+    .cw-default-block-invisible-info {
+        img {
+            vertical-align: text-bottom;
+        }
+    }
+
+}
+
+.cw-block-header {
+    background-color: var(--content-color-20);
+    padding: 4px 10px 4px 22px;
+
+    .cw-block-header-toggle {
+        display: inline-block;
+        width: calc(100% - 50px);
+    }
+
+    span {
+        color: var(--base-color);
+        font-weight: 700;
+        line-height: 2em;
+        font-size: 1.1em;
+
+        &.cw-default-block-invisible-info,
+        &.cw-default-block-blocker-warning {
+            font-weight: 400;
+        }
+    }
+
+    img {
+        vertical-align: text-bottom;
+    }
+
+    .cw-block-actions {
+        position: relative;
+        float: right;
+        margin-top: 4px;
+        .is-open{
+            z-index: 30;
+        }
+    }
+}
+
+.cw-discuss-wrapper,
+.cw-block-features {
+    header{
+        background-color: var(--content-color-20);
+        color: var(--base-color);
+        font-weight: 600;
+        padding: 0.5em;
+    }
+
+    .cw-block-features-content{
+        margin: 1em;
+    }
+}
+
+.cw-discuss-wrapper {
+    flex-shrink: 3;
+    flex-grow: 2;
+    margin-left: 10px;
+}
+
+.cw-block-edit textarea {
+    width: -moz-available;
+    height: -moz-available;
+    min-height: 8em;
+    border: solid thin var(--content-color-40);
+    resize: none;
+}
+
+.cw-block-actions {
+    padding-left: 14px;
+}
+.cw-button-box {
+    float: right;
+}
+
+.cw-content-wrapper {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+    .cw-block-content {
+        overflow: auto;
+        position: relative;
+    }
+}
+.cw-content-wrapper-active {
+    border: solid thin var(--content-color-40);
+    .cw-block-content {
+        padding: $cw-wrapper-gap;
+    }
+}
+
+
+.cw-container-wrapper-discuss {
+    .cw-container-colspan-full {
+        .cw-content-wrapper {
+            max-width: $max-content-width;
+        }
+    }
+    .cw-container-colspan-half,
+    .cw-container-colspan-half-center {
+        .cw-content-wrapper {
+            max-width: 540px;
+        }
+    }
+}
+
+.cw-block-title {
+    padding: 4px;
+    background-color: var(--content-color-20);
+    color: var(--base-color);
+    font-weight: 700;
+    text-align: center;
+    border: solid thin var(--content-color-40);
+    border-bottom: none;
+}
+
+.cw-file-empty {
+    @include background-icon(file, info, 96);
+    border: solid thin var(--content-color-40);
+    background-position: center 1em;
+    background-repeat: no-repeat;
+    min-height: 140px;
+    padding: 1em;
+    p {
+        text-align: center;
+        padding-top: 106px;
+    }
+}

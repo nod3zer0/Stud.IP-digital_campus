@@ -3,6 +3,10 @@
     display: flex;
     flex-direction: column;
 
+    &.loading-indicator-content {
+        margin-top: 76px;
+    }
+
     .progress-indicator {
         width: 100%;
         background-image: url("#{$image-path}/loading-indicator.svg");

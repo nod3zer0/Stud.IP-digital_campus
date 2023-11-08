@@ -20,7 +20,7 @@
 
 <script>
 import CoursewareActivityItem from './CoursewareActivityItem.vue';
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 
 import { mapActions, mapGetters } from 'vuex';

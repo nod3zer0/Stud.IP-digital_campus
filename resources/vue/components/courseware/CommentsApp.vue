@@ -17,9 +17,9 @@
 <script>
 import CoursewareBlockCommentsOverview from './CoursewareBlockCommentsOverview.vue';
 import CoursewareStructuralElementCommentsOverview from './CoursewareStructuralElementCommentsOverview.vue';
-import CoursewareCommentsOverviewWidgetFilterType from './CoursewareCommentsOverviewWidgetFilterType.vue';
-import CoursewareCommentsOverviewWidgetFilterCreated from './CoursewareCommentsOverviewWidgetFilterCreated.vue';
-import CoursewareCommentsOverviewWidgetFilterUnit from './CoursewareCommentsOverviewWidgetFilterUnit.vue';
+import CoursewareCommentsOverviewWidgetFilterType from './widgets/CoursewareCommentsOverviewWidgetFilterType.vue';
+import CoursewareCommentsOverviewWidgetFilterCreated from './widgets/CoursewareCommentsOverviewWidgetFilterCreated.vue';
+import CoursewareCommentsOverviewWidgetFilterUnit from './widgets/CoursewareCommentsOverviewWidgetFilterUnit.vue';
 
 import { mapGetters } from 'vuex';
 

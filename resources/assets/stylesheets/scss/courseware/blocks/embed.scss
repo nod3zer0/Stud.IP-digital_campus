@@ -1,0 +1,15 @@
+.cw-block-embed {
+    .cw-block-content {
+        .cw-block-embed-iframe-wrapper {
+            overflow-y: hidden;
+
+            iframe {
+                height: 100% !important;
+                width: 100% !important;
+            }
+        }
+        .cw-block-embed-info {
+            margin-top: 0.5em;
+        }
+    }
+}

@@ -1,0 +1,82 @@
+@use '../../../mixins.scss' as *;
+
+$achievement-types: (
+    certificate: file-text,
+    accreditation: vcard,
+    award: medal,
+    book: literature,
+    publication: news,
+    membership: group3,
+);
+
+$goals-types: (
+    personal: person2,
+    school: doctoral-cap,
+    academic: doctoral-cap,
+    professional: tools,
+);
+
+.cw-block-biography {
+    .cw-block-biography-content {
+        display: flex;
+        min-height: 200px;
+        flex-direction: row;
+        padding: 2em 2em 2em 1em;
+        border: 2px solid var(--base-color);
+
+        .cw-block-biography-type {
+            margin: auto 1em auto 0;
+            padding-top: 96px;
+            min-width: 192px;
+            max-width: 192px;
+            text-align: center;
+            background-repeat: no-repeat;
+            background-position: center top;
+        }
+
+        .cw-block-biography-details {
+            h2, h3 {
+                margin-top: 0;
+            }
+        }
+
+    }
+}
+
+.cw-block-biography-achievements {
+    @each $type, $icon in $achievement-types {
+        .cw-block-biography-achievements-type-#{$type} {
+            @include background-icon($icon, clickable, 96);
+        }
+    }
+}
+
+.cw-block-biography-goals {
+    @each $type, $icon in $goals-types {
+        .cw-block-biography-goals-type-#{$type} {
+            @include background-icon($icon, clickable, 96);
+        }
+    }
+}
+
+.cw-block-biography-personal-information {
+    .cw-block-biography-content {
+        min-height: 140px;
+
+        .cw-block-biography-personal-information-type {
+            @include background-icon(person2, clickable, 96);
+        }
+
+        .cw-block-biography-personal-information-details {
+            display: grid;
+            max-height: 7em;
+            grid-template-columns: max-content 1fr;
+            grid-gap: 5px 10px;
+
+            .preface {
+                grid-column-start: 1;
+                grid-column-end: 3;
+            }
+        }
+    }
+}

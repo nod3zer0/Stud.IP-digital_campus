@@ -1,11 +1,11 @@
-import CoursewareBlockAdderArea from './CoursewareBlockAdderArea.vue';
-import CoursewareCollapsibleBox from './CoursewareCollapsibleBox.vue';
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareDefaultBlock from './CoursewareDefaultBlock.vue';
-import CoursewareDefaultContainer from './CoursewareDefaultContainer.vue';
-import CoursewareFileChooser from './CoursewareFileChooser.vue';
-import CoursewareTabs from './CoursewareTabs.vue';
-import CoursewareTab from './CoursewareTab.vue';
+import CoursewareBlockAdderArea from './containers/CoursewareBlockAdderArea.vue';
+import CoursewareCollapsibleBox from './layouts/CoursewareCollapsibleBox.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
+import CoursewareDefaultBlock from './blocks/CoursewareDefaultBlock.vue';
+import CoursewareDefaultContainer from './containers/CoursewareDefaultContainer.vue';
+import CoursewareFileChooser from './layouts/CoursewareFileChooser.vue';
+import CoursewareTabs from './layouts/CoursewareTabs.vue';
+import CoursewareTab from './layouts/CoursewareTab.vue';
 
 const CoursewarePluginComponents = {
     CoursewareBlockAdderArea,

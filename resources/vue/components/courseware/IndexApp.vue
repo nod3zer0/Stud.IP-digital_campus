@@ -27,7 +27,7 @@
         </div>
         <studip-progress-indicator
             v-if="structureLoadingState === 'loading'"
-            class="cw-loading-indicator-content"
+            class="loading-indicator-content"
             :description="$gettext('Lade Lernmaterial...')"
         />
         <courseware-companion-box
@@ -40,15 +40,16 @@
 </template>
 
 <script>
-import CoursewareStructuralElement from './CoursewareStructuralElement.vue';
-import CoursewareSearchResults from './CoursewareSearchResults.vue';
-import CoursewareViewWidget from './CoursewareViewWidget.vue';
-import CoursewareActionWidget from './CoursewareActionWidget.vue';
-import CoursewareExportWidget from './CoursewareExportWidget.vue';
-import CoursewareImportWidget from './CoursewareImportWidget.vue';
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareSearchWidget from './CoursewareSearchWidget.vue';
-import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
+import CoursewareStructuralElement from './structural-element/CoursewareStructuralElement.vue';
+import CoursewareSearchResults from './structural-element/CoursewareSearchResults.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
+import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
+import CoursewareViewWidget from './widgets/CoursewareViewWidget.vue';
+import CoursewareActionWidget from './widgets/CoursewareActionWidget.vue';
+import CoursewareExportWidget from './widgets/CoursewareExportWidget.vue';
+import CoursewareImportWidget from './widgets/CoursewareImportWidget.vue';
+import CoursewareSearchWidget from './widgets/CoursewareSearchWidget.vue';
+
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 
 import { mapActions, mapGetters } from 'vuex';

@@ -1,0 +1,46 @@
+@use '../../../mixins.scss' as *;
+
+.cw-collapsible {
+    border: solid thin var(--content-color-40);
+    margin-bottom: -1px;
+
+    .cw-collapsible-title {
+        @include background-icon(arr_1right, clickable);
+        background-position: 6px center;
+        background-repeat: no-repeat;
+        background-color: var(--content-color-20);
+        padding: 0.5em 2em;
+        margin: 0;
+        font-weight: 600;
+        color: var(--base-color);
+        cursor: pointer;
+
+        &.cw-collapsible-open {
+            @include background-icon(arr_1down, clickable);
+
+            .cw-container-list-sort-mode {
+                margin-top: 8px;
+            }
+        }
+
+        img {
+            vertical-align: top;
+        }
+    }
+
+    .cw-collapsible-content {
+        display: none;
+        &.cw-collapsible-content-open {
+            display: block;
+            padding: 10px;
+        }
+    }
+}
+
+form .cw-collapsible .cw-collapsible-content.cw-collapsible-content-open {
+    padding: unset;
+
+    label {
+        margin: 1.5ex;
+    }
+}

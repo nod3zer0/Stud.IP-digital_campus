@@ -1,0 +1,90 @@
+@use '../../../mixins.scss' as *;
+
+$companion-types: (
+    default: basic,
+    unsure: unsure,
+    special: special,
+    alert: alert,
+    sad: sad,
+    happy: happy,
+    pointing: pointing-right,
+    curious: curious
+);
+
+.cw-companion-overlay {
+    position: fixed;
+    bottom: 46px;
+    right: 0;
+    width: 360px;
+    max-width: calc(100% - 140px);
+    height: 120px;
+    z-index: 42000;
+    border: solid thin var(--content-color-40);
+    background-color: var(--white);
+    background-repeat: no-repeat;
+    background-position: 1em center;
+    background-size: 100px;
+    box-shadow: 5px 5px var(--dark-gray-color-10);
+    padding-left: 120px;
+    transform: translateX(100%);
+    transition: transform .5s ease;
+
+    @each $type, $image in $companion-types {
+        &.#{$type} {
+            background-image: url("#{$image-path}/companion/Tin_#{$image}.svg");
+        }
+    }
+
+    &.cw-companion-overlay-in {
+        transform: translateX(0);
+        right: 12px;
+    }
+
+    .cw-companion-overlay-content {
+        display: inline-block;
+        position: relative;
+        top: 25%;
+        padding: 0 1em;
+    }
+
+    .cw-compantion-overlay-close {
+        @include background-icon(decline);
+        background-color: var(--white);
+        background-repeat: no-repeat;
+
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        height: 16px;
+        width: 16px;
+        border: none;
+        cursor: pointer;
+    }
+}
+
+.cw-companion-box {
+    display: flex;
+    height: 120px;
+    border: solid thin var(--content-color-40);
+    background-color: var(--white);
+    background-repeat: no-repeat;
+    background-position: 1em center;
+    background-size: 100px;
+    padding-left: 120px;
+    align-items: center;
+    margin-bottom: 1em;
+
+    @each $type, $image in $companion-types {
+        &.#{$type} {
+            background-image: url("#{$image-path}/companion/Tin_#{$image}.svg");
+        }
+    }
+
+    &.cw-companion-box-in-form {
+        margin-top: 8px;
+    }
+
+    p {
+        margin: 0 1em 10px 0;
+    }
+}

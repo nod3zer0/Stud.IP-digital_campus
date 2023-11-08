@@ -233,8 +233,8 @@
 <script>
 import StudipIcon from './../StudipIcon.vue';
 import StudipDialog from './../StudipDialog.vue';
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareDateInput from './CoursewareDateInput.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
+import CoursewareDateInput from './layouts/CoursewareDateInput.vue';
 import CoursewareTasksDialogDistribute from './CoursewareTasksDialogDistribute.vue';
 import taskHelperMixin from '../../mixins/courseware/task-helper.js';
 import { mapActions, mapGetters } from 'vuex';

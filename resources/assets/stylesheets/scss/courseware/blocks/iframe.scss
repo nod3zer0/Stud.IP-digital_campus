@@ -1,0 +1,54 @@
+@use '../../../mixins.scss' as *;
+
+.cw-block-iframe {
+    .cw-block-content {
+        iframe {
+            border: solid thin var(--content-color-40);
+            width: calc(100% - 2px);
+        }
+
+        .cw-block-iframe-cc-data {
+            border: solid thin var(--content-color-40);
+            border-top: none;
+            margin-top: -6px;
+            padding-top: 10px;
+            height: 75px;
+
+            .cw-block-iframe-cc {
+                width: 120px;
+                height: 50px;
+                margin-left: 4px;
+                display: inline-block;
+                background-repeat: no-repeat;
+
+                &.cw-block-iframe-cc-by {
+                    background-image: url('#{$image-path}/cc/by.svg');
+                }
+                &.cw-block-iframe-cc-by-nc {
+                    background-image: url('#{$image-path}/cc/by-nc.eu.svg');
+                }
+                &.cw-block-iframe-cc-by-nc-nd {
+                    background-image: url('#{$image-path}/cc/by-nc-nd.eu.svg');
+                }
+                &.cw-block-iframe-cc-by-nc-sa {
+                    background-image: url('#{$image-path}/cc/by-nc-sa.svg');
+                }
+                &.cw-block-iframe-cc-by-nd {
+                    background-image: url('#{$image-path}/cc/by-nd.svg');
+                }
+                &.cw-block-iframe-cc-by-sa {
+                    background-image: url('#{$image-path}/cc/by-sa.svg');
+                }
+            }
+
+            .cw-block-iframe-cc-infos {
+                display: inline-block;
+                vertical-align: top;
+                padding-left: 1em;
+                p {
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

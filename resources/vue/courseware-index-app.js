@@ -1,6 +1,6 @@
 import CoursewareModule from './store/courseware/courseware.module';
 import CoursewareStructureModule from './store/courseware/structure.module';
-import CoursewareStructuralElement from './components/courseware/CoursewareStructuralElement.vue';
+import CoursewareStructuralElement from './components/courseware/structural-element/CoursewareStructuralElement.vue';
 import IndexApp from './components/courseware/IndexApp.vue';
 import PluginManager from './components/courseware/plugin-manager.js';
 import Vue from 'vue';

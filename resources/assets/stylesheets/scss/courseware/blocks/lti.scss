@@ -1,0 +1,20 @@
+@use '../../../mixins.scss' as *;
+
+.cw-block-lti {
+    .cw-block-content {
+        .cw-block-lti-content {
+            border: solid thin var(--content-color-40);
+            box-sizing: border-box;
+        }
+
+        .cw-block-lti-icon-tool {
+            @include background-icon(plugin, info, 24);
+            background-repeat: no-repeat;
+            display: block;
+            padding: 16px 16px 16px 40px;
+            background-position: 10px center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

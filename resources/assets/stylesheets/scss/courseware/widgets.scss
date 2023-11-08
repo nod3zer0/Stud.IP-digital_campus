@@ -1,0 +1,56 @@
+.cw-action-widget {
+    .cw-action-widget-show-toc {
+        @include background-icon(table-of-contents, clickable);
+    }
+    .cw-action-widget-edit {
+        @include background-icon(edit, clickable);
+    }
+    .cw-action-widget-sort {
+        @include background-icon(arr_1sort, clickable);
+    }
+    .cw-action-widget-add {
+        @include background-icon(add, clickable);
+    }
+    .cw-action-widget-info {
+        @include background-icon(info, clickable);
+    }
+    .cw-action-widget-star {
+        @include background-icon(star, clickable);
+    }
+    .cw-action-widget-trash {
+        @include background-icon(trash, clickable);
+    }
+    .cw-action-widget-oer {
+        @include background-icon(oer-campus, clickable);
+    }
+    .cw-action-widget-remove-lock {
+        @include background-icon(lock-unlocked, clickable);
+    }
+}
+
+.cw-export-widget {
+    .cw-export-widget-export {
+        @include background-icon(export, clickable);
+    }
+    .cw-export-widget-export-pdf {
+        @include background-icon(export, clickable);
+    }
+    .cw-export-widget-oer {
+        @include background-icon(share, clickable);
+    }
+}
+
+.cw-import-widget {
+    .cw-import-widget-archive {
+        @include background-icon(import, clickable);
+    }
+    .cw-import-widget-copy {
+        @include background-icon(copy, clickable);
+    }
+    .cw-import-widget-import {
+        @include background-icon(import, clickable);
+    }
+    .cw-action-widget-link {
+        @include background-icon(group, clickable);
+    }
+}

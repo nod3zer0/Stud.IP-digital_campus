@@ -1,0 +1,22 @@
+.cw-import-zip {
+    margin-bottom: 1em;
+
+    header {
+        font-size: 1.15;
+        font-weight: 700;
+    }
+    .progress-bar-wrapper {
+        width: 100%;
+        border: solid thin var(--content-color-40);
+
+        .progress-bar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            white-space: nowrap;
+            background-color: var(--base-color);
+        }
+    }
+}

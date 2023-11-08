@@ -1,6 +1,6 @@
 <template>
     <StudipProgressIndicator
-        class="cw-loading-indicator-content"
+        class="loading-indicator-content"
         :description="$gettext('Lade Kommentare...')"
         v-if="!doneFetching"
     />

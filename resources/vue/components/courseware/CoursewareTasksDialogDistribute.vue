@@ -237,9 +237,9 @@
 </template>
 
 <script>
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
-import CoursewareStructuralElementSelector from './CoursewareStructuralElementSelector.vue';
-import StudipWizardDialog from './../StudipWizardDialog.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
+import CoursewareStructuralElementSelector from './structural-element/CoursewareStructuralElementSelector.vue';
+import StudipWizardDialog from '../StudipWizardDialog.vue';
 
 import { mapActions, mapGetters } from 'vuex';
 

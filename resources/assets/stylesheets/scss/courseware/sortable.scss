@@ -1,0 +1,57 @@
+@import '../drag-handle.scss';
+
+.cw-sortable-handle {
+    @extend .drag-handle;
+    display: inline-block;
+    height: 24px;
+    &.cw-sortable-handle-dragging {
+        cursor: grabbing;
+    }
+}
+
+.cw-block-item-sortable {
+    .cw-sortable-handle {
+        position: relative;
+        left: 4px;
+    }
+    .cw-block {
+        margin-top: -38px;
+    }
+}
+
+.cw-container-item-sortable {
+    .cw-sortable-handle {
+        position: relative;
+        left: 4px;
+    }
+    .cw-container {
+        margin-top: -38px;
+    }
+}
+
+.container-ghost,
+.block-ghost {
+    opacity: 0.6;
+}
+
+
+.cw-container-wrapper-edit {
+    .cw-structural-element-list {
+        width: 100%;
+        padding: 0;
+        margin-top: 8px;
+        list-style: none;
+    }
+}
+
+.cw-block-item-selected {
+    .cw-block-header {
+        font-style: italic;
+    }
+}
+
+.cw-container-item-selected {
+    .cw-container-header {
+        font-style: italic;
+    }
+}

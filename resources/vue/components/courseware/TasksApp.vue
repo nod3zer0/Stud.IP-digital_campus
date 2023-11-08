@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import CoursewareTasksActionWidget from './CoursewareTasksActionWidget.vue';
+import CoursewareTasksActionWidget from './widgets/CoursewareTasksActionWidget.vue';
 import CoursewareDashboardTasks from './CoursewareDashboardTasks.vue';
 import CoursewareDashboardStudents from './CoursewareDashboardStudents.vue';
-import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
+import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
 import { mapGetters } from 'vuex';
 
 export default {

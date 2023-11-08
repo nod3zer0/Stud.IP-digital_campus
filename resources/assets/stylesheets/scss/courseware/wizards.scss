@@ -1,0 +1,57 @@
+.cw-element-selector-list {
+    list-style: none;
+    padding: 0;
+
+    .cw-element-selector-item {
+        display: block;
+        width: 100%;
+        border: solid thin var(--content-color-40);
+        padding: 0.5em;
+        margin-bottom: 5px;
+        background-color: var(--white);
+        color: var(--base-color);
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--white);
+            background-color: var(--base-color);
+        }
+    }
+}
+
+form.default .courseware-structural-element-selector {
+    list-style: none;
+    padding-left: 0;
+
+    .courseware-structural-element-selector-item {
+        .radiobutton {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        a label {
+            cursor: pointer;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 0;
+            text-indent: 0;
+            vertical-align: middle;
+        }
+
+        img {
+            vertical-align: middle;
+            &.inactive {
+                opacity: 0.5;
+            }
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 18px;
+        }
+    }
+}

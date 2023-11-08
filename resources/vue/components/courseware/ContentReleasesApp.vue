@@ -9,7 +9,7 @@
 <script>
 import CoursewareContentLinks from './CoursewareContentLinks.vue';
 import CoursewareContentShared from './CoursewareContentShared.vue';
-import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
+import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
 
 export default {
     components: {

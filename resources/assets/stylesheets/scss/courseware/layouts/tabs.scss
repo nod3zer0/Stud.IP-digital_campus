@@ -1,0 +1,114 @@
+@use '../../../mixins.scss' as *;
+@import '../variables.scss';
+
+.cw-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: solid thin var(--content-color-40);
+    border-bottom: none;
+
+    button {
+        background-color: var(--white);
+        border: none;
+        padding: 1em 0 4px 0;
+        margin: 0 7px 0 21px;
+        color: var(--base-color);
+        cursor: pointer;
+        text-align: center;
+        flex-grow: 1;
+        max-width: max-content;
+
+        &::after {
+            display: block;
+            margin-top: 4px;
+            margin-bottom: -5px;
+            margin-left: -14px;
+            width: calc(100% + 28px);
+            content: '';
+            border-bottom: solid 3px var(--dark-gray-color-75);
+            transform: scaleX(0);
+            transition: transform var(--transition-duration) ease-in-out;
+        }
+
+        &.is-active,
+        &:hover {
+            color: var(--black);
+            &:after {
+                transform: scaleX(1);
+            }
+        }
+
+        @each $icon in $icons {
+            &.cw-tabs-nav-icon-text-#{$icon} {
+                &::before {
+                    @include background-icon($icon);
+                    background-repeat: no-repeat;
+                    background-position: left bottom;
+
+                    display: inline-block;
+                    height: 16px;
+                    width: 16px;
+                    margin-bottom: -2px;
+                    padding-left: 4px;
+                    content: '';
+                }
+            }
+            &.is-active.cw-tabs-nav-icon-text-#{$icon},
+            &.cw-tabs-nav-icon-text-#{$icon}:hover {
+                &::before {
+                    @include background-icon($icon, info);
+                }
+            }
+        }
+        @each $icon in $icons {
+            &.cw-tabs-nav-icon-solo-#{$icon} {
+                &::before {
+                    display: inline-block;
+                    height: 24px;
+                    width: 24px;
+                    content: '';
+
+                    @include background-icon($icon, clickable, 24);
+                    background-repeat: no-repeat;
+                    background-position: center;
+                }
+            }
+            &.is-active.cw-tabs-nav-icon-solo-#{$icon},
+            &.cw-tabs-nav-icon-solo-#{$icon}:hover {
+                &::before {
+                    @include background-icon($icon, info);
+                }
+            }
+        }
+    }
+
+    &:hover li {
+        &.is-active::after {
+            transform: scaleX(0);
+        }
+        &:hover::after {
+            transform: scaleX(1);
+        }
+    }
+}
+
+.cw-tabs-content {
+    border: solid thin var(--content-color-40);
+    padding: 4px;
+}
+
+.cw-tabs {
+    .cw-tab {
+        display: none;
+        height: 0;
+
+        &.cw-tab-active {
+            display: block;
+            height: unset;
+            padding: 4px 8px;
+        }
+    }
+}

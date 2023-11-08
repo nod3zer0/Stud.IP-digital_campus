@@ -1,0 +1,79 @@
+.cw-container-colspan-half,
+.cw-container-colspan-half-center {
+    .cw-block-date {
+        .cw-block-content {
+            font-size: 9px;
+        }
+    }
+}
+
+.cw-block-date {
+    .cw-date-countdown,
+    .cw-date-date {
+        margin: 0 auto;
+        width: max-content;
+    }
+
+    .cw-date-countdown {
+        .cw-date-countdown-digit {
+            display: inline-block;
+            margin-right: 4px;
+
+            .cw-date-countdown-number {
+                font-size: 6em;
+                line-height: 1.25em;
+                height: 1.25em;
+                padding: 3px 0.5em;
+                background: rgba(245, 245, 245, 1);
+                font-weight: 300;
+            }
+
+            .cw-date-countdown-label-sg,
+            .cw-date-countdown-label-pl {
+                padding: 5px;
+                font-size: 1.25em;
+                text-align: left;
+                text-transform: uppercase;
+            }
+        }
+    }
+
+    .cw-date-date {
+        .cw-date-date-space {
+            display: inline-block;
+            width: 2em;
+        }
+
+        .cw-date-date-digits {
+            display: inline-block;
+
+            .cw-date-date-number {
+                font-size: 5em;
+                line-height: 1.25em;
+                height: 1.25em;
+                padding: 0.25em;
+                background: rgba(245, 245, 245, 1);
+                font-weight: 300;
+            }
+        }
+    }
+}
+
+.responsive-display {
+    .cw-block-date {
+        .cw-block-content {
+            font-size: 9px;
+
+            .cw-date-countdown-number {
+                font-size: 3.5em;
+            }
+            .cw-date-countdown-label-sg,
+            .cw-date-countdown-label-pl {
+                font-size: 1em;
+            }
+            .cw-date-date-number {
+                font-size: 3em;
+            }
+        }
+    }
+}

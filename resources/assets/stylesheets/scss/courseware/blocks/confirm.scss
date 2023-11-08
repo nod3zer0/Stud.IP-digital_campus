@@ -1,0 +1,12 @@
+.cw-block-confirm {
+    .cw-block-confirm-content {
+        border: solid thin var(--content-color-40);
+        padding: 1em;
+        margin: 0;
+
+        input[type='checkbox'] {
+            margin-right: 2em;
+            vertical-align: bottom;
+        }
+    }
+}

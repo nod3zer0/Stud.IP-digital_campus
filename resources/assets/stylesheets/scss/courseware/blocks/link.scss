@@ -1,0 +1,73 @@
+@use '../../../mixins.scss' as *;
+
+.cw-block-link {
+    a {
+        text-decoration: none;
+    }
+
+    .cw-link {
+        border: solid thin var(--content-color-40);
+        color: var(--base-color);
+        height: 20px;
+        padding: 1em;
+
+        .cw-link-title {
+            margin-left: 3em;
+        }
+
+        &:hover {
+            background-color: var(--base-color);
+            border: solid thin var(--base-color);
+            color: var(--white);
+        }
+
+        &.internal {
+            @include background-icon(link-intern, clickable, 28);
+            background-position: 1em 50%;
+            background-repeat: no-repeat;
+
+            &:hover {
+                @include background-icon(link-intern, info-alt, 28);
+            }
+        }
+
+        &.external {
+            @include background-icon(link-extern, clickable, 28);
+            background-position: 1em 50%;
+            background-repeat: no-repeat;
+
+            &:hover {
+                @include background-icon(link-extern, info-alt, 28);
+            }
+
+            .cw-link-og-image {
+                display: inline-block;
+                max-width: 40%;
+                vertical-align: top;
+                margin-right: 2em;
+            }
+
+            .cw-link-og-textwrapper {
+                display: inline-block;
+                max-width: 50%;
+
+                p {
+                    margin: 0;
+                }
+
+                .cw-link-og-site {
+                    font-size: 1.25em;
+                }
+
+                .cw-link-og-title {
+                    font-weight: 600;
+                }
+
+                .cw-link-og-description {
+                    color: var(--base-color-80);
+                    text-align: justify;
+                }
+            }
+        }
+    }
+}

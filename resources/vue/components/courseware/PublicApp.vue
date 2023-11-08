@@ -10,7 +10,7 @@
         </div>
         <studip-progress-indicator
             v-if="structureLoadingState === 'loading'"
-            class="cw-loading-indicator-content"
+            class="loading-indicator-content"
             :description="$gettext('Lade Lernmaterial...')"
         />
         <courseware-companion-box
@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import PublicCoursewareStructuralElement from './PublicCoursewareStructuralElement.vue';
-import CoursewareCompanionBox from './CoursewareCompanionBox.vue';
+import PublicCoursewareStructuralElement from './structural-element/PublicCoursewareStructuralElement.vue';
+import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
 import { mapActions, mapGetters } from 'vuex';
 

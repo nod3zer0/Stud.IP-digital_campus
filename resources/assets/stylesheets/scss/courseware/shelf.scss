@@ -1,0 +1,53 @@
+@use '../../mixins.scss' as *;
+
+.cw-contents-overview-teaser {
+    max-width: 782px;
+    background-color: var(--content-color-20);
+    background-image: url('#{$image-path}/courseware-keyvisual-negative.svg');
+    background-repeat: no-repeat;
+    background-size: 196px;
+    background-position-y: 50%;
+    background-position-x: 24px;
+    padding: 24px;
+    margin-bottom: 10px;
+
+    .cw-contents-overview-teaser-content {
+        padding-left: 220px;
+
+        header {
+            font-size: 1.5em;
+            margin-bottom: 0.5em;
+        }
+    }
+}
+
+.responsive-display {
+    .cw-contents-overview-teaser {
+        max-width: 782px;
+        background-size: 60%;
+        background-position-y: 24px;
+        background-position-x: 50%;
+        padding: 24px;
+        margin-bottom: 10px;
+
+        .cw-contents-overview-teaser-content {
+            padding-top: 28%;
+            padding-left: 0;
+            text-align: justify;
+
+            header {
+                font-size: 1.5em;
+                margin: 1em 0 0.5em 0;
+                text-align: center;
+            }
+        }
+    }
+}
+
+.cw-unit-items,
+.cw-shared-items {
+    margin-bottom: 10px;
+    h2 {
+        margin-top: 0;
+    }
+}

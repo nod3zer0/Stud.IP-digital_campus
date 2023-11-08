@@ -1,0 +1,202 @@
+.cw-container {
+    margin-bottom: 1em;
+
+    &.cw-container-colspan-full {
+        max-width: $max-content-width;
+        width: 100%;
+    }
+    &.cw-container-colspan-half {
+        max-width: 540px;
+        width: 100%;
+    }
+    &.cw-container-colspan-half-center {
+        width: $max-content-width;
+        .cw-container-content {
+            max-width: 540px;
+            margin: auto;
+        }
+    }
+
+    .cw-container-header {
+        background-color: var(--content-color-20);
+        padding: 4px 10px 4px 22px;
+
+        .cw-container-header-toggle {
+            display: inline-block;
+            width: calc(100% - 40px);
+        }
+
+        span {
+            color: var(--base-color);
+            font-weight: 700;
+            line-height: 2em;
+            font-size: 1.1em;
+
+            &.cw-default-container-blocker-warning {
+                font-weight: 400;
+            }
+        }
+
+        img {
+            vertical-align: text-bottom;
+        }
+
+        .cw-container-actions {
+            position: relative;
+            float: right;
+            margin-top: 4px;
+            // z-index: 31;
+            .is-open {
+                z-index: 31;
+            }
+        }
+    }
+
+    &.cw-container-active {
+        &.cw-container-colspan-half-center {
+            .cw-container-content {
+                max-width: unset;
+                .cw-block-wrapper {
+                    max-width: 540px;
+                    margin: auto;
+                }
+            }
+        }
+        .cw-container-content {
+            border: solid thin var(--content-color-40);
+        }
+    }
+
+
+    .cw-block-wrapper {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        &.cw-block-wrapper-active {
+            padding: 14px 10px;
+
+            .cw-tabs-content {
+                padding: 14px 0;
+            }
+        }
+
+        .cw-block-item {
+            padding: 0;
+            margin: 0 0 1em 0;
+        }
+    }
+
+    .cw-container-list-block-list {
+        padding: 0;
+        list-style: none;
+    }
+
+    .cw-container-tabs-block-list {
+        list-style: none;
+        padding: 1em 1em 0 1em;
+    }
+
+    .cw-container-accordion-block-list {
+        list-style: none;
+        padding: 0 1em;
+    }
+}
+
+.cw-container-section-delete {
+    img {
+        cursor: pointer;
+    }
+}
+
+form.cw-container-dialog-edit-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    fieldset {
+        max-width: 200px;
+    }
+}
+
+.cw-container-wrapper-discuss {
+    flex-direction: column;
+
+    .cw-container-colspan-full {
+        max-width: unset;
+    }
+    .cw-container-colspan-half-center,
+    .cw-container-colspan-half {
+        max-width: 1050px;
+    }
+    .cw-container-colspan-half-center {
+        width: 100%;
+        .cw-container-content {
+            width: 1050px;
+        }
+    }
+}
+
+.cw-radioset {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 1em;
+    .cw-radioset-box {
+        width: 128px;
+        height: 128px;
+        text-align: center;
+        margin-right: 16px;
+        border: solid thin var(--content-color-40);
+        &.selected {
+            border-color: var(--base-color);
+            background-color: var(--content-color-20);
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+        label {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            cursor: pointer;
+            .label-icon {
+                background-position: center 8px;
+                background-repeat: no-repeat;
+                height: 64px;
+                padding: 8px;
+                &.accordion {
+                    @include background-icon(block-accordion, clickable, 64);
+                }
+                &.list {
+                    @include background-icon(view-list, clickable, 64);
+                }
+                &.tabs {
+                    @include background-icon(block-tabs, clickable, 64);
+                }
+                &.full {
+                    @include background-icon(column-full, clickable, 64);
+                }
+                &.half {
+                    @include background-icon(column-half, clickable, 64);
+                }
+                &.half-center {
+                    @include background-icon(column-half-centered, clickable, 64);
+                }
+            }
+
+        }
+        input[type=radio] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+
+            &:focus + label {
+                outline-color: Highlight;
+                outline-color: -webkit-focus-ring-color;
+                outline-style: auto;
+                outline-width: 1px;
+            }
+        }
+    }
+}

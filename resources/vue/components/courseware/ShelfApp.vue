@@ -18,14 +18,14 @@
 </template>
 
 <script>
-import CoursewareShelfActionWidget from './CoursewareShelfActionWidget.vue';
-import CoursewareShelfImportWidget from './CoursewareShelfImportWidget.vue';
-import CoursewareShelfDialogAdd from './CoursewareShelfDialogAdd.vue';
-import CoursewareShelfDialogCopy from './CoursewareShelfDialogCopy.vue';
-import CoursewareShelfDialogImport from './CoursewareShelfDialogImport.vue';
-import CoursewareUnitItems from './CoursewareUnitItems.vue';
-import CoursewareSharedItems from './CoursewareSharedItems.vue';
-import CoursewareCompanionOverlay from './CoursewareCompanionOverlay.vue';
+import CoursewareShelfActionWidget from './widgets/CoursewareShelfActionWidget.vue';
+import CoursewareShelfImportWidget from './widgets/CoursewareShelfImportWidget.vue';
+import CoursewareShelfDialogAdd from './unit/CoursewareShelfDialogAdd.vue';
+import CoursewareShelfDialogCopy from './unit/CoursewareShelfDialogCopy.vue';
+import CoursewareShelfDialogImport from './unit/CoursewareShelfDialogImport.vue';
+import CoursewareUnitItems from './unit/CoursewareUnitItems.vue';
+import CoursewareSharedItems from './unit/CoursewareSharedItems.vue';
+import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
 
 import { mapActions, mapGetters } from 'vuex';
 

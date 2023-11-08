@@ -1,0 +1,231 @@
+@use '../../../mixins.scss' as *;
+
+$media-buttons: (
+    play: play,
+    stop: stop,
+    pause: pause,
+    prev: arr_eol-left,
+    next: arr_eol-right
+);
+
+.cw-block-audio {
+    .cw-audio-container {
+        border: solid thin var(--content-color-40);
+        padding-top: 1em;
+    }
+    .cw-audio-controls {
+        text-align: right;
+        padding: 0 0.5em;
+    }
+    .cw-audio-range {
+        margin: 0 5px 10px 0;
+        &::-moz-focus-outer {
+            border: 0;
+        }
+        &.ui-widget-content {
+            background-color: var(--base-color);
+        }
+        .ui-widget-header {
+            background-color: var(--dark-gray-color-5);
+        }
+        .ui-slider-handle {
+            border-radius: 20px;
+            width: 1em;
+            height: 1.7em;
+            top: -0.5em;
+            background-color: var(--dark-gray-color-20);
+            border-color: var(--content-color-40);
+            cursor: pointer;
+            margin-left: -2px;
+        }
+    }
+    .cw-audio-button {
+        border: solid thin var(--content-color-40);
+        background-color: var(--white);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 24px;
+        min-height: 27px;
+        line-height: 130%;
+        padding: 5px 15px 5px 30px;
+        cursor: pointer;
+        font-size: 14px;
+        box-sizing: border-box;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: bottom;
+        white-space: nowrap;
+        min-width: unset;
+        margin: 5px;
+        height: 46px;
+        width: 46px;
+        display: inline-block;
+
+        &:hover {
+            background-color: var(--base-color);
+        }
+
+        @each $button, $icon in $media-buttons {
+            &.cw-audio-#{$button}button {
+                @include background-icon($icon, clickable, 24);
+                &:hover {
+                    @include background-icon($icon, info-alt, 24);
+                }
+            }
+        }
+    }
+
+    .cw-audio-time {
+        position: relative;
+        top: -1em;
+        color: var(--base-gray);
+    }
+
+    .cw-audio-range {
+        display: block;
+        margin: 0 auto 1.5em;
+        -webkit-appearance: none;
+        position: relative;
+        overflow: hidden;
+        height: 18px;
+        width: 100%;
+        cursor: pointer;
+        border-radius: 0;
+    }
+
+    .cw-audio-range::-webkit-slider-runnable-track {
+        background: var(--dark-gray-color-20);
+    }
+
+    .cw-audio-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 9px; /* 1 */
+        height: 18px;
+        background: var(--white);
+        box-shadow: -100vw 0 0 100vw var(--base-color);
+        border: solid thin var(--content-color-40);
+    }
+
+    .cw-audio-range::-moz-range-track {
+        height: 18px;
+        background: var(--dark-gray-color-10);
+    }
+
+    .cw-audio-range::-moz-range-thumb {
+        background: var(--white);
+        height: 18px;
+        width: 9px;
+        border: solid thin var(--content-color-40);
+        border-radius: 0 !important;
+        box-shadow: -100vw 0 0 100vw var(--base-color);
+        box-sizing: border-box;
+    }
+
+    .cw-audio-range::-ms-fill-lower {
+        background: var(--base-color);
+    }
+
+    .cw-audio-range::-ms-thumb {
+        background: var(--white);
+        border: solid thin var(--content-color-40);
+        height: 18px;
+        width: 9px;
+        box-sizing: border-box;
+    }
+
+    .cw-audio-range::-ms-ticks-after {
+        display: none;
+    }
+
+    .cw-audio-range::-ms-ticks-before {
+        display: none;
+    }
+
+    .cw-audio-range::-ms-track {
+        background: var(--dark-gray-color-20);
+        color: transparent;
+        height: 18px;
+        border: none;
+    }
+
+    .cw-audio-range::-ms-tooltip {
+        display: none;
+    }
+    .cw-audio-playlist-wrapper {
+        margin-top: -1em;
+        padding-top: 1em;
+        border: solid thin var(--content-color-40);
+        border-top: none;
+
+        &.empty {
+            border: none;
+        }
+
+        .cw-audio-playlist {
+            padding-left: 0;
+            list-style: none;
+            cursor: pointer;
+
+            &.with-recorder {
+                border-bottom: solid thin var(--content-color-40);
+            }
+
+            li {
+                margin: 0 1em;
+                &:not(:last-child) {
+                    border-bottom: solid thin var(--dark-gray-color-30);
+                }
+
+                .cw-playlist-item {
+                    display: block;
+                    @include background-icon(file-audio2, clickable, 24);
+                    background-repeat: no-repeat;
+                    background-position: 1em center;
+
+                    margin: 1em 0;
+                    padding: 1em;
+                    padding-left: 4em;
+                    color: var(--base-color);
+                    &:hover {
+                        color: var(--active-color);
+                    }
+                    &.current-item {
+                        @include background-icon(play, clickable, 24);
+                        font-weight: 700;
+                        &.is-playing {
+                            @include background-icon(pause, clickable, 24);
+                        }
+                    }
+                }
+            }
+        }
+        .cw-audio-playlist-recorder {
+            padding: 1em;
+        }
+    }
+
+    .cw-audio-current-track {
+        @include background-icon(file-audio2, info, 96);
+        background-position: top center;
+        background-repeat: no-repeat;
+        width: 100%;
+        min-height: 140px;
+        margin: 1em 0 2em 0;
+        p {
+            text-align: center;
+            padding-top: 106px;
+        }
+    }
+    .cw-audio-empty {
+        @include background-icon(file, info, 96);
+        border: solid thin var(--content-color-40);
+        background-position: center 1em;
+        background-repeat: no-repeat;
+        min-height: 140px;
+        padding: 1em;
+        p {
+            text-align: center;
+            padding-top: 106px;
+        }
+    }
+}

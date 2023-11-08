@@ -1,0 +1,131 @@
+
+.cw-dashboard {
+    display: flex;
+    max-width: 1112px;
+    flex-wrap: wrap;
+
+    .cw-dashboard-box {
+        margin-bottom: 1em;
+        margin-right: 1em;
+
+        &.cw-dashboard-box-full {
+            max-width: $max-content-width;
+            width: calc(100% - 16px);
+        }
+        &.cw-dashboard-box-half {
+            width: calc(50% - 16px);
+        }
+
+        &.cw-collapsible .cw-collapsible-content.cw-collapsible-content-open {
+            padding: 0;
+        }
+    }
+    .cw-dashboard-overview {
+        display: flex;
+        padding: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+
+    }
+
+    &.cw-dashboard-task-view {
+        display: unset;
+        max-width: unset;
+        flex-wrap: unset;
+
+        .cw-dashboard-tasks-wrapper,
+        .cw-dashboard-students-wrapper {
+            max-height: unset;
+        }
+    }
+}
+
+#course-courseware-dashboard {
+    .action-menu-item a {
+        cursor: pointer;
+    }
+}
+
+.responsive-display {
+    .cw-dashboard {
+        .cw-dashboard-box {
+
+            &.cw-dashboard-box-full {
+                width: 100%
+            }
+            &.cw-dashboard-box-half {
+                width: 100%
+            }
+        }
+    }
+}
+
+.cw-activities-wrapper {
+    max-width: $max-content-width;
+
+    .cw-companion-box {
+        margin: 10px;
+    }
+
+    .cw-activities {
+        list-style: none;
+        padding: 0;
+
+        .cw-activity-item {
+            border-bottom: solid thin var(--content-color-40);
+            padding: 0.5em;
+
+            &:last-child {
+                border: none;
+            }
+
+            p {
+                margin: 0 0 4px 0;
+                img {
+                    padding-right: 0.5em;
+                    vertical-align: text-bottom;
+                }
+            }
+        }
+    }
+}
+
+.cw-dashboard-box {
+    .cw-dashboard-tasks-wrapper,
+    .cw-dashboard-students-wrapper {
+        padding: 10px;
+    }
+}
+
+.cw-dashboard-tasks-wrapper,
+.cw-dashboard-students-wrapper {
+
+    table.default {
+        margin: 0;
+        thead {
+            tr {
+                th {
+                    &.feedback {
+                        min-width: 11em;
+                    }
+                    &.renewal {
+                        min-width: 14em;
+                    }
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    img {
+                        vertical-align: text-bottom;
+                        &.display-feedback,
+                        &.edit {
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,160 @@
+.cw-unit-progress {
+    .cw-unit-progress-breadcrumb {
+        padding: 10px 0;
+
+        a img {
+            vertical-align: top;
+        }
+    }
+
+    .cw-unit-progress-chapter {
+        text-align: center;
+        margin-bottom: -3.5em;
+
+        h1 {
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cw-progress-circle {
+            font-size: 18px;
+            margin: 1em auto;
+
+            &.cw-unit-progress-current {
+                font-size: 12px;
+                top: -4.5em;
+                left: -2.5em;
+            }
+        }
+    }
+
+    .cw-unit-progress-subchapter-list {
+        border-top: solid thin var(--content-color-40);
+        padding: 0 1em 0 1em;
+
+        .cw-unit-empty-info {
+            margin-top: 10px;
+        }
+    }
+}
+
+.cw-unit-progress-item {
+    display: block;
+    border-bottom: solid thin var(--content-color-40);
+    padding: 10px 0;
+
+    &:hover {
+        background-color: hsla(217, 6%, 45%, 0.2);
+    }
+
+    &:last-child {
+        border: none;
+    }
+
+    .cw-unit-progress-item-value,
+    .cw-unit-progress-item-description {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .cw-unit-progress-item-value {
+        width: 70px;
+        color: var(--base-color);
+        font-size: xx-large;
+
+        .cw-progress-circle {
+            font-size: 12px;
+            margin: 4px;
+        }
+    }
+
+    .cw-unit-progress-item-description {
+        color: var(--base-color);
+        padding: 0.5em 0 0 1em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+
+.cw-progress-circle {
+    font-size: 14px;
+    margin: 10px;
+    position: relative;
+    padding: 0;
+    width: 5em;
+    height: 5em;
+    background-color: var(--dark-gray-color-10);
+    border-radius: 50%;
+    line-height: 5em;
+
+    &:after {
+        border: none;
+        position: absolute;
+        top: 0.35em;
+        left: 0.35em;
+        text-align: center;
+        display: block;
+        border-radius: 50%;
+        width: 4.3em;
+        height: 4.3em;
+        background-color: white;
+        content: ' ';
+    }
+
+    span {
+        position: absolute;
+        line-height: 5em;
+        width: 5em;
+        text-align: center;
+        display: block;
+        color: var(--base-color);
+        z-index: 2;
+    }
+
+    .left-half-clipper {
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+        position: absolute;
+        clip: rect(0, 5em, 5em, 2.5em);
+    }
+
+    &.over50 .left-half-clipper {
+        clip: rect(auto, auto, auto, auto);
+    }
+
+    .value-bar {
+        position: absolute;
+        clip: rect(0, 2.5em, 5em, 0);
+        width: 5em;
+        height: 5em;
+        border-radius: 50%;
+        border: 0.45em solid var(--base-color);
+        box-sizing: border-box;
+    }
+
+    &.over50 .first50-bar {
+        position: absolute;
+        clip: rect(0, 5em, 5em, 2.5em);
+        background-color: var(--base-color);
+        border-radius: 50%;
+        width: 5em;
+        height: 5em;
+    }
+
+    &:not(.over50) .first50-bar {
+        display: none;
+    }
+
+    &.p0 .value-bar {
+        display: none;
+    }
+
+    @for $i from 1 through 100 {
+        &.p#{$i} .value-bar {
+            transform: rotate(calc(360deg * $i / 100));
+        }
+    }
+}

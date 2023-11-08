@@ -12,8 +12,8 @@
 
 <script>
 import CoursewareActivities from './CoursewareActivities.vue';
-import CoursewareActivitiesWidgetFilterType from './CoursewareActivitiesWidgetFilterType.vue';
-import CoursewareActivitiesWidgetFilterUnit from './CoursewareActivitiesWidgetFilterUnit.vue';
+import CoursewareActivitiesWidgetFilterType from './widgets/CoursewareActivitiesWidgetFilterType.vue';
+import CoursewareActivitiesWidgetFilterUnit from './widgets/CoursewareActivitiesWidgetFilterUnit.vue';
 import { mapGetters } from 'vuex';
 
 export default {

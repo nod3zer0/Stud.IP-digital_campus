@@ -1,6 +1,6 @@
 import PublicApp from './components/courseware/PublicApp.vue';
 import CoursewarePublicModule from './store/courseware/courseware-public.module';
-import PublicCoursewareStructuralElement from './components/courseware/PublicCoursewareStructuralElement.vue';
+import PublicCoursewareStructuralElement from './components/courseware/structural-element/PublicCoursewareStructuralElement.vue';
 import CoursewarePublicStructureModule from './store/courseware/public-structure.module';
 import PluginManager from './components/courseware/plugin-manager.js';
 import VueRouter from 'vue-router';

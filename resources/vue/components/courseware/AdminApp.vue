@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import CoursewareAdminActionWidget from './CoursewareAdminActionWidget.vue';
+import CoursewareAdminActionWidget from './widgets/CoursewareAdminActionWidget.vue';
 import CoursewareAdminTemplates from './CoursewareAdminTemplates.vue';
-import CoursewareAdminViewWidget from './CoursewareAdminViewWidget.vue';
+import CoursewareAdminViewWidget from './widgets/CoursewareAdminViewWidget.vue';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {

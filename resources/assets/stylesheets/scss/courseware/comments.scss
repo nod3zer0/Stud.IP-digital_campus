@@ -1,0 +1,57 @@
+.cw-structural-element-feedback,
+.cw-structural-element-comments {
+    padding: 0 1em;
+}
+
+.cw-structural-element-feedback-items,
+.cw-structural-element-comments-items,
+.cw-block-feedback-items,
+.cw-block-comments-items {
+    min-height: 1em;
+    max-height: 225px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: -1em -1em 0em 0em;
+    padding: 0em 1em 0em 0em;
+    scroll-behavior: smooth;
+}
+
+.studip-dialog-content {
+    .cw-structural-element-feedback-items,
+    .cw-structural-element-comments-items,
+    .cw-block-feedback-items,
+    .cw-block-comments-items {
+        max-height: unset;
+    }
+}
+
+.cw-structural-element-feedback-create,
+.cw-structural-element-comment-create,
+.cw-block-feedback-create,
+.cw-block-comment-create {
+    border-top: solid thin var(--content-color-40);
+    padding-top: 1em;
+    textarea {
+        width: calc(100% - 6px);
+        resize: none;
+        border: solid thin var(--content-color-40);
+        &:active {
+            border: solid thin var(--content-color-80);
+        }
+    }
+}
+.cw-structural-element-comments-empty,
+.cw-structural-element-feedback-empty,
+.cw-block-comments-empty,
+.cw-block-feedback-empty {
+    .cw-structural-element-feedback-create,
+    .cw-structural-element-comment-create,
+    .cw-block-feedback-create,
+    .cw-block-comment-create {
+        border-top: none;
+    }
+}
+
+.cw-comments-overview-dialog-comments-context {
+    margin: 0 0 1.5em 0;
+}

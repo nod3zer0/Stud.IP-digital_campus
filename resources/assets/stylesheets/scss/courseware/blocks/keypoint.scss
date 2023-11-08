@@ -1,0 +1,100 @@
+@use '../../../mixins.scss' as *;
+@import '../variables.scss';
+
+.cw-keypoint-content {
+    display: flex;
+    min-height: 52px;
+    padding: 1.5em 2.5em 1.5em 2.5em;
+    border-style: solid;
+    border-width: 2px;
+    align-items: center;
+}
+
+.cw-keypoint-content > img {
+    flex-shrink: 0;
+}
+
+.cw-keypoint-red {
+    border-color: map-get($icon-colors, 'icon-red');
+}
+
+.cw-keypoint-blue {
+    border-color: map-get($icon-colors, 'icon-blue');
+}
+
+.cw-keypoint-green {
+    border-color: map-get($icon-colors, 'icon-green');
+}
+
+.cw-keypoint-gray {
+    border-color: map-get($icon-colors, 'icon-gray');
+}
+
+.cw-keypoint-yellow {
+    border-color: map-get($icon-colors, 'icon-yellow');
+}
+
+.cw-keypoint-sentence {
+    display: inline;
+    font-size: 1.25em;
+    padding-left: 1.5em;
+    margin-top: 10px;
+}
+
+.cw-keypoint-label-color {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px;
+    padding: 5px !important;
+
+    > .cw-keypoint-input-color {
+        visibility: hidden;
+        position: absolute;
+    }
+
+    > .cw-keypoint-input-color + div {
+        cursor: pointer;
+        border: 2px solid transparent;
+        height: 32px;
+        width: 32px;
+    }
+
+    > .cw-keypoint-input-color:checked + div {
+        /* (RADIO CHECKED) IMAGE STYLES */
+        @include background-icon(accept, info_alt, 24);
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+}
+
+label[for='cw-keypoint-color'] {
+    vertical-align: top;
+}
+
+.cw-keypoint-label-color {
+    display: inline-block !important;
+}
+
+.cw-keypoint-icons {
+    background-color: var(--white);
+}
+
+.cw-keypoint-bg-red {
+    background-color: map-get($icon-colors, 'icon-red');
+}
+
+.cw-keypoint-bg-blue {
+    background-color: map-get($icon-colors, 'icon-blue');
+}
+
+.cw-keypoint-bg-green {
+    background-color: map-get($icon-colors, 'icon-green');
+}
+
+.cw-keypoint-bg-gray {
+    background-color: map-get($icon-colors, 'icon-gray');
+}
+
+.cw-keypoint-bg-yellow {
+    background-color: map-get($icon-colors, 'icon-yellow');
+}

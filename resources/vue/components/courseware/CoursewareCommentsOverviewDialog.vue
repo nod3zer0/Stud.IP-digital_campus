@@ -31,17 +31,17 @@
 </template>
 
 <script>
-import CoursewareBlockComments from './CoursewareBlockComments.vue';
-import CoursewareStructuralElementComments from './CoursewareStructuralElementComments.vue';
-import CoursewareBlockFeedback from './CoursewareBlockFeedback.vue';
-import CoursewareStructuralElementFeedback from './CoursewareStructuralElementFeedback.vue';
+import CoursewareBlockComments from './blocks/CoursewareBlockComments.vue';
+import CoursewareBlockFeedback from './blocks/CoursewareBlockFeedback.vue';
+import CoursewareStructuralElementComments from './structural-element/CoursewareStructuralElementComments.vue';
+import CoursewareStructuralElementFeedback from './structural-element/CoursewareStructuralElementFeedback.vue';
 
 export default {
     name: 'courseware-comments-overview-dialog',
     components: {
         CoursewareBlockComments,
-        CoursewareStructuralElementComments,
         CoursewareBlockFeedback,
+        CoursewareStructuralElementComments,
         CoursewareStructuralElementFeedback
     },
     props: {
