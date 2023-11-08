@@ -278,6 +278,10 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
                 "UPDATE `seminare` SET `parent_course` = NULL WHERE `parent_course` = :course",
                 ['course' => $course->id]
             );
+            DBManager::get()->execute(
+                "DELETE FROM `forum_visits` WHERE `seminar_id` = ?",
+                [$course->id]
+            );
         };
 
         parent::configure($config);
