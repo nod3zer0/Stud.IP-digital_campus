@@ -1,4 +1,5 @@
 <form class="default" action="<?= $controller->link_for('admin/tree/do_batch_assign') ?>" method="post">
+    <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend><?= _('Studienbereichszuordnungen der ausgewählten Veranstaltungen bearbeiten') ?></legend>
         <div data-studip-tree>

@@ -184,12 +184,14 @@ class Admin_TreeController extends AuthenticatedController
      */
     public function batch_assign_semtree_action()
     {
-        $GLOBALS['perm']->check('admin');
+        if (!$GLOBALS['perm']->have_perm('admin')
+                && !RolePersistence::isAssignedRole(User::findCurrent()->id, 'DedicatedAdmin')) {
+            throw new AccessDeniedException();
+        }
+
         //set the page title with the area of Stud.IP:
         PageLayout::setTitle(_('Veranstaltungszuordnungen bearbeiten'));
         Navigation::activateItem('/browse/my_courses/list');
-
-        $GLOBALS['perm']->check('admin');
 
         // check the assign_semtree array and extract the relevant course IDs:
         $courseIds = Request::optionArray('assign_semtree');
@@ -197,25 +199,26 @@ class Admin_TreeController extends AuthenticatedController
         $order = Config::get()->IMPORTANT_SEMNUMBER
             ? "ORDER BY `start_time` DESC, `VeranstaltungsNummer`, `Name`"
             : "ORDER BY `start_time` DESC,  `Name`";
-        $this->courses = Course::findMany($courseIds, $order);
+        $this->courses = array_filter(
+            Course::findMany($courseIds, $order),
+            function (Course $course): bool {
+                /*
+                 * Check if sem_tree entries are allowed and may be changed and remove all courses
+                 * where this is not the case.
+                 */
+                return !LockRules::Check($course->id, 'sem_tree', 'sem')
+                    && $course->getSemClass()['bereiche'];
+            }
+        );
 
         $this->return = Request::get('return');
 
         // check if at least one course was selected (this can only happen from admin courses overview):
-        if (!$courseIds) {
-            PageLayout::postWarning('Es wurde keine Veranstaltung gewählt.');
+        if (count($this->courses) === 0) {
+            PageLayout::postWarning('Es wurde keine Veranstaltung gewählt oder die Zuordnungen können ' .
+                'nicht bearbeitet werden.');
             $this->relocate('admin/courses');
         }
-    }
-
-    public function assign_courses_action($class_id)
-    {
-        $GLOBALS['perm']->check('root');
-        $data = $this->checkClassAndId($class_id);
-        $GLOBALS['perm']->check('admin');
-
-        $this->search = QuickSearch::get('courses[]', new StandardSearch('Seminar_id'))->withButton();
-        $this->node = $data['id'];
     }
 
     /**
@@ -224,22 +227,33 @@ class Admin_TreeController extends AuthenticatedController
      */
     public function do_batch_assign_action()
     {
-        $GLOBALS['perm']->check('admin');
-        $astmt = DBManager::get()->prepare("INSERT IGNORE INTO `seminar_sem_tree` VALUES (:course, :node)");
-        $dstmt = DBManager::get()->prepare(
-            "DELETE FROM `seminar_sem_tree` WHERE `seminar_id` IN (:courses) AND `sem_tree_id` = :node");
-
-        $success = true;
-        // Add course assignments to the specified nodes.
-        foreach (Request::optionArray('courses') as $course) {
-            foreach (Request::optionArray('add_assignments') as $a) {
-                $success = $astmt->execute(['course' => $course, 'node' => $a]);
-            }
+        if (!$GLOBALS['perm']->have_perm('admin')
+            && !RolePersistence::isAssignedRole(User::findCurrent()->id, 'DedicatedAdmin')) {
+            throw new AccessDeniedException();
         }
 
-        // Remove course assignments from the specified nodes.
-        foreach (Request::optionArray('delete_assignments') as $d) {
-            $success = $dstmt->execute(['courses' => Request::optionArray('courses'), 'node' => $d]);
+        CSRFProtection::verifyUnsafeRequest();
+
+        $success = true;
+        $courses = Course::findMany(Request::optionArray('courses'));
+        foreach ($courses as $course) {
+            if ($GLOBALS['perm']->have_studip_perm('tutor', $course->id)) {
+                $areas = $course->study_areas->pluck('sem_tree_id');
+                $newAreas = array_merge($areas, Request::optionArray('add_assignments'));
+                $delete = Request::optionArray('delete_assignments');
+                $changed = array_diff($newAreas, $delete);
+                // Set new areas for course if at least one area remains.
+                if (count($changed) > 0) {
+                    $course->setStudyAreas($changed);
+                // Allow to remove all study areas only when there are modules.
+                } else if ($course->getSemClass()['module'] && count(Lvgruppe::findBySeminar($course->id))) {
+                    $course->setStudyAreas($changed);
+                } else {
+                    $success = false;
+                }
+            } else {
+                $success = false;
+            }
         }
 
         if ($success) {
