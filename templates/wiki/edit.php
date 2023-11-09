@@ -11,8 +11,7 @@
         <input type="hidden" name="submit" value="true">
         <input type="hidden" name="cmd" value="show">
 
-        <br>
-        <textarea name="body" class="wiki-editor wysiwyg size-l" data-editor="extraPlugins=WikiLink"
+        <textarea name="body" class="wiki-editor wysiwyg size-l" data-editor="extraPlugins=FindAndReplace,WikiLink"
         ><?= wysiwygReady($body) ?></textarea>
     </fieldset>
 

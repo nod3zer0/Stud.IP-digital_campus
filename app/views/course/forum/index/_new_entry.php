@@ -34,7 +34,7 @@
                 <? endif; ?>
 
                 <label>
-                    <textarea class="wysiwyg size-l" data-textarea="new_entry" name="content" required tabindex="3"
+                    <textarea class="wysiwyg size-l" data-editor="extraPlugins=StudipBlockQuote" data-textarea="new_entry" name="content" required tabindex="3"
                         placeholder="<?= _('Schreiben Sie hier Ihren Beitrag.') ?>"></textarea>
                 </label>
 

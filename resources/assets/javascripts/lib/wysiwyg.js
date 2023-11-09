@@ -2,6 +2,8 @@
  * wysiwyg.js - Replace HTML textareas with WYSIWYG editor.
  */
 import parseOptions from './parse_options.js';
+import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace';
+import StudipBlockQuote from '../cke/studip-quote/StudipBlockQuote.js';
 import WikiLink from '../cke/wiki-link/wiki-link.js';
 
 const wysiwyg = {
@@ -131,7 +133,7 @@ function parseEditorOptions(data) {
         }
 
         if (parsed.extraPlugins) {
-            const pluginMap = { WikiLink };
+            const pluginMap = { FindAndReplace, StudipBlockQuote, WikiLink };
             result.options.extraPlugins = parsed.extraPlugins.split(',').reduce((memo, plugin) => {
                 return plugin in pluginMap ? [...memo, pluginMap[plugin]] : memo;
             }, []);
@@ -153,12 +155,8 @@ function getToolbarOptions(parsed) {
             removeItems: [
                 'undo',
                 'redo',
-                'findAndReplace',
                 'strikethrough',
                 'horizontalLine',
-                'insertBlockQuote',
-                'splitBlockQuote',
-                'removeBlockQuote',
             ],
         };
     } else if (parsed.toolbar === 'minimal') {
@@ -169,14 +167,13 @@ function getToolbarOptions(parsed) {
                 'underline',
                 'subscript',
                 'superscript',
+                'fontColor',
+                'fontBackgroundColor',
                 '|',
                 'removeFormat',
                 '|',
                 'bulletedList',
                 'numberedList',
-                '|',
-                'fontColor',
-                'fontBackgroundColor',
                 '|',
                 'link',
                 'math',

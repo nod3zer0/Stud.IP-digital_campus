@@ -24,6 +24,7 @@
 <script>
 import BlockComponents from './block-components.js';
 import blockMixin from '@/vue/mixins/courseware/block.js';
+import FindAndReplace from '@ckeditor/ckeditor5-find-and-replace/src/findandreplace';
 import { ClassicEditor, BalloonEditor } from '@/assets/javascripts/chunks/wysiwyg';
 import { mapActions } from 'vuex';
 
@@ -42,6 +43,7 @@ export default {
             editor: ClassicEditor,
             editorConfig: {
                 // The configuration of the editor.
+                extraPlugins: [FindAndReplace],
             },
         };
     },
