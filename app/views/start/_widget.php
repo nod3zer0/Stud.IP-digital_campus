@@ -8,7 +8,7 @@
  * @var string|null $admin_url
  */
 ?>
-<div class="ui-widget_head widget-header" id="widget-<?= $widget->widget_id ?>">
+<div class="ui-widget_head widget-header" id="widget-<?= $widget->getPluginId() ?>">
     <span class="header-options">
         <? if (isset($icons)): ?>
             <? foreach ($icons as $nav): ?>
@@ -32,14 +32,14 @@
             </a>
         <? endif ?>
 
-        <a href="<?= $controller->url_for('start/delete/' . $widget->widget_id) ?>">
+        <a href="<?= $controller->url_for('start/delete/' . $widget->getPluginId()) ?>">
             <?= Icon::create('decline', Icon::ROLE_CLICKABLE, ['title' => _('Entfernen')]) ?>
         </a>
     </span>
-    <span id="widgetName<?= $widget->widget_id ?>" class="widget-title">
+    <span id="widgetName<?= $widget->getPluginId() ?>" class="widget-title">
         <?= htmlReady($title ?? $widget->getPluginName()) ?>
     </span>
 </div>
-<div id="wid<?=$widget->widget_id?>">
+<div id="wid<?=$widget->getPluginId()?>">
     <?= $content_for_layout ?>
 </div>

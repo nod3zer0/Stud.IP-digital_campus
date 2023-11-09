@@ -39,30 +39,35 @@ class StartController extends AuthenticatedController
      */
     public function index_action($action = false, $widgetId = null)
     {
-        if (!WidgetHelper::hasUserWidgets($GLOBALS['user']->id)) {
-            WidgetHelper::setInitialPositions();
+        $plugin_manager = PluginManager::getInstance();
+        $widgets = WidgetUser::getWidgets($GLOBALS['user']->id);
+        $this->columns = [[], []];
+
+        foreach ($widgets as $col => $list) {
+            foreach ($list as $plugin_id) {
+                $plugin = $plugin_manager->getPluginById($plugin_id);
+
+                if ($plugin) {
+                    $this->columns[$col][] = $plugin;
+                }
+            }
         }
-
-        $this->left = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0);
-        $this->right = WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1);
-
-        WidgetHelper::setActiveWidget(Request::get('activeWidget'));
 
         $sidebar = Sidebar::get();
 
         $nav = $sidebar->addWidget(new NavigationWidget());
         $nav->setTitle(_('Sprungmarken'));
-        foreach (array_merge($this->left, $this->right) as $widget) {
+        foreach (array_merge(...$this->columns) as $widget) {
             $nav->addLink(
                 $widget->getPluginName(),
-                $this->url_for("start#widget-{$widget->widget_id}")
+                $this->url_for("start#widget-" . $widget->getPluginId())
             );
         }
 
         // Show action to add widget only if not all widgets have already been added.
         $actions = $sidebar->addWidget(new ActionsWidget());
 
-        if (WidgetHelper::getAvailableWidgets($GLOBALS['user']->id)) {
+        if ($this->getAvailableWidgets($GLOBALS['user']->id)) {
             $actions->addLink(
                 _('Widgets hinzufügen'),
                 $this->url_for('start/add'),
@@ -119,6 +124,29 @@ class StartController extends AuthenticatedController
     }
 
     /**
+     * Fetches all widgets that are not already in use.
+     *
+     * @param string $user_id the user to check
+     *
+     * @return array available widgets
+     */
+    private function getAvailableWidgets($user_id)
+    {
+        $all_widgets = PluginEngine::getPlugins('PortalPlugin');
+        $user_widgets = WidgetUser::getWidgets($user_id);
+        $used_widgets = array_merge(...$user_widgets);
+        $available = [];
+
+        foreach ($all_widgets as $widget) {
+            if (!in_array($widget->getPluginId(), $used_widgets)) {
+                $available[] = $widget;
+            }
+        }
+
+        return $available;
+    }
+
+    /**
      *  This action adds one or more new widgets to the start page
      *
      * @return void
@@ -135,15 +163,15 @@ class StartController extends AuthenticatedController
             $post_url = '';
             if (check_ticket($ticket)) {
                 foreach ($widgets as $widget) {
-                    $id = WidgetHelper::addWidget($widget, $GLOBALS['user']->id);
+                    WidgetUser::addWidget($GLOBALS['user']->id, $widget);
                     if (!$post_url) {
-                        $post_url = '#widget-' . $id;
+                        $post_url = '#widget-' . $widget;
                     }
                 }
             }
             $this->redirect('start' . $post_url);
         }
-        $this->widgets = WidgetHelper::getAvailableWidgets($GLOBALS['user']->id);
+        $this->widgets = $this->getAvailableWidgets($GLOBALS['user']->id);
     }
 
 
@@ -162,14 +190,9 @@ class StartController extends AuthenticatedController
 
         PageLayout::setTitle(sprintf(_('Standard-Startseite für "%s" bearbeiten'), ucfirst($permission)));
 
-        $this->widgets = WidgetHelper::getAvailableWidgets();
+        $this->widgets = PluginEngine::getPlugins('PortalPlugin');
+        $this->initial_widgets = WidgetDefault::getWidgets($permission);
         $this->permission = $permission;
-
-        $this->initial_widgets = WidgetHelper::getInitialPositions($permission);
-        $available_plugin_ids = array_keys($this->widgets);
-        $this->initial_widgets[0] = array_intersect((array)$this->initial_widgets[0], $available_plugin_ids);
-        $this->initial_widgets[1] = array_intersect((array)$this->initial_widgets[1], $available_plugin_ids);
-
     }
 
     /**
@@ -187,8 +210,20 @@ class StartController extends AuthenticatedController
             throw new InvalidArgumentException('There is no such permission!');
         }
 
-        WidgetHelper::storeInitialPositions(0, Request::getArray('left'), $permission);
-        WidgetHelper::storeInitialPositions(1, Request::getArray('right'), $permission);
+        $widgets = [Request::getArray('left'), Request::getArray('right')];
+
+        WidgetDefault::deleteBySQL('perm = ?', [$permission]);
+
+        foreach ($widgets as $col => $list) {
+            foreach ($list as $plugin_id => $position) {
+                WidgetDefault::create([
+                    'pluginid' => $plugin_id,
+                    'col'      => $col,
+                    'position' => $position,
+                    'perm'     => $permission
+                ]);
+            }
+        }
 
         $this->render_nothing();
     }
@@ -202,10 +237,13 @@ class StartController extends AuthenticatedController
      */
     public function delete_action($id)
     {
+        $plugin_manager = PluginManager::getInstance();
+        $plugin_info = $plugin_manager->getPluginById($id);
+        $name = $plugin_info->getPluginName();
+
         if (Request::isPost()) {
             if (Request::submitted('yes')) {
-                $name = WidgetHelper::getWidgetName($id);
-                if (WidgetHelper::removeWidget($id, $name, $GLOBALS['user']->id)) {
+                if (WidgetUser::removeWidget($GLOBALS['user']->id, $id)) {
                     $message = sprintf(
                         _('Widget "%s" wurde entfernt.'),
                         htmlReady($name)
@@ -219,11 +257,11 @@ class StartController extends AuthenticatedController
                     PageLayout::postError($message);
                 }
             }
-        } elseif ($widget_name = WidgetHelper::getWidgetName($id)) {
+        } else {
             PageLayout::postQuestion(
                 sprintf(
                     _('Sind Sie sicher, dass Sie das Widget "%s" von der Startseite entfernen möchten?'),
-                    htmlReady($widget_name)
+                    htmlReady($name)
                 ),
                 $this->url_for("start/delete/{$id}")
             );
@@ -236,17 +274,7 @@ class StartController extends AuthenticatedController
      */
     public function reset_action()
     {
-        $widgets = array_merge(
-            WidgetHelper::getUserWidgets($GLOBALS['user']->id, 0),
-            WidgetHelper::getUserWidgets($GLOBALS['user']->id, 1)
-        );
-
-        foreach ($widgets as $widget) {
-            $name = WidgetHelper::getWidgetName($widget->widget_id);
-            WidgetHelper::removeWidget($widget->widget_id, $name, $GLOBALS['user']->id);
-        }
-
-        WidgetHelper::setInitialPositions();
+        WidgetUser::deleteBySQL('range_id = ?', [$GLOBALS['user']->id]);
 
         $message = _('Die Widgets wurden auf die Standardkonfiguration zurückgesetzt.');
         PageLayout::postSuccess($message);
@@ -264,7 +292,16 @@ class StartController extends AuthenticatedController
 
         $lanes = Request::getArray('lanes');
 
-        WidgetHelper::storeNewPositions($lanes);
+        WidgetUser::setInitialWidgets($GLOBALS['user']->id);
+
+        foreach ($lanes as $column => $list) {
+            foreach ($list as $position => $plugin_id) {
+                $widget = WidgetUser::findOneBySQL('pluginid = ? AND range_id = ?', [$plugin_id, $GLOBALS['user']->id]);
+                $widget->position = $position;
+                $widget->col = $column;
+                $widget->store();
+            }
+        }
 
         $this->render_nothing();
     }

@@ -10,20 +10,22 @@ const startpage = {
                     .addClass('move');
             },
             update(event, ui) {
-                let lanes = [];
-                $(this)
-                    .closest('.start-widgetcontainer')
-                    .children('.portal-widget-list')
-                    .each((index, element) => {
-                        lanes[index] = $('.studip-widget-wrapper', element)
-                            .map((i, el) => el.getAttribute('id'))
-                            .get(); // Ensure we have an array
-                    });
+                if (ui.item.parent().is(this)) {
+                    let lanes = [];
+                    $(this)
+                        .closest('.start-widgetcontainer')
+                        .children('.portal-widget-list')
+                        .each((index, element) => {
+                            lanes[index] = $('.studip-widget-wrapper', element)
+                                .map((i, el) => el.getAttribute('id'))
+                                .get(); // Ensure we have an array
+                        });
 
-                $.post(
-                    STUDIP.URLHelper.getURL('dispatch.php/start/storeNewOrder'),
-                    {lanes}
-                );
+                    $.post(
+                        STUDIP.URLHelper.getURL('dispatch.php/start/storeNewOrder'),
+                        {lanes}
+                    );
+                }
             },
             stop() {
                 $(this)

@@ -24,7 +24,7 @@ class ActivityFeed extends CorePlugin implements PortalPlugin
 
         $template->user_id = $GLOBALS['user']->id;
         $template->scrolledfrom = strtotime('+1 day');
-        $template->config = WidgetHelper::getWidgetUserConfig($GLOBALS['user']->id, 'ACTIVITY_FEED');
+        $template->config = UserConfig::get($GLOBALS['user']->id)->getValue('ACTIVITY_FEED');
 
         $navigation = new Navigation('', 'dispatch.php/activityfeed/configuration');
         $navigation->setImage(Icon::create('edit', 'clickable', ["title" => _('Konfigurieren')]), ['data-dialog'=>'size=auto']);

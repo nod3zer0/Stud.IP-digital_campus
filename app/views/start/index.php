@@ -1,7 +1,6 @@
 <?php
 /**
- * @var array $left
- * @var array $right
+ * @var array $columns
  */
 ?>
 <h1 class="sr-only">
@@ -24,10 +23,10 @@ if (Config::get()->BANNER_ADS_ENABLE) {
 ?>
 
 <div class="start-widgetcontainer">
-    <? foreach ([$left, $right] as $column): ?>
+    <? foreach ($columns as $column): ?>
         <ul class="portal-widget-list">
             <? foreach ($column as $widget): ?>
-                <li class="studip-widget-wrapper" id="<?= $widget->widget_id ?>">
+                <li class="studip-widget-wrapper" id="<?= $widget->getPluginId() ?>">
                     <div class="ui-widget-content studip-widget">
                         <? if ($template = $widget->getPortalTemplate()): ?>
                             <? $template->set_layout($this->_factory->open('start/_widget')) ?>

@@ -33,11 +33,15 @@ class StartNavigation extends Navigation
         $news = 0;
         $vote = 0;
 
+        $plugin_manager = PluginManager::getInstance();
+        $news_widget = $plugin_manager->getPluginInfo('NewsWidget');
+        $eval_widget = $plugin_manager->getPluginInfo('EvaluationsWidget');
+
         if (mb_stripos($_SERVER['REQUEST_URI'], "web_migrate.php") === false && is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
-            if (WidgetHelper::hasWidget($GLOBALS['user']->id, 'News')) {
+            if (WidgetUser::hasWidget($GLOBALS['user']->id, $news_widget['id'])) {
                 $news = StudipNews::CountUnread();
             }
-            if (Config::get()->VOTE_ENABLE && WidgetHelper::hasWidget($GLOBALS['user']->id, 'Evaluations')) {
+            if (Config::get()->VOTE_ENABLE && WidgetUser::hasWidget($GLOBALS['user']->id, $eval_widget['id'])) {
                 $threshold = object_get_visit_threshold();
                 $statement = DBManager::get()->prepare("
                     SELECT COUNT(*)

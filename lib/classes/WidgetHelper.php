@@ -1,7 +1,7 @@
 <?php
 /**
  * WidgetHelper.php - utility functions for Widget-Parameter Handling
- *
+ * @deprecated since Stud.IP 5.5
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as

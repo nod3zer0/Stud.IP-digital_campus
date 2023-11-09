@@ -8,50 +8,40 @@
 ?>
 <div class="edit-widgetcontainer">
     <div class="start-widgetcontainer">
-        <ul class="portal-widget-list">
-            <? foreach ($initial_widgets[0] as $widget_id) : ?>
-                <? $widget = $widgets[$widget_id]; unset($widgets[$widget_id]) ?>
-                <li class="studip-widget-wrapper" id="<?= $widget->getPluginId() ?>">
-                    <div class="ui-widget-content studip-widget">
-                        <div class="ui-widget_head widget-header">
-                            <span>
-                                <?= htmlReady($widget->getPluginName()) ?>
-                            </span>
-                        </div>
-                    </div>
-                </li>
-            <? endforeach; ?>
-        </ul>
-
-        <ul class="portal-widget-list">
-            <? foreach ($initial_widgets[1] as $widget_id) : ?>
-                <? $widget = $widgets[$widget_id]; unset($widgets[$widget_id]) ?>
-                <li class="studip-widget-wrapper" id="<?= $widget->getPluginId() ?>">
-                    <div class="ui-widget-content studip-widget">
-                        <div class="ui-widget_head widget-header">
-                            <span>
-                                <?= htmlReady($widget->getPluginName()) ?>
-                            </span>
-                        </div>
-                    </div>
-                </li>
-            <? endforeach; ?>
-        </ul>
+        <? foreach ([0, 1] as $column): ?>
+            <ul class="portal-widget-list">
+                <? if (isset($initial_widgets[$column])): ?>
+                    <? foreach ($initial_widgets[$column] as $widget_id) : ?>
+                        <? foreach ($widgets as $widget) : ?>
+                            <? if ($widget->getPluginId() == $widget_id): ?>
+                                <li class="studip-widget-wrapper" id="<?= $widget_id ?>">
+                                    <div class="ui-widget-content studip-widget">
+                                        <div class="ui-widget_head widget-header">
+                                            <?= htmlReady($widget->getPluginName()) ?>
+                                        </div>
+                                    </div>
+                                </li>
+                            <? endif ?>
+                        <? endforeach ?>
+                    <? endforeach; ?>
+                <? endif ?>
+            </ul>
+        <? endforeach ?>
     </div>
 
     <h2><?= _('Nicht standardmäßig aktivierte Widgets') ?></h2>
     <div class="available-widgets">
         <ul class="portal-widget-list" style="clear: both;">
         <? foreach ($widgets as $widget) : ?>
-            <li class="studip-widget-wrapper" id="<?= $widget->getPluginId() ?>">
-                <div class="ui-widget-content studip-widget">
-                    <div class="ui-widget_head widget-header">
-                        <span>
+            <? if (!in_array($widget->getPluginId(), array_merge(...$initial_widgets))): ?>
+                <li class="studip-widget-wrapper" id="<?= $widget->getPluginId() ?>">
+                    <div class="ui-widget-content studip-widget">
+                        <div class="ui-widget_head widget-header">
                             <?= htmlReady($widget->getPluginName()) ?>
-                        </span>
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
+            <? endif ?>
         <? endforeach; ?>
         </ul>
     </div>

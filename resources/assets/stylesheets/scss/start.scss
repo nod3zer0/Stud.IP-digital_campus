@@ -67,45 +67,6 @@
     width: 100%;
 }
 
-/* some improvements for ui_widget elements */
-.ui-widget_start {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.0em;
-    padding: 0;
-}
-
-.ui-widget_columnl {
-    float: left;
-    width: 100%;
-}
-.ui-widgetContainer {
-    color: var(--white);
-    background-image: none;
-}
-
-.ui-widget_columnr {
-    float: right;
-}
-
-.ui-widget_head {
-    line-height: 30px;
-
-    text-align: center;
-    color: var(--white);
-    font-size: 1.3em;
-    background-color: var(--content-color);
-}
-
-.ui-widget_head:hover {
-    cursor:move;
-
-}
-.ui-widget_head h1 {
-    line-height: 100px;
-    text-align: center;
-    color: var(--black);
-}
-
 .addclip-widgets {
     color: var(--black);
     list-style: none;

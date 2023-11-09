@@ -16,7 +16,7 @@ class ActivityfeedController extends AuthenticatedController
 
         $provider = Request::getArray('provider');
 
-        WidgetHelper::addWidgetUserConfig($GLOBALS['user']->id, 'ACTIVITY_FEED', $provider);
+        UserConfig::get($GLOBALS['user']->id)->store('ACTIVITY_FEED', $provider);
 
         $this->response->add_header('X-Dialog-Close', 1);
         $this->response->add_header('X-Dialog-Execute', 'STUDIP.ActivityFeed.updateFilter');
@@ -81,7 +81,7 @@ class ActivityfeedController extends AuthenticatedController
 
     public function configuration_action()
     {
-        $this->config = WidgetHelper::getWidgetUserConfig($GLOBALS['user']->id, 'ACTIVITY_FEED');
+        $this->config = UserConfig::get($GLOBALS['user']->id)->getValue('ACTIVITY_FEED');
         $this->modules = $this->getAllModules();
         $this->context_translations = [
             Context::COURSE    => _('Veranstaltungen'),

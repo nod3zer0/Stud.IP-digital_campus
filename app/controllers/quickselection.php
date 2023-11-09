@@ -25,7 +25,7 @@ class QuickselectionController extends AuthenticatedController
 
         }
 
-        WidgetHelper::addWidgetUserConfig($GLOBALS['user']->id, 'QUICK_SELECTION', $names);
+        UserConfig::get($GLOBALS['user']->id)->store('QUICK_SELECTION', $names);
 
         $template = PluginEngine::getPlugin('QuickSelection')->getPortalTemplate();
 
@@ -38,7 +38,7 @@ class QuickselectionController extends AuthenticatedController
     public function configuration_action()
     {
         $this->links = Navigation::getItem('/start');
-        $this->config = WidgetHelper::getWidgetUserConfig($GLOBALS['user']->id, 'QUICK_SELECTION');
+        $this->config = UserConfig::get($GLOBALS['user']->id)->getValue('QUICK_SELECTION');
 
         PageLayout::setTitle(_('Schnellzugriff konfigurieren'));
     }

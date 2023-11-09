@@ -25,7 +25,7 @@ class QuickSelection extends CorePlugin implements PortalPlugin
 
     public function getPortalTemplate()
     {
-        $names = WidgetHelper::getWidgetUserConfig($GLOBALS['user']->id, 'QUICK_SELECTION');
+        $names = UserConfig::get($GLOBALS['user']->id)->getValue('QUICK_SELECTION');
 
         $template = $GLOBALS['template_factory']->open('start/quickselection');
         $template->navigation = $this->getFilteredNavigation($names);
