@@ -978,7 +978,7 @@ class MessagesController extends AuthenticatedController {
                     MessageUser::countBySQL("snd_rec = 'rec' AND user_id = :id AND deleted != 1", ['id' => $GLOBALS['user']->id])
                 );
                 $actions->addLink(
-                    _('Nachrichten im Posteingang löschen'),
+                    _('Posteingang leeren'),
                     $this->url_for('messages/purge/rec'),
                     Icon::create('trash'),
                     ['data-confirm' => $message]
@@ -991,7 +991,7 @@ class MessagesController extends AuthenticatedController {
                     MessageUser::countBySQL("snd_rec = 'snd' AND user_id = :id AND deleted != 1", ['id' => $GLOBALS['user']->id])
                 );
                 $actions->addLink(
-                    _('Nachrichten im Postausgang löschen'),
+                    _('Postausgang leeren'),
                     $this->url_for('messages/purge/snd'),
                     Icon::create('trash'),
                     ['onclick' => 'return STUDIP.Dialog.confirmAsPost("' . $message . '", this.href);']
