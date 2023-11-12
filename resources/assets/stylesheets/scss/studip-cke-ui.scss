@@ -311,7 +311,7 @@
 }
 
 /* table inserter */
-.ck .ck-insert-table-dropdown-grid-box.ck-on {
+.ck.ck-insert-table-dropdown-grid-box.ck-on {
     background: var(--base-color-20);
 }
 
@@ -321,8 +321,7 @@
     background-color: transparent;
 }
 
-.ck.ck-balloon-panel.ck-tooltip .ck.ck-tooltip__text,
-.ck.ck-tooltip .ck-tooltip__text {
+.ck.ck-tooltip .ck.ck-tooltip__text {
     background-color: var(--dark-gray-color-5);
     border: 1px solid var(--dark-gray-color-30);
     box-shadow: inset 0 1px 0 hsla(0,0%,100%,.5);
@@ -338,8 +337,8 @@
     top: 12px;
     position: relative;
 }
-.ck.ck-tooltip__text::after,
-.ck.ck-tooltip.ck-tooltip_s .ck-tooltip__text::after {
+
+.ck.ck-tooltip__text::after {
     content: "";
     height: 0;
     width: 0;
@@ -352,8 +351,8 @@
     margin-right: -8px;
     top: -16px;
 }
-.ck.ck-tooltip__text::before,
-.ck.ck-tooltip.ck-tooltip_s .ck-tooltip__text::before {
+
+.ck.ck-tooltip__text::before {
     content: "";
     height: 0;
     width: 0;
@@ -376,21 +375,13 @@
 /* editor */
 $editor-min-height: 8em;
 
-.ck-source-editing-area {
+.ck.ck-source-editing-area {
     min-height: calc($editor-min-height + 2px);
 }
-.ck-editor__editable_inline {
+.ck.ck-editor__editable_inline {
+    border-color: var(--ck-color-base-border);
     cursor: text;
     min-height: $editor-min-height;
-}
-.ck.ck-editor__editable_inline {
-    border: 1px solid var(--ck-color-base-border);
-}
-.ck.ck-block-toolbar-button {
-    background: var(--ck-color-base-background);
-    border: 1px solid var(--ck-color-base-border);
-    color: var(--base-color);
-    z-index: 10000;
 }
 
 form.default label:not(.undecorated):not(.ck-voice-label) .ck-source-editing-area textarea {
@@ -411,11 +402,6 @@ form.default .ck-source-editing-area textarea {
 }
 .ck.ck-toolbar {
     background-color: var(--dark-gray-color-5);
-}
-
-/* tooltip fix for balloon panel */
-.ck.ck-balloon-panel.ck-tooltip {
-    padding: 0;
 }
 
 .ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_sw {
@@ -444,4 +430,6 @@ form.default textarea:not(.size-l) + .ck-editor {
 /* balloon editor button*/
 .ck.ck-block-toolbar-button {
     background-color: var(--dark-gray-color-5);
+    border: 1px solid var(--ck-color-base-border);
+    z-index: var(--ck-z-modal);
 }
