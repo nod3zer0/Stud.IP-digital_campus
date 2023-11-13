@@ -522,6 +522,9 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
                 case "Email":
                     $query .= "ORDER BY au.`Email` {$attributes['order']}, au.`username`";
                     break;
+                case 'matriculation_number':
+                    $query .= "ORDER BY au.`matriculation_number` {$attributes['order']}, au.`username`";
+                    break;
                 case "changed":
                     $query .= "ORDER BY uo.`last_lifesign` {$attributes['order']}, au.`username`";
                     break;

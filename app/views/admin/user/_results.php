@@ -22,7 +22,11 @@
                     </a>
                 </th>
                 <th>&nbsp;</th>
-                <th><?= _('Matrikelnummer') ?></th>
+                <th <?= $sortby === 'matriculation_number' ? 'class="sort' . $order . '"' : '' ?>>
+                    <a href="<?= $controller->link_for('admin/user', ['sortby' => 'matriculation_number', 'order' => $order, 'toggle' => $sortby === 'matriculation_number']) ?>">
+                        <?= _('Matrikelnummer') ?>
+                    </a>
+                </th>
                 <th <?= $sortby === 'perms' ? 'class="sort' . $order . '"' : '' ?>>
                     <a href="<?= $controller->link_for('admin/user',['sortby' =>'perms', 'order'=> $order ,'toggle' => $sortby === 'perms']) ?>">
                         <?= _('Status') ?>
