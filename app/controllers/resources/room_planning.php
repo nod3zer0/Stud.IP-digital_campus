@@ -346,7 +346,7 @@ class Resources_RoomPlanningController extends AuthenticatedController
             }
             if ($GLOBALS['perm']->have_perm('admin') && $this->resource instanceof Room) {
                 $actions->addLink(
-                    _('Raum Bearbeiten'),
+                    _('Raum bearbeiten'),
                     URLHelper::getURL(
                         'dispatch.php/resources/room/edit/' . $this->resource->id
                     ),
