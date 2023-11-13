@@ -22,6 +22,7 @@
                     </a>
                 </th>
                 <th>&nbsp;</th>
+                <th><?= _('Matrikelnummer') ?></th>
                 <th <?= $sortby === 'perms' ? 'class="sort' . $order . '"' : '' ?>>
                     <a href="<?= $controller->link_for('admin/user',['sortby' =>'perms', 'order'=> $order ,'toggle' => $sortby === 'perms']) ?>">
                         <?= _('Status') ?>
@@ -99,6 +100,7 @@
                         ?>
                         <?= tooltipHtmlIcon(htmlReady($tooltxt, true, true)) ?>
                     </td>
+                    <td><?= htmlReady($user->matriculation_number) ?></td>
                     <td><?= $user['perms'] ?></td>
                     <td><?= htmlReady($user->Vorname) ?></td>
                     <td><?= htmlReady($user->nachname) ?></td>

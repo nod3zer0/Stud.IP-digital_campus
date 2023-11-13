@@ -204,6 +204,16 @@ use Studip\Button, Studip\LinkButton;
             </div>
         </section>
 
+        <section>
+            <label>
+                <?= _('Matrikelnummer') ?>
+                <input class="user_form" type="text" id="matriculation_number"
+                       value="<?= htmlReady($user->matriculation_number) ?>"
+                    <?= StudipAuthAbstract::CheckField('auth_user_md5.matriculation_number', $user->auth_plugin)
+                       || LockRules::check($user->user_id, 'matriculation_number') ? 'readonly' : 'name="matriculation_number"' ?>>
+            </label>
+        </section>
+
 
         <? if (!empty($user_roles)) : ?>
             <section>

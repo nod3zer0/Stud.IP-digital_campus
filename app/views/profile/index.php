@@ -65,6 +65,8 @@
         <? if ($current_user->user_id === $GLOBALS['user']->id) : ?>
             <dt><?= _('Status') ?>:</dt>
             <dd><?= htmlReady(ucfirst($current_user['perms'])) ?></dd>
+            <dt><?= _('Matrikelnummer') ?>:</dt>
+            <dd><?= htmlReady($current_user['matriculation_number']) ?></dd>
         <? endif ?>
 
         <? if (!empty($shortDatafields)) : ?>

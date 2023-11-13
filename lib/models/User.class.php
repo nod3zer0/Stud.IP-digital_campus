@@ -30,6 +30,7 @@
  * @property string $vorname database column
  * @property string $nachname database column
  * @property string $email database column
+ * @property string $matriculation_number database column
  * @property string $validation_key database column
  * @property string|null $auth_plugin database column
  * @property int $locked database column

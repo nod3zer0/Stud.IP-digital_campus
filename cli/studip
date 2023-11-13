@@ -38,6 +38,7 @@ $commands = [
     Commands\Fix\EndTimeWeeklyRecurredEvents::class,
     Commands\Fix\IconDimensions::class,
     Commands\HelpContent\Migrate::class,
+    Commands\Migrate\MigrateMatrikelnummer::class,
     Commands\Migrate\MigrateList::class,
     Commands\Migrate\MigrateStatus::class,
     Commands\Migrate\Migrate::class,
