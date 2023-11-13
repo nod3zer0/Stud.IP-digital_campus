@@ -142,7 +142,7 @@ class Studip_Ws_Type {
    *
    * @todo name ist falsch
    */
-  function get_element_type($type) {
+  public static function get_element_type($type) {
     if (is_array($type))
       return current($type);
     trigger_error(sprintf('\$type has to be an array, but is: "%s"',
@@ -159,7 +159,7 @@ class Studip_Ws_Type {
    *
    * @return type <description>
    */
-  function is_complex_type($type0) {
+  public static function is_complex_type($type0) {
     $type = Studip_Ws_Type::get_type($type0);
     return $type === STUDIP_WS_TYPE_ARRAY || $type === STUDIP_WS_TYPE_STRUCT;
   }
@@ -172,7 +172,7 @@ class Studip_Ws_Type {
    *
    * @return type <description>
    */
-  function is_primitive_type($type) {
+  public static function is_primitive_type($type) {
     return !Studip_Ws_Type::is_complex_type($type);
   }
 
@@ -184,7 +184,7 @@ class Studip_Ws_Type {
    *
    * @return type <description>
    */
-  function get_struct_elements($struct) {
+  public static function get_struct_elements($struct) {
 
     # check argument; has to be a class
     if (!class_exists($struct)) {

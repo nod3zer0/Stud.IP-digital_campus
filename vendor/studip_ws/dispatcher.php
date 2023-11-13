@@ -125,6 +125,7 @@ class Studip_Ws_Dispatcher {
       return $this->throw_exception('No service responds to "%s".', $method0);
 
     $service = $this->api_methods[$method0]->service;
+    $argument_array = array_values($argument_array);
 
     # calling before filter
     $before = $service->before_filter($method0, $argument_array);
