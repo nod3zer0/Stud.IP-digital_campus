@@ -344,17 +344,23 @@ class Resources_RoomPlanningController extends AuthenticatedController
                     );
                 }
             }
-            if($GLOBALS['perm']->have_perm('admin')) {
-                if ($this->resource instanceof Room) {
-                    $actions->addLink(
-                        _('Raumeigenschaften anzeigen'),
-                        URLHelper::getURL(
-                            'dispatch.php/resources/room/index/' . $this->resource->id
-                        ),
-                        Icon::create('link-intern'),
-                        ['data-dialog' => 'size=auto']
-                    );
-                }
+            if ($GLOBALS['perm']->have_perm('admin') && $this->resource instanceof Room) {
+                $actions->addLink(
+                    _('Bearbeiten'),
+                    URLHelper::getURL(
+                        'dispatch.php/resources/room/edit/' . $this->resource->id
+                    ),
+                    Icon::create('edit'),
+                    ['data-dialog' => 'size=auto']
+                );
+                $actions->addLink(
+                    _('Raumeigenschaften anzeigen'),
+                    URLHelper::getURL(
+                        'dispatch.php/resources/room/index/' . $this->resource->id
+                    ),
+                    Icon::create('link-intern'),
+                    ['data-dialog' => 'size=auto']
+                );
             }
         }
         $actions->addLink(
