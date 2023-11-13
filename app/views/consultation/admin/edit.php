@@ -57,6 +57,14 @@
             <?= _('Die freien Termine auch im Kalender markieren') ?>
         </label>
 
+    <? if ($block->range_type === 'course'): ?>
+        <label>
+            <input type="checkbox" name="mail-to-tutors" value="1"
+                <? if ($block->mail_to_tutors) echo 'checked'; ?>>
+            <?= _('Tutor/innen beim Versand allgemeiner Nachrichten berücksichtigen?') ?>
+        </label>
+    <? endif; ?>
+
         <label>
             <input type="checkbox" name="show-participants" value="1"
                 <? if ($block->show_participants) echo 'checked'; ?>>

@@ -5,30 +5,14 @@
  */
 class ConsultationMailer
 {
-    private static $messaging = null;
-
-    /**
-     * Returns a messaging object.
-     *
-     * @return messaging object
-     */
-    private static function getMessaging()
-    {
-        if (self::$messaging === null) {
-            self::$messaging = new messaging();
-        }
-        return self::$messaging;
-    }
-
     /**
      * Sends a consultation information message.
      *
-     * @param User|null         $sender  Sender
-     * @param User             $user    Recipient
-     * @param ConsultationSlot $slot    Slot in question
-     * @param string           $subject Subject of the message
-     * @param string           $reason  Reason for a booking or cancelation
-     * @param User             $sender  Sender of the message
+     * @param User|null           $sender  Sender
+     * @param User                $user    Recipient
+     * @param ConsultationBooking $booking    Booking in question
+     * @param string              $subject Subject of the message
+     * @param string|null         $reason  Reason for a booking or cancelation
      */
     public static function sendMessage(?User $sender, User $user, ConsultationBooking $booking, string $subject, ?string $reason = '')
     {
@@ -63,11 +47,7 @@ class ConsultationMailer
      */
     public static function sendBookingMessageToResponsibilities(?User $sender, ConsultationBooking $booking)
     {
-        foreach ($booking->slot->block->responsible_persons as $user) {
-            if ($user->id === $GLOBALS['user']->id) {
-                continue;
-            }
-
+        foreach (self::getResponsiblePersonsOfBlock($booking->slot->block) as $user) {
             self::sendMessage(
                 $sender,
                 $user,
@@ -97,7 +77,7 @@ class ConsultationMailer
      * Send an information message about a changed reason to a user of the
      * booked slot.
      *
-     * @param User                 $sender   The sender of the message
+     * @param User|null           $sender   The sender of the message
      * @param ConsultationBooking $booking  The booking
      * @param User                $receiver The receiver of the message
      */
@@ -120,11 +100,7 @@ class ConsultationMailer
      */
     public static function sendCancelMessageToResponsibilities(?User $sender, ConsultationBooking $booking, string $reason = '')
     {
-        foreach ($booking->slot->block->responsible_persons as $user) {
-            if ($user->id === $GLOBALS['user']->id) {
-                continue;
-            }
-
+        foreach (self::getResponsiblePersonsOfBlock($booking->slot->block) as $user) {
             self::sendMessage(
                 $sender,
                 $user,
@@ -149,5 +125,31 @@ class ConsultationMailer
             $booking,
             sprintf(_('Termin bei %s abgesagt'), $booking->slot->block->range_display), trim($reason)
         );
+    }
+
+    /**
+     * @return Generator<User>
+     */
+    private static function getResponsiblePersonsOfBlock(ConsultationBlock $block): Generator
+    {
+        foreach ($block->responsible_persons as $user) {
+            /** @var User $user */
+
+            // No mail to self
+            if ($user->id === User::findCurrent()->id) {
+                continue;
+            }
+
+            // No mails to tutors
+            if (
+                $block->range_type === 'course'
+                && !$block->mail_to_tutors
+                && !$GLOBALS['perm']->have_studip_perm('dozent', $block->range_id, $user->id)
+            ) {
+                continue;
+            }
+
+            yield $user;
+        }
     }
 }

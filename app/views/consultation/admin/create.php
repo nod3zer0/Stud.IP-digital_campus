@@ -198,6 +198,13 @@ $intervals = [
             <?= _('Die freien Termine auch im Kalender markieren') ?>
         </label>
 
+    <? if ($range instanceof Course): ?>
+        <label>
+            <input type="checkbox" name="mail-to-tutors" value="1" checked>
+            <?= _('Tutor/innen beim Versand allgemeiner Nachrichten berücksichtigen?') ?>
+        </label>
+    <? endif; ?>
+
         <label>
             <input type="checkbox" name="show-participants" value="1"
                     <? if (Request::bool('show-participants')) echo 'checked'; ?>>

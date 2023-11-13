@@ -205,6 +205,7 @@ class Consultation_AdminController extends ConsultationController
                 $block->calendar_events   = Request::bool('calender-events', false);
                 $block->show_participants = Request::bool('show-participants', false);
                 $block->require_reason    = Request::option('require-reason');
+                $block->mail_to_tutors    = Request::bool('mail-to-tutors', false);
                 $block->confirmation_text = trim(Request::get('confirmation-text')) ?: null;
                 $block->note              = Request::get('note');
                 $block->size              = Request::int('size', 1);
@@ -395,6 +396,7 @@ class Consultation_AdminController extends ConsultationController
         $this->block->calendar_events = Request::bool('calender-events', false);
         $this->block->show_participants = Request::bool('show-participants', false);
         $this->block->require_reason = Request::option('require-reason');
+        $this->block->mail_to_tutors = Request::bool('mail-to-tutors', false);
         $this->block->confirmation_text = trim(Request::get('confirmation-text'));
         $this->block->lock_time = Request::int('lock_time');
 

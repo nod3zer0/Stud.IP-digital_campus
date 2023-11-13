@@ -20,6 +20,7 @@
  * @property int $calendar_events database column
  * @property int $show_participants database column
  * @property string $require_reason database column
+ * @property bool $mail_to_tutors database column
  * @property string|null $confirmation_text database column
  * @property string $note database column
  * @property int $size database column
