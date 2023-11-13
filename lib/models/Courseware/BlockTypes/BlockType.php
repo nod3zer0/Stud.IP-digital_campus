@@ -457,7 +457,7 @@ abstract class BlockType
             $template->set_attributes([
                 'title' => $this->getTitle(),
                 'payload' => $this->getPayload(),
-                'files' => $this->getFiles()
+                'files' => $this->block->files
             ]);
         } catch (\Exception $e) {
             // it catches the exception mostly because the template file could not be found.
