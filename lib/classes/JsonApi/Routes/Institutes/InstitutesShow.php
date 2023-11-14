@@ -15,7 +15,9 @@ use JsonApi\Schemas\Institute as InstituteSchema;
 class InstitutesShow extends JsonApiController
 {
     protected $allowedIncludePaths = [
+        InstituteSchema::REL_FACULTY,
         InstituteSchema::REL_STATUS_GROUPS,
+        InstituteSchema::REL_SUB_INSTITUTES,
     ];
 
     /**
