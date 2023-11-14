@@ -815,7 +815,7 @@ class ForumEntry  implements PrivacyObject
                 }
 
                 if ($options['search_author']) {
-                    $zw_search_string[] = "author LIKE " . DBManager::get()->quote($search_word);
+                    $zw_search_string[] = "(anonymous = 0 AND author LIKE " . DBManager::get()->quote($search_word) . ')';
                 }
 
                 if (!empty($zw_search_string)) {
