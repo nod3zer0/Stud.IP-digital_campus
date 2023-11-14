@@ -1,8 +1,5 @@
 <template>
-    <li v-if="showItem"
-        :draggable="editMode ? true : null"
-        :aria-selected="editMode ? keyboardSelected : null"
-    >
+    <li v-if="showItem" :draggable="editMode ? true : null" :aria-selected="editMode ? keyboardSelected : null">
         <div class="cw-tree-item-wrapper">
             <span
                 v-if="editMode && depth > 0 && canEdit"
@@ -14,16 +11,27 @@
                 @keydown="handleKeyEvent"
             >
             </span>
+            <courseware-tree-item-updater
+                v-if="editMode && editingItem"
+                :structuralElement="element"
+                @close="editingItem = false"
+                @childrenUpdated="$emit('childrenUpdated')"
+            />
             <router-link
+                v-else
                 :to="'/structural_element/' + element.id"
                 class="cw-tree-item-link"
                 :class="{
                     'cw-tree-item-link-current': isCurrent,
                     'cw-tree-item-link-edit': editMode,
-                    'cw-tree-item-link-selected': keyboardSelected
+                    'cw-tree-item-link-selected': keyboardSelected,
                 }"
             >
-                {{ element.attributes?.title || "–" }}
+                {{ element.attributes?.title || '–' }}
+                <button v-if="editMode && canEdit" class="cw-tree-item-edit-button" @click.prevent="editingItem = true">
+                    <studip-icon shape="edit" />
+                </button>
+
                 <span v-if="task">| {{ solverName }}</span>
                 <span
                     v-if="hasReleaseOrWithdrawDate"
@@ -50,14 +58,11 @@
                     <span
                         v-else
                         class="cw-tree-item-sequential cw-tree-item-sequential-percentage"
-                        :title="$gettextInterpolate(
-                                    $gettext('Fortschritt: %{progress}%'),
-                                    {progress: itemProgress}
-                                )"
+                        :title="$gettextInterpolate($gettext('Fortschritt: %{progress}%'), { progress: itemProgress })"
                     >
                         {{ itemProgress }} %
                     </span>
-            </template>
+                </template>
             </router-link>
         </div>
         <ol
@@ -85,11 +90,11 @@
             handle=".cw-sortable-handle"
             v-bind="dragOptions"
             :elementId="element.id"
-            :list="nestedChildren" 
+            :list="nestedChildren"
             :group="{ name: 'g1' }"
             @end="endDrag"
         >
-            <courseware-tree-item 
+            <courseware-tree-item
                 v-for="el in nestedChildren"
                 :key="el.id"
                 :element="el"
@@ -108,17 +113,28 @@
                 @childrenUpdated="$emit('childrenUpdated')"
             />
         </draggable>
+        <ol
+            v-if="editMode && canEdit && isFirstLevel"
+            class="cw-tree-adder-list"
+        >
+            <courseware-tree-item-adder :parentId="element.id" />
+        </ol>
     </li>
 </template>
 
 <script>
+import CoursewareTreeItemAdder from './CoursewareTreeItemAdder.vue';
+import CoursewareTreeItemUpdater from './CoursewareTreeItemUpdater.vue';
 import draggable from 'vuedraggable';
+
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
     name: 'courseware-tree-item',
     components: {
-        draggable
+        CoursewareTreeItemAdder,
+        CoursewareTreeItemUpdater,
+        draggable,
     },
     props: {
         element: {
@@ -134,22 +150,23 @@ export default {
         },
         keyboardSelectedProp: {
             type: Boolean,
-            default: false
+            default: false,
         },
         newPos: {
-            type: Number
+            type: Number,
         },
         newParentId: {
-            type: Number
+            type: Number,
         },
         siblingCount: {
-            type: Number
-        }
+            type: Number,
+        },
     },
     data() {
         return {
-            keyboardSelected: false
-        }
+            keyboardSelected: false,
+            editingItem: false,
+        };
     },
     computed: {
         ...mapGetters({
@@ -168,8 +185,10 @@ export default {
             return {
                 attrs: {
                     role: 'listbox',
-                    ['aria-label']: this.$gettextInterpolate(this.$gettext('Unterseiten von %{elementName}'),{ elementName: this.element.attributes?.title })
-                }
+                    ['aria-label']: this.$gettextInterpolate(this.$gettext('Unterseiten von %{elementName}'), {
+                        elementName: this.element.attributes?.title,
+                    }),
+                },
             };
         },
         children() {
@@ -179,7 +198,8 @@ export default {
 
             return this.childrenById(this.element.id)
                 .map((id) => this.structuralElementById({ id }))
-                .filter(Boolean).sort((a,b) => a.attributes.position - b.attributes.position);
+                .filter(Boolean)
+                .sort((a, b) => a.attributes.position - b.attributes.position);
         },
         nestedChildren() {
             return this.element.nestedChildren ?? [];
@@ -198,7 +218,8 @@ export default {
         },
         hasReleaseOrWithdrawDate() {
             return (
-                this.element.attributes?.['release-date'] !== null || this.element.attributes?.['withdraw-date'] !== null
+                this.element.attributes?.['release-date'] !== null ||
+                this.element.attributes?.['withdraw-date'] !== null
             );
         },
         hasWriteApproval() {
@@ -207,7 +228,10 @@ export default {
             if (!writeApproval || Object.keys(writeApproval).length === 0) {
                 return false;
             }
-            return (writeApproval.all || writeApproval.groups.length > 0 || writeApproval.users.length > 0) && this.element.attributes?.['can-edit'];
+            return (
+                (writeApproval.all || writeApproval.groups.length > 0 || writeApproval.users.length > 0) &&
+                this.element.attributes?.['can-edit']
+            );
         },
         hasNoReadApproval() {
             if (this.context.type === 'users') {
@@ -286,11 +310,11 @@ export default {
             return {
                 animation: 0,
                 disabled: false,
-                ghostClass: "cw-tree-item-ghost"
+                ghostClass: 'cw-tree-item-ghost',
             };
         },
         canEdit() {
-            return this.element.attributes['can-edit'];
+            return this.element.attributes?.['can-edit'] ?? false;
         },
         inCourse() {
             return this.context.type === 'courses';
@@ -308,12 +332,12 @@ export default {
     methods: {
         ...mapActions({
             loadTask: 'loadTask',
-            setAssistiveLiveContents: 'setAssistiveLiveContents'
+            setAssistiveLiveContents: 'setAssistiveLiveContents',
         }),
         endDrag(e) {
             let sortArray = [];
             for (let child of e.to.childNodes) {
-                sortArray.push({id: child.attributes.elementid.nodeValue, type: 'courseware-structural-elements'});
+                sortArray.push({ id: child.attributes.elementid.nodeValue, type: 'courseware-structural-elements' });
             }
 
             let data = {
@@ -322,15 +346,15 @@ export default {
                 oldPos: e.oldIndex,
                 oldParent: e.item._underlying_vm_.relationships.parent.data.id,
                 newParent: e.to.__vue__.$attrs.elementId,
-                sortArray: sortArray
+                sortArray: sortArray,
             };
 
             if (data.oldParent === data.newParent && data.oldPos === data.newPos) {
                 return;
             }
             if (data.oldParent !== data.newParent) {
-                sortArray.splice(data.newPos, 0, {id: data.id, type: 'courseware-structural-elements'});
-            } 
+                sortArray.splice(data.newPos, 0, { id: data.id, type: 'courseware-structural-elements' });
+            }
 
             data.sortArray = sortArray;
             this.$emit('sort', data);
@@ -346,20 +370,25 @@ export default {
                         this.storeKeyboardSorting();
                     } else {
                         this.keyboardSelected = true;
-                        const assistiveLive = 
-                            this.$gettextInterpolate(
-                                this.$gettext('%{elementTitle} ausgewählt. Aktuelle Position in der Liste: %{pos} von %{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die Position zu ändern, die Leertaste zum Ablegen, die Escape-Taste zum Abbrechen. Mit Pfeiltasten links und rechts kann die Position in der Hierarchie verändert werden.'),
-                                { elementTitle: this.element.attributes.title, pos: this.element.attributes.position + 1, listLength: this.siblingCount }
-                            );
+                        const assistiveLive = this.$gettextInterpolate(
+                            this.$gettext(
+                                '%{elementTitle} ausgewählt. Aktuelle Position in der Liste: %{pos} von %{listLength}. Drücken Sie die Aufwärts- und Abwärtspfeiltasten, um die Position zu ändern, die Leertaste zum Ablegen, die Escape-Taste zum Abbrechen. Mit Pfeiltasten links und rechts kann die Position in der Hierarchie verändert werden.'
+                            ),
+                            {
+                                elementTitle: this.element.attributes.title,
+                                pos: this.element.attributes.position + 1,
+                                listLength: this.siblingCount,
+                            }
+                        );
 
-                            this.setAssistiveLiveContents(assistiveLive);
+                        this.setAssistiveLiveContents(assistiveLive);
                     }
                     break;
             }
             if (this.keyboardSelected) {
                 const data = {
                     element: this.element,
-                    parents: []
+                    parents: [],
                 };
                 switch (e.keyCode) {
                     case 27: // esc
@@ -371,7 +400,7 @@ export default {
                         this.$emit('moveItemPrevLevel', data);
                         break;
                     case 38: // up
-                        e.preventDefault();    
+                        e.preventDefault();
                         this.$emit('moveItemUp', data);
                         break;
                     case 39: // right
@@ -379,7 +408,7 @@ export default {
                         this.$emit('moveItemNextLevel', data);
                         break;
                     case 40: // down
-                        e.preventDefault(); 
+                        e.preventDefault();
                         this.$emit('moveItemDown', data);
                         break;
                 }
@@ -403,10 +432,9 @@ export default {
         },
         abortKeyboardSorting() {
             this.$emit('childrenUpdated');
-            const assistiveLive = this.$gettextInterpolate(
-                this.$gettext('%{elementTitle}. Neuordnung abgebrochen.'),
-                { elementTitle: this.element.attributes.title }
-            );
+            const assistiveLive = this.$gettextInterpolate(this.$gettext('%{elementTitle}. Neuordnung abgebrochen.'), {
+                elementTitle: this.element.attributes.title,
+            });
             this.setAssistiveLiveContents(assistiveLive);
             this.$nextTick(() => {
                 this.keyboardSelected = false;
@@ -419,14 +447,14 @@ export default {
                 oldPos: this.element.attributes.position,
                 oldParent: this.element.relationships.parent.data.id,
                 newParent: this.element.newParentId,
-                sortArray: this.element.sortArray
+                sortArray: this.element.sortArray,
             };
             this.keyboardSelected = false;
 
             if (data.newParent === undefined || data.newPos === undefined) {
                 const assistiveLive = this.$gettextInterpolate(
                     this.$gettext('%{elementTitle}. Neuordnung nicht möglich.'),
-                    {elementTitle: this.element.attributes.title}
+                    { elementTitle: this.element.attributes.title }
                 );
                 this.setAssistiveLiveContents(assistiveLive);
                 return;
@@ -435,18 +463,18 @@ export default {
             if (data.oldParent === data.newParent && data.oldPos === data.newPos) {
                 const assistiveLive = this.$gettextInterpolate(
                     this.$gettext('%{elementTitle}. Neuordnung abgebrochen.'),
-                    {elementTitle: this.element.attributes.title}
+                    { elementTitle: this.element.attributes.title }
                 );
                 this.setAssistiveLiveContents(assistiveLive);
                 return;
             }
             this.$emit('sort', data);
             const assistiveLive = this.$gettextInterpolate(
-                this.$gettext('%{elementTitle}, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.'), 
-                {elementTitle: this.element.attributes.title, pos: data.newPos + 1, listLength: this.siblingCount }
+                this.$gettext('%{elementTitle}, abgelegt. Entgültige Position in der Liste: %{pos} von %{listLength}.'),
+                { elementTitle: this.element.attributes.title, pos: data.newPos + 1, listLength: this.siblingCount }
             );
             this.setAssistiveLiveContents(assistiveLive);
-        }
+        },
     },
     mounted() {
         if (this.element.relationships?.task?.data) {
@@ -468,6 +496,6 @@ export default {
             this.keyboardSelected = true;
             this.$refs.sortableHandle.focus();
         },
-    }
+    },
 };
 </script>

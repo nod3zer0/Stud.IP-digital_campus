@@ -2,7 +2,6 @@
     ol {
         list-style: none;
         padding-left: 1.25em;
-        margin-bottom: 20px;
 
         &.cw-tree-root-list {
             padding-left: 0;
@@ -33,6 +32,10 @@
                             border-bottom: solid thin var(--content-color-40);
                             margin-bottom: 12px;
 
+                            > .cw-sortable-handle {
+                                margin-bottom: 2px;
+                            }
+
                             > a.cw-tree-item-link {
                                 display: inline-block;
                                 width: calc(100% - 4px);
@@ -48,8 +51,13 @@
                         ol {
                             padding-left: 0.25em;
 
+                            &.cw-tree-adder-list,
                             &.cw-tree-draggable-list {
-                                padding-left: 1em;
+                                padding-left: 2px;
+                            }
+                            &.cw-tree-adder-list {
+                                margin-left: 16px;
+                                height: 30px;
                             }
 
                             > li.cw-tree-item {
@@ -57,27 +65,36 @@
 
                                 > .cw-tree-item-wrapper {
                                     border: none;
+                                    line-height: 28px;
 
-                                    > a.cw-tree-item-link {
-                                        display: inline-block;
+                                    > a.cw-tree-item-link,
+                                    form {
                                         border-bottom: none;
                                         font-size: 14px;
                                         width: calc(100% - 20px);
                                         background-repeat: no-repeat;
+                                        background-position-y: center;
                                         padding-left: 18px;
                                         margin-left: 4px;
                                         margin-bottom: 0;
+                                        line-height: 28px;
 
                                         &.cw-tree-item-link-edit {
                                             width: calc(100% - 38px);
                                         }
 
                                         @include background-icon(bullet-dot, clickable, 18);
+                                    }
+                                    form {
+                                        display: inline;
+                                        background-position-y: center;
+                                    }
+                                    > a.cw-tree-item-link {
+                                        display: inline-block;
 
                                         &:hover {
                                             @include background-icon(bullet-dot, attention, 18);
                                         }
-
                                         &.cw-tree-item-link-current {
                                             @include background-icon(bullet-dot, info, 18);
                                         }
@@ -95,14 +112,44 @@
         }
     }
 
-    .cw-sortable-handle {
-        vertical-align: middle;
+    .cw-tree-item-wrapper {
+        .cw-sortable-handle {
+            vertical-align: middle;
+            opacity: 0;
+            &:focus {
+                opacity: 1;
+            }
+        }
+        &:hover {
+            .cw-sortable-handle {
+                opacity: 1;
+            }
+        }
     }
 
     .cw-tree-item-link {
+        .cw-tree-item-edit-button {
+            opacity: 0;
+            padding: 0 4px;
+            vertical-align: bottom;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            img {
+                vertical-align: middle;
+            }
+            &:focus {
+                opacity: 1;
+            }
+        }
+
         &:hover {
             background-color: var(--light-gray-color-20);
             color: var(--active-color);
+
+            .cw-tree-item-edit-button {
+                opacity: 1;
+            }
         }
 
         &.cw-tree-item-link-current {
@@ -122,10 +169,10 @@
 
         @each $type, $icon in $tree-item-flag-icons {
             .cw-tree-item-flag-#{$type} {
-                display: inline-block;
                 width: 16px;
                 height: 16px;
                 vertical-align: top;
+                float: right;
                 @include background-icon(#{$icon}, clickable, 16);
             }
 
@@ -159,5 +206,33 @@
 
     .cw-tree-item-ghost {
         opacity: 0.6;
+        border: dashed 2px var(--content-color-40);
+        height: 28px;
+        margin-left: 24px !important;
+
+        .cw-tree-item-wrapper {
+            visibility: hidden;
+        }
+    }
+
+    form.cw-tree-item-adder-form,
+    form.cw-tree-item-updater {
+        display: inline;
+
+        input {
+            height: 22px;
+        }
+
+        button {
+            min-width: unset;
+            height: 28px;
+            width: 28px;
+            padding: 0;
+            margin: -1px 0 0 0;
+
+            &::before {
+                margin: 4px;
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@
                 @moveItemNextLevel="moveItemNextLevel"
                 @childrenUpdated="updateNestedChildren"
             ></courseware-tree-item>
+            <courseware-tree-item-adder v-if="editMode && canEditRoot" :parentId="rootElement.id"/>
         </ol>
         <studip-progress-indicator
             v-else 
@@ -28,6 +29,7 @@
 
 <script>
 import CoursewareTreeItem from './CoursewareTreeItem.vue';
+import CoursewareTreeItemAdder from './CoursewareTreeItemAdder.vue';
 import StudipProgressIndicator from '../../StudipProgressIndicator.vue';
 
 import { mapActions, mapGetters } from 'vuex';
@@ -35,6 +37,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     components: { 
         CoursewareTreeItem,
+        CoursewareTreeItemAdder,
         StudipProgressIndicator
     },
     name: 'courseware-tree',
@@ -77,6 +80,9 @@ export default {
                 return this.structuralElementById({ id: this.context.rootId });
             }
 
+        },
+        canEditRoot() {
+            return this.rootElement.attributes['can-edit'];
         },
         editMode() {
             return this.viewMode === 'edit';
