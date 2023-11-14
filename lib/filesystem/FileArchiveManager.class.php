@@ -111,8 +111,8 @@ class FileArchiveManager
                     if (file_exists($archive->filename) && filesize($archive->filename) > $archive_max_size) {
                         throw new FileArchiveManagerException(
                             sprintf(
-                                _('Das ZIP-Archiv ist zu groß! Die maximal erlaubte Größe ist %d bytes!'),
-                                $archive_max_size
+                                _('Das ZIP-Archiv ist zu groß! Die maximal erlaubte Größe ist %s!'),
+                                relsize($archive_max_size)
                             )
                         );
                     }
@@ -149,8 +149,8 @@ class FileArchiveManager
                         if (file_exists($archive->filename) && filesize($archive->filename) > $archive_max_size) {
                             throw new FileArchiveManagerException(
                                 sprintf(
-                                    _('Das ZIP-Archiv ist zu groß! Die maximal erlaubte Größe ist %d bytes!'),
-                                    $archive_max_size
+                                    _('Das ZIP-Archiv ist zu groß! Die maximal erlaubte Größe ist %s!'),
+                                    relsize($archive_max_size)
                                 )
                             );
                         }
@@ -183,8 +183,8 @@ class FileArchiveManager
                                 unlink($archive->filename);
                                 throw new FileArchiveManagerException(
                                     sprintf(
-                                        _('Das ZIP-Archiv ist zu groß! Die maximal erlaubte Größe ist %d bytes!'),
-                                        $archive_max_size
+                                        _('Das ZIP-Archiv ist zu groß! Die maximal erlaubte Größe ist %s!'),
+                                        relsize($archive_max_size)
                                     )
                                 );
                             }
