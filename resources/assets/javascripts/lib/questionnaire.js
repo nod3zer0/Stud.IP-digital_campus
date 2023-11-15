@@ -441,12 +441,20 @@ const Questionnaire = {
                 let pdf = new pdfExporter({
                     orientation: 'portrait'
                 });
+
                 $(".questionnaire_results").addClass('print-view');
 
                 let title = $(".questionnaire_results").data('title');
+                let formattedDate = new Intl.DateTimeFormat(String.locale, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
 
+                    hour: "numeric",
+                    minute: "numeric"
+                }).format(new Date());
                 let splitTitle = pdf.splitTextToSize(title, 180);
-                pdf.text(splitTitle, 25, 20);
+
 
                 let count_questions = $(".questionnaire_results .question").length;
                 let questions_rendered = 0;
@@ -474,7 +482,7 @@ const Questionnaire = {
                                 let height = Math.floor(160 / canvasses[i].width * canvasses[i].height);
                                 if (height_sum + height > 240 && height < 240) {
                                     pdf.addPage();
-                                    height_sum = 0;
+                                    height_sum = 15;
                                 }
                                 pdf.addImage(imgData, 'JPEG',
                                     25,
@@ -486,6 +494,27 @@ const Questionnaire = {
 
                                 );
                                 height_sum += height + 10;
+                            }
+
+                            const pages = pdf.internal.getNumberOfPages();
+
+                            for (let i = 1; i <= pages; i++) {
+                                let pageSize = pdf.internal.pageSize;
+                                let pageHeight = pageSize.getHeight();
+                                pdf.setPage(i);
+                                pdf.setFontSize(16);
+                                pdf.text(splitTitle, 25, 20);
+                                pdf.setFontSize(8);
+                                pdf.text(
+                                    String(formattedDate),
+                                    30,
+                                    pageHeight - 8
+                                )
+                                pdf.text(
+                                    String(i) + ' / ' + String(pages),
+                                    pageSize.getWidth() - 30,
+                                    pageHeight - 8
+                                );
                             }
                             pdf.save(title + '.pdf');
                         }
