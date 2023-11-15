@@ -12,7 +12,7 @@
             <template v-if="showEditMode && canEdit && !currentElementisLink">
                 <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                 <span id="operation" class="assistive-text">
-                    {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
+                    {{ $gettext('Drücken Sie die Leertaste, um neu anzuordnen.') }}
                 </span>
             </template>
             <courseware-collapsible-box
@@ -78,22 +78,30 @@
                     </div>
                 </template>
             </courseware-collapsible-box>
+            <studipDialog
+                v-if="showDeleteDialog"
+                :title="$gettext('Fach löschen')"
+                :question="$gettext('Möchten Sie dieses Fach wirklich löschen?')"
+                height="180"
+                @confirm="deleteCurrentSection"
+                @close="closeDeleteDialog"
+            ></studipDialog>
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
                 <fieldset v-for="(section, index) in currentContainer.attributes.payload.sections.filter(section => !section.locked)" :key="index">
                     <label>
-                        <translate>Title</translate>
+                        {{ $gettext('Title')}}
                         <input type="text" v-model="section.name" />
                     </label>
                     <label>
-                        <translate>Icon</translate>
+                        {{ $gettext('Icon')}}
                         <studip-select :options="icons" v-model="section.icon">
                             <template #open-indicator="selectAttributes">
-                                <span v-bind="selectAttributes"><studip-icon shape="arr_1down" size="10"/></span>
+                                <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
                             </template>
                             <template #no-options>
-                                <translate>Es steht keine Auswahl zur Verfügung.</translate>
+                                {{ $gettext('Es steht keine Auswahl zur Verfügung.')}}
                             </template>
                             <template #selected-option="option">
                                 <studip-icon :shape="option.label"/> <span class="vs__option-with-icon">{{option.label}}</span>
@@ -107,11 +115,13 @@
                         class="cw-container-section-delete"
                         v-if="currentContainer.attributes.payload.sections.length > 1"
                     >
-                    <button class="button trash" @click="deleteSection(index)"><translate>Fach löschen</translate></button>
+                    <button class="button trash" @click.prevent="confirmDeleteSection(index)">{{ $gettext('Fach löschen')}}</button>
                     </label>
                 </fieldset>
             </form>
-            <button class="button add" @click="addSection"><translate>Fach hinzufügen</translate></button>
+        </template>
+        <template v-slot:containerEditButtons>
+            <button class="button add" @click="addSection">{{ $gettext('Fach hinzufügen')}}</button>
         </template>
     </courseware-default-container>
 </template>
@@ -153,7 +163,9 @@ export default {
             processing: false,
             keyboardSelected: null,
             sortInSlots: [],
-            assistiveLive: ''
+            assistiveLive: '',
+            showDeleteDialog: false,
+            currentSection: null,
         };
     },
     computed: {
@@ -223,26 +235,35 @@ export default {
         addSection() {
             this.currentContainer.attributes.payload.sections.push({ name: '', icon: '', blocks: [] });
         },
-        deleteSection(index) {
+        confirmDeleteSection(index) {
+            this.currentSection = index;
+            this.showDeleteDialog = true;
+        },
+        closeDeleteDialog() {
+            this.currentSection = null;
+            this.showDeleteDialog = false;
+        },
+        deleteCurrentSection() {
             if (this.currentContainer.attributes.payload.sections.length === 1) {
                 return;
             }
-            if (this.currentContainer.attributes.payload.sections[index].blocks.length > 0) {
-                if (index === 0) {
+            if (this.currentContainer.attributes.payload.sections[this.currentSection].blocks.length > 0) {
+                if (this.currentSection === 0) {
                     this.currentContainer.attributes.payload.sections[
-                        index + 1
-                    ].blocks = this.currentContainer.attributes.payload.sections[index + 1].blocks.concat(
-                        this.currentContainer.attributes.payload.sections[index].blocks
+                    this.currentSection + 1
+                    ].blocks = this.currentContainer.attributes.payload.sections[this.currentSection + 1].blocks.concat(
+                        this.currentContainer.attributes.payload.sections[this.currentSection].blocks
                     );
                 } else {
                     this.currentContainer.attributes.payload.sections[
-                        index - 1
-                    ].blocks = this.currentContainer.attributes.payload.sections[index - 1].blocks.concat(
-                        this.currentContainer.attributes.payload.sections[index].blocks
+                    this.currentSection - 1
+                    ].blocks = this.currentContainer.attributes.payload.sections[this.currentSection - 1].blocks.concat(
+                        this.currentContainer.attributes.payload.sections[this.currentSection].blocks
                     );
                 }
             }
-            this.currentContainer.attributes.payload.sections.splice(index, 1);
+            this.currentContainer.attributes.payload.sections.splice(this.currentSection, 1);
+            this.closeDeleteDialog();
         },
         async storeContainer() {
             const timeout = setTimeout(() => this.processing = true, 800);

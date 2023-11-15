@@ -47,6 +47,10 @@
                 <template v-slot:dialogContent>
                     <slot name="containerEditDialog"></slot>
                 </template>
+                <template v-slot:dialogButtons>
+                    <slot name="containerEditButtons"></slot>
+                </template>
+
             </studip-dialog>
 
             <studip-dialog
@@ -66,18 +70,18 @@
                         <div class="cw-radioset-wrapper" role="group" aria-labelledby="container-type">
                             <p id="container-type">{{ $gettext('Typ') }}</p>
                             <div class="cw-radioset">
-                                <div 
+                                <div
                                     v-for="(container, index) in containerTypes"
                                     :key="index"
-                                    class="cw-radioset-box" 
+                                    class="cw-radioset-box"
                                     :class="[container.type === changeType ? 'selected' : '']"
                                 >
-                                    <input type="radio" :id="'type-' + container.type" :value="container.type" v-model="changeType" name="container-type"/>    
+                                    <input type="radio" :id="'type-' + container.type" :value="container.type" v-model="changeType" name="container-type"/>
                                     <label :for="'type-' + container.type" >
                                         <div class="label-icon" :class="[container.type, container.type === changeType ? 'selected' : '']"></div>
                                         <p>{{ container.title }}</p>
                                     </label>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -372,7 +376,7 @@ export default {
                     'container-id': this.container.id,
                     'object-type': this.container.type,
                     'object-kind': this.container.attributes['container-type'],
-                    
+
                 }
             };
 
