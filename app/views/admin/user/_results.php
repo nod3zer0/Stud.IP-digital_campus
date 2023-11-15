@@ -241,7 +241,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="11">
+                <td colspan="12">
                         <input style="vertical-align: middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>"
                                data-proxyfor=".check_all" data-activates=".bulkAction">
                         <select name="method" class="bulkAction size-s" required>
