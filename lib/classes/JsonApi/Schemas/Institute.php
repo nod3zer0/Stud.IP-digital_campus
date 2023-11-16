@@ -36,7 +36,7 @@ class Institute extends SchemaProvider
             'street'     => $institute->strasse,
             'phone'      => $institute->telefon,
             'fax'        => $institute->fax,
-            'url'        => $institute->url,
+            'url'        => (string) $institute->url,
             'is-faculty' => $institute->is_fak,
             'mkdate'     => date('c', $institute->mkdate),
             'chdate'     => date('c', $institute->chdate),

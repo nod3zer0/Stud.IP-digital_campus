@@ -19,7 +19,7 @@
  * @property string $fakultaets_id database column
  * @property string $strasse database column
  * @property string $plz database column
- * @property string $url database column
+ * @property I18NString $url database column
  * @property string $telefon database column
  * @property string $email database column
  * @property string $fax database column
@@ -133,7 +133,7 @@ class Institute extends SimpleORMap implements Range
             return Statusgruppen::findAllByRangeId($institute->id, true);
         };
 
-        $config['i18n_fields']['name'] = true;
+        $config['i18n_fields'] = ['name', 'url'];
         $config['registered_callbacks']['after_create'][] = 'setDefaultTools';
 
         parent::configure($config);

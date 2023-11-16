@@ -1,3 +1,16 @@
+<?php
+/**
+ * @var Institute_BasicdataController $controller
+ * @var string $i_view
+ * @var string|null $question
+ * @var Institute $institute
+ * @var bool $may_edit_faculty
+ * @var bool $may_delete
+ * @var Institute[] $faculties
+ * @var array $datafields
+ * @var string $reason_txt
+ */
+?>
 <?= $question ?? '' ?>
 <form method="post" name="edit" action="<?= $controller->url_for('institute/basicdata/store/' . $i_view) ?>" class="default">
     <?= CSRFProtection::tokenTag() ?>
@@ -7,7 +20,7 @@
 
         <label class="col-6">
             <span class="required"><?= _('Name') ?></span>
-            <?= I18N::input('Name', $institute->Name, LockRules::Check($institute->id, 'name') ? ['readonly' => true, 'disabled' => true] : ['required' => true]); ?>
+            <?= I18N::input('Name', $institute->name, LockRules::Check($institute->id, 'name') ? ['readonly' => true, 'disabled' => true] : ['required' => true]); ?>
         </label>
 
         <label class="col-3">
@@ -89,8 +102,7 @@
 
         <label class="col-3">
             <?= _('Homepage') ?>
-            <input type="text" <?= LockRules::Check($institute->id, 'url') ? 'readonly disabled' : '' ?> id="home" name="home"
-                   value="<?= htmlReady(Request::get('home', $institute->url)) ?>">
+            <?= I18N::input('url', $institute->url, LockRules::Check($institute->id, 'url') ? ['readonly' => true, 'disabled' => true] : ['required' => true]); ?>
         </label>
 
     <? if ($GLOBALS['perm']->have_perm('root')): // Select lockrule to apply ?>

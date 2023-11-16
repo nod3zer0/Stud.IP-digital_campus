@@ -184,7 +184,7 @@ class Institute_BasicdataController extends AuthenticatedController
         $institute->strasse         = Request::get('strasse', $institute->strasse);
         // Beware: Despite the name, this contains both zip code AND city name
         $institute->plz             = Request::get('plz', $institute->plz);
-        $institute->url             = Request::get('home', $institute->url);
+        $institute->url             = Request::i18n('url', $institute->url)->trim();
         $institute->telefon         = Request::get('telefon', $institute->telefon);
         $institute->email           = Request::get('email', $institute->email);
         $institute->fax             = Request::get('fax', $institute->fax);
