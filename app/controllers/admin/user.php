@@ -978,6 +978,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function change_password_action($user_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         // mail address did not change, so skip this check
         $GLOBALS['MAIL_VALIDATE_BOX'] = false;
         $UserManagement               = new UserManagement($user_id);
@@ -989,7 +990,7 @@ class Admin_UserController extends AuthenticatedController
             PageLayout::postError(_('Die Änderungen konnten nicht gespeichert werden.'), $details);
         }
         if (Request::int('from_index')) {
-            $this->redirect('admin/user');
+            $this->relocate('admin/user');
         } else {
             $this->redirect('admin/user/edit/' . $user_id);
         }
@@ -1031,7 +1032,7 @@ class Admin_UserController extends AuthenticatedController
         }
 
         if (Request::int('from_index')) {
-            $this->redirect('admin/user');
+            $this->relocate('admin/user');
         } else {
             $this->redirect('admin/user/edit/' . $user_id);
         }
@@ -1044,6 +1045,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function unlock_action($user_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         $user = User::find($user_id);
 
         $user->locked       = 0;
@@ -1063,7 +1065,7 @@ class Admin_UserController extends AuthenticatedController
         }
 
         if (Request::int('from_index')) {
-            $this->redirect('admin/user');
+            $this->relocate('admin/user');
         } else {
             $this->redirect('admin/user/edit/' . $user_id);
         }
@@ -1146,6 +1148,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_studycourse_action($user_id, $fach_id, $abschlus_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         $user_stc = UserStudyCourse::find([$user_id, $fach_id, $abschlus_id]);
         $deleted  = false;
         if ($user_stc) {
@@ -1167,19 +1170,19 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_institute_action($user_id, $institut_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         if ($GLOBALS['perm']->have_studip_perm("admin", $institut_id)) {
             $groups     = GetAllStatusgruppen($institut_id);
             $group_list = GetRoleNames($groups, 0, '', true);
             if (is_array($group_list) && count($group_list) > 0) {
-                $query = "DELETE FROM statusgruppe_user
-                          WHERE statusgruppe_id IN (?) AND user_id = ?";
-                $statement = DBManager::get()->prepare($query);
-                $statement->execute([array_keys($group_list), $user_id]);
+                StatusgruppeUser::deleteBySQL(
+                    "`statusgruppe_id` IN (?) AND `user_id` = ?",
+                    [array_keys($group_list), $user_id]
+                );
             }
 
-            $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
-            $db->execute([$user_id, $institut_id]);
-            if ($db->rowCount() == 1) {
+            $count = InstituteMember::deleteBySQL("`user_id` = ? AND `Institut_id` = ?", [$user_id, $institut_id]);
+            if ($count === 1) {
                 StudipLog::log('INST_USER_DEL', $institut_id, $user_id);
                 NotificationCenter::postNotification('UserInstitutionDidDelete', $institut_id, $user_id);
                 InstituteMember::ensureDefaultInstituteForUser($user_id);
@@ -1203,6 +1206,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_userdomain_action($user_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         $domain_id = Request::get('domain_id');
         UserDomain::find($domain_id)->removeUser($user_id);
         $result = AutoInsert::instance()->saveUser($user_id);
@@ -1221,11 +1225,12 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Reset notfication for user
+     * Reset notification for user
      * @param $user_id
      */
     public function reset_notification_action($user_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         $resetted = CourseMemberNotification::deleteBySQL("user_id = ?", [$user_id]);
         PageLayout::postSuccess(sprintf(_('Die Benachrichtigungseinstellungen für %s Veranstaltungen wurden zurück gesetzt.'), $resetted));
         $this->redirect('admin/user/edit/' . $user_id);
@@ -1237,6 +1242,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function reset_tfa_action($user_id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         if (TFASecret::deleteByUser_id($user_id)) {
             PageLayout::postSuccess(_('Die Zwei-Faktor-Authentifizierung wurde für diese Person deaktiviert.'));
         }
@@ -1688,7 +1694,7 @@ class Admin_UserController extends AuthenticatedController
                 _('Personenaccount entsperren'),
                 $this->url_for("admin/user/unlock/{$this->user->id}"),
                 Icon::create('lock-unlocked')
-            );
+            )->asButton();
         } else {
             $user_actions->addLink(
                 _('Personenaccount sperren'),
@@ -1703,7 +1709,7 @@ class Admin_UserController extends AuthenticatedController
                     _('Passwortlink zusenden'),
                     $this->url_for("admin/user/change_password/{$this->user->id}"),
                     Icon::create('key')
-                );
+                )->asButton();
             }
             $user_actions->addLink(
                 _('Person löschen'),
@@ -1716,7 +1722,7 @@ class Admin_UserController extends AuthenticatedController
                 _('Benachrichtigungen zurücksetzen'),
                 $this->url_for("admin/user/reset_notification/{$this->user->id}"),
                 Icon::create('refresh')
-            );
+            )->asButton();
         }
 
         if ($this->action === 'activities') {
@@ -1724,7 +1730,7 @@ class Admin_UserController extends AuthenticatedController
                 _('Alle Dateien des Nutzers aus Veranstaltungen und Einrichtungen als ZIP herunterladen'),
                 $this->url_for("admin/user/download_user_files/{$this->user->user_id}"),
                 Icon::create('folder-full')
-            );
+            )->asButton();
         }
 
         if ($this->user->id !== $GLOBALS['user']->id && TFASecret::exists($this->user->id)) {
@@ -1732,7 +1738,7 @@ class Admin_UserController extends AuthenticatedController
                 _('Zwei-Faktor-Authentifizierung deaktivieren'),
                 $this->url_for("admin/user/reset_tfa/{$this->user->id}"),
                 Icon::create('code-qr')
-            );
+            )->asButton();
         }
 
         $sidebar->insertWidget($user_actions, 'actions', 'user_actions');

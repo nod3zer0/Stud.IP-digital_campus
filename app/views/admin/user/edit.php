@@ -256,7 +256,7 @@ use Studip\Button, Studip\LinkButton;
            </label>
 
            <label class="col-2">
-                <?= Icon::create('accept', 'accept')->asImg([
+                <?= Icon::create('accept', Icon::ROLE_ACCEPT)->asImg([
                     'id'    => 'pw_success',
                     'style' => 'display: none',
                 ]) ?>
@@ -435,12 +435,14 @@ use Studip\Button, Studip\LinkButton;
                         htmlReady($usc->semester),
                         _('Fachsemester')
                     ) ?>
-                    <a href="<?= $controller->url_for('admin/user/delete_studycourse/' . $user->user_id . '/' . $usc->fach_id . '/' . $usc->abschluss_id) ?>">
-                        <?= Icon::create('trash')->asImg([
+                    <?= Icon::create('trash')->asInput(
+                        [
                             'class' => 'text-bottom',
                             'title' => _('Diesen Studiengang löschen'),
-                        ]) ?>
-                    </a>
+                            'data-confirm' => _('Sind Sie sicher, dass Sie diesen Studiengang löschen wollen?'),
+                            'formaction' => $controller->delete_studycourseURL($user->user_id, $usc->fach_id, $usc->abschluss_id)
+                        ]
+                    )?>
                     <? $versionen = StgteilVersion::findByFachAbschluss($usc->fach_id, $usc->abschluss_id); ?>
                     <? $versionen = array_filter($versionen, function ($ver) {
                         return $ver->hasPublicStatus('genehmigt');
@@ -474,12 +476,14 @@ use Studip\Button, Studip\LinkButton;
                     <?= htmlReady($inst_membership->institute->name) ?>
 
                     <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_membership->institut_id)) : ?>
-                        <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user->user_id . '/' . $inst_membership->institut_id) ?>">
-                            <?= Icon::create('trash')->asImg([
+                        <?= Icon::create('trash')->asInput(
+                            [
                                 'class' => 'text-bottom',
                                 'title' => _('Diese Einrichtung löschen'),
-                            ]) ?>
-                        </a>
+                                'data-confirm' => _('Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?'),
+                                'formaction' => $controller->delete_instituteURL($user->user_id, $inst_membership->institut_id)
+                            ]
+                        )?>
                     <? endif; ?>
                 </li>
             <? endforeach; ?>
@@ -504,7 +508,7 @@ use Studip\Button, Studip\LinkButton;
                 </option>
             <? foreach ($available_institutes as $i) : ?>
                 <? if (InstituteMember::countBySql('user_id = ? AND institut_id = ?', [$user->user_id, $i['Institut_id']]) == 0
-                       && (!($i['is_fak'] && $user->perms == 'admin') || $GLOBALS['perm']->have_perm('root'))
+                       && (!($i['is_fak'] && $user->perms === 'admin') || $GLOBALS['perm']->have_perm('root'))
                 ) : ?>
                     <option class="<?= $i['is_fak'] ? 'nested-item-header' : 'nested-item' ?>"
                             value="<?= htmlReady($i['Institut_id']) ?>">
@@ -533,12 +537,14 @@ use Studip\Button, Studip\LinkButton;
                                 'title' => _('Diese Einrichtung bearbeiten'),
                             ]) ?>
                         </a>
-                        <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user->user_id . '/' . $inst_membership->institut_id) ?>">
-                            <?= Icon::create('trash')->asImg([
+                        <?= Icon::create('trash')->asInput(
+                            [
                                 'class' => 'text-bottom',
                                 'title' => _('Diese Einrichtung löschen'),
-                            ]) ?>
-                        </a>
+                                'data-confirm' => _('Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?'),
+                                'formaction' => $controller->delete_instituteURL($user->user_id, $inst_membership->institut_id)
+                            ]
+                        )?>
                     <? endif; ?>
                 </li>
             <? endforeach; ?>
@@ -547,46 +553,49 @@ use Studip\Button, Studip\LinkButton;
         <? endif;?>
     </fieldset>
 
-    <fieldset>
-        <legend>
-            <?= _('Nutzerdomänen') ?>
-        </legend>
+        <? if (!empty($domains) || !empty($userdomains)) : ?>
+            <fieldset>
+                <legend>
+                    <?= _('Nutzerdomänen') ?>
+                </legend>
 
-        <? if (!empty($domains)) : ?>
-        <label class="col-3">
-            <?= _('Neue Nutzerdomäne') ?>
 
-            <select name="new_userdomain" id="new_userdomain">
-                <option selected value="none"><?= _('-- Bitte Nutzerdomäne auswählen --') ?></option>
-            <? foreach ($domains as $domain) : ?>
-                <option value="<?= $domain->id ?>">
-                    <?= htmlReady(my_substr($domain->name, 0, 50)) ?>
-                </option>
-            <? endforeach ?>
-            </select>
-        </label>
+                <label class="col-3">
+                    <?= _('Neue Nutzerdomäne') ?>
+
+                    <select name="new_userdomain" id="new_userdomain">
+                        <option selected value="none"><?= _('-- Bitte Nutzerdomäne auswählen --') ?></option>
+                    <? foreach ($domains as $domain) : ?>
+                        <option value="<?= $domain->id ?>">
+                            <?= htmlReady(my_substr($domain->name, 0, 50)) ?>
+                        </option>
+                    <? endforeach ?>
+                    </select>
+                </label>
+
+
+                <? if (count($userdomains) > 0): ?>
+                <section class="col-3">
+                    <ol class="default">
+                    <? foreach ($userdomains as $i => $domain): ?>
+                        <li>
+                            <?= htmlReady($domain->name) ?>
+                            <?= Icon::create('trash')->asInput(
+                                [
+                                    'class' => 'text-bottom',
+                                    'title' => _('Aus dieser Nutzerdomäne austragen'),
+                                    'data-confirm' => _('Sind Sie sicher, dass sie die Person aus der Nutzerdomäne austragen wollen?'),
+                                    'formaction' => $controller->delete_userdomainURL($user->id, ['domain_id' => $domain->id])
+                                ]
+                            )?>
+                        </li>
+                    <? endforeach; ?>
+                    </ol>
+                </section>
+                <? endif; ?>
+            </fieldset>
         <? endif ?>
-
-        <? if (count($userdomains) > 0): ?>
-        <section class="col-3">
-            <ol class="default">
-            <? foreach ($userdomains as $i => $domain): ?>
-                <li>
-                    <?= htmlReady($domain->name) ?>
-
-                    <a href="<?= $controller->url_for('admin/user/delete_userdomain/' . $user->id, ['domain_id' => $domain->id]) ?>">
-                        <?= Icon::create('trash')->asImg([
-                            'class' => 'text-bottom',
-                            'title' => _('Aus dieser Nutzerdomäne austragen'),
-                        ]) ?>
-                    </a>
-                </li>
-            <? endforeach; ?>
-            </ol>
-        </section>
-        <? endif; ?>
-    </fieldset>
-    <? endif;  /* $user['perms'] !== 'root' */ ?>
+    <? endif;?>
 
     <? if ($GLOBALS['perm']->have_perm('root') && count(LockRule::findAllByType('user')) > 0) : ?>
     <fieldset>

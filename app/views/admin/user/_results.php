@@ -170,10 +170,13 @@
                         );
 
                         if ($user->locked) {
-                            $actionMenu->addLink(
-                                $controller->url_for("admin/user/unlock/{$user->id}", ['from_index' => 1]),
+                            $actionMenu->addButton(
+                                'unlock',
                                 _('Nutzeraccount entsperren'),
-                                Icon::create('lock-unlocked')
+                                Icon::create('lock-unlocked'),
+                                [
+                                    'formaction' => $controller->url_for("admin/user/unlock/{$user->id}", ['from_index' => 1])
+                                ]
                             );
                         } else {
                             $actionMenu->addLink(
@@ -186,10 +189,13 @@
 
                         if ($user->auth_plugin !== 'preliminary' && ($GLOBALS['perm']->have_perm('root') || $GLOBALS['perm']->is_fak_admin() || !in_array($user->perms, words('root admin')))) {
                             if (!StudipAuthAbstract::CheckField('auth_user_md5.password', $user->auth_plugin)) {
-                                $actionMenu->addLink(
-                                    $controller->url_for("admin/user/change_password/{$user->id}", ['from_index' => 1]),
+                                $actionMenu->addButton(
+                                    'change_password',
                                     _('Passwortlink zusenden'),
-                                    Icon::create('key')
+                                    Icon::create('key'),
+                                    [
+                                        'formaction' => $controller->url_for("admin/user/change_password/{$user->id}", ['from_index' => 1])
+                                    ]
                                 );
                             }
 
