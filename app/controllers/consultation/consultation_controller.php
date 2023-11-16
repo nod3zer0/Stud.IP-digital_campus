@@ -12,12 +12,19 @@ abstract class ConsultationController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
+        $type = 'person';
         if (Request::submitted('username')) {
             $this->range = User::findByUsername(Request::username('username'));
         } elseif (Request::submitted('cid')) {
             $this->range = Context::get();
+            $type = 'object';
         } else {
             $this->range = $GLOBALS['user']->getAuthenticatedUser();
+        }
+
+        if (!$this->range) {
+            $this->redirect($this->not_foundURL($type));
+            return;
         }
 
         if ($this->range instanceof User) {
@@ -45,6 +52,12 @@ abstract class ConsultationController extends AuthenticatedController
                 htmlReady(substr($what, 0, $length))
             );
         };
+    }
+
+    public function not_found_action(string $type): void
+    {
+        $this->type = $type;
+        $this->render_template('consultation/not_found', $this->layout);
     }
 
     protected function activateNavigation($path)

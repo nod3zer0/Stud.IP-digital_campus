@@ -16,6 +16,10 @@ class Consultation_AdminController extends ConsultationController
     {
         parent::before_filter($action, $args);
 
+        if (!$this->range || $action === 'not_found') {
+            return;
+        }
+
         if (!$this->range->isEditableByUser()) {
             $this->redirect('consultation/overview');
             return;
