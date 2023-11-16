@@ -47,7 +47,7 @@ class LikertScale extends QuestionnaireQuestion implements QuestionType
         $questiondata['description'] = \Studip\Markup::markAsHtml(
             \Studip\Markup::purifyHtml($questiondata['description'])
         );
-        $questiondata['statements'] = array_filter($questiondata['statements']);
+        $questiondata['statements'] = array_filter($questiondata['statements'] ?? []);
         return $questiondata;
     }
 
