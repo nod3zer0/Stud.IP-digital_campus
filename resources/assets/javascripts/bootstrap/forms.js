@@ -383,10 +383,10 @@ STUDIP.ready(function () {
         observer.observe($(this).closest(':visible')[0], {
             attributeOldValue: true,
             attributes: true,
-            attributeFilter: ['style', 'class'],
+            attributeFilter: ['style', 'class', 'hidden'],
             characterData: false,
             childList: true,
-            subtree: false
+            subtree: true
         });
 
         $(this).addClass('select2-awaiting');
@@ -394,12 +394,16 @@ STUDIP.ready(function () {
 
     function onDomChange(mutations, observer) {
         mutations.forEach(function(mutation) {
-            if ($('select.select2-awaiting', mutation.target).length > 0) {
-                $('select.select2-awaiting', mutation.target)
-                    .removeClass('select2-awaiting')
-                    .each(function() {
-                        createSelect2(this);
-                    });
+            let targets = Array.from(mutation.target.querySelectorAll('select.select2-awaiting'));
+            if (mutation.target.matches('select.select2-awaiting')) {
+                targets.push(mutation.target);
+            }
+            targets = $(targets).filter(':visible');
+
+            if (targets.length > 0) {
+                targets.removeClass('select2-awaiting').each(function() {
+                    createSelect2(this);
+                });
                 observer.disconnect();
             }
         });
