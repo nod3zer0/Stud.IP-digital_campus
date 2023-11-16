@@ -784,16 +784,24 @@ class UserManagement
     /**
     * Delete an existing user from the database and tidy up
     *
-    * @param    bool delete all documents in course context belonging to the user
-    * @param    bool delete all course content belonging to the user
-    * @param    bool delete all personal documents belonging to the user
-    * @param    bool delete all personal content belonging to the user
-    * @param    bool delete all names identifying the user
-    * @param    bool delete all memberships of the user
+    * @param $delete_documents bool delete all documents in course context belonging to the user
+    * @param $delete_content_from_course bool delete all course content belonging to the user
+    * @param $delete_personal_documents bool delete all personal documents belonging to the user
+    * @param $delete_personal_content bool delete all personal content belonging to the user
+    * @param $delete_names bool delete all names identifying the user
+    * @param $delete_memberships bool delete all memberships of the user
+    * @param bool $send_email_notification bool send an email that the account has been deleted
     * @return   bool Removal successful?
     */
-    public function deleteUser($delete_documents = true, $delete_content_from_course = true, $delete_personal_documents = true, $delete_personal_content = true, $delete_names = true, $delete_memberships = true)
-    {
+    public function deleteUser(
+        bool $delete_documents = true,
+        bool $delete_content_from_course = true,
+        bool $delete_personal_documents = true,
+        bool $delete_personal_content = true,
+        bool $delete_names = true,
+        bool $delete_memberships = true,
+        bool $send_email_notification = true
+    ): bool {
         global $perm;
 
         // Do we have permission to do so?
@@ -1051,7 +1059,10 @@ class UserManagement
             StudipLog::log('USER_DEL', $this->user_data['auth_user_md5.user_id'], null, sprintf('%s %s (%s)', $this->user_data['auth_user_md5.Vorname'], $this->user_data['auth_user_md5.Nachname'], $this->user_data['auth_user_md5.username'])); //log with Vorname Nachname (username) as info string
 
             // Can we reach the email?
-            if ($this->checkMail($this->user_data['auth_user_md5.Email'])) {
+            if (
+                $send_email_notification
+                && $this->checkMail($this->user_data['auth_user_md5.Email'])
+            ) {
                 // include language-specific subject and mailbody
                 $Zeit = strftime('%x, %X');
 
