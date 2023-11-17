@@ -20,6 +20,9 @@ class Course_CoursewareController extends CoursewareController
     {
         parent::before_filter($action, $args);
 
+        if (!Context::get()) {
+            throw new CheckObjectException(_('Sie haben kein Objekt gewählt.'));
+        }
         PageLayout::setTitle(Context::get()->getFullname() . ' - ' . _('Courseware'));
         PageLayout::setHelpKeyword('Basis.Courseware');
 
@@ -44,7 +47,7 @@ class Course_CoursewareController extends CoursewareController
     public function courseware_action($unit_id = null):  void
     {
         global $user;
-        
+
         Navigation::activateItem('course/courseware/unit');
         if ($this->unitsNotFound) {
             PageLayout::postMessage(MessageBox::info(_('Es wurde kein Lernmaterial gefunden.')));
