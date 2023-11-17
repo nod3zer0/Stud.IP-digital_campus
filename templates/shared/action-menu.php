@@ -20,9 +20,9 @@
     </button>
     <div class="action-menu-content">
         <div class="action-menu-title" aria-hidden="true">
-            <?= _('Aktionen') ?>
+            <?= htmlReady($title) ?>
         </div>
-        <ul class="action-menu-list" aria-label="<?= _('Aktionen') ?>">
+        <ul class="action-menu-list" aria-label="<?= htmlReady($title) ?>">
         <? foreach ($actions as $action): ?>
             <li class="action-menu-item <? if (isset($action['attributes']['disabled'])) echo 'action-menu-item-disabled'; ?>">
             <? if ($action['type'] === 'link'): ?>

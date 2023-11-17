@@ -46,12 +46,6 @@
                 >
             <?= _('Veranstaltungstypfilter'); ?>
         </label>
-        <label>
-            <input name="viewFilterActive" type="checkbox" value="1"
-                <?= (!empty($userSelectedElements['viewFilter'])) ? 'checked' : '' ?>
-                >
-            <?= _('Darstellungsfilter'); ?>
-        </label>
     </fieldset>
     <? if ($datafields): ?>
     <fieldset>

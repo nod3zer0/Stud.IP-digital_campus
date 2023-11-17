@@ -38,8 +38,9 @@
                         {{ fields[activeField] }}
                     </template>
                 </th>
-                <th class="actions" style="text-align: center;">
+                <th class="actions">
                     {{ $gettext('Aktion') }}
+                    <studip-action-menu :title="$gettext('Darstellungsfilter')" :items="availableFields" @toggleActiveField="toggleActiveField"></studip-action-menu>
                 </th>
             </tr>
             <tr v-if="buttons.top">
@@ -175,6 +176,17 @@ export default {
         },
         sortedActivatedFields() {
             return Object.keys(this.fields).filter(f => this.activatedFields.includes(f));
+        },
+        availableFields() {
+            return Object.keys(this.fields).map(f => {
+                let state = this.activatedFields.includes(f);
+                return {
+                    label: this.fields[f],
+                    icon: state ? 'checkbox-checked' : 'checkbox-unchecked',
+                    emit: 'toggleActiveField',
+                    emitArguments: f,
+                }
+            });
         },
         loadingIndicator() {
             return STUDIP.ASSETS_URL + 'images/loading-indicator.svg';

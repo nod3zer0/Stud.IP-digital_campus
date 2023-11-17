@@ -1,13 +1,13 @@
 <template>
     <div v-if="shouldCollapse" class="action-menu">
-        <button class="action-menu-icon" :title="title" aria-expanded="false">
+        <button class="action-menu-icon" :title="tooltip" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
         </button>
         <div class="action-menu-content">
             <div class="action-menu-title">
-                {{ $gettext('Aktionen') }}
+                {{ title }}
             </div>
             <ul class="action-menu-list">
                 <li v-for="item in navigationItems" :key="item.id" class="action-menu-item">
@@ -50,6 +50,12 @@ export default {
         context: {
             type: String,
             default: ''
+        },
+        title: {
+            type: String,
+            default() {
+                return this.$gettext('Aktionen');
+            }
         }
     },
     data () {
@@ -122,8 +128,8 @@ export default {
             }
             return Number.parseInt(collapseAt) <= this.items.filter((item) => item.type !== 'separator').length;
         },
-        title () {
-            return this.context ? this.$gettextInterpolate(this.$gettext('Aktionsmenü für %{context}'), {context: this.context}) : this.$gettext('Aktionsmenü');
+        tooltip () {
+            return this.context ? this.$gettextInterpolate(this.$gettext('%{title} für %{context}'), {title: this.title, context: this.context}) : this.title;
         }
     }
 }

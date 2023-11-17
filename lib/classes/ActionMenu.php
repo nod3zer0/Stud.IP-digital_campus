@@ -26,6 +26,7 @@ class ActionMenu
 
     private $actions = [];
     private $attributes = [];
+    private $title;
 
     private $condition_all = null;
     private $condition     = true;
@@ -48,6 +49,7 @@ class ActionMenu
     private function __construct()
     {
         $this->addCSSClass('action-menu');
+        $this->setTitle(_('Aktionen'));
     }
 
     /**
@@ -294,6 +296,7 @@ class ActionMenu
             }
             return $action;
         }, $this->actions);
+        $template->title = $this->title;
         $template->action_menu_title = $this->generateTitle();
         $template->attributes = $this->attributes;
         return $template->render();
@@ -377,6 +380,20 @@ class ActionMenu
     }
 
     /**
+     * Sets the title for the action menu.
+     *
+     * @param string $title display title
+     *
+     * @return ActionMenu instance to allow chaining
+     */
+    public function setTitle(string $title): ActionMenu
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
      * Generates the title of the action menu, including its context, if the context has been set.
      *
      * @return string The title of the action menu.
@@ -385,11 +402,12 @@ class ActionMenu
     {
         if ($this->context) {
             return sprintf(
-                _('Aktionsmenü für %s'),
+                _('%s für %s'),
+                $this->title,
                 $this->context
             );
         } else {
-            return _('Aktionsmenü');
+            return $this->title;
         }
     }
 }

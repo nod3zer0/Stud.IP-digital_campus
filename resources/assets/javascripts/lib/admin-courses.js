@@ -6,14 +6,14 @@ const AdminCourses = {
         $.get(
             STUDIP.URLHelper.getURL('dispatch.php/admin/courses/get_stdgangteil_selector/' + institut_id)
         ).done((widget) => {
-            $('select[name=stgteil_select]').closest('.sidebar-widget').replaceWith(widget);
+            $('select[name=stgteil_select]').closest('label').replaceWith(widget);
         });
 
         //change Dozenten-Filter
         $.get(
             STUDIP.URLHelper.getURL('dispatch.php/admin/courses/get_teacher_selector/' + institut_id)
         ).done((widget) => {
-            $('select[name=teacher_filter]').closest('.sidebar-widget').replaceWith(widget);
+            $('select[name=teacher_filter]').closest('label').replaceWith(widget);
         });
     }
 };

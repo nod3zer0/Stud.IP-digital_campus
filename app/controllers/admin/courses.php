@@ -139,12 +139,32 @@ class Admin_CoursesController extends AuthenticatedController
         /*
             Order of elements:
             * Navigation
+            * actions
             * selected filters (configurable)
             * selected actions widget
-            * actions
             * view filter (configurable)
             * export
         */
+
+        if ($GLOBALS['perm']->have_perm($this->sem_create_perm)) {
+            $actions = new ActionsWidget();
+            $actions->addLink(
+                _('Neue Veranstaltung anlegen'),
+                  URLHelper::getURL('dispatch.php/course/wizard'),
+                  Icon::create('add')
+            )->asDialog('size=50%');
+            $actions->addLink(
+                _('Diese Seitenleiste konfigurieren'),
+                URLHelper::getURL('dispatch.php/admin/courses/sidebar'),
+                Icon::create('admin')
+            )->asDialog();
+
+
+            $sidebar->addWidget($actions, 'links');
+        }
+
+        $filter = new OptionsWidget(_('Filter'));
+        $filter->setId('admin-filter-widget');
 
         /*
             Now draw the configurable elements according
@@ -154,20 +174,22 @@ class Admin_CoursesController extends AuthenticatedController
             $this->setSearchWiget();
         }
         if (!empty($visibleElements['institute'])) {
-            $this->setInstSelector();
+            $filter->addElement($this->getInstSelector());
         }
         if (!empty($visibleElements['semester'])) {
-            $this->setSemesterSelector();
+            $filter->addElement($this->getSemesterSelector());
         }
         if (!empty($visibleElements['stgteil'])) {
-            Sidebar::Get()->addWidget($this->getStgteilSelector(), 'filter_stgteil');
+            $filter->addElement($this->getStgteilSelector());
         }
         if (!empty($visibleElements['courseType'])) {
-            $this->setCourseTypeWidget();
+            $filter->addElement($this->getCourseTypeWidget());
         }
         if (!empty($visibleElements['teacher'])) {
-            Sidebar::Get()->addWidget($this->getTeacherWidget(), 'filter_teacher');
+            $filter->addElement($this->getTeacherWidget());
         }
+
+        $sidebar->addWidget($filter, 'filter');
 
         //if there are datafields in the list, draw their input fields, too:
         if (!empty($visibleElements['datafields'])) {
@@ -192,33 +214,8 @@ class Admin_CoursesController extends AuthenticatedController
             }
         }
 
-
         //this shall be visible in every case:
         $this->setActionsWidget();
-
-
-        //actions: always visible, too
-        if ($GLOBALS['perm']->have_perm($this->sem_create_perm)) {
-            $actions = new ActionsWidget();
-            $actions->addLink(
-                _('Neue Veranstaltung anlegen'),
-                  URLHelper::getURL('dispatch.php/course/wizard'),
-                  Icon::create('add')
-            )->asDialog('size=50%');
-            $actions->addLink(
-                _('Diese Seitenleiste konfigurieren'),
-                URLHelper::getURL('dispatch.php/admin/courses/sidebar'),
-                Icon::create('admin')
-            )->asDialog();
-
-
-            $sidebar->addWidget($actions, 'links');
-        }
-
-        //the view filter's visibility is configurable:
-        if (in_array('viewFilter', $visibleElements)) {
-            $this->setViewWidget($this->view_filter);
-        }
 
         //"export as Excel" is always visible:
         if ($this->sem_create_perm) {
@@ -807,7 +804,6 @@ class Admin_CoursesController extends AuthenticatedController
             $stgteilActive = Request::get('stgteilActive');
             $courseTypeActive = Request::get('courseTypeActive');
             $teacherActive = Request::get('teacherActive');
-            $viewFilterActive = Request::get('viewFilterActive');
             $activeDatafields = Request::getArray('activeDatafields');
 
             /*
@@ -832,9 +828,6 @@ class Admin_CoursesController extends AuthenticatedController
             }
             if ($teacherActive) {
                 $activeArray['teacher'] = true;
-            }
-            if ($viewFilterActive) {
-                $activeArray['viewFilter'] = true;
             }
 
             if ($activeDatafields) {
@@ -862,13 +855,13 @@ class Admin_CoursesController extends AuthenticatedController
     public function get_stdgangteil_selector_action($institut_id)
     {
         $selector = $this->getStgteilSelector($institut_id);
-        $this->render_text($selector->render(['base_class' => 'sidebar']));
+        $this->render_text($selector->render());
     }
 
     public function get_teacher_selector_action($institut_id)
     {
         $selector = $this->getTeacherWidget($institut_id);
-        $this->render_text($selector->render(['base_class' => 'sidebar']));
+        $this->render_text($selector->render());
     }
 
 
@@ -1594,61 +1587,27 @@ class Admin_CoursesController extends AuthenticatedController
         });
     }
 
-
-    /**
-     * Adds view filter to the sidebar
-     * @param array $configs
-     */
-    private function setViewWidget()
-    {
-        $configs         = $this->getFilterConfig();
-        $checkbox_widget = new OptionsWidget();
-        $checkbox_widget->setTitle(_('Darstellungsfilter'));
-
-        foreach ($this->getViewFilters() as $index => $label) {
-            $state = in_array($index, $configs);
-            $checkbox_widget->addCheckbox(
-                $label,
-                $state,
-                $this->url_for('admin/courses/set_view_filter/' . $index . '/' . $state),
-                null,
-                ['onclick' => "$(this).toggleClass(['options-checked', 'options-unchecked']); $(this).attr('aria-checked', $(this).hasClass('options-checked') ? 'true' : 'false'); STUDIP.AdminCourses.App.toggleActiveField('".$index."'); return false;"]
-            );
-        }
-        Sidebar::get()->addWidget($checkbox_widget, 'views');
-    }
-
     /**
      * Adds the institutes selector to the sidebar
      */
-    private function setInstSelector()
+    private function getInstSelector()
     {
-        $sidebar = Sidebar::Get();
-        $list = new SelectWidget(
-            _('Einrichtung'),
-            $this->url_for('admin/courses/set_selection'),
-            'institute'
-        );
-        $list->class = 'institute-list';
+        $list = [];
 
         if ($GLOBALS['perm']->have_perm('root') || (count($this->insts) > 1)) {
-            $list->addElement(new SelectElement(
+            $list[] = new SelectElement(
                 '',
-                $GLOBALS['perm']->have_perm('root') ? _('Alle') : _('Alle meine Einrichtungen'),
-                !$GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT),
-                'select-all'
+                $GLOBALS['perm']->have_perm('root') ? _('Alle') : _('Alle meine Einrichtungen')
             );
         }
 
         foreach ($this->insts as $institut) {
-            $list->addElement(
+            $list[] =
                 new SelectElement(
                     $institut['Institut_id'],
                     (!$institut['is_fak'] ? ' ' : '') . $institut['Name'],
                     $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === $institut['Institut_id']
-                ),
-                'select-' . $institut['Institut_id']
-            );
+                );
 
             //check if the institute is a faculty.
             //If true, then add another option to display all courses
@@ -1656,66 +1615,62 @@ class Admin_CoursesController extends AuthenticatedController
 
             //$institut is an array, we can't use the method isFaculty() here!
             if ($institut['fakultaets_id'] === $institut['Institut_id']) {
-                $list->addElement(
+                $list[] =
                     new SelectElement(
                         $institut['Institut_id'] . '_withinst', //_withinst = with institutes
                         ' ' . $institut['Name'] . ' +' . _('Institute'),
                         ($GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT === $institut['Institut_id'] && $GLOBALS['user']->cfg->MY_INSTITUTES_INCLUDE_CHILDREN)
-                    ),
-                    'select-' . $institut['Name'] . '-with_institutes'
-                );
+                    );
             }
         }
-        $list->setOnSubmitHandler("STUDIP.AdminCourses.changeFiltersDependendOnInstitute($(this).find('select').val()); return false;");
 
-        $sidebar->addWidget($list, 'filter_institute');
+        return new SelectListElement(_('Einrichtung'), 'institute', $list, false, ['class' => 'institute-list', 'onchange' => "STUDIP.AdminCourses.changeFiltersDependendOnInstitute($(this).val()); return false;"], false);
     }
 
     /**
      * Adds the semester selector to the sidebar
      */
-    private function setSemesterSelector()
+    private function getSemesterSelector()
     {
         $semesters = array_reverse(Semester::getAll());
-        $sidebar = Sidebar::Get();
-        $list = new SelectWidget(_('Semester'), $this->url_for('admin/courses/set_selection'), 'sem_select');
-        $list->addElement(new SelectElement('', _('Alle')), 'sem_select-all');
+        $list = [];
+        $list[] = new SelectElement('', _('Alle'));
         foreach ($semesters as $semester) {
-            $list->addElement(new SelectElement(
+            $list[] = new SelectElement(
                 $semester->id,
                 $semester->name,
                 $semester->id === $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE
-            ), 'sem_select-' . $semester->id);
+            );
         }
-        $list->setOnSubmitHandler("STUDIP.AdminCourses.App.changeFilter({semester_id: $(this).find('select').val()}); return false;");
 
-        $sidebar->addWidget($list, 'filter_semester');
+        return new SelectListElement(_('Semester'), 'sem_select', $list, false, ['onchange' => "STUDIP.AdminCourses.App.changeFilter({semester_id: $(this).val()}); return false;"], false);
     }
 
-        /**
+    /**
      * Adds the studiengangteil selector to the sidebar
      */
     private function getStgteilSelector($institut_id = null)
     {
         $institut_id = $institut_id ?: $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
         $stgteile = StudiengangTeil::getAllEnriched('fach_name', 'ASC', ['mvv_fach_inst.institut_id' => $institut_id]);
-        $list = new SelectWidget(_('Studiengangteil'), $this->url_for('admin/courses/set_selection'), 'stgteil_select');
+        $list = [];
         if (!$institut_id || $institut_id === 'all') {
-            $list->addElement(new SelectElement('', _('Wählen Sie eine Einrichtung') ), 'stgteil_select-all');
-        } elseif (count($stgteile) === 0) {
-                $list->addElement(new SelectElement('', _('Keine Studiengangteile zu der gewählten Einrichtung') ), 'stgteil_select-all');
+            $list[] = new SelectElement('', _('Wählen Sie eine Einrichtung'));
+        } else if (count($stgteile) === 0) {
+            $list[] = new SelectElement('', _('Keine Studiengangteile zu der gewählten Einrichtung'));
         } else {
-            $list->addElement(new SelectElement('', _('Alle')), 'stgteil_select-all');
+            $list[] = new SelectElement('', _('Alle'));
         }
+
         foreach ($stgteile as $stgteil) {
-            $list->addElement(new SelectElement(
+            $list[] = new SelectElement(
                 $stgteil->id,
                 $stgteil->getDisplayName(),
                 $stgteil->id === $GLOBALS['user']->cfg->MY_COURSES_SELECTED_STGTEIL
-            ), 'stgteil_select-' . $stgteil->id);
+            );
         }
-        $list->setOnSubmitHandler("STUDIP.AdminCourses.App.changeFilter({stgteil: $(this).find('select').val()}); return false;");
-        return $list;
+
+        return new SelectListElement(_('Studiengangteil'), 'stgteil_select', $list, false, ['onchange' => "STUDIP.AdminCourses.App.changeFilter({stgteil: $(this).val()}); return false;"], false);
     }
 
 
@@ -1747,21 +1702,12 @@ class Admin_CoursesController extends AuthenticatedController
      * @param string $selected
      * @param array $params
      */
-    private function setCourseTypeWidget()
+    private function getCourseTypeWidget()
     {
-        $sidebar = Sidebar::get();
-        $this->url = $this->url_for('admin/courses/set_course_type');
-        $this->types = [];
-        $this->selected = $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER;
-
-        $list = new SelectWidget(
-            _('Veranstaltungstypfilter'),
-            $this->url_for('admin/courses/set_course_type'),
-            'course_type'
+        $list = [];
+        $list[] = new SelectElement(
+            '', _('Alle')
         );
-        $list->addElement(new SelectElement(
-            '', _('Alle'), !$GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER
-        ), 'course-type-all');
         foreach ($GLOBALS['SEM_CLASS'] as $class_id => $class) {
             if ($class['studygroup_mode']) {
                 continue;
@@ -1772,10 +1718,7 @@ class Admin_CoursesController extends AuthenticatedController
                 $class['name'],
                 $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER === (string)$class_id
             );
-            $list->addElement(
-                $element->setAsHeader(),
-                'course-type-' . $class_id
-            );
+            $list[] = $element->setAsHeader();
 
             foreach ($class->getSemTypes() as $id => $result) {
                 $element = new SelectElement(
@@ -1783,14 +1726,11 @@ class Admin_CoursesController extends AuthenticatedController
                     $result['name'],
                     $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER === $class_id . '_' . $id
                 );
-                $list->addElement(
-                    $element->setIndentLevel(1),
-                    'course-type-' . $class_id . '_' . $id
-                );
+                $list[] = $element->setIndentLevel(1);
             }
         }
-        $list->setOnSubmitHandler("STUDIP.AdminCourses.App.changeFilter({course_type: $(this).find('select').val()}); return false;");
-        $sidebar->addWidget($list, 'filter-course-type');
+
+        return new SelectListElement(_('Veranstaltungstypfilter'), 'course_type', $list, false, ['onchange' => "STUDIP.AdminCourses.App.changeFilter({course_type: $(this).val()}); return false;"], false);
     }
 
     /**
@@ -1821,24 +1761,24 @@ class Admin_CoursesController extends AuthenticatedController
         );
 
 
-        $list = new SelectWidget(_('Lehrendenfilter'), $this->url_for('admin/courses/index'), 'teacher_filter');
+        $list = [];
         if (!$institut_id || $institut_id === 'all') {
-            $list->addElement(new SelectElement('', _('Wählen Sie eine Einrichtung') ), 'teacher_filter-all');
-        } elseif (count($teachers) === 0) {
-            $list->addElement(new SelectElement('', _('Keine Lehrenden in der gewählten Einrichtung') ), 'teacher_filter-all');
+            $list[] = new SelectElement('', _('Wählen Sie eine Einrichtung'));
+        } else if (count($teachers) === 0) {
+            $list[] = new SelectElement('', _('Keine Lehrenden in der gewählten Einrichtung'));
         } else {
-            $list->addElement(new SelectElement('', _('Alle')), 'teacher_filter-all');
+            $list[] = new SelectElement('', _('Alle'));
         }
 
         foreach ($teachers as $teacher) {
-            $list->addElement(new SelectElement(
+            $list[] = new SelectElement(
                 $teacher['user_id'],
                 $teacher['fullname'],
                 $GLOBALS['user']->cfg->ADMIN_COURSES_TEACHERFILTER === $teacher['user_id']
-            ), 'teacher_filter-' . $teacher['user_id']);
+            );
         }
-        $list->setOnSubmitHandler("STUDIP.AdminCourses.App.changeFilter({teacher_filter: $(this).find('select').val()}); return false;");
-        return $list;
+
+        return new SelectListElement(_('Lehrendenfilter'), 'teacher_filter', $list, false, ['onchange' => "STUDIP.AdminCourses.App.changeFilter({teacher_filter: $(this).val()}); return false;"], false);
     }
 
     /**
@@ -1918,7 +1858,6 @@ class Admin_CoursesController extends AuthenticatedController
             'stgteil' => true,
             'courseType' => true,
             'teacher' => true,
-            'viewFilter' => true
         ];
     }
 
