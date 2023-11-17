@@ -393,15 +393,18 @@ class Admin_UserController extends AuthenticatedController
         if ($user_id === null) {
             if (Request::option('user')) {
                 $user_id = Request::option('user');
-            } else {
-                PageLayout::postInfo(_('Sie haben niemanden ausgewählt!'));
-                //liste wieder anzeigen
-                $this->redirect('admin/user/');
-                return;
             }
         }
 
         $this->user = User::find($user_id);
+
+        if (!$this->user) {
+            PageLayout::postInfo(_('Sie haben niemanden ausgewählt!'));
+            //liste wieder anzeigen
+            $this->redirect('admin/user/');
+            return;
+        }
+
         $this->user_roles = $this->user->getRoles();
 
         // Änderungen speichern
