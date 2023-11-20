@@ -324,6 +324,9 @@ class Oer_EndpointsController extends StudipController
         }
         page_close();
 
+        if (!file_exists($this->material->getFilePath())) {
+            throw new Exception(_('Die gewünschte Datei konnte nicht gefunden werden.'));
+        }
         $filesize = filesize($this->material->getFilePath());
         header("Accept-Ranges: bytes");
         $start = 0;
