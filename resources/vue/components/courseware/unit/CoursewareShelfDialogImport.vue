@@ -66,7 +66,7 @@
                         <textarea v-model="modifiedData.description" :placeholder="loadedDescription" required />
                     </label>
                 </form>
-                <courseware-companion-box 
+                <courseware-companion-box
                     v-else
                     :msgCompanion="$gettext('Bitte wählen Sie ein Import-Archiv aus.')"
                     mood="unsure"
@@ -82,7 +82,7 @@
         >
             <template v-slot:dialogContent>
                 <div role="status" aria-live="polite">
-                    <courseware-companion-box 
+                    <courseware-companion-box
                         v-show="importDone && importErrors.length === 0"
                         :msgCompanion="$gettext('Import erfolgreich!')"
                         mood="special"
@@ -183,7 +183,7 @@ export default {
             importStructuresProgress: 'importStructuresProgress',
             importErrors: 'importErrors',
             lastCreateCoursewareUnit: 'courseware-units/lastCreated',
-            
+
         }),
         colors() {
             return this.mixinColors.filter(color => color.darkmode);
@@ -192,6 +192,10 @@ export default {
             return this.importFilesProgress === 100;
         },
         importDone() {
+            if (!this.importZipFile) {
+                this.setImportFilesProgress(0);
+                this.setImportStructuresProgress(0);
+            }
             return this.importFilesProgress === 100 && this.importStructuresProgress === 100;
         },
         hasValidFile() {
@@ -216,7 +220,7 @@ export default {
         }),
         setImport(event) {
             this.importZipFile = event.target.files[0];
-            this.loadZipData(); 
+            this.loadZipData();
         },
 
         async loadZipData() {
@@ -240,7 +244,7 @@ export default {
                     this.archiveErrors.push(this.$gettext('Beim laden des Archivs ist ein Fehler aufgetreten. Vermutlich ist das Archiv beschädigt.'));
                     filesError = true;
                 }
-                
+
                 if (this.zip) {
                     if (this.zip.file('courseware.json') === null) {
                         this.archiveErrors.push(this.$gettext('Das Archiv enthält keine courseware.json Datei.'));

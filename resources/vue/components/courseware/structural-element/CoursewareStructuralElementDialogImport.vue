@@ -23,7 +23,7 @@
             </label>
             </form>
             <div role="status" aria-live="polite">
-                <courseware-companion-box 
+                <courseware-companion-box
                     v-show="importDone && importErrors.length === 0"
                     :msgCompanion="$gettext('Import erfolgreich!')"
                     mood="special"
@@ -111,6 +111,10 @@ export default {
             return this.importFilesProgress === 100;
         },
         importDone() {
+            if (!this.importZipFile) {
+                this.setImportFilesProgress(0);
+                this.setImportStructuresProgress(0);
+            }
             return (this.importFilesProgress === 100 && this.importStructuresProgress === 100);
         }
     },
