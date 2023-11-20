@@ -96,19 +96,19 @@ class SiteinfoController extends StudipController
     {
         $sidebar = Sidebar::get();
 
-        if (!$GLOBALS['rubrics_empty']) {
+        if (empty($GLOBALS['rubrics_empty'])) {
             $actions = new ActionsWidget();
             $actions->setTitle(_('Seiten-Aktionen'));
 
             if ($this->currentrubric) {
                 $actions->addLink(_('Neue Seite anlegen'),
-                                  $this->url_for('siteinfo/new/' . $this->currentrubric), Icon::create('add', 'clickable'));
+                                  $this->url_for('siteinfo/new/' . $this->currentrubric), Icon::create('add'));
             }
             if ($this->currentdetail) {
                 $actions->addLink(_('Seite bearbeiten'),
-                                  $this->url_for('siteinfo/edit/' . $this->currentrubric . '/' . $this->currentdetail), Icon::create('edit', 'clickable'));
+                                  $this->url_for('siteinfo/edit/' . $this->currentrubric . '/' . $this->currentdetail), Icon::create('edit'));
                 $actions->addLink(_('Seite löschen'),
-                                  $this->url_for('siteinfo/delete/' . $this->currentrubric . '/' . $this->currentdetail), Icon::create('trash', 'clickable'));
+                                  $this->url_for('siteinfo/delete/' . $this->currentrubric . '/' . $this->currentdetail), Icon::create('trash'));
             }
 
             $sidebar->addWidget($actions);
@@ -119,12 +119,12 @@ class SiteinfoController extends StudipController
         $actions->setTitle(_('Rubrik-Aktionen'));
 
         $actions->addLink(_('Neue Rubrik anlegen'),
-                          $this->url_for('siteinfo/new'), Icon::create('add', 'clickable'));
+                          $this->url_for('siteinfo/new'), Icon::create('add'));
         if ($this->currentrubric) {
             $actions->addLink(_('Rubrik bearbeiten'),
-                              $this->url_for('siteinfo/edit/' . $this->currentrubric), Icon::create('edit', 'clickable'));
+                              $this->url_for('siteinfo/edit/' . $this->currentrubric), Icon::create('edit'));
             $actions->addLink(_('Rubrik löschen'),
-                              $this->url_for('siteinfo/delete/' . $this->currentrubric), Icon::create('trash', 'clickable'));
+                              $this->url_for('siteinfo/delete/' . $this->currentrubric), Icon::create('trash'));
         }
 
         $sidebar->addWidget($actions);
@@ -144,6 +144,7 @@ class SiteinfoController extends StudipController
 
     public function new_action($givenrubric = null)
     {
+        $this->edit_rubric = false;
         if ($givenrubric === null) {
             Navigation::addItem('/footer/siteinfo/rubric_new',
                                 new AutoNavigation(_('Neue Rubrik'),
@@ -159,6 +160,7 @@ class SiteinfoController extends StudipController
 
     public function edit_action($givenrubric = null, $givendetail = null)
     {
+        $this->edit_rubric = false;
         if (is_numeric($givendetail)) {
             $this->rubrics      = $this->si->get_all_rubrics();
             $this->rubric_id    = $this->si->rubric_for_detail($this->currentdetail);
