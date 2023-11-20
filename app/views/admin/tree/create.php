@@ -3,7 +3,7 @@
         <label>
             <?= _('Name') ?>
             <input type="text" name="name"
-                   placeholder="<?= _('Name des Eintrags (wird bei Zuweisung zu einer Stud.IP-Einrichtung überschrieben)') ?>">
+                   placeholder="<?= get_class($node) === RangeTreeNode::class ? _('Name des Eintrags (wird bei Zuweisung zu einer Stud.IP-Einrichtung überschrieben)') : _('Name des Eintrags') ?>">
         </label>
     </section>
     <? if (get_class($node) === StudipStudyArea::class): ?>
@@ -34,12 +34,14 @@
             <?= $treesearch->render() ?>
         </label>
     </section>
+    <? if (get_class($node) === RangeTreeNode::class): ?>
     <section>
         <label>
             <?= _('Zu einer Stud.IP-Einrichtung zuordnen') ?>
             <?= $instsearch->render() ?>
         </label>
     </section>
+    <? endif ?>
     <input type="hidden" name="from" value="<?= htmlReady($from) ?>">
     <?= CSRFProtection::tokenTag() ?>
     <footer data-dialog-button>
