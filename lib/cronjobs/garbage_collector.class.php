@@ -123,10 +123,7 @@ class GarbageCollectorJob extends CronJob
             AND `folders`.`chdate` < UNIX_TIMESTAMP(DATE_ADD(NOW(),INTERVAL -2 HOUR))
             AND ((`mvv_files_ranges`.`range_type` = 'Studiengang' AND `mvv_files_ranges`.`range_id` NOT IN ( SELECT `studiengang_id` FROM `mvv_studiengang`))
             OR (`mvv_files_ranges`.`range_type` = 'AbschlussKategorie' AND `mvv_files_ranges`.`range_id` NOT IN ( SELECT `kategorie_id` FROM `mvv_abschl_kategorie`))
-            OR (`mvv_files_ranges`.`range_type` = 'StgteilVersion' AND `mvv_files_ranges`.`range_id` NOT IN ( SELECT `version_id` FROM `mvv_stgteilversion`)))",
-            [
-                'user_id' => $GLOBALS['user']->id
-            ]
+            OR (`mvv_files_ranges`.`range_type` = 'StgteilVersion' AND `mvv_files_ranges`.`range_id` NOT IN ( SELECT `version_id` FROM `mvv_stgteilversion`)))"
         );
         if ($unsent_mvv_folders) {
             $db->exec("DELETE FROM mvv_files_filerefs WHERE fileref_id NOT IN (SELECT id FROM file_refs)");
