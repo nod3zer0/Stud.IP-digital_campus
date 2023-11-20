@@ -1,23 +1,23 @@
 <?php
 /**
- * @var string $title
+ * @var string|null $title
  * @var string $base_class
  * @var array $additional_attributes
  * @var string|null $extra
- * @var string $content
+ * @var string $content_for_layout
  */
 
 $css_classes = $layout_css_classes ?? [];
 $css_classes[] = "{$base_class}-widget";
 
-if ($title && isset($extra)) {
+if (!empty($title) && isset($extra)) {
     $css_classes[] = 'sidebar-widget-has-extra';
 }
 
 $additional_attributes['class'] = implode(' ', $css_classes);
 ?>
 <div <?= arrayToHtmlAttributes($additional_attributes) ?>>
-<? if ($title): ?>
+<? if (!empty($title)): ?>
     <div class="<?= $base_class ?>-widget-header">
         <?= htmlReady($title) ?>
     </div>
