@@ -91,7 +91,7 @@ class SemBrowse {
         if (
             Request::get('keep_result_set')
             || !empty($this->sem_browse_data['sset'])
-            || (!empty($this->sem_browse_data['search_result']) && $this->sem_browse_data['show_entries'])
+            || (!empty($this->sem_browse_data['search_result']) && !empty($this->sem_browse_data['show_entries']))
         ) {
             $this->show_result = true;
         }
@@ -437,7 +437,7 @@ class SemBrowse {
                 }
                 switch ($this->sem_browse_data['group_by'] ?? null) {
                     case 0:
-                        echo htmlReady($this->search_obj->sem_dates[$group_field]['name']);
+                        echo htmlReady($this->search_obj->sem_dates[$group_field]['name'] ?? '');
                         break;
                     case 1:
                         if ($the_tree->tree_data[$group_field]) {
