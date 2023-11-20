@@ -6,10 +6,18 @@
         :src="url"
         :width="size"
         :height="size"
+        :role="ariaRole"
         v-bind="$attrs"
         v-on="$listeners"
     />
-    <img v-else :src="url" :width="size" :height="size" v-bind="$attrs" v-on="$listeners" />
+    <img v-else
+         :src="url"
+         :width="size"
+         :height="size"
+         :role="ariaRole"
+         v-bind="$attrs"
+         v-on="$listeners"
+    />
 </template>
 
 <script lang="ts">
@@ -18,20 +26,24 @@ import Vue from 'vue';
 export default Vue.extend({
     name: 'studip-icon',
     props: {
-        shape: String,
+        ariaRole: {
+            type: String,
+            required: false,
+        },
+        name: {
+            type: String,
+            required: false,
+        },
         role: {
             type: String,
             required: false,
             default: 'clickable',
         },
+        shape: String,
         size: {
             type: Number,
             required: false,
             default: 16,
-        },
-        name: {
-            type: String,
-            required: false,
         },
     },
     computed: {
