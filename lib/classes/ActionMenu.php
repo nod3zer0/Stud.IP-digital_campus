@@ -208,6 +208,44 @@ class ActionMenu
     }
 
     /**
+     * Adds a checkbox to the list of actions.
+     *
+     * @param String $name       Input name
+     * @param String $label      Label displayed in the menu
+     * @param bool   $checked    Checked state of the action
+     * @param array  $attributes Optional attributes to add to the button
+     * @return ActionMenu instance to allow chaining
+     */
+    public function addCheckbox($name, $label, bool $checked, array $attributes = [])
+    {
+        return $this->addButton(
+            $name,
+            $label,
+            Icon::create($checked ? 'checkbox-checked' : 'checkbox-unchecked'),
+            $attributes + ['role' => 'checkbox', 'aria-checked' => $checked ? 'true' : 'false']
+        );
+    }
+
+    /**
+     * Adds a radio button to the list of actions.
+     *
+     * @param String $name       Input name
+     * @param String $label      Label displayed in the menu
+     * @param bool   $checked    Checked state of the action
+     * @param array  $attributes Optional attributes to add to the button
+     * @return ActionMenu instance to allow chaining
+     */
+    public function addRadioButton($name, $label, bool $checked, array $attributes = [])
+    {
+        return $this->addButton(
+            $name,
+            $label,
+            Icon::create($checked ? 'radiobutton-checked' : 'radiobutton-unchecked'),
+            $attributes + ['role' => 'radio', 'aria-checked' => $checked ? 'true' : 'false']
+        );
+    }
+
+    /**
      * Adds a MultiPersonSearch object to the list of actions.
      *
      * @param MultiPersonSearch $mp MultiPersonSearch object

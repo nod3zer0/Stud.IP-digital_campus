@@ -17,13 +17,21 @@
                         <span v-else class="action-menu-no-icon"></span>
                         {{ item.label }}
                     </a>
-                    <label v-else-if="item.icon" class="undecorated" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
-                        <studip-icon :shape="item.icon.shape" :role="item.icon.role" :name="item.name" :title="item.label" v-bind="item.attributes ?? {}"></studip-icon>
+                    <label v-else-if="item.type === 'checkbox'" class="undecorated" v-on="linkEvents(item)">
+                        <studip-icon :shape="item.checked ? 'checkbox-checked' : 'checkbox-unchecked'" :role="item.icon.role" :name="item.name" :title="item.label" aria-role="checkbox" :aria-checked="item.checked.toString()" v-bind="linkAttributes(item)"></studip-icon>
+                        {{ item.label }}
+                    </label>
+                    <label v-else-if="item.type === 'radio'" class="undecorated" v-on="linkEvents(item)">
+                        <studip-icon :shape="item.checked ? 'radiobutton-checked' : 'radiobutton-unchecked'" :role="item.icon.role" :name="item.name" :title="item.label" aria-role="radio" :aria-checked="item.checked.toString()" v-bind="linkAttributes(item)"></studip-icon>
+                        {{ item.label }}
+                    </label>
+                    <label v-else-if="item.icon" class="undecorated" v-on="linkEvents(item)">
+                        <studip-icon :shape="item.icon.shape" :role="item.icon.role" :name="item.name" :title="item.label" v-bind="linkAttributes(item)"></studip-icon>
                         {{ item.label }}
                     </label>
                     <template v-else>
                         <span class="action-menu-no-icon"></span>
-                        <button :name="item.name" v-bind="Object.assign(item.attributes ?? {}, linkAttributes(item))" v-on="linkEvents(item)">
+                        <button :name="item.name" v-bind="linkAttributes(item)" v-on="linkEvents(item)">
                             {{ item.label }}
                         </button>
                     </template>
@@ -114,6 +122,7 @@ export default {
                     classes: classes.trim(),
                     attributes: item.attributes || {},
                     disabled: item.disabled,
+                    checked: item.checked,
                 };
             });
         },

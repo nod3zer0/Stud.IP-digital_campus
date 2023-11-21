@@ -179,10 +179,11 @@ export default {
         },
         availableFields() {
             return Object.keys(this.fields).map(f => {
-                let state = this.activatedFields.includes(f);
                 return {
+                    type: 'checkbox',
                     label: this.fields[f],
-                    icon: state ? 'checkbox-checked' : 'checkbox-unchecked',
+                    checked: this.activatedFields.includes(f),
+                    name: 'activatedFields',
                     emit: 'toggleActiveField',
                     emitArguments: f,
                 }
