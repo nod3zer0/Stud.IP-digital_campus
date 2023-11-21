@@ -294,28 +294,17 @@ class Admin_UserController extends AuthenticatedController
                 //if deleting user, go back to mainpage
                 $parent = '';
 
-                //deactivate message
-                if (!Request::int('mail')) {
-                    $dev_null       = new blackhole_message_class();
-                    $default_mailer = StudipMail::getDefaultTransporter();
-                    StudipMail::setDefaultTransporter($dev_null);
-                }
                 //preparing delete
                 $umanager = new UserManagement();
                 $umanager->getFromDatabase($user_id);
 
                 //delete
-                if ($umanager->deleteUser($delete_documents, $delete_content_from_course, $delete_personal_documents, $delete_personal_content, $delete_names, $delete_memberships)) {
+                if ($umanager->deleteUser($delete_documents, $delete_content_from_course, $delete_personal_documents, $delete_personal_content, $delete_names, $delete_memberships, !Request::bool('mail'))) {
                     $details = explode('§', str_replace(['msg§', 'info§', 'error§'], '', mb_substr($umanager->msg, 0, -1)));
                     PageLayout::postSuccess(htmlReady(sprintf(_('"%s (%s)" wurde erfolgreich gelöscht.'), $user->getFullName(), $user->username)), $details);
                 } else {
                     $details = explode('§', str_replace(['msg§', 'info§', 'error§'], '', mb_substr($umanager->msg, 0, -1)));
                     PageLayout::postError(htmlReady(sprintf(_('Fehler! "%s (%s)" konnte nicht gelöscht werden.'), $user->getFullName(), $user->username)), $details);
-                }
-
-                //reavtivate messages
-                if (!Request::int('mail') && isset($default_mailer)) {
-                    StudipMail::setDefaultTransporter($default_mailer);
                 }
 
                 //sicherheitsabfrage
@@ -340,13 +329,6 @@ class Admin_UserController extends AuthenticatedController
             if (Request::submitted('delete')) {
                 CSRFProtection::verifyUnsafeRequest();
 
-                //deactivate message
-                if (!Request::int('mail')) {
-                    $dev_null       = new blackhole_message_class();
-                    $default_mailer = StudipMail::getDefaultTransporter();
-                    StudipMail::setDefaultTransporter($dev_null);
-                }
-
                 foreach ($user_ids as $i => $_user_id) {
                     $users[$i] = User::find($_user_id);
                     //preparing delete
@@ -354,7 +336,7 @@ class Admin_UserController extends AuthenticatedController
                     $umanager->getFromDatabase($_user_id);
 
                     //delete
-                    if ($umanager->deleteUser($delete_documents, $delete_content_from_course, $delete_personal_documents, $delete_personal_content, $delete_names, $delete_memberships)) {
+                    if ($umanager->deleteUser($delete_documents, $delete_content_from_course, $delete_personal_documents, $delete_personal_content, $delete_names, $delete_memberships, !Request::bool('mail'))) {
                         $details = explode('§', str_replace(['msg§', 'info§', 'error§'], '', mb_substr($umanager->msg, 0, -1)));
                         PageLayout::postSuccess(htmlReady(sprintf(_('"%s (%s)" wurde erfolgreich gelöscht'), $users[$i]->getFullName(), $users[$i]->username)), $details);
                     } else {
@@ -362,12 +344,6 @@ class Admin_UserController extends AuthenticatedController
                         PageLayout::postError(htmlReady(sprintf(_('Fehler! "%s (%s)" konnte nicht gelöscht werden'), $users[$i]->getFullName(), $users[$i]->username)), $details);
                     }
                 }
-
-                //reactivate messages
-                if (!Request::int('mail') && isset($default_mailer)) {
-                    StudipMail::setDefaultTransporter($default_mailer);
-                }
-
             }
         }
 
@@ -948,21 +924,21 @@ class Admin_UserController extends AuthenticatedController
 
                 //delete old user
                 if (Request::get('delete_old')) {
-                    //no messaging
-                    $dev_null       = new blackhole_message_class();
-                    $default_mailer = StudipMail::getDefaultTransporter();
-                    StudipMail::setDefaultTransporter($dev_null);
-
                     //preparing delete
                     $umanager = new UserManagement();
                     $umanager->getFromDatabase($old_id);
 
                     //delete
-                    $umanager->deleteUser();
+                    $umanager->deleteUser(
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        false
+                    );
                     $details = array_merge($details, explode('§', str_replace(['msg§', 'info§', 'error§'], '', mb_substr($umanager->msg, 0, -1))));
-
-                    //reactivate messaging
-                    StudipMail::setDefaultTransporter($default_mailer);
                 }
 
                 PageLayout::postSuccess(_('Die Personen wurden migriert.'), $details);
