@@ -279,7 +279,7 @@ class Course_AdmissionController extends AuthenticatedController
                     $limit = $this->course->getNumWaiting() - $this->course->admission_waitlist_max;
                     $removed_applicants = $this->course->admission_applicants->findBy('status', 'awaiting')->orderBy('position desc', SORT_NUMERIC)->limit($limit);
                 }
-                if ($removed_applicants) {
+                if (!empty($removed_applicants)) {
                     $num_moved = 0;
                     foreach ($removed_applicants as $applicant) {
                         setTempLanguage($applicant->user_id);
