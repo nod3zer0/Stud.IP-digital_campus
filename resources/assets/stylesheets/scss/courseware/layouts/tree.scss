@@ -8,17 +8,7 @@
 
             > li.cw-tree-item {
                 > .cw-tree-item-wrapper {
-                    border-bottom: solid thin var(--content-color-40);
-                    display: block;
-
-                    > a.cw-tree-item-link {
-                        display: block;
-                        font-size: 18px;
-                        padding-left: 26px;
-                        @include background-icon(courseware, clickable, 18);
-                        background-repeat: no-repeat;
-                        background-position: 3px 3px;
-                    }
+                    display: none;
                 }
 
                 ol {
