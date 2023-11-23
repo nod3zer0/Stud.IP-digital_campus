@@ -13,10 +13,7 @@ class XML_RPC_WebserviceClient extends WebserviceClient
     public function __construct($webservice_url)
     {
         $this->client = new xmlrpc_client($webservice_url);
-        #$this->client->verifyhost = true;
         $this->client->debug = false;
-        $this->client->verifypeer = false;
-        $this->client->response_timeout = 7600;
         $this->client->return_type = 'phpvals';
 
     }
