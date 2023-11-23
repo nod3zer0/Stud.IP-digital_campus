@@ -258,6 +258,7 @@ $(document).on('change', 'input[data-must-equal]', function() {
 $(document).on('keydown', '.enter-accessible', function(event) {
     if (event.code == 'Enter') {
         //The enter key has been pressed.
+        event.preventDefault();
         $(this).trigger('click');
     }
 });

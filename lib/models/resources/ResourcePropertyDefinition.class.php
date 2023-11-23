@@ -244,14 +244,23 @@ class ResourcePropertyDefinition extends SimpleORMap
             $search = new QuickSearch($input_name, new StandardSearch('user_id'));
             $search->defaultValue($value, ($value ? get_fullname($value, 'full_rev_username') : ''));
             return sprintf(
-                '<label %1$s>%2$s%3$s</label>',
+                '<label %1$s>%2$s<div class="assigned-user-search-wrapper flex-row">%3$s%4$s</div></label>',
                 (
                     $label_html_classes
                     ? 'class="' . htmlReady($label_html_classes) . '"'
                     : ''
                 ),
                 $this->__toString(),
-                $search->render()
+                $search->render(),
+                Icon::create('refresh')->asImg(
+                    [
+                        'class'           => 'delete-assigned-user-icon enter-accessible',
+                        'data-input-name' => $input_name,
+                        'title'           => _('Zuorndung entfernen'),
+                        'tabindex'        => '0',
+                        'aria-role'       => 'button'
+                    ]
+                )
             );
         } else {
             $input_type = 'text';

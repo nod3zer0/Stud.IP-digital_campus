@@ -773,7 +773,7 @@ STUDIP.ready(function () {
 
     jQuery(document).on(
         'click',
-        '.create-booking-form .delete-assigned-user-icon',
+        '.delete-assigned-user-icon',
         function (event) {
             var quicksearch = jQuery(event.target).parent().find('input');
             if (!quicksearch) {
