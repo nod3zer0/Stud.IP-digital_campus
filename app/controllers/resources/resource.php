@@ -1125,30 +1125,32 @@ class Resources_ResourceController extends AuthenticatedController
                 }
             }
 
-            //Now we must remove all permissions where the resource_id is given
-            //and where the user_id is not in the $user_ids array which has been
-            //filled above.
-            if ($user_ids) {
-                $deleted_permissions = ResourceTemporaryPermission::deleteBySql(
-                    'resource_id = :resource_id
-                    AND
-                    user_id NOT IN ( :user_ids )',
-                    [
-                        'resource_id' => $this->resource_id,
-                        'user_ids' => $user_ids
-                    ]
-                );
-            } else {
-                //In case no user_ids are collected above all permissions
-                //for the resource have to be deleted:
-                $deleted_permissions = ResourceTemporaryPermission::deleteBySQL(
-                    'resource_id = :resource_id',
-                    [
-                        'resource_id' => $this->resource_id,
-                    ]
-                );
+            $deleted_permissions = 0;
+            if (!$this->single_user_mode) {
+                //Now we must remove all permissions where the resource_id is given
+                //and where the user_id is not in the $user_ids array which has been
+                //filled above.
+                if ($user_ids) {
+                    $deleted_permissions = ResourceTemporaryPermission::deleteBySql(
+                        'resource_id = :resource_id
+                        AND
+                        user_id NOT IN ( :user_ids )',
+                        [
+                            'resource_id' => $this->resource_id,
+                            'user_ids' => $user_ids
+                        ]
+                    );
+                } else {
+                    //In case no user_ids are collected above all permissions
+                    //for the resource have to be deleted:
+                    $deleted_permissions = ResourceTemporaryPermission::deleteBySQL(
+                        'resource_id = :resource_id',
+                        [
+                            'resource_id' => $this->resource_id,
+                        ]
+                    );
+                }
             }
-
             if (count($errors)) {
                 PageLayout::postError(
                     _('Die folgenden Fehler traten auf beim Speichern der Berechtigungen:'),
