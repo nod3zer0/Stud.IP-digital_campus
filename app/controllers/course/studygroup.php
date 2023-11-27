@@ -966,10 +966,10 @@ class Course_StudygroupController extends AuthenticatedController
         $id = Context::getId();
         $sem = Context::get();
 
-        if (mb_strlen($sem->getFullname()) > 32) {//cut subject if to long
-            $subject = sprintf(_("[Studiengruppe: %s...]"), mb_substr($sem->getFullname(), 0, 30));
+        if (mb_strlen($sem->name) > 32) {//cut subject if to long
+            $subject = sprintf(_("[Studiengruppe: %s...]"), mb_substr($sem->name, 0, 30));
         } else {
-            $subject = sprintf(_("[Studiengruppe: %s]"), $sem->getFullname());
+            $subject = sprintf(_("[Studiengruppe: %s]"), $sem->name);
         }
 
         $this->redirect($this->url_for('messages/write', ['course_id' => $id, 'default_subject' => $subject, 'filter' => 'all', 'emailrequest' => 1]));
