@@ -179,7 +179,7 @@ class RolePersistence
     {
         // role is not in database
         // save it to the database first
-        if ($role->getRoleid() !== Role::UNKNOWN_ROLE_ID) {
+        if ($role->getRoleid() === Role::UNKNOWN_ROLE_ID) {
             $roleid = self::saveRole($role);
         } else {
             $roleid = $role->getRoleid();
