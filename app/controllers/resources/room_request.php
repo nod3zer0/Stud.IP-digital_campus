@@ -302,7 +302,11 @@ class Resources_RoomRequestController extends AuthenticatedController
                     OR
                     (resource_requests.metadate_id <> '' AND EXISTS (SELECT * FROM termine WHERE termine.metadate_id=resource_requests.metadate_id AND termine.date BETWEEN :begin AND :semester_end))
                     OR
-                    (resource_requests.termin_id = '' AND resource_requests.metadate_id = '' AND EXISTS (SELECT * FROM termine WHERE termine.range_id=resource_requests.course_id AND termine.date BETWEEN :begin AND :semester_end))
+                    (resource_requests.termin_id = '' AND resource_requests.metadate_id = '' AND (
+                        EXISTS (SELECT * FROM termine JOIN resource_request_appointments ON termine.termin_id = appointment_id WHERE request_id = resource_requests.id AND termine.date BETWEEN :begin AND :semester_end)
+                        OR
+                        NOT EXISTS (SELECT * FROM resource_request_appointments WHERE request_id = resource_requests.id) AND EXISTS (SELECT * FROM termine WHERE termine.range_id=resource_requests.course_id AND termine.date BETWEEN :begin AND :semester_end)
+                    ))
                      ";
 
                 if (empty($this->filter['request_periods'])) {
