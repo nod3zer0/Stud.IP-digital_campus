@@ -76,7 +76,7 @@ class Institute_BasicdataController extends AuthenticatedController
             $this->question = (string) QuestionBox::create(
                 $message,
                 $this->url_for('institute/basicdata/delete/' . $i_view, $post),
-                $this->url_for('institute/basicdata/delete/' . $i_view, [])
+                $this->url_for('institute/basicdata/index/' . $i_view)
             );
         }
 

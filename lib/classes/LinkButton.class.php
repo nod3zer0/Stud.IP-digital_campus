@@ -35,6 +35,13 @@ class LinkButton extends Interactable
      */
     public function __toString()
     {
+        if (
+            isset($this->attributes['disabled'])
+            && $this->attributes['disabled'] !== false
+        ) {
+            return (string) Button::create($this->label, 'none', $this->attributes);
+        }
+
         // add "button" to attribute @class
         if (empty($this->attributes['class'])) {
             $this->attributes['class'] = '';

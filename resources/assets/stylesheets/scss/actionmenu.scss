@@ -102,21 +102,7 @@ $action-menu-shadow: 1px 1px 1px var(--dark-gray-color-60);
             display: block;
         }
 
-        &.action-menu-item-disabled {
-            > a,
-            > label {
-                &,
-                &:hover {
-                    color: var(--dark-gray-color-80);
-                    cursor: default;
-                }
-            }
-        }
-
-        a img,
-        a svg,
-        .action-menu-no-icon,
-        input[type="image"] {
+        .action-menu-item-icon {
             display: inline-block;
             margin: 0 0.25em;
             vertical-align: middle;
@@ -146,6 +132,18 @@ $action-menu-shadow: 1px 1px 1px var(--dark-gray-color-60);
             border-style: none;
             border-top: thin solid var(--dark-gray-color-45);
             margin: 4px 0;
+        }
+
+        &.action-menu-item-disabled {
+            > label,
+            > button {
+                color: var(--dark-gray-color-80);
+                cursor: default;
+
+                &:hover {
+                    color: var(--dark-gray-color-80);
+                }
+            }
         }
     }
 

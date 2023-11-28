@@ -143,6 +143,7 @@ class ActionMenu
                     'attributes' => $attributes,
                 ];
             }
+
             $index = $index ?: md5($action['link'] . json_encode($action['attributes']));
             $action['index'] = $index;
             //now insert it possibly at the desired position:
@@ -326,10 +327,10 @@ class ActionMenu
                        : self::TEMPLATE_FILE_MULTIPLE;
 ;
         $template = $GLOBALS['template_factory']->open($template_file);
-        $template->actions = array_map(function ($action) {
-            $disabled = isset($action['attributes']['disabled'])
+        $template->actions = array_map(function ($action): array {
+            $action['disabled'] = isset($action['attributes']['disabled'])
                      && $action['attributes']['disabled'] !== false;
-            if ($disabled && $action['icon']) {
+            if ($action['disabled'] && $action['icon']) {
                 $action['icon'] = $action['icon']->copyWithRole(Icon::ROLE_INACTIVE);
             }
             return $action;

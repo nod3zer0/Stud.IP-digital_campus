@@ -9,6 +9,9 @@
  *     icon: Icon,
  *     attributes: array
  * }> $actions
+ * @var string $title
+ * @var string $action_menu_title
+ * @var array $attributes
  */
 ?>
 <? // class "action-menu" will be set from API ?>
@@ -24,11 +27,21 @@
         </div>
         <ul class="action-menu-list" aria-label="<?= htmlReady($title) ?>">
         <? foreach ($actions as $action): ?>
-            <li class="action-menu-item <? if (isset($action['attributes']['disabled'])) echo 'action-menu-item-disabled'; ?>">
-            <? if ($action['type'] === 'link'): ?>
+            <li class="action-menu-item <? if ($action['disabled']) echo 'action-menu-item-disabled'; ?>">
+            <? if ($action['disabled']): ?>
+                <label class="undecorated" aria-disabled="true" <?= arrayToHtmlAttributes($action['attributes']) ?>>
+                    <? if ($action['icon']): ?>
+                        <?= $action['icon']->asImg(false, ['class' => 'action-menu-item-icon']) ?>
+                    <? else: ?>
+                        <span class="action-menu-no-icon"></span>
+                    <? endif ?>
+
+                    <?= htmlReady($action['label']) ?>
+                </label>
+            <? elseif ($action['type'] === 'link'): ?>
                 <a href="<?= htmlReady($action['link']) ?>" <?= arrayToHtmlAttributes($action['attributes']) ?>>
                     <? if ($action['icon']): ?>
-                        <?= $action['icon']->asImg(false) ?>
+                        <?= $action['icon']->asImg(false, ['class' => 'action-menu-item-icon']) ?>
                     <? else: ?>
                         <span class="action-menu-no-icon"></span>
                     <? endif ?>
@@ -37,7 +50,11 @@
             <? elseif ($action['type'] === 'button'): ?>
                 <? if ($action['icon']): ?>
                     <label class="undecorated">
-                        <?= $action['icon']->asInput(false, $action['attributes'] + ['name' => $action['name'], 'title' => $action['label']]) ?>
+                        <?= $action['icon']->asInput(false, $action['attributes'] + [
+                            'class' => 'action-menu-item-icon',
+                            'name'  => $action['name'],
+                            'title' => $action['label'],
+                        ]) ?>
                         <?= htmlReady($action['label']) ?>
                     </label>
                 <? else: ?>
