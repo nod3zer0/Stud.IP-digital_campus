@@ -27,8 +27,9 @@ class StudipRedisCache implements StudipCache
      *
      * @param string $hostname Hostname of redis server
      * @param int    $port     Port of redis server
+     * @param string $auth     Optional auth token/password
      */
-    public function __construct($hostname, $port)
+    public function __construct($hostname, $port, string $auth = '')
     {
         if (!extension_loaded('redis')) {
             throw new Exception('Redis extension missing.');
@@ -39,6 +40,10 @@ class StudipRedisCache implements StudipCache
 
         if (!$status) {
             throw new Exception('Could not add cache.');
+        }
+
+        if ($auth !== '') {
+            $this->redis->auth($auth);
         }
     }
 
@@ -83,7 +88,10 @@ class StudipRedisCache implements StudipCache
     public function read($arg)
     {
         $key = $this->getCacheKey($arg);
-        return $this->redis->get($key);
+
+        $result = $this->redis->get($key);
+
+        return ($result === null) ? null : unserialize($result);
     }
 
     /**
@@ -97,7 +105,7 @@ class StudipRedisCache implements StudipCache
     public function write($name, $content, $expire = self::DEFAULT_EXPIRATION)
     {
         $key = $this->getCacheKey($name);
-        return $this->redis->setEx($key, $expire, $content);
+        return $this->redis->setEx($key, $expire, serialize($content));
     }
 
     /**

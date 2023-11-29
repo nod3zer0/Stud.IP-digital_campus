@@ -2,15 +2,19 @@
     <div>
         <label class="col-4">
             <span class="required">
-                <translate>Hostname</translate>
+                {{ $gettext('Hostname') }}
             </span>
             <input required type="text" name="hostname" placeholder="localhost" v-model="theHostname">
         </label>
         <label class="col-2">
             <span class="required">
-                <translate>Port</translate>
+                {{ $gettext('Port') }}
             </span>
             <input required type="text" name="port" placeholder="6379" v-model="thePort">
+        </label>
+        <label>
+            {{ $gettext('Passwort/Token zur Authentifizierung') }}
+            <input type="text" name="auth" v-model="theAuth">
         </label>
     </div>
 </template>
@@ -26,12 +30,17 @@ export default {
         port: {
             type: Number,
             default: 6379
+        },
+        auth: {
+            type: String,
+            default: ''
         }
     },
     data () {
         return {
             theHostname: this.hostname,
             thePort: this.port,
+            theAuth: this.auth
         }
     },
     methods: {
