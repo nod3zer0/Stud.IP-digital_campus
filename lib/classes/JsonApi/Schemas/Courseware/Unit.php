@@ -44,7 +44,7 @@ class Unit extends SchemaProvider
     {
         $relationships = [];
 
-        $relationships[self::REL_CREATOR] = $resource['creator_id']
+        $relationships[self::REL_CREATOR] = $resource->creator
             ? [
                 self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->createLinkToResource($resource->creator),
@@ -53,7 +53,7 @@ class Unit extends SchemaProvider
             ]
             : [self::RELATIONSHIP_DATA => null];
 
-        $relationships[self::REL_STRUCTURAL_ELEMENT] = $resource['structural_element_id']
+        $relationships[self::REL_STRUCTURAL_ELEMENT] = $resource->structural_element
             ? [
                 self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->createLinkToResource($resource->structural_element),
