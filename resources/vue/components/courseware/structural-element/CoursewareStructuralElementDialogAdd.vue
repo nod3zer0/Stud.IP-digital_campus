@@ -113,33 +113,35 @@
                         <option value="other">{{ $gettext('Sonstiges') }}</option>
                     </select>
                 </label>
-                <label>
-                    {{ $gettext('Lizenztyp') }}
-                    <select v-model="license_type">
-                        <option v-for="license in licenses" :key="license.id" :value="license.id">
-                            {{ license.name }}
-                        </option>
-                    </select>
-                </label>
-                <label>
-                    {{ $gettext('Geschätzter zeitlicher Aufwand') }}
-                    <input type="text" v-model="required_time" />
-                </label>
-                <label>
-                    {{ $gettext('Niveau') }}<br />
-                    {{ $gettext('von') }}
-                    <select v-model="difficulty_start">
-                        <option v-for="difficulty_start in 12" :key="difficulty_start" :value="difficulty_start">
-                            {{ difficulty_start }}
-                        </option>
-                    </select>
-                    {{ $gettext('bis') }}
-                    <select v-model="difficulty_end">
-                        <option v-for="difficulty_end in 12" :key="difficulty_end" :value="difficulty_end">
-                            {{ difficulty_end }}
-                        </option>
-                    </select>
-                </label>
+                <template v-if="purposeIsOer">
+                    <label>
+                        {{ $gettext('Lizenztyp') }}
+                        <select v-model="license_type">
+                            <option v-for="license in licenses" :key="license.id" :value="license.id">
+                                {{ license.name }}
+                            </option>
+                        </select>
+                    </label>
+                    <label>
+                        {{ $gettext('Geschätzter zeitlicher Aufwand') }}
+                        <input type="text" v-model="required_time" />
+                    </label>
+                    <label>
+                        {{ $gettext('Niveau') }}<br />
+                        {{ $gettext('von') }}
+                        <select v-model="difficulty_start">
+                            <option v-for="difficulty_start in 12" :key="difficulty_start" :value="difficulty_start">
+                                {{ difficulty_start }}
+                            </option>
+                        </select>
+                        {{ $gettext('bis') }}
+                        <select v-model="difficulty_end">
+                            <option v-for="difficulty_end in 12" :key="difficulty_end" :value="difficulty_end">
+                                {{ difficulty_end }}
+                            </option>
+                        </select>
+                    </label>
+                </template>
             </form>
         </template>
     </studip-wizard-dialog>
@@ -249,6 +251,9 @@ export default {
         hasTemplates() {
             return this.templates.length > 0;
         },
+        purposeIsOer() {
+            return this.purpose === 'oer';
+        },
     },
     methods: {
         ...mapActions({
@@ -302,10 +307,10 @@ export default {
                     payload: {
                         description: this.description,
                         color: this.color,
-                        license_type: this.license_type,
-                        required_time: this.required_time,
-                        difficulty_start: this.difficulty_start,
-                        difficulty_end: this.difficulty_end,
+                        license_type: this.purposeIsOer ? this.license_type : '',
+                        required_time: this.purposeIsOer ? this.required_time : '',
+                        difficulty_start: this.purposeIsOer ? this.difficulty_start : '',
+                        difficulty_end: this.purposeIsOer ? this.difficulty_end : '',
                     },
                 },
                 templateId: this.selectedTemplate ? this.selectedTemplate.id : null,

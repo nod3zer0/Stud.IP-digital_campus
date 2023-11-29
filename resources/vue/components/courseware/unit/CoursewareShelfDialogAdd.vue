@@ -91,41 +91,43 @@
                         <option value="other">{{ $gettext('Sonstiges') }}</option>
                     </select>
                 </label>
-                <label>
-                    {{ $gettext('Lizenztyp') }}
-                    <select v-model="addWizardData.license_type">
-                        <option v-for="license in licenses" :key="license.id" :value="license.id">
-                            {{ license.name }}
-                        </option>
-                    </select>
-                </label>
-                <label>
-                    {{ $gettext('Geschätzter zeitlicher Aufwand') }}
-                    <input type="text" v-model="addWizardData.required_time" />
-                </label>
-                <label>
-                    {{ $gettext('Niveau') }}<br />
-                    {{ $gettext('von') }}
-                    <select v-model="addWizardData.difficulty_start">
-                        <option
-                            v-for="difficulty_start in 12"
-                            :key="difficulty_start"
-                            :value="difficulty_start"
-                        >
-                            {{ difficulty_start }}
-                        </option>
-                    </select>
-                    {{ $gettext('bis') }}
-                    <select v-model="addWizardData.difficulty_end">
-                        <option
-                            v-for="difficulty_end in 12"
-                            :key="difficulty_end"
-                            :value="difficulty_end"
-                        >
-                            {{ difficulty_end }}
-                        </option>
-                    </select>
-                </label>
+                <template v-if="purposeIsOer">
+                    <label>
+                        {{ $gettext('Lizenztyp') }}
+                        <select v-model="addWizardData.license_type">
+                            <option v-for="license in licenses" :key="license.id" :value="license.id">
+                                {{ license.name }}
+                            </option>
+                        </select>
+                    </label>
+                    <label>
+                        {{ $gettext('Geschätzter zeitlicher Aufwand') }}
+                        <input type="text" v-model="addWizardData.required_time" />
+                    </label>
+                    <label>
+                        {{ $gettext('Niveau') }}<br />
+                        {{ $gettext('von') }}
+                        <select v-model="addWizardData.difficulty_start">
+                            <option
+                                v-for="difficulty_start in 12"
+                                :key="difficulty_start"
+                                :value="difficulty_start"
+                            >
+                                {{ difficulty_start }}
+                            </option>
+                        </select>
+                        {{ $gettext('bis') }}
+                        <select v-model="addWizardData.difficulty_end">
+                            <option
+                                v-for="difficulty_end in 12"
+                                :key="difficulty_end"
+                                :value="difficulty_end"
+                            >
+                                {{ difficulty_end }}
+                            </option>
+                        </select>
+                    </label>
+                </template>
             </form>
         </template>
     </studip-wizard-dialog>
@@ -183,7 +185,10 @@ export default {
         },
         colors() {
             return this.mixinColors.filter(color => color.darkmode);
-        }
+        },
+        purposeIsOer() {
+            return this.addWizardData.purpose === 'oer';
+        },
     },
     mounted() {
         this.initAddWizardData();
@@ -243,10 +248,10 @@ export default {
                     payload: {
                         description: this.addWizardData.description,
                         color: this.addWizardData.color,
-                        license_type: this.addWizardData.license_type,
-                        required_time: this.addWizardData.required_time,
-                        difficulty_start: this.addWizardData.difficulty_start,
-                        difficulty_end: this.addWizardData.difficulty_end
+                        license_type: this.purposeIsOer ? this.addWizardData.license_type : '',
+                        required_time: this.purposeIsOer ? this.addWizardData.required_time : '',
+                        difficulty_start: this.purposeIsOer ? this.addWizardData.difficulty_start : '',
+                        difficulty_end: this.purposeIsOer ? this.addWizardData.difficulty_end : ''
                     }
                 },
                 relationships: {

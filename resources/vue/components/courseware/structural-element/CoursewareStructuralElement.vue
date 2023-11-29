@@ -281,41 +281,43 @@
                                             <option value="other"><translate>Sonstiges</translate></option>
                                         </select>
                                     </label>
-                                    <label>
-                                        <translate>Lizenztyp</translate>
-                                        <select v-model="currentElement.attributes.payload.license_type">
-                                            <option v-for="license in licenses" :key="license.id" :value="license.id">
-                                                {{ license.name }}
-                                            </option>
-                                        </select>
-                                    </label>
-                                    <label>
-                                        <translate>Geschätzter zeitlicher Aufwand</translate>
-                                        <input type="text" v-model="currentElement.attributes.payload.required_time" />
-                                    </label>
-                                    <label>
-                                        <translate>Niveau</translate><br />
-                                        <translate>von</translate>
-                                        <select v-model="currentElement.attributes.payload.difficulty_start">
-                                            <option
-                                                v-for="difficulty_start in 12"
-                                                :key="difficulty_start"
-                                                :value="difficulty_start"
-                                            >
-                                                {{ difficulty_start }}
-                                            </option>
-                                        </select>
-                                        <translate>bis</translate>
-                                        <select v-model="currentElement.attributes.payload.difficulty_end">
-                                            <option
-                                                v-for="difficulty_end in 12"
-                                                :key="difficulty_end"
-                                                :value="difficulty_end"
-                                            >
-                                                {{ difficulty_end }}
-                                            </option>
-                                        </select>
-                                    </label>
+                                    <template v-if="currentElement.attributes.purpose === 'oer'">
+                                        <label>
+                                            <translate>Lizenztyp</translate>
+                                            <select v-model="currentElement.attributes.payload.license_type">
+                                                <option v-for="license in licenses" :key="license.id" :value="license.id">
+                                                    {{ license.name }}
+                                                </option>
+                                            </select>
+                                        </label>
+                                        <label>
+                                            <translate>Geschätzter zeitlicher Aufwand</translate>
+                                            <input type="text" v-model="currentElement.attributes.payload.required_time" />
+                                        </label>
+                                        <label>
+                                            <translate>Niveau</translate><br />
+                                            <translate>von</translate>
+                                            <select v-model="currentElement.attributes.payload.difficulty_start">
+                                                <option
+                                                    v-for="difficulty_start in 12"
+                                                    :key="difficulty_start"
+                                                    :value="difficulty_start"
+                                                >
+                                                    {{ difficulty_start }}
+                                                </option>
+                                            </select>
+                                            <translate>bis</translate>
+                                            <select v-model="currentElement.attributes.payload.difficulty_end">
+                                                <option
+                                                    v-for="difficulty_end in 12"
+                                                    :key="difficulty_end"
+                                                    :value="difficulty_end"
+                                                >
+                                                    {{ difficulty_end }}
+                                                </option>
+                                            </select>
+                                        </label>
+                                    </template>
                                 </form>
                             </courseware-tab>
                             <courseware-tab :name="textEdit.image" :index="2">
