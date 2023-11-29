@@ -220,7 +220,6 @@ class SeminarDB
 
     public static function getDeletedSingleDates($seminar_id, $start = 0, $end = 0)
     {
-        $ret = [];
         if (($start != 0) || ($end != 0)) {
             $query = "SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) AS related_persons, GROUP_CONCAT(DISTINCT trg.statusgruppe_id) AS related_groups
                       FROM ex_termine
@@ -246,12 +245,18 @@ class SeminarDB
         $statement = DBManager::get()->prepare($query);
         $statement->execute($parameters);
 
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-            $zw = $row;
-            $zw['ex_termin'] = TRUE;
-            $zw['related_persons'] = explode(',', $zw['related_persons']);
-            $zw['related_groups'] = explode(',', $zw['related_groups']);
-            $ret[] = $zw;
+        $ret = [];
+        while ($data = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $data['ex_termin'] = true;
+
+            if ($data['related_persons']) {
+                $data['related_persons'] = explode(',', $data['related_persons']);
+            }
+            if ($data['related_groups']) {
+                $data['related_groups'] = explode(',', $data['related_groups']);
+            }
+
+            $ret[] = $data;
         }
         return $ret;
     }
