@@ -126,7 +126,7 @@ class AdminCourseFilter
         }
 
         if ($GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER && $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER !== 'all') {
-            if (str_contains(Request::option('course_type'), '_')) {
+            if (str_contains($GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER, '_')) {
                 list($sem_class_id, $sem_type_id) = explode('_', $GLOBALS['user']->cfg->MY_COURSES_TYPE_FILTER);
                 $this->query->where('course_type', 'seminare.status = :course_type', ['course_type' => $sem_type_id]);
             } else {
