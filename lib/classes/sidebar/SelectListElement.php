@@ -45,11 +45,14 @@ class SelectListElement extends WidgetElement implements ArrayAccess
                     'value' => $option->getId(),
                     'class' => ($option->isHeader() ? 'nested-item-header' : '') . ($option->getIndentLevel() ? ' nested-item' : ''),
                     'title' => $option->getTooltip() ?: $option->getLabel(),
-                    'selected' => $option->isActive()
+                    'selected' => $option->isActive() || $option->getId() === $this->selected_option
                 ];
                 $option_label = $option->getLabel();
             } else {
-                $option_attr = compact('value');
+                $option_attr = [
+                    'value' => $value,
+                    'selected' => $value == $this->selected_option
+                ];
                 $option_label = $option;
             }
 
