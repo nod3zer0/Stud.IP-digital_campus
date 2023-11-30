@@ -360,6 +360,23 @@ export const actions = {
         return response ? response.data.data : response;
     },
 
+    async updateFileContent(context, { file, filedata }) {
+        const url = `file-refs/${file.id}/content`;
+        const formData = new FormData();
+        formData.append('file', filedata, file.attributes.name);
+        let request = await state.httpClient.post(url, formData);
+        let response = null;
+        try {
+            response = await state.httpClient.get(request.headers.location);
+        }
+        catch(e) {
+            console.debug(e);
+            response = null;
+        }
+
+        return response ? response.data.data : response;
+    },
+
     async createRootFolder({ dispatch, rootGetters }, { context, folder }) {
         // get root folder for this context
         await dispatch(
