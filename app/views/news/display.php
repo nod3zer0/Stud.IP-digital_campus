@@ -25,35 +25,41 @@
         </nav>
     </header>
     <? foreach ($news as $new): ?>
-    <? $is_new = ($new['chdate'] >= object_get_visit($new->id, 'news', false, false))
+        <? $is_new = ($new['chdate'] >= object_get_visit($new->id, 'news', false, false))
             && ($new['user_id'] != $GLOBALS['user']->id); ?>
-    <article class="studip toggle <?= ContentBoxHelper::classes($new->id, $is_new) ?>" id="<?= $new->id ?>" data-visiturl="<?=URLHelper::getScriptLink('dispatch.php/news/visit')?>">
-        <header>
-            <h1>
-                <a href="<?= ContentBoxHelper::href($new->id, ['contentbox_type' => 'news']) ?>">
-                    <?= Icon::create('news') ?>
-                    <?= htmlReady($new['topic']); ?>
-                </a>
-            </h1>
-            <nav>
-                <?= $this->render_partial('news/_actions.php', ['new' => $new, 'range' => $range]) ?>
-            </nav>
-        </header>
-        <section>
-            <article>
-                <?= formatReady($new['body']) ?>
-            </article>
-        </section>
-        <?= $this->render_partial('news/_comments.php', ['new' => $new, 'range' => $range]) ?>
-    </article>
+        <? if ($is_new && Request::get('unread_news') === 'yes') : ?>
+        <? object_add_view($new->id);
+            object_set_visit($new->id, 'news');?>
+        <? endif ?>
+        <article class="studip toggle <?= ContentBoxHelper::classes($new->id, $is_new) ?>"
+                 id="<?= $new->id ?>"
+                 data-visiturl="<?=URLHelper::getScriptLink('dispatch.php/news/visit')?>">
+            <header>
+                <h1>
+                    <a href="<?= ContentBoxHelper::href($new->id, ['contentbox_type' => 'news']) ?>">
+                        <?= Icon::create('news') ?>
+                        <?= htmlReady($new['topic']); ?>
+                    </a>
+                </h1>
+                <nav>
+                    <?= $this->render_partial('news/_actions.php', ['new' => $new, 'range' => $range]) ?>
+                </nav>
+            </header>
+            <section>
+                <article>
+                    <?= formatReady($new['body']) ?>
+                </article>
+            </section>
+            <?= $this->render_partial('news/_comments.php', ['new' => $new, 'range' => $range]) ?>
+        </article>
     <? endforeach; ?>
     <? if (!$news): ?>
-    <section>
-        <?= _('Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie rechts auf das Plus-Zeichen.') ?>
-    </section>
+        <section>
+            <?= _('Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie rechts auf das Plus-Zeichen.') ?>
+        </section>
         <? if ($perm && $count_all_news) : ?>
             <footer>
-            <a href="<?=URLHelper::getLink('?nshow_all=1')?>"><?=sprintf(_("Abgelaufene und unveröffentlichte Ankündigungen anzeigen (%s)"), $count_all_news)?></a>
+                <a href="<?=URLHelper::getLink('?nshow_all=1')?>"><?=sprintf(_("Abgelaufene und unveröffentlichte Ankündigungen anzeigen (%s)"), $count_all_news)?></a>
             </footer>
         <? endif; ?>
     <? elseif ($perm) : ?>
