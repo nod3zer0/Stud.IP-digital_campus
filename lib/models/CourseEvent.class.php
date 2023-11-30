@@ -176,12 +176,15 @@ class CourseEvent extends CourseDate implements Event
     /**
      * Returns the name of the category.
      *
-     * @return string the name of the category
+     * @return array|string the name of the category
      */
     public function toStringCategories($as_array = false)
     {
         $category = '';
-        if ($this->havePermission(Event::PERMISSION_READABLE)) {
+        if (
+            $this->havePermission(Event::PERMISSION_READABLE)
+            && !empty($GLOBALS['TERMIN_TYP'][$this->getCategory()])
+        ) {
             $category = $GLOBALS['TERMIN_TYP'][$this->getCategory()]['name'];
         }
         return $as_array ? [$category] : $category;
