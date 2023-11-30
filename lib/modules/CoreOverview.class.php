@@ -41,6 +41,7 @@ class CoreOverview extends CorePlugin implements StudipModule
         }
 
         $nav = new Navigation(_('Ankündigungen'), '');
+        $url_params = [];
         if ($result['neue']) {
             $url_params = ['unread_news' => 'yes'];
             $nav->setImage(Icon::create('news', Icon::ROLE_ATTENTION), [
