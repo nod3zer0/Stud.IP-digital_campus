@@ -22,7 +22,10 @@ if ($bg_mobile) {
 <!-- Startseite (nicht eingeloggt) -->
 <main id="content">
 <? if ($logout): ?>
-    <?= MessageBox::success(_('Sie sind nun aus dem System abgemeldet.'), array_filter([$GLOBALS['UNI_LOGOUT_ADD']])) ?>
+    <?= MessageBox::success(
+        _('Sie sind nun aus dem System abgemeldet.'),
+        array_filter((array) $GLOBALS['UNI_LOGOUT_ADD'])
+    ) ?>
 <? endif; ?>
 
     <div id="background-desktop" style="background: url(<?= $bg_desktop ?>) no-repeat top left/cover;"></div>
