@@ -72,11 +72,7 @@
                                 @addElement="menuAction('addElement')"
                                 @deleteCurrentElement="menuAction('deleteCurrentElement')"
                                 @showInfo="menuAction('showInfo')"
-                                @showExportOptions="menuAction('showExportOptions')"
-                                @oerCurrentElement="menuAction('oerCurrentElement')"
                                 @setBookmark="menuAction('setBookmark')"
-                                @sortContainers="menuAction('sortContainers')"
-                                @pdfExport="menuAction('pdfExport')"
                                 @showSuggest="menuAction('showSuggest')"
                                 @linkElement="menuAction('linkElement')"
                                 @removeLock="menuAction('removeLock')"
@@ -426,73 +422,6 @@
                 </studip-dialog>
 
                 <studip-dialog
-                    v-if="showExportDialog"
-                    :title="textExport.title"
-                    :confirmText="textExport.confirm"
-                    confirmClass="accept"
-                    :closeText="textExport.close"
-                    closeClass="cancel"
-                    height="350"
-                    @close="showElementExportDialog(false)"
-                    @confirm="exportCurrentElement"
-                >
-                    <template v-slot:dialogContent>
-                        <div v-show="!exportRunning">
-                            <span v-translate>Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als ZIP-Datei.</span>
-                            <div class="cw-element-export">
-                                <label>
-                                    <input type="checkbox" v-model="exportChildren" />
-                                    <translate>Unterseiten exportieren</translate>
-                                </label>
-                            </div>
-                        </div>
-
-                        <courseware-companion-box
-                            v-show="exportRunning"
-                            :msgCompanion="$gettext('Export läuft, bitte haben sie einen Moment Geduld...')"
-                            mood="pointing"
-                        />
-                        <div v-show="exportRunning" class="cw-import-zip">
-                            <header>{{ exportState }}:</header>
-                            <div class="progress-bar-wrapper">
-                                <div
-                                    class="progress-bar"
-                                    role="progressbar"
-                                    :style="{ width: exportProgress + '%' }"
-                                    :aria-valuenow="exportProgress"
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
-                                >
-                                    {{ exportProgress }}%
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </studip-dialog>
-
-                <studip-dialog
-                    v-if="showPdfExportDialog"
-                    :title="textExport.title"
-                    :confirmText="textExport.confirm"
-                    confirmClass="accept"
-                    :closeText="textExport.close"
-                    closeClass="cancel"
-                    height="350"
-                    @close="showElementPdfExportDialog(false)"
-                    @confirm="pdfExportCurrentElement"
-                >
-                    <template v-slot:dialogContent>
-                        <span v-translate>Hiermit exportieren Sie die Seite "%{ currentElement.attributes.title }" als PDF-Datei.</span>
-                            <div class="cw-element-export">
-                                <label>
-                                    <input type="checkbox" v-model="pdfExportChildren" />
-                                    <translate>Unterseiten exportieren</translate>
-                                </label>
-                            </div>
-                    </template>
-                </studip-dialog>
-
-                <studip-dialog
                     v-if="showOerDialog"
                     height="600"
                     width="600"
@@ -632,6 +561,9 @@
                 <courseware-structural-element-dialog-import v-if="showImportDialog"/>
                 <courseware-structural-element-dialog-copy v-if="showCopyDialog" />
                 <courseware-structural-element-dialog-link v-if="showLinkDialog"/>
+                <courseware-structural-element-dialog-export-chooser v-if="showExportChooserDialog" :canEdit="canEdit" :canVisit="canVisit" />
+                <courseware-structural-element-dialog-export v-if="showExportDialog" :structuralElement="currentElement" />
+                <courseware-structural-element-dialog-export-pdf v-if="showPdfExportDialog" :structuralElement="currentElement" />
             </div>
             <div v-else>
                 <courseware-companion-box
@@ -657,6 +589,9 @@ import CoursewareStructuralElementDialogAdd from './CoursewareStructuralElementD
 import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
 import CoursewareStructuralElementDialogImport from './CoursewareStructuralElementDialogImport.vue';
 import CoursewareStructuralElementDialogLink from './CoursewareStructuralElementDialogLink.vue';
+import CoursewareStructuralElementDialogExportChooser from './CoursewareStructuralElementDialogExportChooser.vue';
+import CoursewareStructuralElementDialogExport from './CoursewareStructuralElementDialogExport.vue';
+import CoursewareStructuralElementDialogExportPdf from './CoursewareStructuralElementDialogExportPdf.vue';
 import CoursewareStructuralElementDiscussion from './CoursewareStructuralElementDiscussion.vue';
 import CoursewareStructuralElementPermissions from './CoursewareStructuralElementPermissions.vue';
 import CoursewareContentPermissions from '../CoursewareContentPermissions.vue';
@@ -678,6 +613,9 @@ export default {
         CoursewareStructuralElementDialogCopy,
         CoursewareStructuralElementDialogImport,
         CoursewareStructuralElementDialogLink,
+        CoursewareStructuralElementDialogExport,
+        CoursewareStructuralElementDialogExportChooser,
+        CoursewareStructuralElementDialogExportPdf,
         CoursewareStructuralElementDiscussion,
         CoursewareStructuralElementPermissions,
         CoursewareContentPermissions,
@@ -710,11 +648,6 @@ export default {
                 title: this.$gettext('Informationen zur Seite'),
                 close: this.$gettext('Schließen'),
             },
-            textExport: {
-                title: this.$gettext('Seite exportieren'),
-                confirm: this.$gettext('Exportieren'),
-                close: this.$gettext('Schließen'),
-            },
             textAdd: {
                 title: this.$gettext('Seite hinzufügen'),
                 confirm: this.$gettext('Erstellen'),
@@ -728,8 +661,6 @@ export default {
                 title: this.$gettext('Sperre aufheben'),
                 alert: this.$gettext('Möchten Sie die Sperre der Seite wirklich aufheben?'),
             },
-            exportRunning: false,
-            exportChildren: false,
             oerExportRunning: false,
             oerChildren: true,
             pdfExportChildren: false,
@@ -778,6 +709,7 @@ export default {
             showCopyDialog: 'showStructuralElementCopyDialog',
             showLinkDialog: 'showStructuralElementLinkDialog',
             showExportDialog: 'showStructuralElementExportDialog',
+            showExportChooserDialog: 'showStructuralElementExportChooserDialog',
             showPdfExportDialog: 'showStructuralElementPdfExportDialog',
             showInfoDialog: 'showStructuralElementInfoDialog',
             showDeleteDialog: 'showStructuralElementDeleteDialog',
@@ -788,8 +720,6 @@ export default {
             oerCampusEnabled: 'oerCampusEnabled',
             oerEnableSuggestions: 'oerEnableSuggestions',
             licenses: 'licenses',
-            exportState: 'exportState',
-            exportProgress: 'exportProgress',
             userId: 'userId',
             viewMode: 'viewMode',
             taskById: 'courseware-tasks/byId',
@@ -1321,12 +1251,6 @@ export default {
                 case 'showInfo':
                     this.showElementInfoDialog(true);
                     break;
-                case 'showExportOptions':
-                    this.showElementExportDialog(true);
-                    break;
-                case 'oerCurrentElement':
-                    this.showElementOerDialog(true);
-                    break;
                 case 'showSuggest':
                     this.updateShowSuggestOerDialog(true);
                     break;
@@ -1467,36 +1391,7 @@ export default {
             this.processing = false;
         },
 
-        async exportCurrentElement(data) {
-            if (this.exportRunning) {
-                return;
-            }
 
-            this.exportRunning = true;
-
-            await this.sendExportZip(this.currentElement.id, {
-                withChildren: this.exportChildren,
-            });
-
-            this.exportRunning = false;
-            this.showElementExportDialog(false);
-        },
-
-        pdfExportCurrentElement() {
-            this.showElementPdfExportDialog(false);
-            let url = '';
-            let withChildren = this.pdfExportChildren ? '/1' : '/0';
-            if (this.context.type === 'users') {
-                url = STUDIP.URLHelper.getURL('dispatch.php/contents/courseware/pdf_export/' + this.structuralElement.id + withChildren);
-            }
-            if (this.context.type === 'courses') {
-                url = STUDIP.URLHelper.getURL('dispatch.php/course/courseware/pdf_export/' + this.structuralElement.id + withChildren);
-            }
-
-            if (url) {
-                window.open(url , '_blank').focus();
-            }
-        },
 
         async publishCurrentElement() {
             if (this.oerExportRunning) {

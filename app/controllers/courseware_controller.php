@@ -83,6 +83,5 @@ abstract class CoursewareController extends AuthenticatedController
         $sidebar->addWidget(new VueWidget('courseware-search-widget'));
         $sidebar->addWidget(new VueWidget('courseware-view-widget'));
         $sidebar->addWidget(new VueWidget('courseware-import-widget'));
-        $sidebar->addWidget(new VueWidget('courseware-export-widget'));
     }
 }

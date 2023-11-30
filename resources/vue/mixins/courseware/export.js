@@ -130,7 +130,7 @@ export default {
             if (withChildren && elements !== []) {
                 let children = await this.exportStructuralElement(root_id, elements);
 
-                if (children.length) {
+                if (children?.length) {
                     root_element.children = children;
                 }
             }

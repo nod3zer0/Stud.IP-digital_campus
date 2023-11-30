@@ -31,6 +31,7 @@ const getDefaultState = () => {
         showStructuralElementCopyDialog: false,
         showStructuralElementLinkDialog: false,
         showStructuralElementExportDialog: false,
+        showStructuralElementExportChooserDialog: false,
         showStructuralElementPdfExportDialog: false,
         showStructuralElementInfoDialog: false,
         showStructuralElementDeleteDialog: false,
@@ -185,6 +186,9 @@ const getters = {
     },
     showStructuralElementExportDialog(state) {
         return state.showStructuralElementExportDialog;
+    },
+    showStructuralElementExportChooserDialog(state) {
+        return state.showStructuralElementExportChooserDialog;
     },
     showStructuralElementPdfExportDialog(state) {
         return state.showStructuralElementPdfExportDialog;
@@ -907,6 +911,10 @@ export const actions = {
         context.commit('setShowStructuralElementExportDialog', bool);
     },
 
+    showElementExportChooserDialog(context, bool) {
+        context.commit('setShowStructuralElementExportChooserDialog', bool);
+    },
+
     showElementPdfExportDialog(context, bool) {
         context.commit('setShowStructuralElementPdfExportDialog', bool);
     },
@@ -1523,6 +1531,10 @@ export const mutations = {
 
     setShowStructuralElementExportDialog(state, showExport) {
         state.showStructuralElementExportDialog = showExport;
+    },
+
+    setShowStructuralElementExportChooserDialog(state, showExportChooser) {
+        state.showStructuralElementExportChooserDialog = showExportChooser;
     },
 
     setShowStructuralElementPdfExportDialog(state, showPdfExport) {

@@ -7,6 +7,11 @@
                         {{ $gettext('Seite hinzufügen') }}
                     </button>
                 </li>
+                <li class="cw-action-widget-export">
+                    <button @click="exportElement">
+                        {{ $gettext('Seite exportieren') }}
+                    </button>
+                </li>
             </ul>
         </template>
     </sidebar-widget>
@@ -33,10 +38,14 @@ export default {
     methods: {
         ...mapActions({
             showElementAddDialog: 'showElementAddDialog',
+            showElementExportChooserDialog: 'showElementExportChooserDialog',
         }),
         addElement() {
             this.showElementAddDialog(true);
         },
+        exportElement() {
+            this.showElementExportChooserDialog(true);
+        }
     },
 };
 </script>

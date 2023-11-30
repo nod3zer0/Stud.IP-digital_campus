@@ -11,6 +11,9 @@
     .cw-action-widget-add {
         @include background-icon(add, clickable);
     }
+    .cw-action-widget-export {
+        @include background-icon(export, clickable);
+    }
     .cw-action-widget-info {
         @include background-icon(info, clickable);
     }
