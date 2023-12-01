@@ -16,7 +16,7 @@
             <template #image-overlay-with-action-menu>
                 <studip-action-menu
                     class="cw-unit-action-menu"
-                    :items="menuItems"  
+                    :items="menuItems"
                     :context="title"
                     :collapseAt="0"
                     @showDelete="openDeleteDialog"
@@ -29,6 +29,9 @@
             </template>
             <template #description>
                 {{ description }}
+            </template>
+            <template #footer v-if="certificate">
+                <studip-icon shape="medal" :size="32" role="info_alt"></studip-icon>
             </template>
         </courseware-tile>
         <studip-dialog
@@ -69,6 +72,7 @@ import CoursewareUnitItemDialogExport from './CoursewareUnitItemDialogExport.vue
 import CoursewareUnitItemDialogSettings from './CoursewareUnitItemDialogSettings.vue';
 import CoursewareUnitItemDialogLayout from './CoursewareUnitItemDialogLayout.vue';
 import CoursewareUnitProgress from './CoursewareUnitProgress.vue';
+import axios from 'axios';
 
 import { mapActions, mapGetters } from 'vuex';
 
@@ -95,7 +99,8 @@ export default {
             showSettingsDialog: false,
             showProgressDialog: false,
             showLayoutDialog: false,
-            progresses: null
+            progresses: null,
+            certificate: null
         }
     },
     computed: {
@@ -108,6 +113,18 @@ export default {
             let menu = [];
             if (this.inCourseContext) {
                 menu.push({ id: 1, label: this.$gettext('Fortschritt'), icon: 'progress', emit: 'showProgress' });
+                if (this.certificate) {
+                    menu.push({
+                        id: 2,
+                        label: this.$gettext('Zertifikat'),
+                        icon: 'medal',
+                        url: STUDIP.URLHelper.getURL('sendfile.php', {
+                            type: 0,
+                            file_id: this.certificate,
+                            file_name: this.$gettext('Zertifikat') + '.pdf'
+                        })
+                    });
+                }
             }
             if(this.userIsTeacher && this.inCourseContext) {
                 menu.push({ id: 2, label: this.$gettext('Einstellungen'), icon: 'settings', emit: 'showSettings' });
@@ -156,6 +173,7 @@ export default {
     async mounted() {
         if (this.inCourseContext) {
             this.progresses = await this.loadUnitProgresses({unitId: this.unit.id});
+            this.checkCertificate();
         }
     },
     methods: {
@@ -165,6 +183,15 @@ export default {
             copyUnit: 'copyUnit',
             companionSuccess: 'companionSuccess'
         }),
+        async checkCertificate() {
+            if (this.getStudipConfig('COURSEWARE_CERTIFICATES_ENABLE')) {
+                const response = await axios.get(STUDIP.URLHelper.getURL('jsonapi.php/v1/courseware-units/' +
+                    this.unit.id + '/certificate/' + STUDIP.USER_ID));
+                if (response.status === 200) {
+                    this.certificate = response.data;
+                }
+            }
+        },
         executeDelete() {
             this.deleteUnit({id: this.unit.id});
         },
@@ -185,13 +212,13 @@ export default {
             this.showProgressDialog = false;
         },
         openSettingsDialog() {
-            this.showSettingsDialog = true; 
+            this.showSettingsDialog = true;
         },
         closeSettingsDialog() {
             this.showSettingsDialog = false;
         },
         openLayoutDialog() {
-            this.showLayoutDialog = true; 
+            this.showLayoutDialog = true;
         },
         closeLayoutDialog() {
             this.showLayoutDialog = false;

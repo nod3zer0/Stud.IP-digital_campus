@@ -2,7 +2,7 @@
 
 namespace Courseware;
 
-use \User, \Course;
+use \User, \Course, \CoursewarePDFCertificate;
 
 /**
  * Courseware's certificates.
@@ -22,6 +22,40 @@ use \User, \Course;
  */
 class Certificate extends \SimpleORMap
 {
+    /**
+     * Generates a PDF certificate for
+     * @param Courseeware\Unit $unit
+     * @param User|null $user
+     * @param int $timestamp timestamp that shall be used as certificate date
+     * @param string|null $image optional background image fileref ID
+     * @return string Full path to the generated PDF file
+     */
+    public static function createPDF(Unit $unit, int $timestamp, ?\User $user = null, $image = null)
+    {
+        if ($user === null) {
+            $user = new User();
+            $user->vorname = 'Vorname';
+            $user->nachname = 'Nachname';
+            $user->geschlecht = 3;
+        }
+
+        $template = $GLOBALS['template_factory']->open('courseware/mails/certificate');
+        $html = $template->render(
+            compact('user', 'unit', 'timestamp')
+        );
+
+        // Generate the PDF.
+        $pdf = new CoursewarePDFCertificate($image ?? false);
+        $pdf->AddPage();
+        $pdf->writeHTML($html, true, false, true, false, '');
+        $pdf_file_name = ($user->isNew() ? 'Vorschau' : $user->nachname) . '_' . $unit->course->name . '_' .
+            _('Zertifikat') . '.pdf';
+        $filename = $GLOBALS['TMP_PATH'] . '/' . \FileManager::cleanFileName($pdf_file_name);
+        $pdf->Output($filename, 'F');
+
+        return $filename;
+    }
+
     protected static function configure($config = [])
     {
         $config['db_table'] = 'cw_certificates';
@@ -38,5 +72,4 @@ class Certificate extends \SimpleORMap
 
         parent::configure($config);
     }
-
 }

@@ -40,13 +40,16 @@ class CoursewareCronjob extends CronJob
     {
         $verbose = $parameters['verbose'];
 
-        /*
-         * Fetch all units that have some relevant settings.
-         */
-        $todo = Courseware\Unit::findBySQL(
-            "`range_type` = 'course' AND (`config` LIKE (:cert) OR `config` LIKE (:reminder) OR `config` LIKE (:reset))",
-            ['cert' => '%"certificate":%', 'reminder' => '%"reminder":%', 'reset' => '%"reset_progress":%']
-        );
+        $todo = [];
+        if (Config::get()->COURSEWARE_CERTIFICATES_ENABLE) {
+            /*
+             * Fetch all units that have some relevant settings.
+             */
+            $todo = Courseware\Unit::findBySQL(
+                "`range_type` = 'course' AND (`config` LIKE (:cert) OR `config` LIKE (:reminder) OR `config` LIKE (:reset))",
+                ['cert' => '%"certificate":%', 'reminder' => '%"reminder":%', 'reset' => '%"reset_progress":%']
+            );
+        }
 
         if (count($todo) > 0) {
 
@@ -72,7 +75,7 @@ class CoursewareCronjob extends CronJob
 
                     // Fetch accumulated progress values for all users in this course.
                     $progresses = DBManager::get()->fetchAll(
-                        "SELECT DISTINCT p.`user_id`, SUM(p.`grade`) AS progress
+                        "SELECT DISTINCT p.`user_id`, SUM(p.`grade`) AS progress, MAX(p.`chdate`) AS pdate
                         FROM `cw_user_progresses` p
                         WHERE `block_id` IN (:blocks)
                             AND NOT EXISTS (
@@ -92,8 +95,8 @@ class CoursewareCronjob extends CronJob
                                     $progress['user_id'], $unit->range_id, $unit->id);
                             }
 
-                            if (!$this->sendCertificate($unit, $progress['user_id'], $percent,
-                                $unit->config['certificate']['image'])) {
+                            if (!$this->sendCertificate($unit, $progress['user_id'], $percent, $progress['pdate'],
+                                    $unit->config['certificate']['image'])) {
                                 printf("Could not send certificate for course %s and unit %u to user %s.\n",
                                     $unit->range_id, $unit->id, $progress['user_id']);
                             }
@@ -218,56 +221,56 @@ class CoursewareCronjob extends CronJob
         }
     }
 
-    private function sendCertificate($unit, $user_id, $progress, $image = '')
+    /**
+     * @param Courseware\Unit $unit
+     * @param string $user_id
+     * @param int $progress
+     * @param int $timestamp
+     * @param string|null $image
+     * @return bool|int|number
+     * @throws Exception
+     */
+    private function sendCertificate(Courseware\Unit $unit, string $user_id, int $progress, int $timestamp, string $image = null)
     {
         $user = User::find($user_id);
         $course = Course::find($unit->range_id);
 
+        $pdf = Courseware\Certificate::createPDF($unit, $timestamp, $user, $image);
+
+        $folder = $this->requireCertificateFolder($unit);
+        $data = [
+            'name'=> $user->getFullname('full') . '-' . date('ymd') . '.pdf',
+            'tmp_name'=> $pdf,
+            'type' => 'application/pdf',
+            'size' => @filesize($pdf)
+        ];
+        $file = $folder->addFile(StandardFile::create($data), $user->id);
+        @unlink($pdf);
+
         setTempLanguage('', $user->preferred_language);
 
-        $template = $GLOBALS['template_factory']->open('courseware/mails/certificate');
-        $html = $template->render(
-            compact('user', 'course')
-        );
-
-        // Generate the PDF.
-        $pdf = new CoursewarePDFCertificate($image);
-        $pdf->AddPage();
-        $pdf->writeHTML($html, true, false, true, false, '');
-        $pdf_file_name = $user->nachname . '_' . $course->name . '_' . _('Zertifikat') . '.pdf';
-        $filename = $GLOBALS['TMP_PATH'] . '/' . $pdf_file_name;
-        $pdf->Output($filename, 'F');
-
-        // Send the mail with PDF attached.
-        $mail = new StudipMail();
-
+        // Send the message containing a link to the PDF certificate.
+        $subject = _('Courseware: Zertifikat') . ' - ' . $course->getFullname() .
+            ' (' . $unit->structural_element->title . ')';
         $message = sprintf(
-            _('Anbei erhalten Sie Ihr Courseware-Zertifikat zur Veranstaltung %1$s, in der Sie einen Fortschritt ' .
-                'von %2$u %% im Lernmaterial "%s" erreicht haben.'),
-            $course->getFullname(), $progress, $unit->structural_element->title);
-        $message .= "\n\n" . _('Über folgenden Link kommen Sie direkt zur Courseware') . ': ' .
-            URLHelper::getURL('dispatch.php/course/courseware/courseware/' . $unit->id, ['cid' => $course->id]);
+            _('Sie haben einen Fortschritt von %1$u % % im Lernmaterial "%2$s" erreicht und können daher Ihr ' .
+                '[Zertifikat herunterladen]%3$s .'),
+            $progress, $unit->structural_element->title, $file->getDownloadURL());
+        $message .= "\n\n" . sprintf(_('Sie können das Lernmaterial [direkt hier aufrufen]%s .'),
+                URLHelper::getURL('dispatch.php/course/courseware/courseware/' . $unit->id, ['cid' => $course->id]));
+        ;
 
-        $sent = $mail->addRecipient($user->email, $user->getFullname())
-            ->setSubject(_('Courseware: Zertifikat') . ' - ' . $course->getFullname())
-            ->setBodyText($message)
-            ->addFileAttachment($filename, $pdf_file_name)
-            ->send();
-
-        @unlink($filename);
+        messaging::sendSystemMessage($user, $subject, $message);
 
         restoreLanguage();
 
         // Add database entry for the certificate.
-        if ($sent) {
-            $cert = new Courseware\Certificate();
-            $cert->user_id = $user_id;
-            $cert->course_id = $course->id;
-            $cert->unit_id = $unit->id;
-            return $cert->store();
-        } else {
-            return false;
-        }
+        $cert = new Courseware\Certificate();
+        $cert->user_id = $user_id;
+        $cert->course_id = $course->id;
+        $cert->unit_id = $unit->id;
+        $cert->fileref_id = $file->id;
+        return $cert->store();
     }
 
     private function sendReminders($unit)
@@ -286,8 +289,10 @@ class CoursewareCronjob extends CronJob
             );
         }
 
-        $message = $unit->config['reminder']['mailText'] . "\n\n" . _('Über folgenden Link kommen Sie direkt zur Courseware') . ': ' .
-            URLHelper::getURL('dispatch.php/course/courseware/courseware/' . $unit->id, ['cid' => $course->id]);
+        $message = $unit->config['reminder']['mailText'] . "\n\n" .
+            sprintf(_('Sie können das Lernmaterial [direkt hier aufrufen]%s .'),
+                URLHelper::getURL('dispatch.php/course/courseware/courseware/' . $unit->id, ['cid' => $course->id]));
+        ;
 
         $mail->setSubject(_('Courseware: Erinnerung') . ' - ' . $course->getFullname() .
                 ', ' . $unit->structural_element->title)
@@ -305,6 +310,12 @@ class CoursewareCronjob extends CronJob
             ['blocks' => $block_ids]
         );
 
+        /*
+         * If certificates are active, remove all existing entries for this unit.
+         * Note that existing PDF files will stay in their course folders.
+         */
+        Courseware\Certificate::deleteByUnit_id($unit->id);
+
         $recipients = $course->getMembersWithStatus('autor', true);
 
         $mail = new StudipMail();
@@ -318,12 +329,65 @@ class CoursewareCronjob extends CronJob
         }
 
         $message = $unit->config['reset_progress']['mailText'] . "\n\n" .
-            _('Über folgenden Link kommen Sie direkt zur Courseware') . ': ' .
-            URLHelper::getURL('dispatch.php/course/courseware/courseware/' . $unit->id, ['cid' => $course->id]);
+            sprintf(_('Sie können das Lernmaterial [direkt hier aufrufen]%s .'),
+            URLHelper::getURL('dispatch.php/course/courseware/courseware/' . $unit->id, ['cid' => $course->id]));
 
         $mail->setSubject(_('Courseware: Fortschritt zurückgesetzt') . ' - ' . $course->getFullname())
             ->setBodyText($message);
 
         return $mail->send();
     }
+
+    /**
+     * Create or fetch the folder where certificates shall be put in this course.
+     * @param Courseware\Unit $unit
+     * @return FolderType
+     */
+    private function requireCertificateFolder(Courseware\Unit $unit)
+    {
+        // Try to find existing unit folder in database.
+        $unitFolder = Folder::findOneBySQL(
+            "`range_id` = :range AND `data_content` = :unit",
+            ['range' => $unit->range_id, 'unit' => json_encode(['unit_id' => $unit->id, 'download_allowed' => 1])]
+        );
+
+        // We need to create a new folder for this unit.
+        if (!$unitFolder) {
+            // Try to find existing certificate folder in database.
+            $certFolder = Folder::findOneBySQL(
+                "`range_id` = :range AND `data_content` = :data",
+                [
+                    'range' => $unit->range_id,
+                    'data' => json_encode(['purpose' => 'cw-certificates', 'download_allowed' => 1])
+                ]
+            );
+
+            // Create parent folder, collecting all certificates for all units of this course.
+            if (!$certFolder) {
+                $certFolder = FileManager::createSubFolder(
+                    Folder::findTopFolder($unit->range_id)->getTypedFolder(),
+                    User::findCurrent(),
+                    'HiddenFolder',
+                    _('Courseware-Zertifikate'),
+                    _('Erteilte Zertifikate für den Fortschritt in Courseware-Inhalten dieser Veranstaltung ')
+                );
+                $certFolder->data_content = json_encode(['purpose' => 'cw-certificates', 'download_allowed' => 1]);
+                $certFolder->store();
+            }
+
+            // General folder for certificates exists now, create the subfolder for this unit.
+            $unitFolder = FileManager::createSubFolder(
+                is_a($certFolder, FolderType::class) ? $certFolder : $certFolder->getTypedFolder(),
+                User::findCurrent(),
+                'HiddenFolder',
+                $unit->structural_element->title,
+                sprintf(_('Zertifikate für Lernmaterial %u'), $unit->id)
+            );
+            $unitFolder->data_content = json_encode(['unit_id' => $unit->id, 'download_allowed' => 1]);
+            $unitFolder->store();
+        }
+
+        return is_a($unitFolder, FolderType::class) ? $unitFolder : $unitFolder->getTypedFolder();
+    }
+
 }

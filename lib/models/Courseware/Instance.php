@@ -273,6 +273,7 @@ class Instance
     {
         if (count($certificateSettings) > 0) {
             $this->validateCertificateSettings($certificateSettings);
+            $certificateSettings['text'] = \Studip\Markup::purifyHtml($certificateSettings['text']);
             $this->unit->config['certificate'] = $certificateSettings;
         } else {
             unset($this->unit->config['certificate']);
@@ -289,6 +290,10 @@ class Instance
     public function isValidCertificateSettings($certificateSettings): bool
     {
         return !isset($certificateSettings['threshold'])
+            || !isset($certificateSettings['title'])
+            || trim($certificateSettings['title']) !== ''
+            || !isset($certificateSettings['text'])
+            || trim($certificateSettings['text']) !== ''
             || (
                 $certificateSettings['threshold'] >= 0
                 && $certificateSettings['threshold'] <= 100
@@ -327,6 +332,7 @@ class Instance
     {
         if (count($reminderSettings) > 0) {
             $this->validateReminderSettings($reminderSettings);
+            $reminderSettings['mailText'] = \Studip\Markup::purifyHtml($reminderSettings['mailText']);
             $this->unit->config['reminder'] = $reminderSettings;
         } else {
             unset($this->unit->config['reminder']);
@@ -380,6 +386,7 @@ class Instance
     {
         if (count($resetProgressSettings) > 0) {
             $this->validateResetProgressSettings($resetProgressSettings);
+            $resetProgressSettings['mailText'] = \Studip\Markup::purifyHtml($resetProgressSettings['mailText']);
             $this->unit->config['reset_progress'] = $resetProgressSettings;
         } else {
             unset($this->unit->config['reset_progress']);

@@ -1,22 +1,12 @@
-<?php
-$p = '<p style="font-size: 20px; text-align: center;">';
-$span_bold = '<br /><br /><span style="font-size: 20px; text-align: center; font-weight: bold">';
-$span_close = '</span><br /><br />';
-switch($user->geschlecht) {
-    case 1:
-        $anrede = _('Herr');
-        break;
-    case 2:
-        $anrede = _('Frau');
-        break;
-    default:
-        $anrede= '';
-}
-echo $p;
-printf(
-    _("Hiermit wird bescheinigt, dass %1$s am %2$s erfolgreich am Seminar %3$s teilgenommen hat."),
-    $span_bold . $anrede . ' ' . $user->getFullname() . $span_close,
-    $span_bold . date('d.m.Y', time()) . $span_close,
-    $span_bold . $course->name . $span_close
-);
-echo '</p>';
+<p style="font-size: 14px; text-align: right;">
+    <?= strftime('%x', $timestamp) ?>
+</p>
+<h1 style="font-size: 20px; text-align: center">
+    <?= htmlReady($unit->config['certificate']['title']) ?>
+</h1>
+<h2 style="font-size: 14px; text-align: center">
+    <?= sprintf(_('für %s'), htmlReady($user->getFullname())) ?>
+</h2>
+<p style="font-size: 14px; text-align: center;">
+    <?= $unit->config['certificate']['text'] ?>
+</p>

@@ -470,6 +470,10 @@ class RouteMap
         $group->get('/courseware-units/{id}/courseware-user-progresses', Routes\Courseware\UserProgressesOfUnitsShow::class);
         $group->patch('/courseware-user-progresses/{id}', Routes\Courseware\UserProgressesUpdate::class);
 
+        // not a JSON route
+        $group->get('/courseware-units/{id}/certificate', Routes\Courseware\CertificateShow::class);
+        $group->get('/courseware-units/{id}/certificate/{user}', Routes\Courseware\CertificateShow::class);
+
         $group->get('/courseware-blocks/{id}/comments', Routes\Courseware\BlockCommentsOfBlocksIndex::class);
         $group->post('/courseware-block-comments', Routes\Courseware\BlockCommentsCreate::class);
         $group->get('/courseware-block-comments/{id}', Routes\Courseware\BlockCommentsShow::class);

@@ -53,6 +53,7 @@ $lang_attr = str_replace('_', '-', $_SESSION['_language']);
                 'ACTIONMENU_THRESHOLD' => Config::get()->ACTION_MENU_THRESHOLD,
                 'ENTRIES_PER_PAGE'     => Config::get()->ENTRIES_PER_PAGE,
                 'OPENGRAPH_ENABLE'     => Config::get()->OPENGRAPH_ENABLE,
+                'COURSEWARE_CERTIFICATES_ENABLE' => Config::get()->COURSEWARE_CERTIFICATES_ENABLE
             ]) ?>,
         }
     </script>
