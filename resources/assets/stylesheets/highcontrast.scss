@@ -441,7 +441,7 @@ table.default thead .actions svg {
 }
 
 // ... but Icons in Table Data must be black
-table.default .actions .action-menu .action-menu-icon {
+table.default tbody .actions .action-menu .action-menu-icon {
     filter: brightness(0);
 }
 
@@ -488,7 +488,6 @@ tr.sortable th.sortdesc:after,
 .course-admin th .course-completion,
 .sortable-table .tablesorter-headerDesc .tablesorter-header-inner:after,
 .sortable-table .tablesorter-headerAsc .tablesorter-header-inner:after,
-.action-menu-wrapper .action-menu-icon,
 .action-menu .action-menu-icon,
 .contentbox header nav .tooltip-icon,
 article header h1 .tooltip-icon,
