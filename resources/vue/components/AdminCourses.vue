@@ -11,7 +11,7 @@
         </caption>
         <thead>
             <tr class="sortable">
-                <th v-if="showComplete">
+                <th v-if="showComplete" :class="sort.by === 'completion' ? 'sort' + sort.direction.toLowerCase() : ''">
                     <a
                         @click.prevent="changeSort('completion')"
                         class="course-completion"
@@ -19,20 +19,14 @@
                     >
                         {{ $gettext('Bearbeitungsstatus') }}
                     </a>
-                    <studip-icon :shape="sort.direction === 'ASC' ? 'arr_1down' : 'arr_1up'"
-                                 v-if="sort.by === 'completion'"
-                                 class="text-bottom"></studip-icon>
                 </th>
-                <th v-for="activeField in sortedActivatedFields" :key="`field-${activeField}`">
+                <th v-for="activeField in sortedActivatedFields" :key="`field-${activeField}`" :class="sort.by === activeField ? 'sort' + sort.direction.toLowerCase() : ''">
                     <a href="#"
                        @click.prevent="changeSort(activeField)"
                        :title="sort.by === activeField && sort.direction === 'ASC' ? $gettextInterpolate('Sortiert aufsteigend nach %{field}', {field: fields[activeField]}) : (sort.by === activeField && sort.direction === 'DESC' ? $gettextInterpolate('Sortiert absteigend nach %{ field } ', { field: fields[activeField]}) : $gettextInterpolate('Sortieren nach %{ field }', { field: fields[activeField]}))"
                        v-if="!unsortableFields.includes(activeField)"
                     >
                         {{ fields[activeField] }}
-                        <studip-icon :shape="sort.direction === 'ASC' ? 'arr_1down' : 'arr_1up'"
-                                     v-if="sort.by === activeField"
-                                     class="text-bottom"></studip-icon>
                     </a>
                     <template v-else>
                         {{ fields[activeField] }}
