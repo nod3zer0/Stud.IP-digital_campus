@@ -39,8 +39,6 @@ export default {
     methods: {
         ...mapActions({
             coursewareBlockAdder: 'coursewareBlockAdder',
-            coursewareSelectedToolbarItem: 'coursewareSelectedToolbarItem',
-            coursewareShowToolbar: 'coursewareShowToolbar'
         }),
         selectBlockAdder() {
             if (this.adderActive) {
@@ -49,8 +47,6 @@ export default {
             } else {
                 this.adderActive = true;
                 this.coursewareBlockAdder({ container: this.container, section: this.section });
-                this.coursewareSelectedToolbarItem('blockadder');
-                this.coursewareShowToolbar(true);
             }
         },
     },

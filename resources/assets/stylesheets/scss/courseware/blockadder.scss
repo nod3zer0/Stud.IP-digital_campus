@@ -89,21 +89,17 @@
     }
 }
 
-.cw-element-adder-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
 .cw-blockadder-item-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     grid-auto-rows: auto;
     grid-gap: 4px;
+    margin-bottom: 8px;
 
     .cw-blockadder-item-wrapper {
         display: flex;
         border: solid thin var(--content-color-40);
-        max-width: 254px;
+        max-width: 268px;
 
         &:hover {
             border-color: var(--base-color);
@@ -238,16 +234,12 @@
         &:hover {
             color: var(--active-color);
         }
-        &:not(:first-child) {
-            border-left: solid thin transparent;
-        }
         &.cw-container-style-selector-active {
             background-color: var(--content-color-20);
             border: solid thin var(--base-color);
         }
-
     }
-    input[type=radio] {
+    input[type='radio'] {
         position: absolute;
         opacity: 0;
         width: 0;
@@ -261,54 +253,53 @@
     }
 }
 .cw-element-inserter-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+    grid-auto-rows: auto;
+    grid-gap: 4px;
+    margin-bottom: 8px;
 
+    .cw-clipboard-item-wrapper {
+        display: flex;
+        border: solid thin var(--content-color-40);
+        max-width: 248px;
 
-.cw-clipboard-item-wrapper {
-    display: flex;
-    width: calc(50% - 4px);
-    border: solid thin var(--content-color-40);
-    margin-bottom: 4px;
+        &:hover {
+            border-color: var(--base-color);
+        }
 
-    &:hover {
-        border-color: var(--base-color);
-    }
+        .cw-clipboard-item {
+            width: calc(100% - 36px);
+            padding: 64px 10px 4px 10px;
+            @include background-icon(unit-test, clickable, 48);
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            background-color: var(--white);
+            border: none;
+            text-align: left;
+            color: var(--base-color);
 
-    .cw-clipboard-item {
-        width: 207px;
-        padding: 64px 10px 4px 10px;
-        @include background-icon(unit-test, clickable, 48);
-        background-position: 10px 10px;
-        background-repeat: no-repeat;
-        cursor: pointer;
-        background-color: var(--white);
-        border: none;
-        text-align: left;
-        color: var(--base-color);
+            @each $item, $icon in $blockadder-items {
+                &.cw-clipboard-item-#{$item} {
+                    @include background-icon($icon, clickable, 48);
+                }
+            }
+            @each $item, $icon in $containeradder-items {
+                &.cw-clipboard-item-#{$item} {
+                    @include background-icon($icon, clickable, 48);
+                }
+            }
 
-        @each $item, $icon in $blockadder-items {
-            &.cw-clipboard-item-#{$item} {
-                @include background-icon($icon, clickable, 48);
+            .cw-clipboard-item-title {
+                display: inline-block;
+                font-weight: 600;
+                margin-bottom: 2px;
             }
         }
-        @each $item, $icon in $containeradder-items {
-            &.cw-clipboard-item-#{$item} {
-                @include background-icon($icon, clickable, 48);
-            }
+        .cw-clipboard-item-action-menu-wrapper {
+            padding: 8px;
         }
-    
-        .cw-clipboard-item-title {
-            display: inline-block;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-    }
-    .cw-clipboard-item-action-menu-wrapper {
-        padding: 8px;
     }
 }
 .action-menu.is-open,

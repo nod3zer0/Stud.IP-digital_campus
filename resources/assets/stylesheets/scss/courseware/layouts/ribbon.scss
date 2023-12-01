@@ -185,13 +185,13 @@ $consum_ribbon_width: calc(100% - 58px);
             cursor: default;
         }
     }
+}
 
-    .cw-ribbon-action-menu {
-        vertical-align: text-top;
-        margin: 2px 0 0 2px;
-        &.is-open {
-            z-index: 32;
-        }
+.cw-ribbon-action-menu {
+    vertical-align: text-top;
+    margin: 2px 0 0 2px;
+    &.is-open {
+        z-index: 32;
     }
 }
 

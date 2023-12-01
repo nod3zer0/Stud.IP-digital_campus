@@ -1,0 +1,175 @@
+$toolbar-icons: (
+    toggle-out: arr_2right,
+    toggle-in: arr_2left,
+    add: add,
+    clipboard: clipboard
+);
+
+.cw-toolbar {
+    z-index: 30;
+    display: flex;
+    position: fixed;
+    top: 0;
+    flex-direction: row;
+    justify-content: flex-end;
+    right: 0;
+    margin-left: 4px;
+    height: 600px;
+
+    .cw-toolbar-tools {
+        width: 270px;
+        min-height: 100%;
+        border: solid thin var(--content-color-40);
+        background-color: var(--white);
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+        padding: 0 4px;
+        top: 0;
+        right: -270px;
+        transition: right 0.6s;
+        &.hd {
+            width: 480px;
+            right: -480px;
+        }
+        &.wqhd {
+            width: 558px;
+            right: -558px;
+        }
+        &.unfold {
+            right: 0;
+        }
+
+        .cw-toolbar-blocks {
+            .input-group.files-search {
+                &.search {
+                    border: thin solid var(--dark-gray-color-30);
+                    margin-bottom: 0px;
+                    input {
+                        border: none;
+                    }
+                }
+    
+                .input-group-append {
+                    .button {
+                        border: none;
+                        border-left: thin solid var(--dark-gray-color-30);
+                        &.active {
+                            background-color: var(--base-color);
+                        }
+                    }
+                    .reset-search {
+                        border: none;
+                        background-color: var(--white);
+                    }
+                }
+    
+                .active-filter {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border: solid thin var(--black);
+                    background-color: var(--content-color-10);
+                    margin: 3px;
+                    padding: 2px 3px;
+    
+                    .removefilter {
+                        border: none;
+                        background-color: transparent;
+                    }
+                }
+            }
+    
+            .cw-block-search {
+                width: inherit;
+            }
+    
+            .filterpanel {
+                margin-bottom: 5px;
+                padding: 2px;
+                border: thin solid var(--dark-gray-color-30);
+                border-top: none;
+                background-color: #fff;
+    
+                .button {
+                    min-width: inherit;
+                    margin: 4px 2px;
+    
+                    &.button-active {
+                        background-color: var(--base-color);
+                        color: var(--white);
+                    }
+                }
+            }
+
+        }
+    }
+    .cw-toolbar-button-wrapper {
+        position: sticky;
+        top: 0;
+        background-color: var(--white);
+        border-bottom: solid thin var(--content-color-40);
+        display: flex;
+        z-index: 31;
+        margin: 0 0 8px -4px;
+        width: calc(100% + 8px);
+    }
+    .cw-toolbar-button {
+        height: 44px;
+        margin: 0 4px 0 4px;
+        padding: 2px 8px 0 8px;
+        border: none;
+        background-color: var(--white);
+        background-repeat: no-repeat;
+        background-position: center center;
+        cursor: pointer;
+        border-bottom: solid 2px transparent;
+
+        @each $type, $icon in $toolbar-icons {
+            &.cw-toolbar-button-#{$type} {
+                @include background-icon(#{$icon}, clickable, 24);
+            }
+        }
+        &.cw-toolbar-button-toggle {
+            right: 0;
+            width: 42px;
+
+            &.cw-toolbar-button-toggle-out {
+                position: absolute;
+            }
+            &.cw-toolbar-button-toggle-in {
+                position: relative;
+            }
+        }
+
+        &.active {
+            border-bottom: solid 2px var(--base-color);
+        }
+    }
+    .cw-toolbar-spacer-right {
+        z-index: 39;
+        flex-shrink: 0;
+        position: relative;
+        background-color: var(--white);
+        width: 15px;
+        height: calc(100% + 2px);
+    }
+
+    .cw-toolbar-tools.hd {
+        .cw-toolbar-button-wrapper {
+            .cw-toolbar-button {
+                width: 128px;
+                padding: 2px 16px 0 16px;
+                &.cw-toolbar-button-toggle {
+                    width: 42px;
+                }
+            }
+        }
+    }
+}
+#contents-courseware-courseware,
+#course-courseware-courseware {
+    #content-wrapper {
+        overflow-x: hidden;
+    }
+}

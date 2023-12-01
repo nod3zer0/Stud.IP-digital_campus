@@ -2,11 +2,11 @@
     <focus-trap v-model="consumModeTrap">
         <div>
             <div
+                v-if="validContext"
                 :class="{ 'cw-structural-element-consumemode': consumeMode }"
                 class="cw-structural-element"
-                v-if="validContext"
             >
-                <div class="cw-structural-element-content" v-if="structuralElement">
+                <div v-if="structuralElement" class="cw-structural-element-content">
                     <courseware-ribbon :canEdit="canEdit && canAddElements" :isContentBar="true" @blockAdded="updateContainerList">
                         <template #buttons>
                             <router-link v-if="prevElement" :to="'/structural_element/' + prevElement.id">
@@ -80,133 +80,136 @@
                             />
                         </template>
                     </courseware-ribbon>
-
-                    <div v-if="structuralElementLoaded && !isLink" class="cw-companion-box-wrapper">
-                        <courseware-companion-box
-                            v-if="!canVisit"
-                            mood="sad"
-                            :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
-                        />
-                        <courseware-companion-box
-                            v-if="blockedByAnotherUser"
-                            :msgCompanion="$gettextInterpolate($gettext('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet'), {blockingUserName: blockingUserName})"
-                            mood="pointing"
-                        >
-                            <template #companionActions>
-                                <button v-if="userIsTeacher" class="button" @click="menuAction('removeLock')">
-                                    {{ textRemoveLock.title }}
-                                </button>
-                            </template>
-                        </courseware-companion-box>
-                        <courseware-empty-element-box
-                            v-if="showEmptyElementBox"
-                            :canEdit="canEdit"
-                            :noContainers="noContainers"
-                        />
-                        <courseware-welcome-screen v-if="noContainers && isRoot && canEdit" />
-                    </div>
-
-                    <div
-                        v-if="canVisit && !editView && !isLink"
-                        class="cw-container-wrapper"
-                        :class="{
-                            'cw-container-wrapper-consume': consumeMode,
-                            'cw-container-wrapper-discuss': discussView,
-                        }"
-                    >
-                        <courseware-structural-element-discussion
-                            v-if="!noContainers && discussView"
-                            :structuralElement="structuralElement"
-                            :canEdit="canEdit"
-                        />
-                        <component
-                            v-for="container in containers"
-                            :key="container.id"
-                            :is="containerComponent(container)"
-                            :container="container"
-                            :canEdit="canEdit"
-                            :canAddElements="canAddElements"
-                            :isTeacher="userIsTeacher"
-                            class="cw-container-item"
-                        />
-                    </div>
-                    <div
-                        v-if="isLink"
-                        class="cw-container-wrapper"
-                        :class="{
-                            'cw-container-wrapper-consume': consumeMode,
-                            'cw-container-wrapper-discuss': discussView,
-                        }"
-                    >
-                        <courseware-structural-element-discussion
-                            v-if="discussView"
-                            :structuralElement="structuralElement"
-                            :canEdit="canEdit"
-                        />
-                        <div v-if="editView" class="cw-companion-box-wrapper">
-                            <courseware-companion-box
-                                :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
-                                mood="pointing"
-                            />
-                        </div>
-                        <component
-                            v-for="container in linkedContainers"
-                            :key="container.id"
-                            :is="containerComponent(container)"
-                            :container="container"
-                            :canEdit="false"
-                            :canAddElements="false"
-                            :isTeacher="userIsTeacher"
-                            class="cw-container-item"
-                        />
-                    </div>
-                    <div v-if="canVisit && canEdit && editView && !isLink" class="cw-container-wrapper cw-container-wrapper-edit">
-                        <template v-if="!processing">
-                            <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
-                            <span id="operation" class="assistive-text">
-                                {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
-                            </span>
-                            <draggable
-                                class="cw-structural-element-list"
-                                tag="ol"
-                                role="listbox"
-                                v-model="containerList"
-                                v-bind="dragOptions"
-                                handle=".cw-sortable-handle"
-                                @start="isDragging = true"
-                                @end="dropContainer"
-                            >
-                                <li
-                                    v-for="container in containerList"
-                                    :key="container.id"
-                                    class="cw-container-item-sortable"
+                    <div class="cw-page-wrapper">
+                        <div class="cw-page-content">
+                            <div v-if="structuralElementLoaded && !isLink" class="cw-companion-box-wrapper">
+                                <courseware-companion-box
+                                    v-if="!canVisit"
+                                    mood="sad"
+                                    :msgCompanion="$gettext('Diese Seite steht Ihnen leider nicht zur Verfügung.')"
+                                />
+                                <courseware-companion-box
+                                    v-if="blockedByAnotherUser"
+                                    :msgCompanion="$gettextInterpolate($gettext('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet'), {blockingUserName: blockingUserName})"
+                                    mood="pointing"
                                 >
-                                    <span
-                                        :class="{ 'cw-sortable-handle-dragging': isDragging }"
-                                        class="cw-sortable-handle"
-                                        tabindex="0"
-                                        role="button"
-                                        aria-describedby="operation"
-                                        :ref="'sortableHandle' + container.id"
-                                        @keydown="keyHandler($event, container.id)"
-                                    ></span>
-                                    <component
-                                        :is="containerComponent(container)"
-                                        :container="container"
-                                        :canEdit="canEdit"
-                                        :canAddElements="canAddElements"
-                                        :isTeacher="userIsTeacher"
-                                        class="cw-container-item"
-                                        ref="containers"
-                                        :class="{ 'cw-container-item-selected': keyboardSelected === container.id}"
+                                    <template #companionActions>
+                                        <button v-if="userIsTeacher" class="button" @click="menuAction('removeLock')">
+                                            {{ textRemoveLock.title }}
+                                        </button>
+                                    </template>
+                                </courseware-companion-box>
+                                <courseware-empty-element-box
+                                    v-if="showEmptyElementBox"
+                                    :canEdit="canEdit"
+                                    :noContainers="noContainers"
+                                />
+                                <courseware-welcome-screen v-if="noContainers && isRoot && canEdit" />
+                            </div>
+
+                            <div
+                                v-if="canVisit && !editView && !isLink"
+                                class="cw-container-wrapper"
+                                :class="{
+                                    'cw-container-wrapper-consume': consumeMode,
+                                    'cw-container-wrapper-discuss': discussView,
+                                }"
+                            >
+                                <courseware-structural-element-discussion
+                                    v-if="!noContainers && discussView"
+                                    :structuralElement="structuralElement"
+                                    :canEdit="canEdit"
+                                />
+                                <component
+                                    v-for="container in containers"
+                                    :key="container.id"
+                                    :is="containerComponent(container)"
+                                    :container="container"
+                                    :canEdit="canEdit"
+                                    :canAddElements="canAddElements"
+                                    :isTeacher="userIsTeacher"
+                                    class="cw-container-item"
+                                />
+                            </div>
+                            <div
+                                v-if="isLink"
+                                class="cw-container-wrapper"
+                                :class="{
+                                    'cw-container-wrapper-consume': consumeMode,
+                                    'cw-container-wrapper-discuss': discussView,
+                                }"
+                            >
+                                <courseware-structural-element-discussion
+                                    v-if="discussView"
+                                    :structuralElement="structuralElement"
+                                    :canEdit="canEdit"
+                                />
+                                <div v-if="editView" class="cw-companion-box-wrapper">
+                                    <courseware-companion-box
+                                        :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
+                                        mood="pointing"
                                     />
-                                </li>
-                            </draggable>
-                        </template>
-                        <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
+                                </div>
+                                <component
+                                    v-for="container in linkedContainers"
+                                    :key="container.id"
+                                    :is="containerComponent(container)"
+                                    :container="container"
+                                    :canEdit="false"
+                                    :canAddElements="false"
+                                    :isTeacher="userIsTeacher"
+                                    class="cw-container-item"
+                                />
+                            </div>
+                            <div v-if="canVisit && canEdit && editView && !isLink" class="cw-container-wrapper cw-container-wrapper-edit">
+                                <template v-if="!processing">
+                                    <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
+                                    <span id="operation" class="assistive-text">
+                                        {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
+                                    </span>
+                                    <draggable
+                                        class="cw-structural-element-list"
+                                        tag="ol"
+                                        role="listbox"
+                                        v-model="containerList"
+                                        v-bind="dragOptions"
+                                        handle=".cw-sortable-handle"
+                                        @start="isDragging = true"
+                                        @end="dropContainer"
+                                    >
+                                        <li
+                                            v-for="container in containerList"
+                                            :key="container.id"
+                                            class="cw-container-item-sortable"
+                                        >
+                                            <span
+                                                :class="{ 'cw-sortable-handle-dragging': isDragging }"
+                                                class="cw-sortable-handle"
+                                                tabindex="0"
+                                                role="option"
+                                                aria-describedby="operation"
+                                                :ref="'sortableHandle' + container.id"
+                                                @keydown="keyHandler($event, container.id)"
+                                            ></span>
+                                            <component
+                                                :is="containerComponent(container)"
+                                                :container="container"
+                                                :canEdit="canEdit"
+                                                :canAddElements="canAddElements"
+                                                :isTeacher="userIsTeacher"
+                                                class="cw-container-item"
+                                                ref="containers"
+                                                :class="{ 'cw-container-item-selected': keyboardSelected === container.id}"
+                                            />
+                                        </li>
+                                    </draggable>
+                                </template>
+                                <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
+                            </div>
+                        </div>
+                        <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" /> 
                     </div>
                 </div>
-
                 <studip-dialog
                     v-if="showEditDialog"
                     :title="textEdit.title"

@@ -1,3 +1,4 @@
+import CoursewareToolbar from './../toolbar/CoursewareToolbar.vue';
 // contentbar
 import CoursewareRibbon from './CoursewareRibbon.vue';
 import CoursewareTabs from '../layouts/CoursewareTabs.vue';
@@ -13,6 +14,7 @@ import CoursewareListContainer from '../containers/CoursewareListContainer.vue';
 import CoursewareTabsContainer from '../containers/CoursewareTabsContainer.vue';
 
 const StructuralElementComponents = {
+    CoursewareToolbar,
     //contentbar
     CoursewareRibbon,
     CoursewareTabs,

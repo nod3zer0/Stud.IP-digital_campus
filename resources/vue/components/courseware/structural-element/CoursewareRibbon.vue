@@ -1,7 +1,7 @@
 <template>
     <div :class="{ 'cw-ribbon-wrapper-consume': consumeMode }" :id="isContentBar ? 'contentbar' : null" >
         <div v-show="stickyRibbon" class="cw-ribbon-sticky-top"></div>
-        <header class="cw-ribbon" :class="{ 'cw-ribbon-sticky': stickyRibbon, 'cw-ribbon-consume': consumeMode }">
+        <header :id="isContentBar ? 'cw-ribbon' : null" class="cw-ribbon" :class="{ 'cw-ribbon-sticky': stickyRibbon, 'cw-ribbon-consume': consumeMode }">
             <div class="cw-ribbon-wrapper-left">
                 <nav class="cw-ribbon-nav" :class="buttonsClass">
                     <slot name="buttons" />
