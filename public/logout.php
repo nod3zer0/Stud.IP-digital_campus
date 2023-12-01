@@ -62,9 +62,14 @@ if ($auth->auth["uid"]!="nobody") {
     if (!empty($docaslogout)) {
         $casauth->logout();
     }
+    $sess->start();
+    $_SESSION['_language'] = $_language;
+    if ($contrast) {
+        $_SESSION['contrast'] = $contrast;
+    }
 } else {
     $sess->delete();
     page_close();
 }
 
-header("Location:" . URLHelper::getURL("index.php?logout=true&set_language=$_language&set_contrast=$contrast"));
+header("Location:" . URLHelper::getURL("index.php?logout=true"));

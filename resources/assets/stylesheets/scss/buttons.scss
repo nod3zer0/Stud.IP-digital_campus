@@ -141,14 +141,20 @@ button.styleless {
     background-color: unset;
     border: 0;
 }
+
 button.as-link {
+    border: 0;
     background-color: transparent;
-    border: none;
     color: var(--base-color);
     cursor: pointer;
-    margin: 0px;
-    padding: 0px;
-    &:hover {
+    line-height: 1em;
+    padding: 0;
+    &:hover,
+    &:active {
         color: var(--active-color);
+    }
+
+    @media not prefers-reduced-motion {
+        transition: color $transition-duration;
     }
 }

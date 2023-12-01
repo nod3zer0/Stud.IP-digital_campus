@@ -417,7 +417,7 @@ class Seminar_Auth
         $_language_path = init_i18n($_SESSION['_language']);
         include 'config.inc.php';
 
-        if (isset($_SESSION['contrast'])) {
+        if (!empty($_SESSION['contrast'])) {
             PageLayout::addStylesheet('accessibility.css');
         }
     }
