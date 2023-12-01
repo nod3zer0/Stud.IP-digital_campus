@@ -493,6 +493,11 @@ class Authority
         return $GLOBALS['perm']->have_studip_perm('tutor', $range->id ,$user->id);
     }
 
+    public static function canSortUnit(User $user, \Range $range): bool
+    {
+        return self::canCreateUnit($user, $range);
+    }
+
     public static function canUpdateUnit(User $user, Unit $resource): bool
     {
         return $resource->canEdit($user);

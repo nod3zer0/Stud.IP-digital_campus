@@ -29,6 +29,7 @@ class Unit extends SchemaProvider
     {
         return [
             'content-type' => (string) $resource['content_type'],
+            'position' => (int) $resource['position'],
             'public' => (int) $resource['public'],
             'release-date' => $resource['release_date'] ? date('c', $resource['release_date']) : null,
             'withdraw-date' => $resource['withdraw_date'] ? date('c', $resource['withdraw_date']) : null,

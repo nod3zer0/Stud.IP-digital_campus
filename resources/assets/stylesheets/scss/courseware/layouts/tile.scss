@@ -33,6 +33,18 @@
             @include background-icon(courseware, clickable, 128);
         }
 
+        .overlay-handle {
+            @extend .drag-handle;
+            background-color: $white;
+            background-position: center !important;
+            height: 22px;
+            padding: 4px 8px;
+            margin-top: 3px;
+            float: left;
+            border-left: solid thin var(--content-color-20);
+        }
+
+
         .overlay-text {
             padding: 6px 7px;
             margin: 4px;

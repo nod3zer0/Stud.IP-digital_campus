@@ -515,6 +515,7 @@ class RouteMap
         $group->delete('/courseware-units/{id}', Routes\Courseware\UnitsDelete::class);
         // not a JSON route
         $group->post('/courseware-units/{id}/copy', Routes\Courseware\UnitsCopy::class);
+        $group->post('/{type:courses|users}/{id}/courseware-units/sort', Routes\Courseware\UnitsSort::class);
 
         $group->get('/courseware-clipboards', Routes\Courseware\ClipboardsIndex::class);
         $group->get('/users/{id}/courseware-clipboards', Routes\Courseware\UsersClipboardsIndex::class);

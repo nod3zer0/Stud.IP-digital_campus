@@ -2,6 +2,7 @@
 
 namespace JsonApi\Routes\Courseware;
 
+use Courseware\Unit;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\Errors\RecordNotFoundException;
 use JsonApi\JsonApiController;
@@ -103,6 +104,7 @@ class UnitsCreate extends JsonApiController
             'range_type' => $range->getRangeType(),
             'structural_element_id' => $struct->id,
             'content_type' => 'courseware',
+            'position' => Unit::getNewPosition($range->getRangeId()),
             'creator_id' => $user->id,
             'public' => self::arrayGet($json, 'data.attributes.public', '0'),
             'release_date' => self::arrayGet($json, 'data.attributes.release-date'),

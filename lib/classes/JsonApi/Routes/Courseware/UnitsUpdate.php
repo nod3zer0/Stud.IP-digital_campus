@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
- * Update one Block.
+ * Update one Unit.
  */
 class UnitsUpdate extends JsonApiController
 {

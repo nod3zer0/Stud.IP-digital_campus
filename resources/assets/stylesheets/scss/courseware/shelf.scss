@@ -51,3 +51,14 @@
         margin-top: 0;
     }
 }
+
+.cw-unit-items {
+    .unit-ghost {
+        background: var(--white);
+        border: dashed 2px var(--content-color-40);
+    }
+    .unit-ghost .cw-tile {
+        opacity: 0;
+        height: 416px;
+    }
+}

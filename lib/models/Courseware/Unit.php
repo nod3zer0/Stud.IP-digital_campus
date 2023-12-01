@@ -59,6 +59,8 @@ class Unit extends \SimpleORMap implements \PrivacyObject
             'foreign_key' => 'creator_id',
         ];
 
+        $config['registered_callbacks']['after_delete'][] = 'updatePositionsAfterDelete';
+
         parent::configure($config);
     }
 
@@ -126,5 +128,48 @@ class Unit extends \SimpleORMap implements \PrivacyObject
             $storage->addTabularData(_('Courseware Lernmaterialien'), 'cw_units', $units);
         }
         
+    }
+
+    public static function getNewPosition($range_id): int
+    {
+        return static::countBySQL('range_id = ?', [$range_id]);
+    }
+
+    public function updatePositionsAfterDelete(): void
+    {
+        if (is_null($this->position)) {
+            return;
+        }
+
+        $db = \DBManager::get();
+        $stmt = $db->prepare(sprintf(
+            'UPDATE
+              %s
+            SET
+              position = position - 1
+            WHERE
+              range_id = :range_id AND
+              position > :position',
+            'cw_units'
+        ));
+        $stmt->bindValue(':range_id', $this->range_id);
+        $stmt->bindValue(':position', $this->position);
+        $stmt->execute();
+    }
+
+    public static function updatePositions($range, $positions): void
+    {
+        $db = \DBManager::get();
+        $query = sprintf(
+            'UPDATE
+                %s 
+            SET
+                position = FIND_IN_SET(id, ?) - 1
+            WHERE
+                range_id = ?',
+            'cw_units');
+        $args = array(join(',', $positions), $range->id);
+        $stmt = $db->prepare($query);
+        $stmt->execute($args);
     }
 }

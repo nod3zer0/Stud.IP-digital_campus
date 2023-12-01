@@ -273,6 +273,20 @@ export const actions = {
 
         return dispatch(loadUnits, state.context.id);
     },
+    
+    async sortUnits({ dispatch, state }, data) {
+        let loadUnits = null;
+        if (state.context.type === 'courses') {
+            loadUnits = 'loadCourseUnits';
+        }
+        if (state.context.type === 'users') {
+            loadUnits = 'loadUserUnits';
+        }
+
+        await state.httpClient.post(`${state.context.type}/${state.context.id}/courseware-units/sort`, {data: data});
+        
+        return dispatch(loadUnits, state.context.id);
+    },
 
     async loadUsersCourses({ dispatch, rootGetters, state }, { userId, withCourseware }) {
         const parent = {

@@ -9,6 +9,9 @@
             :displayProgress="inCourseContext"
             :progress="progress"
             :imageUrl="imageUrl"
+            :handle="handle"
+            :handleId="'unit-handle-' + unit.id"
+            @handle-keydown="$emit('unit-keydown', $event)"
         >
             <template #image-overlay-with-action-menu>
                 <studip-action-menu
@@ -80,6 +83,10 @@ export default {
     },
     props: {
         unit: Object,
+        handle: {
+            type: Boolean,
+            default: true
+        }
     },
     data() {
         return {
@@ -191,7 +198,8 @@ export default {
         },
         async copy() {
             await this.copyUnit({unitId: this.unit.id, modified: null});
-            this.companionSuccess({ info: this.$gettext('Lernmaterial kopiert.') });        }
+            this.companionSuccess({ info: this.$gettext('Lernmaterial kopiert.') });
+        },
     }
 }
 </script>

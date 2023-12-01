@@ -1,10 +1,15 @@
 <template>
     <component :is="tag" class="cw-tile" :class="[color]">
-        <div
-            class="preview-image"
-            :class="[hasImage ? '' : 'default-image']"
-            :style="previewImageStyle"
-        >
+        <div class="preview-image" :class="[hasImage ? '' : 'default-image']" :style="previewImageStyle">
+            <div
+                v-if="handle"
+                class="overlay-handle cw-tile-handle"
+                tabindex="0"
+                role="option"
+                aria-describedby="operation"
+                :id="handleId"
+                @keydown="$emit('handle-keydown', $event)"
+            ></div>
             <div class="overlay-text" v-if="hasImageOverlay">
                 <slot name="image-overlay"></slot>
             </div>
@@ -18,15 +23,10 @@
             :title="descriptionTitle"
             class="description"
         >
-            <header
-                :class="[icon ? 'description-icon-' + icon : '']"
-            >
+            <header :class="[icon ? 'description-icon-' + icon : '']">
                 {{ title }}
             </header>
-            <div
-                v-if="displayProgress"
-                :title="progressTitle"
-                class="progress-wrapper" >
+            <div v-if="displayProgress" :title="progressTitle" class="progress-wrapper">
                 <progress :value="progress" max="100">{{ progress }}</progress>
             </div>
             <div class="description-text-wrapper">
@@ -43,65 +43,72 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    name: "courseware-tile",
+    name: 'courseware-tile',
     props: {
         tag: {
             type: String,
-            default: "div",
-            validator: tag => {
-                return ["div", "li"].includes(tag);
-            }
+            default: 'div',
+            validator: (tag) => {
+                return ['div', 'li'].includes(tag);
+            },
         },
         color: {
             type: String,
-            default: "studip-blue",
-            validator: value => {
+            default: 'studip-blue',
+            validator: (value) => {
                 return [
-                    "black",
-                    "charcoal",
-                    "royal-purple",
-                    "iguana-green",
-                    "queen-blue",
-                    "verdigris",
-                    "mulberry",
-                    "pumpkin",
-                    "sunglow",
-                    "apple-green",
-                    "studip-blue",
-                    "studip-lightblue",
-                    "studip-green",
-                    "studip-yellow",
-                    "studip-gray",
+                    'black',
+                    'charcoal',
+                    'royal-purple',
+                    'iguana-green',
+                    'queen-blue',
+                    'verdigris',
+                    'mulberry',
+                    'pumpkin',
+                    'sunglow',
+                    'apple-green',
+                    'studip-blue',
+                    'studip-lightblue',
+                    'studip-green',
+                    'studip-yellow',
+                    'studip-gray',
                 ].includes(value);
-            }
+            },
         },
         title: {
             type: String,
-            default: "–"
+            default: '–',
         },
         icon: {
-            type: String
+            type: String,
         },
         imageUrl: {
-            type: String
+            type: String,
         },
         displayProgress: {
             type: Boolean,
-            default: false
+            default: false,
         },
         progress: {
             type: Number,
-            validator: value => {
+            validator: (value) => {
                 return value >= 0 && value <= 100;
-            }
+            },
         },
         descriptionLink: {
             type: String,
-            default: ""
+            default: '',
         },
         descriptionTitle: {
             type: String,
-            default: ''
+            default: '',
+        },
+        handle: {
+            type: Boolean,
+            default: false,
+        },
+        handleId: {
+            type: String
         }
     },
     computed: {
@@ -109,19 +116,18 @@ export default {
             userIsTeacher: 'userIsTeacher'
         }),
         hasImage() {
-            return this.imageUrl !== "" && this.imageUrl !== undefined;
+            return this.imageUrl !== '' && this.imageUrl !== undefined;
         },
         hasImageOverlay() {
-            return this.$slots["image-overlay"] !== undefined;
+            return this.$slots['image-overlay'] !== undefined;
         },
         hasImageOverlayWithActionMenu() {
-            return this.$slots["image-overlay-with-action-menu"] !== undefined;
+            return this.$slots['image-overlay-with-action-menu'] !== undefined;
         },
         previewImageStyle() {
             if (this.hasImage) {
-                return { "background-image": "url(" + this.imageUrl + ")" };
-            }
-            else {
+                return { 'background-image': 'url(' + this.imageUrl + ')' };
+            } else {
                 return {};
             }
         },
@@ -133,13 +139,13 @@ export default {
         },
         hasDescriptionLink() {
             return this.descriptionLink !== '';
-        }
+        },
     },
     methods: {
         showProgress(e) {
             e.preventDefault();
-            this.$emit("showProgress");
-        }
+            this.$emit('showProgress');
+        },
     },
 }
 </script>
