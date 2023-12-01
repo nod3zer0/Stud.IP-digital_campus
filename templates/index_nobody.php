@@ -1,8 +1,5 @@
 <?php
 /**
- * @var int $num_active_courses
- * @var int $num_registered_users
- * @var int $num_online_users
  * @var bool $logout
  * @var string[] $plugin_contents
  */
@@ -25,7 +22,9 @@ if ($bg_mobile) {
 <!-- Startseite (nicht eingeloggt) -->
 <main id="content">
     <? if ($logout): ?>
-        <?= MessageBox::success(_('Sie sind nun aus dem System abgemeldet.'), array_filter([$GLOBALS['UNI_LOGOUT_ADD']])) ?>
+        <?= MessageBox::success(
+            _('Sie sind nun aus dem System abgemeldet.'),
+            array_filter((array) $GLOBALS['UNI_LOGOUT_ADD'])) ?>
     <? endif; ?>
 
     <div id="background-desktop" style="background: url(<?= $bg_desktop ?>) no-repeat top left/cover;"></div>
@@ -87,29 +86,6 @@ if ($bg_mobile) {
                     <? endif ?>
                 </div>
             </form>
-
-            <div class="login_info">
-                <div>
-                    <?= _('Aktive Veranstaltungen') ?>:
-                    <?= number_format($num_active_courses, 0, ',', '.') ?>
-                </div>
-
-                <div>
-                    <?= _('Registrierte NutzerInnen') ?>:
-                    <?= number_format($num_registered_users, 0, ',', '.') ?>
-                </div>
-
-                <div>
-                    <?= _('Davon online') ?>:
-                    <?= number_format($num_online_users, 0, ',', '.') ?>
-                </div>
-
-                <div>
-                    <a href="dispatch.php/siteinfo/show">
-                        <?= _('mehr') ?> &hellip;
-                    </a>
-                </div>
-            </div>
         </footer>
     </article>
 
