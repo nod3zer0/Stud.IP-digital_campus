@@ -294,7 +294,7 @@ $message_types = ['msg' => "success", 'error' => "error", 'info' => "info"];
         </table>
     </fieldset>
     <fieldset <?= !isset($flash['open']) || $flash['open'] != 'bd_description' ? 'class="collapsed"' : ''?> data-open="bd_description">
-        <legend><?= _('Beschreibungen') ?></legend>
+        <legend><?= _('Weitere Angaben') ?></legend>
 
 <? if (!$descriptions): ?>
         <?= MessageBox::info(_('Fehlende Datenzeilen')) ?>
