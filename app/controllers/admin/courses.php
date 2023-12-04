@@ -873,7 +873,9 @@ class Admin_CoursesController extends AuthenticatedController
         $filter_config = Request::getArray('fields');
 
         if (count($filter_config) > 0) {
-            $courses = AdminCourseFilter::get()->getCourses();
+            $filter = AdminCourseFilter::get();
+            PluginEngine::sendMessage(AdminCourseWidgetPlugin::class, 'applyFilters', $filter);
+            $courses = $filter->getCourses();
 
             $view_filters = $this->getViewFilters();
 
