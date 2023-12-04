@@ -3,14 +3,6 @@
     flex-direction: row;
     flex-wrap: wrap;
 
-    > * {
-        flex: 1 0 100%;
-    }
-
-    > legend {
-        margin-bottom: 0 !important;
-    }
-
     // General list item styles and placeholders
     ul, li {
         list-style: none;

@@ -39,101 +39,105 @@
     </fieldset>
 
 <? if (count($teachers) > 1): ?>
-    <fieldset class="studip-selection <?= $metadata_locked ? 'disabled' : ''?>" data-attribute-name="assigned_teachers">
+    <fieldset>
         <legend><?= _('Durchführende Lehrende') ?></legend>
 
-        <section class="studip-selection-selected">
-            <h2><?= _('Zugewiesene Lehrende') ?></h2>
+        <div class="studip-selection <?= $metadata_locked ? 'disabled' : ''?>" data-attribute-name="assigned_teachers">
+            <section class="studip-selection-selected">
+                <h2><?= _('Zugewiesene Lehrende') ?></h2>
 
-            <ul>
-            <? foreach ($assigned_teachers as $teacher): ?>
-                <li data-selection-id="<?= htmlReady($teacher->user_id) ?>">
-                    <input type="hidden" name="assigned_teachers[]"
-                           value="<?= htmlReady($teacher->user_id) ?>">
+                <ul>
+                <? foreach ($assigned_teachers as $teacher): ?>
+                    <li data-selection-id="<?= htmlReady($teacher->user_id) ?>">
+                        <input type="hidden" name="assigned_teachers[]"
+                               value="<?= htmlReady($teacher->user_id) ?>">
 
-                    <span class="studip-selection-image">
-                        <?= Avatar::getAvatar($teacher->user_id)->getImageTag(Avatar::SMALL) ?>
-                    </span>
-                    <span class="studip-selection-label">
-                        <?= htmlReady($teacher->getFullname()) ?>
-                    </span>
-                </li>
+                        <span class="studip-selection-image">
+                            <?= Avatar::getAvatar($teacher->user_id)->getImageTag(Avatar::SMALL) ?>
+                        </span>
+                        <span class="studip-selection-label">
+                            <?= htmlReady($teacher->getFullname()) ?>
+                        </span>
+                    </li>
+                <? endforeach; ?>
+                    <li class="empty-placeholder">
+                        <?= _('Kein spezieller Lehrender zugewiesen') ?>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="studip-selection-selectable">
+                <h2><?= _('Lehrende der Veranstaltung') ?></h2>
+
+                <ul>
+            <? foreach ($teachers as $teacher): ?>
+                <? if (!$assigned_teachers->find($teacher->user_id)): ?>
+                    <li data-selection-id="<?= htmlReady($teacher->id) ?>" >
+                        <span class="studip-selection-image">
+                            <?= Avatar::getAvatar($teacher->id)->getImageTag(Avatar::SMALL) ?>
+                        </span>
+                        <span class="studip-selection-label">
+                            <?= htmlReady($teacher->getFullname()) ?>
+                        </span>
+                    </li>
+                <? endif; ?>
             <? endforeach; ?>
-                <li class="empty-placeholder">
-                    <?= _('Kein spezieller Lehrender zugewiesen') ?>
-                </li>
-            </ul>
-        </section>
-
-        <section class="studip-selection-selectable">
-            <h2><?= _('Lehrende der Veranstaltung') ?></h2>
-
-            <ul>
-        <? foreach ($teachers as $teacher): ?>
-            <? if (!$assigned_teachers->find($teacher->user_id)): ?>
-                <li data-selection-id="<?= htmlReady($teacher->id) ?>" >
-                    <span class="studip-selection-image">
-                        <?= Avatar::getAvatar($teacher->id)->getImageTag(Avatar::SMALL) ?>
-                    </span>
-                    <span class="studip-selection-label">
-                        <?= htmlReady($teacher->getFullname()) ?>
-                    </span>
-                </li>
-            <? endif; ?>
-        <? endforeach; ?>
-                <li class="empty-placeholder">
-                    <?= sprintf(
-                            _('Ihre Auswahl entspricht dem Zustand "%s" und wird beim Speichern zurückgesetzt'),
-                            _('Kein spezieller Lehrender zugewiesen')
-                    ) ?>
-                </li>
-            </ul>
-        </section>
+                    <li class="empty-placeholder">
+                        <?= sprintf(
+                                _('Ihre Auswahl entspricht dem Zustand "%s" und wird beim Speichern zurückgesetzt'),
+                                _('Kein spezieller Lehrender zugewiesen')
+                        ) ?>
+                    </li>
+                </ul>
+            </section>
+        </div>
     </fieldset>
 <? endif; ?>
 
 <? if (count($groups) > 0): ?>
-    <fieldset class="studip-selection <?= $metadata_locked ? 'disabled' : ''?>" data-attribute-name="assigned_groups">
+    <fieldset>
         <legend><?= _('Beteiligte Gruppen') ?></legend>
 
-        <section class="studip-selection-selected">
-            <h2><?= _('Zugewiesene Gruppen') ?></h2>
+        <div class="studip-selection <?= $metadata_locked ? 'disabled' : ''?>" data-attribute-name="assigned_groups">
+            <section class="studip-selection-selected">
+                <h2><?= _('Zugewiesene Gruppen') ?></h2>
 
-            <ul>
-            <? foreach ($assigned_groups as $group) : ?>
-                <li data-selection-id="<?= htmlReady($group->id) ?>">
-                    <input type="hidden" name="assigned_groups[]"
-                           value="<?= htmlReady($group->id) ?>">
+                <ul>
+                <? foreach ($assigned_groups as $group) : ?>
+                    <li data-selection-id="<?= htmlReady($group->id) ?>">
+                        <input type="hidden" name="assigned_groups[]"
+                               value="<?= htmlReady($group->id) ?>">
 
-                    <span class="studip-selection-label">
-                        <?= htmlReady($group->name) ?>
-                    </span>
-                </li>
-            <? endforeach ?>
-                <li class="empty-placeholder">
-                    <?= _('Keine spezielle Gruppe zugewiesen') ?>
-                </li>
-            </ul>
-        </section>
+                        <span class="studip-selection-label">
+                            <?= htmlReady($group->name) ?>
+                        </span>
+                    </li>
+                <? endforeach ?>
+                    <li class="empty-placeholder">
+                        <?= _('Keine spezielle Gruppe zugewiesen') ?>
+                    </li>
+                </ul>
+            </section>
 
-        <section class="studip-selection-selectable">
-            <h2><?= _('Gruppen der Veranstaltung') ?></h2>
+            <section class="studip-selection-selectable">
+                <h2><?= _('Gruppen der Veranstaltung') ?></h2>
 
-            <ul>
-        <? foreach ($groups as $group): ?>
-            <? if (!$assigned_groups->find($group->id)): ?>
-                <li data-selection-id="<?= htmlReady($group->id) ?>" >
-                    <span class="studip-selection-label">
-                        <?= htmlReady($group->name) ?>
-                    </span>
-                </li>
-            <? endif; ?>
-        <? endforeach; ?>
-                <li class="empty-placeholder">
-                    <?= _('Alle Gruppen wurden dem Termin zugewiesen') ?>
-                </li>
-            </ul>
-        </section>
+                <ul>
+            <? foreach ($groups as $group): ?>
+                <? if (!$assigned_groups->find($group->id)): ?>
+                    <li data-selection-id="<?= htmlReady($group->id) ?>" >
+                        <span class="studip-selection-label">
+                            <?= htmlReady($group->name) ?>
+                        </span>
+                    </li>
+                <? endif; ?>
+            <? endforeach; ?>
+                    <li class="empty-placeholder">
+                        <?= _('Alle Gruppen wurden dem Termin zugewiesen') ?>
+                    </li>
+                </ul>
+            </section>
+        </div>
     </fieldset>
 <? endif; ?>
 
