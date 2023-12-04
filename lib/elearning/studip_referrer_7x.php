@@ -9,14 +9,14 @@
 *
 */
 
-/* ILIAS Version 4.4.x */
+/* ILIAS Version 7.x */
 
 if(file_exists("./ilias.ini.php")){
     require_once("./Services/Init/classes/class.ilIniFile.php");
     $ilIliasIniFile = new ilIniFile("./ilias.ini.php");
     $ilIliasIniFile->read();
     $serverSettings = $ilIliasIniFile->readGroup("server");
-    if ($serverSettings["studip"] != 1)
+    if (isset($serverSettings["studip"]) && $serverSettings["studip"] != 1)
     {
         echo 'Option "studip" in ilias.ini.php is not enabled. You need to add studip = "1" to the server section.';
         exit();
@@ -40,7 +40,7 @@ if(file_exists("./ilias.ini.php")){
 
     require_once "./include/inc.header.php";
 
-    $base_url= "ilias.php?baseClass=ilPersonalDesktopGUI";
+    $base_url= "ilias.php?baseClass=ilDashboardGUI";
 
 
     // redirect to specified page
@@ -121,4 +121,4 @@ if(file_exists("./ilias.ini.php")){
         exit();
     }
 }
-?>
+

@@ -217,13 +217,13 @@ class ConnectedIlias
     public function getConnectionSettingsStatus()
     {
         // check ILIAS version
-        if (($this->ilias_int_version < 30000) || ($this->ilias_int_version > 80000)) {
+        if (($this->ilias_int_version < 30000)) {
             $this->error[] = _('Die ILIAS-Version ist ungültig.');
             return false;
         }
 
         // check if url exists
-        $check = @get_headers($this->ilias_config['url'] . 'login.php');
+        $check = @get_headers($this->ilias_config['url'] . 'webservice/soap/server.php');
         if (strpos($check[0], '200') === false) {
             $this->error[] = sprintf(_('Die URL "%s" ist nicht erreichbar.'), $this->ilias_config['url']);
             return false;

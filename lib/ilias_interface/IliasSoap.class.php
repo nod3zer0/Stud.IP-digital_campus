@@ -372,10 +372,10 @@ class IliasSoap extends StudipSoapClient
             'sid' => $this->getSID(),
             'types' => $types,
             'key' => $key,
-            'combination' => $combination
+            'combination' => $combination,
+            'user_id' => (int)$user_id
             ];
-         if ($user_id != "")
-            $param["user_id"] = $user_id;
+
         $result = $this->call('searchObjects', $param);
         if ($result)
         {
@@ -398,10 +398,10 @@ class IliasSoap extends StudipSoapClient
     {
         $param = [
             'sid' => $this->getSID(),
-            'reference_id' => $ref
+            'reference_id' => $ref,
+            'user_id' => (int)$user_id
             ];
-         if ($user_id != "")
-            $param["user_id"] = $user_id;
+
         $result = $this->call('getObjectByReference', $param);
         if ($result != false)
         {
@@ -425,7 +425,8 @@ class IliasSoap extends StudipSoapClient
     {
         $param = [
             'sid'   => $this->getSID(),
-            'title' => $key
+            'title' => $key,
+            'user_id' => 0
         ];
         $result = $this->call('getObjectsByTitle', $param);
         if ($result != false)
@@ -459,9 +460,11 @@ class IliasSoap extends StudipSoapClient
     {
         $param = [
             'sid'   => $this->getSID(),
-            'title' => $key
+            'title' => $key,
+            'user_id' => 0
         ];
         $result = $this->call('getObjectsByTitle', $param);
+
         if ($result != false)
         {
             $objects = $this->parseIliasObject($result);
@@ -501,7 +504,7 @@ class IliasSoap extends StudipSoapClient
 
         $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
-  <Object type=\"$type\">
+  <Object type=\"$type\" obj_id=\"\" >
     <Title>
     $title
     </Title>
@@ -594,11 +597,10 @@ class IliasSoap extends StudipSoapClient
         $param = [
             'sid' => $this->getSID(),
             'ref_id' => $ref_id,
-            'types' => $types
+            'types' => $types,
+            'user_id' => (int)$user_id
             ];
-        if ($user_id != "") {
-            $param["user_id"] = $user_id;
-        }
+
         $result = $this->call('getTreeChilds', $param);
         $tree_childs = [];
         if ($result != false) {
@@ -897,17 +899,47 @@ class IliasSoap extends StudipSoapClient
     *
     * gets user-data for given user-id
     * @access public
-    * @param string user_id user-id
+    * @param string $user_id user-id
     * @return array user-data
     */
     function getUser($user_id)
     {
-        $param = [
-            'sid' => $this->getSID(),
-            'user_id'         => $user_id,
+        if ($this->ilias_version < 80000) {
+            $param = [
+                'sid'     => $this->getSID(),
+                'user_id' => $user_id
             ];
-        $result = $this->call('getUser', $param); // returns user data array
-        return $result;
+            $result = $this->call('getUser', $param); // returns user data array
+            return $result;
+        } else {
+            $param = [
+                'sid'          => $this->getSID(),
+                'user_ids'     => [$user_id],
+                'attach_roles' => 0,
+            ];
+            $result = $this->call('getUserXML', $param); // returns user xml data
+            if ($result) {
+                $s = simplexml_load_string($result);
+                $user_array = [];
+
+                foreach ($s->User as $user) {
+                    $id_parts = explode('usr_', $user->attributes()->Id);
+                    if ($id_parts[1] == $user_id) {
+                        $user_array['usr_id'] = $user_id;
+                        $user_array['user_language'] = (string)$user->attributes()->Language;
+                        $user_array['login'] = (string)$user->Login;
+                        $user_array['firstname'] = (string)$user->Firstname;
+                        $user_array['lastname'] = (string)$user->Lastname;
+                        $user_array['title'] = (string)$user->Title;
+                        $user_array['email'] = (string)$user->Email;
+                        $user_array['active'] = (string)$user->Active;
+                        $user_array['authmode'] = (string)$user->AuthMode->attributes()->type;
+                        return $user_array;
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     /**
@@ -1227,17 +1259,45 @@ class IliasSoap extends StudipSoapClient
     *
     * deletes user-account
     * @access public
-    * @param string user_id user-id
+    * @param string $user_id user-id
     * @return string result
     */
     function deleteUser($user_id)
     {
         $this->clearCache();
-        $param = [
-            'sid' => $this->getSID(),
-            'user_id'         => $user_id
+        if ($this->ilias_version < 80000) {
+            $param = [
+                'sid'     => $this->getSID(),
+                'user_id' => $user_id
             ];
-        return $this->call('deleteUser', $param);   // returns boolean
+            return $this->call('deleteUser', $param);   // returns boolean
+        } else {
+            $user_data = $this->getUser($user_id);
+            if (!$user_data['login']) {
+                return false;
+            }
+            $usr_xml = '<Users>
+    <User Id="il_0_usr_' . $user_id . '" Action="Delete">
+    <UDFDefinitions></UDFDefinitions><Login>' . $user_data['login'] . '</Login>
+    </User>
+    </Users>';
+
+            $param = [
+                'sid'               => $this->getSID(),
+                'folder_id'         => -1,
+                'usr_xml'           => $usr_xml,
+                'conflict_rule'     => 1,
+                'send_account_mail' => 0
+            ];
+            $result = $this->call('importUsers', $param);
+
+            $s = simplexml_load_string($result);
+
+            if ((string)$s->rows->row->column[3] == "successful") {
+                return (string)$s->rows->row->column[0];
+            }
+            return false;
+        }
     }
 
 ////////////////////////////
@@ -1453,7 +1513,7 @@ class IliasSoap extends StudipSoapClient
 <Course>
   <MetaData>
     <General Structure=\"Hierarchical\">
-      <Identifier Catalog=\"ILIAS\"/>
+      <Identifier Catalog=\"ILIAS\" Entry=\"\"/>
       <Title Language=\"$crs_language\">
       $crs_title
       </Title>
