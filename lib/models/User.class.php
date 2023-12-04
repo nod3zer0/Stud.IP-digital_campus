@@ -1161,10 +1161,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             $new_avatar = Avatar::getAvatar($new_id);
             if ($old_avatar->is_customized()) {
                 if (!$new_avatar->is_customized()) {
-                    $avatar_file = $old_avatar->getFilename(Avatar::ORIGINAL);
-                    if (!file_exists($avatar_file)) {
-                        $avatar_file = $old_avatar->getFilename(Avatar::NORMAL);
-                    }
+                    $avatar_file = $old_avatar->getFilename(Avatar::NORMAL);
                     $new_avatar->createFrom($avatar_file);
                 }
                 $old_avatar->reset();

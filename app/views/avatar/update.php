@@ -1,5 +1,15 @@
+<?php
+/**
+ * @var AvatarController $controller
+ * @var string $type
+ * @var string $id
+ * @var string $avatar
+ * @var bool $customized
+ * @var string $cancel_link
+ */
+?>
 <form class="default settings-avatar" enctype="multipart/form-data"
-        action="<?= $controller->url_for('avatar/upload', $type, $id) ?>" method="post">
+        action="<?= $controller->link_for('avatar/upload', $type, $id) ?>" method="post">
     <fieldset>
         <legend>
             <?= $type == 'user' ? _('Profilbild bearbeiten und zuschneiden') :
@@ -8,20 +18,20 @@
         </legend>
         <div class="form-group">
             <div id="avatar-preview">
-                <img class="avatar-normal" id="new-avatar" src="<?= $avatar ?>"
+                <img class="avatar-normal" id="new-avatar" src="<?= htmlReady($avatar) ?>"
                      data-message-too-small="<?= _('Das Bild ist kleiner als 250 x 250 Pixel. Wollen Sie wirklich fortfahren?') ?>">
             </div>
 
             <label class="file-upload">
                 <?= _('Wählen Sie ein Bild von Ihrer Festplatte aus.') ?>
-                <input type="file" id="avatar-upload" accept="image/gif,image/png,image/jpeg"
+                <input type="file" id="avatar-upload" accept="image/gif,image/png,image/jpeg,image/webp"
                        capture="camera"
                        data-max-size="<?= Avatar::MAX_FILE_SIZE ?>"
                        data-message-too-large="<?= _('Die hochgeladene Datei ist zu groß. Bitte wählen Sie ein anderes Bild.') ?>">
 
                 <p class="form-text">
                     <?= sprintf(
-                        _('Die Bilddatei darf max. %s groß sein, es sind nur Dateien mit den Endungen .jpg, .png oder .gif erlaubt!'),
+                        _('Die Bilddatei darf max. %s groß sein, es sind nur Dateien mit den Endungen .jpg, .png, .gif und .webp erlaubt!'),
                         relsize(Avatar::MAX_FILE_SIZE)
                     ) ?>
                 </p>

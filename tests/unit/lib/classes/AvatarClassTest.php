@@ -11,6 +11,96 @@
 
 require_once 'lib/phplib/Seminar_Perm.class.php';
 
+abstract class AvatarTest extends \Codeception\Test\Unit
+{
+    protected $avatar_id;
+    protected $avatar;
+
+    abstract protected function getType(): string;
+
+    protected function createPath(string $avatar_id, ?string $size, bool $subdir): string
+    {
+        $result = $avatar_id;
+
+        if ($size) {
+            $result .= "_{$size}";
+        }
+
+        $result .= '.' . Avatar::EXTENSION;
+
+        if ($subdir) {
+            $result = substr($avatar_id, 0, 2) . '/' . $result;
+        }
+        return "/dynamic/{$this->getType()}/{$result}";
+    }
+
+    protected function createFixedPath(?string $size): string
+    {
+        $result = 'nobody';
+
+        if ($size) {
+            $result .= "_{$size}";
+        }
+
+        $result .= '.' . Avatar::EXTENSION;
+
+        return "/fixed/images/avatars/{$this->getType()}/{$result}";
+    }
+
+    protected function setUp(): void
+    {
+        $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
+        $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
+        $GLOBALS['ASSETS_URL'] = "/fixed/";
+        $GLOBALS['ASSETS_PATH'] = "/fixed/";
+
+        Assets::set_assets_url($GLOBALS['ASSETS_URL']);
+        Assets::set_assets_path($GLOBALS['ASSETS_PATH']);
+    }
+
+    public function tearDown(): void
+    {
+        unset(
+            $GLOBALS['DYNAMIC_CONTENT_PATH'],
+            $GLOBALS['DYNAMIC_CONTENT_URL'],
+            $GLOBALS['ASSETS_URL'],
+            $GLOBALS['ASSETS_PATH']
+        );
+    }
+
+    public function test_avatar_url()
+    {
+        $this->assertEquals(
+            $this->createPath($this->avatar_id, Avatar::NORMAL, true) . '?d=0',
+            $this->avatar->getCustomAvatarUrl(Avatar::NORMAL)
+        );
+    }
+
+    public function test_avatar_path()
+    {
+        $this->assertEquals(
+            $this->createPath($this->avatar_id, Avatar::NORMAL, true),
+            $this->avatar->getCustomAvatarPath(Avatar::NORMAL)
+        );
+    }
+
+    public function test_nobody_url()
+    {
+        $this->assertEquals(
+            $this->createFixedPath(Avatar::NORMAL),
+            $this->avatar->getNobody()->getURL(Avatar::NORMAL)
+        );
+    }
+
+    public function test_nobody_path()
+    {
+        $this->assertEquals(
+            $this->createFixedPath(Avatar::NORMAL),
+            $this->avatar->getNobody()->getFilename(Avatar::NORMAL)
+        );
+    }
+}
+
 /**
  * Testcase for Avatar class.
  *
@@ -20,13 +110,12 @@ require_once 'lib/phplib/Seminar_Perm.class.php';
  * @author    mlunzena
  * @copyright (c) Authors
  */
-class AvatarTestCase extends  \Codeception\Test\Unit
+class AvatarTestCase extends AvatarTest
 {
-    private $avatar_id;
-    private $avatar;
-
     public function setUp(): void
     {
+        parent::setUp();
+
         $stub = $this->createMock('Seminar_Perm');
         // Configure the stub.
         $stub->expects($this->any())
@@ -34,113 +123,40 @@ class AvatarTestCase extends  \Codeception\Test\Unit
             ->will($this->returnValue(true));
 
         $GLOBALS['perm'] = $stub;
-        $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
-        $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
+
         $this->avatar_id = "123456789";
         $this->avatar = Avatar::getAvatar($this->avatar_id);
     }
 
-    public function tearDown(): void
-    {
-        unset($GLOBALS['DYNAMIC_CONTENT_PATH'], $GLOBALS['DYNAMIC_CONTENT_URL']);
-    }
-
     public function test_class_should_exist()
     {
-        $this->assertTrue(class_exists('Avatar'));
+        $this->assertTrue(class_exists(Avatar::class));
     }
 
-    public function test_avatar_url()
+    protected function getType(): string
     {
-        $url = $this->avatar->getCustomAvatarUrl(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/user/" . $this->avatar_id . "_normal.png?d=0", $url);
-    }
-
-    public function test_avatar_path()
-    {
-        $path = $this->avatar->getCustomAvatarPath(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/user/" . $this->avatar_id . "_normal.png", $path);
-    }
-
-    public function test_nobody_url()
-    {
-        $url = Avatar::getNobody()->getUrl(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/user/nobody_normal.png?d=0", $url);
-    }
-
-    public function test_nobody_path()
-    {
-        $path = Avatar::getNobody()->getCustomAvatarPath(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/user/nobody_normal.png", $path);
+        return 'user';
     }
 }
 
 
-class CourseAvatarTestCase extends \Codeception\Test\Unit
+class CourseAvatarTestCase extends AvatarTest
 {
-    private $avatar_id;
-    private $avatar;
-
     public function setUp(): void
     {
+        parent::setUp();
+
         $this->avatar_id = "123456789";
         $this->avatar = CourseAvatar::getAvatar($this->avatar_id);
-
-        $this->setUpFS();
-
-        $GLOBALS['DYNAMIC_CONTENT_URL'] = "/dynamic";
-        $GLOBALS['DYNAMIC_CONTENT_PATH'] = "/dynamic";
-    }
-
-    private function setUpFS()
-    {
-        ArrayFileStream::set_filesystem([
-            'dynamic' => [
-                'course' => [
-                    $this->avatar_id . '_normal.png' => '',
-                    $this->avatar_id . '_medium.png' => '',
-                    $this->avatar_id . '_small.png' => '',
-                ],
-            ],
-        ]);
-
-        if (!stream_wrapper_register("var", "ArrayFileStream")) {
-            throw new Exception("Failed to register protocol");
-        }
-    }
-
-    public function tearDown(): void
-    {
-        stream_wrapper_unregister("var");
-        unset($GLOBALS['DYNAMIC_CONTENT_PATH'], $GLOBALS['DYNAMIC_CONTENT_URL']);
     }
 
     public function test_class_should_exist()
     {
-        $this->assertTrue(class_exists('CourseAvatar'));
+        $this->assertTrue(class_exists(CourseAvatar::class));
     }
 
-    public function test_avatar_url()
+    protected function getType(): string
     {
-        $url = $this->avatar->getCustomAvatarUrl(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/course/". $this->avatar_id . "_normal.png?d=0", $url);
-    }
-
-    public function test_avatar_path()
-    {
-        $path = $this->avatar->getCustomAvatarPath(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/course/". $this->avatar_id . "_normal.png", $path);
-    }
-
-    public function test_nobody_url()
-    {
-        $url = CourseAvatar::getNobody()->getUrl(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/course/nobody_normal.png?d=0", $url);
-    }
-
-    public function test_nobody_path()
-    {
-        $path = CourseAvatar::getNobody()->getCustomAvatarPath(Avatar::NORMAL);
-        $this->assertEquals("/dynamic/course/nobody_normal.png", $path);
+        return 'course';
     }
 }

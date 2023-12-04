@@ -61,8 +61,9 @@ if (isset($_SERVER['SERVER_NAME'])) {
     $ABSOLUTE_URI_STUDIP .= $CANONICAL_RELATIVE_PATH_STUDIP;
 }
 
-// default ASSETS_URL, customize if required
+// default ASSETS_URL and ASSETS_PATH, customize if required
 $GLOBALS['ASSETS_URL'] = $ABSOLUTE_URI_STUDIP . 'assets/';
+$GLOBALS['ASSETS_PATH'] = $ABSOLUTE_PATH_STUDIP . 'assets/';
 
 require __DIR__ . '/classes/StudipFileloader.php';
 
@@ -107,6 +108,7 @@ require_once 'lib/visual.inc.php';
 
 // set assets url
 Assets::set_assets_url($GLOBALS['ASSETS_URL']);
+Assets::set_assets_path($GLOBALS['ASSETS_PATH']);
 
 // globale template factory anlegen
 require_once 'vendor/flexi/lib/flexi.php';

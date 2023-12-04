@@ -26,7 +26,7 @@ class User extends \RESTAPI\RouteMap
             'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
             'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
             'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
-            'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL)
+            'avatar_original' => $avatar->getURL(\Avatar::NORMAL)
         ];
     }
 
@@ -118,7 +118,7 @@ class User extends \RESTAPI\RouteMap
             'avatar_small'    => $avatar->getURL(\Avatar::SMALL),
             'avatar_medium'   => $avatar->getURL(\Avatar::MEDIUM),
             'avatar_normal'   => $avatar->getURL(\Avatar::NORMAL),
-            'avatar_original' => $avatar->getURL(\Avatar::ORIGINAL),
+            'avatar_original' => $avatar->getURL(\Avatar::NORMAL),
             'phone'           => $get_field('privatnr', 'private_phone'),
             'homepage'        => $get_field('Home', 'homepage'),
             'privadr'         => strip_tags($get_field('privadr', 'privadr')),

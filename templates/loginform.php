@@ -65,7 +65,6 @@ if (!match_route('web_migrate.php')) {
                 <?= CSRFProtection::tokenTag() ?>
                 <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
                 <input type="hidden" name="resolution"  value="">
-                <input type="hidden" name="device_pixel_ratio" value="1">
                 <?= Button::createAccept(_('Anmelden'), _('Login')); ?>
                 <?= LinkButton::create(_('Abbrechen'), URLHelper::getURL('index.php', ['cancel_login' => 1], true)) ?>
         </form>
@@ -93,7 +92,6 @@ if (!match_route('web_migrate.php')) {
 $(function () {
     $('form[name=login]').submit(function () {
         $('input[name=resolution]', this).val( screen.width + 'x' + screen.height );
-        $('input[name=device_pixel_ratio]').val(window.devicePixelRatio || 1);
     });
 });
 // -->

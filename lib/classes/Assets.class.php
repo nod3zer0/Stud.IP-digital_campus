@@ -41,8 +41,20 @@ class Assets
     /**
      * @ignore
      */
-    private static $assets_url, $dynamic, $counter_cache;
+    private static $assets_url;
+    private static $assets_path;
+    private static $dynamic;
+    private static $counter_cache;
 
+    /**
+     * This method sets the URL to your assets.
+     *
+     * @param string $path the path to the assets
+     */
+    public static function set_assets_path(string $path): void
+    {
+        self::$assets_path = $path;
+    }
 
     /**
      * This method sets the URL to your assets.
@@ -51,13 +63,12 @@ class Assets
      *
      * @return void
      */
-    static function set_assets_url($url)
+    public static function set_assets_url($url)
     {
-        Assets::$assets_url = $url;
-        Assets::$counter_cache = NULL;
-        Assets::$dynamic = mb_strpos($url, '%d') !== FALSE;
+        self::$assets_url = $url;
+        self::$counter_cache = NULL;
+        self::$dynamic = mb_strpos($url, '%d') !== FALSE;
     }
-
 
     /**
      * This class method is an accessor to the URL "prefix" for all things "asset"
@@ -104,21 +115,29 @@ class Assets
      *
      * @return string the URL "prefix"
      */
-    static function url($to = '')
+    public static function url($to = '')
     {
-
-        if (!Assets::$dynamic)
-            return Assets::$assets_url . $to;
+        if (!self::$dynamic) {
+            return self::$assets_url . $to;
+        }
 
         # dynamic ASSETS_URL
-        return sprintf(Assets::$assets_url,
+        return sprintf(self::$assets_url,
             $to == ''
-                ? Assets::$counter_cache++ % Assets::NUMBER_OF_ALIASES
+                ? self::$counter_cache++ % self::NUMBER_OF_ALIASES
                 # alternative implementation
                 # : hexdec(mb_substr(sha1($to),-1)) & 3)
-                : ord($to[1]) & (Assets::NUMBER_OF_ALIASES - 1))
+                : ord($to[1]) & (self::NUMBER_OF_ALIASES - 1))
 
         . $to;
+    }
+
+    /**
+     * This class method is an accessor to the path "prefix" for all things "asset"
+     */
+    public static function path($to = ''): string
+    {
+        return self::$assets_path . $to;
     }
 
     /**
@@ -137,7 +156,7 @@ class Assets
      * Do not use this to render icons. Use the more appropiate class
      * Icon for this.
      */
-    static function img($source, $opt = [])
+    public static function img($source, $opt = [])
     {
         if (!$source) {
             return '';
@@ -145,9 +164,9 @@ class Assets
 
         $size = $opt['size'] ?? null;
 
-        $opt = Assets::parse_attributes($opt);
+        $opt = self::parse_attributes($opt);
 
-        $opt['src'] = Assets::image_path($source);
+        $opt['src'] = self::image_path($source);
 
         if (!isset($opt['alt'])) {
             $opt['alt'] = ucfirst(current(explode('.', basename($opt['src']))));
@@ -161,7 +180,7 @@ class Assets
             unset($opt['size']);
         }
 
-        return Assets::tag('img', $opt);
+        return self::tag('img', $opt);
     }
 
 
@@ -179,7 +198,7 @@ class Assets
      * Do not use this to render icons. Use the more appropiate class
      * Icon for this.
      */
-    static function input($source, $opt = [])
+    public static function input($source, $opt = [])
     {
 
         if (!$source) {
@@ -190,9 +209,9 @@ class Assets
 
         $size = $opt['size'];
 
-        $opt = Assets::parse_attributes($opt);
+        $opt = self::parse_attributes($opt);
 
-        $opt['src'] = Assets::image_path($source);
+        $opt['src'] = self::image_path($source);
         $opt['type'] = 'image';
 
         if (isset($size) && !isset($opt['width'])) {
@@ -200,7 +219,7 @@ class Assets
             unset($opt['size']);
         }
 
-        return Assets::tag('input', $opt);
+        return self::tag('input', $opt);
     }
 
     /**
@@ -223,9 +242,9 @@ class Assets
      * scripts, as we would like to always generate the complete <image> oder
      * <input> tag. Please use Assets::img or Assets::input instead.
      */
-    static function image_path($source, $respect_retina = false)
+    public static function image_path($source, $respect_retina = false)
     {
-        $path = Assets::compute_public_path($source, 'images', 'png');
+        $path = self::compute_public_path($source, 'images', 'png');
 
         return $path;
     }
@@ -242,12 +261,12 @@ class Assets
      *     <script src="/js/common.javascript"></script>
      *     <script src="/elsewhere/cools.js"></script>
      */
-    static function script($atLeastOneArgument)
+    public static function script($atLeastOneArgument)
     {
         $html = '';
         foreach (func_get_args() as $source) {
-            $source = Assets::javascript_path($source);
-            $html .= Assets::content_tag('script', '',
+            $source = self::javascript_path($source);
+            $html .= self::content_tag('script', '',
                 ['src' => $source]);
             $html .= "\n";
         }
@@ -263,9 +282,9 @@ class Assets
      *
      *   Assets::javascript_path('ajax') => /javascripts/ajax.js
      */
-    static function javascript_path($source)
+    public static function javascript_path($source)
     {
-        return Assets::compute_public_path($source, 'javascripts', 'js');
+        return self::compute_public_path($source, 'javascripts', 'js');
     }
 
 
@@ -284,7 +303,7 @@ class Assets
      *     <link href="/stylesheets/random.styles" media="screen" rel="stylesheet">
      *     <link href="/css/stylish.css" media="screen" rel="stylesheet">
      */
-    static function stylesheet($atLeastOneArgument)
+    public static function stylesheet($atLeastOneArgument)
     {
         $sources = func_get_args();
         $sourceOptions = (func_num_args() > 1 &&
@@ -294,12 +313,12 @@ class Assets
 
         $html = '';
         foreach ($sources as $source) {
-            $source = Assets::stylesheet_path($source);
+            $source = self::stylesheet_path($source);
             $opt = array_merge(['rel' => 'stylesheet',
                     'media' => 'screen',
                     'href' => $source],
                 $sourceOptions);
-            $html .= Assets::tag('link', $opt) . "\n";
+            $html .= self::tag('link', $opt) . "\n";
         }
 
         return $html;
@@ -313,9 +332,9 @@ class Assets
      *
      *   stylesheet_path('style') => /stylesheets/style.css
      */
-    static function stylesheet_path($source)
+    public static function stylesheet_path($source)
     {
-        return Assets::compute_public_path($source, 'stylesheets', 'css');
+        return self::compute_public_path($source, 'stylesheets', 'css');
     }
 
 
@@ -341,7 +360,7 @@ class Assets
                 $source = "$dir/$source";
 
             # consider asset host
-            $source = Assets::url(ltrim($source, '/'));
+            $source = self::url(ltrim($source, '/'));
         }
 
         return $source;
@@ -373,15 +392,17 @@ class Assets
     /**
      * Helper function for content tags.
      *
-     * @param name    tag name
-     * @param content tag content
-     * @param options tag options
+     * @param string $name    tag name
+     * @param string $content tag content
+     * @param array $options tag options
      *
-     * @return type <description>
+     * @return string
      */
     private static function content_tag($name, $content = '', $options = [])
     {
-        if (!$name) return '';
+        if (!$name) {
+            return '';
+        }
         return '<' . $name . ' ' . arrayToHtmlAttributes($options) . '>' .
         $content .
         '</' . $name . '>';

@@ -31,10 +31,10 @@ public/pictures/banner/*.gif
 public/pictures/banner/*.jpeg
 public/pictures/banner/*.jpg
 public/pictures/banner/*.png
-public/pictures/course/[0-9a-f]*.png
-public/pictures/institute/[0-9a-f]*.png
 public/pictures/stock-images/*
-public/pictures/user/[0-9a-f]*.png
+public/pictures/course/*/*.webp
+public/pictures/institute/*/*.webp
+public/pictures/user/*/*.webp
 public/plugins_packages/*
 
 tests/_log

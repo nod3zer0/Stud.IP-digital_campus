@@ -4,7 +4,7 @@
     <? if ($avatar) : ?>
         <div class="sidebar-context">
         <? if ($avatar->is_customized()) : ?>
-            <a href="<?= htmlReady($avatar->getURL(file_exists($avatar->getFilename(Avatar::ORIGINAL)) ? Avatar::ORIGINAL : Avatar::NORMAL)) ?>"
+            <a href="<?= htmlReady($avatar->getURL(Avatar::NORMAL)) ?>"
                data-lightbox="sidebar-avatar"
                data-title="<?= htmlReady(PageLayout::getTitle()) ?>">
         <? endif ?>

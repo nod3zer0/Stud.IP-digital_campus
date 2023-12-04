@@ -15,69 +15,31 @@
  */
 class LicenseAvatar extends Avatar
 {
-
-    /**
-     * Returns an avatar object of the appropriate class.
-     *
-     * @param  string  the course's id
-     *
-     * @return mixed   the course's avatar.
-     */
-    public static function getAvatar($id)
-    {
-        return new self($id);
-    }
-
-    /**
-     * Returns an avatar object for "nobody".
-     *
-     * @return mixed   the course's avatar.
-     */
-    public static function getNobody()
-    {
-        return new self('nobody');
-    }
-
-    /**
-     * Returns the URL to the courses' avatars.
-     *
-     * @return string     the URL to the avatars
-     */
-    public function getAvatarDirectoryUrl()
-    {
-        return $GLOBALS['DYNAMIC_CONTENT_URL'] . "/licenses";
-    }
-
-
-    /**
-     * Returns the file system path to the courses' avatars
-     *
-     * @return string      the file system path to the avatars
-     */
-    public function getAvatarDirectoryPath()
-    {
-        return $GLOBALS['DYNAMIC_CONTENT_PATH'] . "/licenses";
-    }
+    public const AVATAR_TYPE = 'licenses';
+    protected const CREATE_CHUNKED_FOLDERS = false;
 
     public function getImageTag($size = Avatar::MEDIUM, $opt = [])
     {
         if (!$this->is_customized()) {
             return "";
-        } else {
-            return parent::getImageTag($size, $opt);
         }
+
+        return parent::getImageTag($size, $opt);
     }
 
     /**
      * Returns the CSS class to use for this avatar image.
      *
-     * @param string  one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
-     *
+     * @param string  $size one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
      * @return string CSS class to use for the avatar
      */
     protected function getCssClass($size)
     {
-        return sprintf('license-avatar-%s license-%s', $size, $this->user_id);
+        return sprintf(
+            'license-avatar-%s license-%s',
+            $size,
+            $this->user_id
+        );
     }
 
     /**
@@ -101,8 +63,8 @@ class LicenseAvatar extends Avatar
     /**
      * Return the dimension of a size
      *
-     * @param    string         the dimension of a size
-     * @return array            a tupel of integers [width, height]
+     * @param  string $size the dimension of a size
+     * @return array a tupel of integers [width, height]
      */
     public static function getDimension($size)
     {

@@ -36,8 +36,8 @@
     </label>
 
     <label class="file-upload">
-        <?= _('Bild hochladen (PNG, JPG, GIF)') ?>
-        <input type="file" name="avatar" accept=".jpg,.png,.jpeg,.gif">
+        <?= _('Bild hochladen (PNG, JPG, GIF, WebP)') ?>
+        <input type="file" name="avatar" accept=".jpg,.png,.jpeg,.gif,.webp">
     </label>
 
     <label>

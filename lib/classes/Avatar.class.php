@@ -1,62 +1,53 @@
 <?php
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-
-/*
- * Copyright (C) 2007 - André Klaßen (aklassen@uos.de)
- * Copyright (C) 2008 - Marcus Lunzenauer (mlunzena@uos)
- *
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- */
-
-
-/**
- * TODO
+ * the License, or (at your option) any later version. *
  *
- * @package        studip
- * @subpackage lib
- *
- * @author        André Klaßen (aklassen@uos)
- * @author        Marcus Lunzenauer (mlunzena@uos)
- * @copyright (c) Authors
- * @since         1.7
+ * @author  André Klaßen (aklassen@uos)
+ * @author  Marcus Lunzenauer (mlunzena@uos)
+ * @author  Jan-Hendirk Willms <tleilax+studip@gmail.com>
+ * @license GPL2 or any later version
+ * @since   1.7
  */
-class Avatar {
+class Avatar
+{
+    public const AVATAR_TYPE = 'user';
+    protected const CREATE_CHUNKED_FOLDERS = true;
+
+    public const EXTENSION = 'webp';
+    public const IMAGE_QUALITY = 90;
 
     /**
      * This constant stands for the maximal size of a user picture.
      */
-    const ORIGINAL = 'original';
+    public const ORIGINAL = 'original';
 
     /**
      * This constant stands for the maximal size of a user picture.
      */
-    const NORMAL = 'normal';
+    public const NORMAL = 'normal';
 
     /**
      * This constant stands for a medium size of a user picture.
      */
-    const MEDIUM = 'medium';
+    public const MEDIUM = 'medium';
 
     /**
      * This constant stands for an icon size of a user picture.
      */
-    const SMALL    = 'small';
-
+    public const SMALL    = 'small';
 
     /**
      * This constant represents the maximal size of a user picture in bytes.
      */
-    const MAX_FILE_SIZE = 10485760;
+    public const MAX_FILE_SIZE = 10485760;
 
     /**
      * This constant holds the username and ID of the "nobody" avatar.
      */
-    const NOBODY = 'nobody';
+    protected const NOBODY = 'nobody';
 
     /**
      * Holds the user's id
@@ -65,7 +56,6 @@ class Avatar {
      */
     protected $user_id;
 
-
     /**
      * Holds the user's username
      *
@@ -73,24 +63,23 @@ class Avatar {
      */
     protected $username;
 
-
     /**
      * Returns an avatar object of the appropriate class.
      *
-     * @param string    the user's id
-     * @param string    the user's username (optional)
+     * @param string $id the user's id
+     * @param string $username the user's username (optional)
      *
-     * @return Avatar the user's avatar.
+     * @return static the user's avatar.
      */
     public static function getAvatar($id)
     {
         $username = null;
 
-        if (func_num_args() == 2) {
+        if (func_num_args() === 2) {
             $username = func_get_arg(1);
         }
 
-        return new Avatar($id, $username);
+        return new static($id, $username);
     }
 
     /**
@@ -100,60 +89,113 @@ class Avatar {
      */
     public static function getNobody()
     {
-        return new Avatar(Avatar::NOBODY, Avatar::NOBODY);
+        return new static(static::NOBODY, static::NOBODY);
     }
 
-
+    /**
+     * Returns the url to the customized avatars
+     *
+     * @return string
+     */
     public function getAvatarDirectoryUrl()
     {
-        return $GLOBALS['DYNAMIC_CONTENT_URL'] . "/user";
+        return sprintf(
+            '%s/%s%s',
+            $GLOBALS['DYNAMIC_CONTENT_URL'],
+            static::AVATAR_TYPE,
+            static::CREATE_CHUNKED_FOLDERS ? '/' . substr($this->user_id, 0, 2) : ''
+        );
     }
 
-
+    /**
+     * Returns the path to the customized avatars
+     *
+     * @return string
+     */
     public function getAvatarDirectoryPath()
     {
-        return $GLOBALS['DYNAMIC_CONTENT_PATH'] . "/user";
+        return sprintf(
+            '%s/%s%s',
+            $GLOBALS['DYNAMIC_CONTENT_PATH'],
+            static::AVATAR_TYPE,
+            static::CREATE_CHUNKED_FOLDERS ? '/' . substr($this->user_id, 0, 2) : ''
+        );
     }
 
-
-    public function getCustomAvatarUrl($size, $ext = 'png')
+    /**
+     * Returns the url to the default avatars
+     */
+    public function getDefaultAvatarDirectoryUrl(): string
     {
-        $retina = isset($GLOBALS['auth']->auth['devicePixelRatio'])
-                ? $GLOBALS['auth']->auth['devicePixelRatio'] > 1.2
-                : false;
-        $size = $retina && file_exists($this->getCustomAvatarPath($size, 'png', true))
-              ? $size."@2x"
-              : $size;
+        return Assets::url('images/avatars/' . static::AVATAR_TYPE);
+    }
+
+    /**
+     * Returns the path to the default avatars
+     */
+    public function getDefaultAvatarDirectoryPath(): string
+    {
+        return Assets::path('images/avatars/' . static::AVATAR_TYPE);
+    }
+
+    /**
+     * Returns the url to a customized avatar
+     *
+     * @return string
+     */
+    public function getCustomAvatarUrl($size)
+    {
+        if ($this->isNobody()) {
+            return sprintf(
+                '%s/%s_%s.%s',
+                $this->getDefaultAvatarDirectoryUrl(),
+                $this->user_id,
+                $size,
+                self::EXTENSION
+            );
+        }
+
         return sprintf(
             '%s/%s_%s.%s?d=%s',
             $this->getAvatarDirectoryUrl(),
             $this->user_id,
             $size,
-            $ext,
+            self::EXTENSION,
             @filemtime($this->getCustomAvatarPath($size)) ?: "0"
         );
     }
 
-
-    public function getCustomAvatarPath($size, $ext = 'png', $retina = false)
+    /**
+     * Returns the path to a customized avatar
+     *
+     * @return string
+     */
+    public function getCustomAvatarPath($size)
     {
+        if ($this->isNobody()) {
+            return sprintf(
+                '%s/%s_%s.%s',
+                $this->getDefaultAvatarDirectoryPath(),
+                $this->user_id,
+                $size,
+                self::EXTENSION
+            );
+        }
+
         return sprintf(
             '%s/%s_%s.%s',
             $this->getAvatarDirectoryPath(),
             $this->user_id,
-            $retina ? $size."@2x" : $size,
-            $ext
+            $size,
+            self::EXTENSION
         );
     }
-
 
     /**
      * Constructs a new Avatar object belonging to a user with the given id.
      *
-     * @param    string    the user's id
-     * @param    string    the user's username (optional)
-     *
-     * @return void
+     * @param string $user_id  the user's id
+     * @param string $username the user's username (optional)
      */
     protected function __construct($user_id, $username = null)
     {
@@ -163,39 +205,50 @@ class Avatar {
         $this->checkAvatarVisibility();
     }
 
-
     /**
      * Returns the file name of a user's avatar.
      *
-     * @param    string    one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
-     * @param    string    an optional extension of the avatar
+     * @param string $size one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
      *
      * @return string    the absolute file path to the avatar
      */
-    public function getFilename($size, $ext = 'png')
+    public function getFilename($size)
     {
         return $this->is_customized()
-            ? $this->getCustomAvatarPath($size, $ext)
-            : $this->getNobody()->getCustomAvatarPath($size, $ext);
+            ? $this->getCustomAvatarPath($size)
+            : $this->getNobody()->getCustomAvatarPath($size);
     }
-
 
     /**
      * Returns the URL of a user's picture.
      *
-     * @param    string    one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
-     * @param    string    an optional extension of the user's picture
+     * @param string $size one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
      *
      * @return string    the URL to the user's picture
      */
     # TODO (mlunzena) in Url umbenennen
-    public function getURL($size, $ext = 'png')
+    public function getURL($size)
     {
         return $this->is_customized()
-            ? $this->getCustomAvatarUrl($size, $ext)
-            : $this->getNobody()->getCustomAvatarUrl($size, $ext);
+            ? $this->getCustomAvatarUrl($size)
+            : $this->getNobody()->getCustomAvatarUrl($size);
     }
 
+    /**
+     * Returns whether this avatar is a default/"nobody" avatar.
+     */
+    public function isNobody(): bool
+    {
+        return $this->user_id === static::NOBODY;
+    }
+
+    /**
+     * Returns whether a customized file exists
+     */
+    public function customizedFileExists(): bool
+    {
+        return file_exists($this->getCustomAvatarPath(static::MEDIUM));
+    }
 
     /**
      * Returns whether a user has uploaded a custom picture.
@@ -205,38 +258,40 @@ class Avatar {
      */
     public function is_customized()
     {
-        return $this->user_id !== Avatar::NOBODY
-            && file_exists($this->getCustomAvatarPath(Avatar::MEDIUM));
+        return !$this->isNobody()
+            && $this->customizedFileExists();
     }
-
 
     /**
      * Returns the CSS class to use for this avatar image.
      *
-     * @param string    one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
+     * @param string $size one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
      *
      * @return string CSS class to use for the avatar
      */
     protected function getCssClass($size)
     {
         if (!isset($this->username)) {
-            $this->username = htmlReady(get_username($this->user_id));
+            $this->username = get_username($this->user_id);
         }
 
-        return sprintf('avatar-%s user-%s'.($this->is_customized() ? '' : ' recolor'), $size, $this->username);
+        return sprintf(
+            'avatar-%s user-%s' . ($this->is_customized() ? '' : ' recolor'),
+            $size,
+            htmlReady($this->username)
+        );
     }
-
 
     /**
      * Constructs a desired HTML image tag for an Avatar. Additional
      * html attributes may also be specified using the $opt parameter.
      *
-     * @param string    one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
-     * @param array     array of attributes to add to the HTML image tag
+     * @param string $size one of the constants Avatar::(NORMAL|MEDIUM|SMALL)
+     * @param array  $opt  array of attributes to add to the HTML image tag
      *
      * @return string returns the HTML image tag
      */
-    public function getImageTag($size = Avatar::MEDIUM, $opt = [])
+    public function getImageTag($size = self::MEDIUM, $opt = [])
     {
         $opt['src'] = $this->getURL($size);
 
@@ -277,31 +332,34 @@ class Avatar {
         return '<img ' . arrayToHtmlAttributes($opt) . '>';
     }
 
-
     /**
      * Creates all the different sized thumbnails for an uploaded file.
      *
-     * @param    string    the key of the uploaded file,
-     *                                 see documentation about $_FILES
+     * @param string $userfile the key of the uploaded file, see documentation about $_FILES
      *
      * @return void
-     *
-     * @throws several Exceptions if the uploaded file does not satisfy the
-     *                 requirements
      */
     public function createFromUpload($userfile)
     {
         try {
-            // Bilddatei ist zu groß
-            if ($_FILES[$userfile]['size'] > self::MAX_FILE_SIZE) {
-                throw new Exception(sprintf(_("Die hochgeladene Bilddatei ist %s KB groß. Die maximale Dateigröße beträgt %s KB!"),
-                                                                        round($_FILES[$userfile]['size'] / 1024),
-                                                                        self::MAX_FILE_SIZE / 1024));
-            }
-
             // keine Datei ausgewählt!
             if (!$_FILES[$userfile]['name']) {
-                throw new Exception(_("Sie haben keine Datei zum Hochladen ausgewählt!"));
+                throw new Exception(_('Sie haben keine Datei zum Hochladen ausgewählt!'));
+            }
+
+            // Fehler beim Hochladen
+            if ($_FILES[$userfile]['error'] !== UPLOAD_ERR_OK) {
+                throw new Exception(_('Es gab einen Fehler beim Hochladen der Datei!'));
+            }
+
+
+            // Bilddatei ist zu groß
+            if ($_FILES[$userfile]['size'] > self::MAX_FILE_SIZE) {
+                throw new Exception(sprintf(
+                    _('Die hochgeladene Bilddatei ist %s KB groß. Die maximale Dateigröße beträgt %s KB!'),
+                    round($_FILES[$userfile]['size'] / 1024),
+                    self::MAX_FILE_SIZE / 1024)
+                );
             }
 
             // get extension
@@ -309,14 +367,15 @@ class Avatar {
             $ext = mb_strtolower($pathinfo['extension']);
 
             // passende Endung ?
-            if (!in_array($ext, words('jpg jpeg gif png'))) {
-                throw new Exception(sprintf(_("Der Dateityp der Bilddatei ist falsch (%s). Es sind nur die Dateiendungen .gif, .png, .jpeg und .jpg erlaubt!"), htmlReady($ext)));
+            if (!in_array($ext, words('jpg jpeg gif png webp'))) {
+                throw new Exception(sprintf(
+                    _('Der Dateityp der Bilddatei ist falsch (%s). Es sind nur die Dateiendungen .gif, .png, .jpeg, .jpg oder .webp erlaubt!'),
+                    $ext
+                ));
             }
 
             // na dann kopieren wir mal...
-            $filename = sprintf('%s/%s.%s',
-                                                    $this->getAvatarDirectoryPath(),
-                                                    $this->user_id, $ext);
+            $filename = tempnam($GLOBALS['TMP_PATH'], 'avatar-upload');
 
             if (!@move_uploaded_file($_FILES[$userfile]['tmp_name'], $filename)) {
                 throw new Exception(_("Es ist ein Fehler beim Kopieren der Datei aufgetreten. Das Bild wurde nicht hochgeladen!"));
@@ -327,20 +386,17 @@ class Avatar {
 
             $this->sanitizeOrientation($filename);
             $this->createFrom($filename);
-
-            @unlink($filename);
-
-        // eigentlich braucht man hier "finally"
-        } catch (Exception $e) {
-            @unlink($filename);
-            throw $e;
+        } finally {
+            if (isset($filename)) {
+                @unlink($filename);
+            }
         }
     }
 
     /**
      * Creates thumbnails from an image.
      *
-     * @param string    filename of the image to create thumbnails from
+     * @param string $filename filename of the image to create thumbnails from
      *
      * @return void
      */
@@ -353,13 +409,9 @@ class Avatar {
         set_error_handler([__CLASS__, 'error_handler']);
 
         NotificationCenter::postNotification('AvatarWillCreate', $this->user_id);
-        copy($filename, $this->getCustomAvatarPath(Avatar::ORIGINAL));
-        $this->resize(Avatar::NORMAL, $filename);
-        $this->resize(Avatar::NORMAL, $filename, true);
-        $this->resize(Avatar::MEDIUM, $filename);
-        $this->resize(Avatar::MEDIUM, $filename, true);
-        $this->resize(Avatar::SMALL,  $filename);
-        $this->resize(Avatar::SMALL,  $filename, true);
+        $this->resize(static::NORMAL, $filename);
+        $this->resize(static::MEDIUM, $filename);
+        $this->resize(static::SMALL,  $filename);
         NotificationCenter::postNotification('AvatarDidCreate', $this->user_id);
 
         restore_error_handler();
@@ -372,55 +424,50 @@ class Avatar {
     {
         if ($this->is_customized()) {
             NotificationCenter::postNotification('AvatarWillDelete', $this->user_id);
-            @unlink($this->getCustomAvatarPath(Avatar::ORIGINAL));
-            @unlink($this->getCustomAvatarPath(Avatar::NORMAL));
-            @unlink($this->getCustomAvatarPath(Avatar::SMALL));
-            @unlink($this->getCustomAvatarPath(Avatar::MEDIUM));
-            @unlink($this->getCustomAvatarPath(Avatar::NORMAL, 'png', true));
-            @unlink($this->getCustomAvatarPath(Avatar::SMALL, 'png', true));
-            @unlink($this->getCustomAvatarPath(Avatar::MEDIUM, 'png', true));
+            @unlink($this->getCustomAvatarPath(static::NORMAL));
+            @unlink($this->getCustomAvatarPath(static::SMALL));
+            @unlink($this->getCustomAvatarPath(static::MEDIUM));
             NotificationCenter::postNotification('AvatarDidDelete', $this->user_id);
         }
     }
 
-
     /**
      * Return the dimension of a size
      *
-     * @param    string         the dimension of a size
-     * @return array            a tupel of integers [width, height]
+     * @param string $size the dimension of a size
+     * @return array{0: int, 1: int} a tupel of integers [width, height]
      */
-    public static function getDimension($size) {
+    public static function getDimension($size)
+    {
         $dimensions = [
-            Avatar::NORMAL => [250, 250],
-            Avatar::MEDIUM => [100, 100],
-            Avatar::SMALL  => [25, 25]
+            static::NORMAL => [250, 250],
+            static::MEDIUM => [100, 100],
+            static::SMALL  => [25, 25]
         ];
         return $dimensions[$size];
     }
 
-
     /**
      * Create from an image thumbnails of a specified size.
      *
-     * @param string    the size of the thumbnail to create
-     * @param string    the filename of the image to make thumbnail of
-     *
-     * @return void
+     * @param string $size     the size of the thumbnail to create
+     * @param string $filename the filename of the image to make thumbnail of
      */
-    private function resize($size, $filename, $retina = false)
+    private function resize(string $size, string $filename)
     {
-        list($thumb_width, $thumb_height) = static::getDimension($size);
-        $thumb_width = $retina ? $thumb_width * 2 : $thumb_width;
-        $thumb_height = $retina ? $thumb_height * 2 : $thumb_height;
+        [$thumb_width, $thumb_height] = static::getDimension($size);
 
-        list($width, $height, $type) = getimagesize($filename);
+        $thumb_width = $thumb_width * 2;
+        $thumb_height = $thumb_height * 2;
+
+        [$width, $height, $type] = getimagesize($filename);
 
         # create image resource from filename
         $lookup = [
             IMAGETYPE_GIF  => 'imagecreatefromgif',
             IMAGETYPE_JPEG => 'imagecreatefromjpeg',
             IMAGETYPE_PNG  => 'imagecreatefrompng',
+            IMAGETYPE_WEBP => 'imagecreatefromwebp',
         ];
         if (!isset($lookup[$type])) {
             throw new Exception(_("Der Typ des Bilds wird nicht unterstützt."));
@@ -460,9 +507,14 @@ class Avatar {
             $resized_width, $resized_height
         );
 
-        imagepng($dst, $this->getCustomAvatarPath($size, 'png', $retina));
-    }
+        $output_file = $this->getCustomAvatarPath($size);
+        $directory = dirname($output_file);
+        if (!is_dir($directory) && !mkdir($directory)) {
+            throw new Exception(_('Das Verzeichnis zum Speichern der Datei konnte nicht angelegt werden.'));
+        }
 
+        imagewebp($dst, $output_file, self::IMAGE_QUALITY);
+    }
 
     private function imageresize($image, $current_width, $current_height, $width, $height)
     {
@@ -480,7 +532,6 @@ class Avatar {
 
         return $image_resized;
     }
-
 
     public static function error_handler($errno, $errstr, $errfile, $errline)
     {
@@ -506,8 +557,8 @@ class Avatar {
      */
     public function getDefaultTitle()
     {
-        if ($this->user_id === Avatar::NOBODY) {
-            return Avatar::NOBODY;
+        if ($this->isNobody()) {
+            return static::NOBODY;
         }
 
         require_once 'lib/functions.php';
@@ -523,7 +574,7 @@ class Avatar {
     {
         $visible = Visibility::verify('picture', $this->user_id);
         if (!$visible) {
-            $this->user_id = 'nobody';
+            $this->user_id = self::NOBODY;
         }
         return $visible;
     }
@@ -568,12 +619,14 @@ class Avatar {
             $img = imagerotate($img, $degree, 0);
 
             $extension = pathinfo($filename, PATHINFO_EXTENSION);
-            if ($extension === 'jpg' || $extension === 'jpg') {
+            if ($extension === 'jpg' || $extension === 'jpeg') {
                 imagejpeg($img, $filename, 95);
             } elseif ($extension === 'gif') {
                 imagegif($img, $filename);
-            } else {
+            } elseif ($extension === 'png') {
                 imagepng($img, $filename, 9);
+            } else {
+                imagewebp($img, $filename, self::IMAGE_QUALITY);
             }
 
             imagedestroy($img);

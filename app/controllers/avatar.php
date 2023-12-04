@@ -29,13 +29,13 @@ class AvatarController extends AuthenticatedController
             PageLayout::setTitle(_('Profilbild ändern'));
 
             $has_perm = $GLOBALS['perm']->have_profile_perm('user', $id);
-            $class = 'Avatar';
+            $class = Avatar::class;
             $this->cancel_link = $this->url_for('profile', ['username' => User::find($id)->username]);
         } else if ($type == 'institute') {
             PageLayout::setTitle(Context::getHeaderLine() . ' - ' . _('Einrichtungsbild ändern'));
 
             $has_perm = $GLOBALS['perm']->have_studip_perm('admin', $id);
-            $class = 'InstituteAvatar';
+            $class = InstituteAvatar::class;
             $this->cancel_link = $this->url_for('institute/basicdata/index', ['cid' => $id]);
         } else {
             PageLayout::setTitle(Context::getHeaderLine() . ' - ' . _('Veranstaltungsbild ändern'));
@@ -44,10 +44,10 @@ class AvatarController extends AuthenticatedController
             $sem = Seminar::getInstance($id);
             $studygroup_mode = $sem->getSemClass()->offsetget('studygroup_mode');
             if ($studygroup_mode) {
-                $class = 'StudygroupAvatar';
+                $class = StudygroupAvatar::class;
                 $this->cancel_link = $this->url_for('course/studygroup/edit?cid=' . $id);
             } else {
-                $class = 'CourseAvatar';
+                $class = CourseAvatar::class;
                 $this->cancel_link = $this->url_for('course/management?cid=' . $id);
             }
         }
@@ -56,20 +56,17 @@ class AvatarController extends AuthenticatedController
             throw new AccessDeniedException(_('Sie haben keine Berechtigung, das Bild zu ändern.'));
         }
 
-        if ($type == 'user') {
+        if ($type === 'user') {
             Navigation::activateItem('/profile/index');
-        } else if ($type == 'institute') {
+        } else if ($type === 'institute') {
             Navigation::activateItem('/admin/institute/details');
         } else {
             Navigation::activateItem('/course/admin/avatar');
         }
 
-        $this->customized = false;
         $avatar = $class::getAvatar($id);
         $this->avatar = $avatar->getURL($class::NORMAL);
-        if ($avatar->is_customized()) {
-            $this->customized = true;
-        }
+        $this->customized = $avatar->is_customized();
 
         $this->type = $type;
         $this->id = $id;
@@ -88,21 +85,21 @@ class AvatarController extends AuthenticatedController
         // Check for permission to save a new avatar.
         if ($type == 'user') {
             $has_perm = $GLOBALS['perm']->have_profile_perm('user', $id);
-            $class = 'Avatar';
+            $class = Avatar::class;
             $redirect = 'profile?username=' . User::find($id)->username;
         } else if ($type == 'institute') {
             $has_perm = $GLOBALS['perm']->have_studip_perm('admin', $id);
-            $class = 'InstituteAvatar';
+            $class = InstituteAvatar::class;
             $redirect = 'institute/basicdata/index';
         } else {
             $has_perm = $GLOBALS['perm']->have_studip_perm('tutor', $id);
             $sem = Seminar::getInstance($id);
             $studygroup_mode = $sem->getSemClass()->offsetget('studygroup_mode');
             if ($studygroup_mode) {
-                $class = 'StudygroupAvatar';
+                $class = StudygroupAvatar::class;
                 $redirect = 'course/studygroup/edit/?cid=' . $id;
             } else {
-                $class = 'CourseAvatar';
+                $class = CourseAvatar::class;
                 $redirect = 'course/management';
             }
         }

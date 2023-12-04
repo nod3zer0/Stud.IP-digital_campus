@@ -109,7 +109,7 @@ class User extends SchemaProvider
                 'small' => $avatar->getURL(\Avatar::SMALL),
                 'medium' => $avatar->getURL(\Avatar::MEDIUM),
                 'normal' => $avatar->getURL(\Avatar::NORMAL),
-                'original' => $avatar->getURL(\Avatar::ORIGINAL),
+                'original' => $avatar->getURL(\Avatar::NORMAL),
             ],
         ];
     }

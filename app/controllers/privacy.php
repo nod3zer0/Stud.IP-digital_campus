@@ -298,7 +298,7 @@ class PrivacyController extends AuthenticatedController
 
         $avatar = Avatar::getAvatar($user_id);
         if ($avatar->is_customized()) {
-            $zip->addFile($avatar->getCustomAvatarPath('normal'), $user_id . '.png');
+            $zip->addFile($avatar->getCustomAvatarPath('normal'), $user_id . '.webp');
         }
 
         foreach (FileRef::findByUser_id($user_id) as $fileref) {
