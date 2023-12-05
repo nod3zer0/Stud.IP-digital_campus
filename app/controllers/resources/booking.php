@@ -1149,7 +1149,7 @@ class Resources_BookingController extends AuthenticatedController
 
             //Validation:
 
-            if (!in_aray($this->booking_type, [
+            if (!in_array($this->booking_type, [
                 ResourceBooking::TYPE_NORMAL,
                 ResourceBooking::TYPE_RESERVATION,
                 ResourceBooking::TYPE_LOCK,
