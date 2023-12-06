@@ -55,7 +55,7 @@ final class TwoFactorAuth
     {
         // Remove cookie
         setcookie(
-            self::COOKIE_KEY,
+            self::COOKIE_KEY . '/' . $GLOBALS['user']->id,
             '',
             strtotime('-1 year'),
             $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']
@@ -149,8 +149,9 @@ final class TwoFactorAuth
         }
 
         // Trusted computer?
-        if (isset($_COOKIE[self::COOKIE_KEY])) {
-            list($code, $timeslice) = explode(':', $_COOKIE[self::COOKIE_KEY]);
+        $user_cookie_key = self::COOKIE_KEY . '/' . $GLOBALS['user']->id;
+        if (isset($_COOKIE[$user_cookie_key])) {
+            list($code, $timeslice) = explode(':', $_COOKIE[$user_cookie_key]);
             if ($this->secret->validateToken($code, (int) $timeslice, true)) {
                 $this->registerSecretInSession();
                 return;
@@ -255,7 +256,7 @@ final class TwoFactorAuth
 
         $timeslice = mt_rand(0, PHP_INT_MAX);
         setcookie(
-            self::COOKIE_KEY,
+            self::COOKIE_KEY . '/' . $GLOBALS['user']->id,
             implode(':', [$this->secret->getToken($timeslice), $timeslice]),
             $lifetime,
             $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']
