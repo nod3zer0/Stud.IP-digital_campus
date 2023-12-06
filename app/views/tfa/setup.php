@@ -1,6 +1,7 @@
 <?php
 /**
  * @var TfaController $controller
+ * @var bool $own_profile
  */
 ?>
 <form class="default" action="<?= $controller->create() ?>" method="post">
@@ -12,17 +13,21 @@
         <?= formatReady(Config::get()->TFA_TEXT_INTRODUCTION) ?>
 
         <label>
-            <input required type="radio" name="type" value="email">
+            <input required type="radio" name="type" value="email"
+                   <? if (!$own_profile) echo 'disabled'; ?>>
             <?= _('E-Mail') ?>
         </label>
 
         <label>
-            <input required type="radio" name="type" value="app">
+            <input required type="radio" name="type" value="app"
+                   <? if (!$own_profile) echo 'disabled'; ?>>
             <?= _('Authenticator-App') ?>
         </label>
     </fieldset>
 
     <footer>
-        <?= Studip\Button::createAccept(_('Aktivieren')) ?>
+        <?= Studip\Button::createAccept(_('Aktivieren'), 'activate', $own_profile ? [] : [
+            'disabled' => ''
+        ]) ?>
     </footer>
 </form>

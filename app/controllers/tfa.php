@@ -11,6 +11,8 @@ class TfaController extends AuthenticatedController
         $this->user = User::findCurrent();
         $this->is_root = $GLOBALS['perm']->have_perm('root');
 
+        $this->own_profile = true;
+
         if ($this->is_root && Request::submitted('username')) {
             $username = Request::username('username');
             $this->user = User::findOneByUsername($username);
@@ -18,6 +20,8 @@ class TfaController extends AuthenticatedController
             if (!$this->user) {
                 throw new Exception(_('Diesen Nutzer gibt es nicht'));
             }
+
+            $this->own_profile = false;
 
             URLHelper::addLinkParam('username', Request::username('username'));
 
@@ -33,6 +37,10 @@ class TfaController extends AuthenticatedController
         }
 
         $this->secret = new TFASecret($this->user->id);
+
+        if (!$this->own_profile) {
+            PageLayout::postWarning(_('Sie können die Zwei-Faktor-Authentifizierung nicht für andere Personen einrichten.'));
+        }
     }
 
     public function index_action()
