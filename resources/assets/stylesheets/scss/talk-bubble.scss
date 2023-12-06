@@ -1,0 +1,139 @@
+$color: var(--base-color-20);
+$ownColor: var(--petrol-40);
+
+.talk-bubble-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+
+    .talk-bubble-avatar {
+        padding: 8px;
+    }
+
+    .talk-bubble {
+        margin: 10px 20px;
+        position: relative;
+        max-width: 80%;
+        height: auto;
+        background-color: $color;
+        border-radius: 10px;
+
+        &.editing {
+            min-width: 50%;
+        }
+
+        .talk-bubble-content {
+            padding: 8px 1em;
+
+            .talk-bubble-header {
+                margin-bottom: 8px;
+
+                a {
+                    font-weight: 700;
+                }
+            }
+
+            .talk-bubble-talktext {
+                margin-bottom: 4px;
+                text-align: left;
+                line-height: 1.5em;
+
+                .html {
+                    display: inline;
+
+                    .formatted-content {
+                        display: inline;
+                    }
+
+                    .opengraph,
+                    blockquote {
+                        background-color: rgba(255, 255, 255, 0.5);
+                    }
+
+                    video {
+                        max-width: 100%;
+                    }
+
+                    img {
+                        max-height: 70vh;
+                    }
+                }
+
+                .talk-bubble-edit {
+                    display: flex;
+                    align-items: flex-end;
+                    gap: 2px;
+
+                    textarea {
+                        flex-grow: 1;
+                    }
+
+                    button {
+                        width: 24px;
+                        height: 24px;
+                        border: solid thin var(--base-color);
+                        background-color: var(--white);
+                        cursor: pointer;
+
+                        img {
+                            vertical-align: middle;
+                        }
+                    }
+                }
+
+                .talk-bubble-footer {
+                    float: right;
+                    margin-top: 4px;
+                    padding-bottom: 4px;
+
+                    &:before {
+                        content: " ";
+                        display: inline-block;
+                        width: 1em;
+                    }
+
+                    .talk-bubble-talktext-time {
+                        text-align: right;
+                        font-size: 0.8em;
+                        margin-bottom: -0.5em;
+                    }
+                }
+
+            }
+        }
+
+        &:after {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: 0px;
+            bottom: auto;
+            border: 16px solid;
+            border-color: $color transparent transparent transparent;
+            border-radius: 4px;
+            left: -14px;
+            right: auto;
+        }
+    }
+
+    &.talk-bubble-own-post {
+        justify-content: end;
+
+        .talk-bubble {
+            flex-direction: row-reverse;
+            background-color: $ownColor;
+
+            &:after {
+                border-color: $ownColor transparent transparent transparent;
+                left: auto;
+                right: -14px;
+            }
+        }
+
+
+        .talk-bubble-header {
+            flex-direction: row-reverse;
+        }
+    }
+}
