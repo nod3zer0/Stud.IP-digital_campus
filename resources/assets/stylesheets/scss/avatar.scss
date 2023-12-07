@@ -62,13 +62,15 @@ div.avatar-widget {
     height: $avatar-normal;
 }
 
-.course-avatar-small {
+.course-avatar-small,
+.institute-avatar-small {
     vertical-align: middle;
     max-width: 25px;
     height: 25px;
 }
 
-.course-avatar-medium {
+.course-avatar-medium,
+.institute-avatar-medium {
     max-width: 180px;
     height: 60px;
 }
@@ -87,7 +89,6 @@ div.avatar-widget {
     max-height: 20px;
     width: 60px;
 }
-
 
 #custom_avatar label {
     display: block;
