@@ -160,7 +160,9 @@ class Sidebar extends WidgetContainer
 
         if ($this->hasWidgets()) {
             $template->widgets = $this->widgets;
-            array_walk($template->widgets, [$this, 'setupSkipLinks']);
+            foreach ($template->widgets as $widget) {
+                $this->setupSkipLinks($widget);
+            }
         } else {
             $template->widgets = [];
         }
