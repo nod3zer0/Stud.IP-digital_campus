@@ -1165,7 +1165,7 @@ class SemBrowse {
         if (is_null($option_name)) {
             $options = Config::get()->COURSE_SEARCH_NAVIGATION_OPTIONS;
             foreach ($options as $name => $option) {
-                if ($option['visible'] && $option['target'] == $target) {
+                if ($option['visible'] && $option['target'] === $target) {
                     return self::getSearchOptionNavigation($target, $name);
                 }
             }
@@ -1175,7 +1175,7 @@ class SemBrowse {
         $installed_languages = array_keys(Config::get()->INSTALLED_LANGUAGES);
         $language = $_SESSION['_language'] ?: reset($installed_languages);
         $option = Config::get()->COURSE_SEARCH_NAVIGATION_OPTIONS[$option_name];
-        if (!$option['visible'] || $option['target'] != $target) {
+        if (!$option['visible'] || $option['target'] !== $target) {
             return null;
         }
         if (empty($option['url'])) {
@@ -1201,7 +1201,7 @@ class SemBrowse {
             return new Navigation($option['title'][$language],
                     URLHelper::getURL($option['url'], ['option' => $option_name], true));
         }
-        if ($option['sem_tree_id']) {
+        if (!empty($option['sem_tree_id'])) {
             $study_area = StudipStudyArea::find($option['sem_tree_id']);
             return new Navigation($study_area->name,
                     URLHelper::getURL('dispatch.php/search/courses',
@@ -1214,7 +1214,7 @@ class SemBrowse {
                             'option'        => $option_name
                         ], true));
         }
-        if ($option['range_tree_id']) {
+        if (!empty($option['range_tree_id'])) {
             $item_name = DBManager::get()->fetchColumn('
                     SELECT `name`
                     FROM `range_tree`
