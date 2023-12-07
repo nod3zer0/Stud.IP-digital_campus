@@ -57,7 +57,7 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
         $types = $types ?: $path;
         $trails = [];
         $class_name = get_class($this);
-        $next = $path[array_search($class_name, $path) + 1];
+        $next = $path[array_search($class_name, $path) + 1] ?? null;
         $parents = $this->getParents($next);
 
         foreach ($parents as $parent) {
