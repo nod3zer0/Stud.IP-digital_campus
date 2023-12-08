@@ -107,7 +107,7 @@ class Navigation implements IteratorAggregate
      * Return the navigation item at the given path.
      *
      * @param string $path   path of navigation item
-     *
+     * @return self
      * @throws InvalidArgumentException  if the item cannot be found
      */
     public static function getItem($path)
