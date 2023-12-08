@@ -1,4 +1,4 @@
-<form method="post">
+<form class="default" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <ul class="<?= implode(' ', $css_classes) ?>" aria-label="<?= htmlReady($title) ?>">
     <? foreach ($elements as $index => $element): ?>

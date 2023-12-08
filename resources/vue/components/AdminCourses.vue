@@ -34,7 +34,7 @@
                 </th>
                 <th class="actions">
                     {{ $gettext('Aktion') }}
-                    <studip-action-menu :title="$gettext('Darstellungsfilter')" :items="availableFields" @toggleActiveField="toggleActiveField"></studip-action-menu>
+                    <studip-action-menu class="filter" :title="$gettext('Darstellungsfilter')" :items="availableFields" @toggleActiveField="toggleActiveField"></studip-action-menu>
                 </th>
             </tr>
             <tr v-if="buttons.top">

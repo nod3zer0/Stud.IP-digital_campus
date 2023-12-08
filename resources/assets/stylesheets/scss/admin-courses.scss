@@ -32,3 +32,14 @@
 #admin-filter-widget .label-text {
     display: block;
 }
+
+.action-menu.filter {
+    margin-left: 1em;
+}
+
+.action-menu.filter:not(.is-open) .action-menu-icon {
+    @include background-icon(settings, clickable, 20);
+    span {
+        display: none;
+    }
+}
