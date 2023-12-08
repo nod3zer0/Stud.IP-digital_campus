@@ -1,5 +1,5 @@
 <div class="<?= $base_class ?>-widget <?= htmlReady(implode(' ', $layout_css_classes ?? [])) ?>">
-<? if ($title): ?>
+<? if (!empty($title)): ?>
     <div class="<?= $base_class ?>-widget-header">
         <?= htmlReady($title) ?>
     </div>

@@ -354,13 +354,10 @@ class Admin_StatusgroupsController extends AuthenticatedController
      */
     private function setType()
     {
-
-        if (get_object_type(Context::getId(), ['inst', 'fak'])) {
-            $type = 'inst';
-        }
+        $type = Context::isInstitute() ? 'inst' : null;
         $types = $this->types();
 
-        if (!$type || Request::submitted('type') && $type != Request::get('type')) {
+        if (!$type || Request::submitted('type') && $type !== Request::get('type')) {
             $types[Request::get('type', 'inst')]['redirect']();
         } else {
             $this->type = $types[$type];
