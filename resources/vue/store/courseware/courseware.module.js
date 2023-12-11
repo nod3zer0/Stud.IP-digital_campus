@@ -77,6 +77,12 @@ const getters = {
     courseware(state) {
         return state.courseware;
     },
+    rootLayout(state, getters) {
+        return getters.courseware.attributes['root-layout'];
+    },
+    showRootElement(state, getters) {
+        return getters.rootLayout !== 'none';
+    },
     currentElement(state) {
         return state.currentElement;
     },

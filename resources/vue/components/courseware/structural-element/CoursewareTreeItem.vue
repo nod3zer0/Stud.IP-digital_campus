@@ -1,6 +1,9 @@
 <template>
-    <li v-if="showItem" :draggable="editMode ? true : null" :aria-selected="editMode ? keyboardSelected : null">
-        <div class="cw-tree-item-wrapper">
+    <li v-if="showItem"
+        :draggable="editMode ? true : null"
+        :aria-selected="editMode ? keyboardSelected : null"
+    >
+        <div class="cw-tree-item-wrapper" v-if="showRootElement || depth > 0">
             <span
                 v-if="editMode && depth > 0 && canEdit"
                 class="cw-sortable-handle"
@@ -180,6 +183,7 @@ export default {
             courseware: 'courseware',
             progressData: 'progresses',
             userIsTeacher: 'userIsTeacher',
+            showRootElement: 'showRootElement'
         }),
         draggableData() {
             return {

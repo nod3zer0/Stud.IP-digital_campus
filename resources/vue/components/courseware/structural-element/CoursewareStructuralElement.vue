@@ -100,15 +100,16 @@
                                     </template>
                                 </courseware-companion-box>
                                 <courseware-empty-element-box
-                                    v-if="showEmptyElementBox"
+                                    v-if="empty && !showRootLayout"
                                     :canEdit="canEdit"
                                     :noContainers="noContainers"
                                 />
-                                <courseware-welcome-screen v-if="noContainers && isRoot && canEdit" />
                             </div>
 
+                            <courseware-root-content v-if="showRootLayout" :structuralElement="currentElement" :canEdit="canEdit" />
+
                             <div
-                                v-if="canVisit && !editView && !isLink"
+                                v-if="canVisit && !editView && !isLink && !hideRootContent"
                                 class="cw-container-wrapper"
                                 :class="{
                                     'cw-container-wrapper-consume': consumeMode,
@@ -131,6 +132,7 @@
                                     class="cw-container-item"
                                 />
                             </div>
+                        
                             <div
                                 v-if="isLink"
                                 class="cw-container-wrapper"
@@ -161,7 +163,7 @@
                                     class="cw-container-item"
                                 />
                             </div>
-                            <div v-if="canVisit && canEdit && editView && !isLink" class="cw-container-wrapper cw-container-wrapper-edit">
+                            <div v-if="canVisit && canEdit && editView && !isLink && !hideRootContent" class="cw-container-wrapper cw-container-wrapper-edit">
                                 <template v-if="!processing">
                                     <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                                     <span id="operation" class="assistive-text">
@@ -207,7 +209,7 @@
                                 <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
                             </div>
                         </div>
-                        <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" /> 
+                        <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" />
                     </div>
                 </div>
                 <studip-dialog
@@ -588,6 +590,8 @@
 import ContainerComponents from '../containers/container-components.js';
 import StructuralElementComponents from './structural-element-components.js';
 import CoursewarePluginComponents from '../plugin-components.js';
+import CoursewareRootContent from './CoursewareRootContent.vue';
+
 import CoursewareStructuralElementDialogAdd from './CoursewareStructuralElementDialogAdd.vue';
 import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
 import CoursewareStructuralElementDialogImport from './CoursewareStructuralElementDialogImport.vue';
@@ -612,6 +616,7 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     name: 'courseware-structural-element',
     components: Object.assign(StructuralElementComponents, {
+        CoursewareRootContent,
         CoursewareStructuralElementDialogAdd,
         CoursewareStructuralElementDialogCopy,
         CoursewareStructuralElementDialogImport,
@@ -738,10 +743,22 @@ export default {
 
             templates: 'courseware-templates/all',
             progressData: 'progresses',
+
+            showRootElement: 'showRootElement',
+            childrenById: 'courseware-structure/children',
+
+            rootLayout: 'rootLayout'
         }),
 
         currentId() {
             return this.structuralElement?.id;
+        },
+        countSiblings() {
+            if (this.parent) {
+                return this.childrenById(this.parent.id).length;
+            }
+            
+            return 0;
         },
 
         textOer() {
@@ -854,6 +871,9 @@ export default {
                     return null;
                 }
                 const element = this.structuralElementById({ id: parentId });
+                if (element.relationships.parent.data === null && !this.showRootElement) {
+                    return null;
+                }
                 if (!element) {
                     console.error(`CoursewareStructuralElement#ancestors: Could not find parent by ID: "${parentId}".`);
                 }
@@ -878,6 +898,10 @@ export default {
             }
             const previousId = this.orderedStructuralElements[currentIndex - 1];
             const previous = this.structuralElementById({ id: previousId });
+
+            if (previous.relationships.parent.data === null && !this.showRootElement) {
+                return null;
+            }
 
             return previous;
         },
@@ -926,18 +950,45 @@ export default {
             return this.structuralElement.attributes['can-edit'];
         },
 
+        parent() {
+            const parentId = this.structuralElement?.relationships?.parent?.data?.id;
+            if (!parentId) {
+                return null;
+            }
+
+            return this.structuralElementById({ id: parentId });
+        },
+
         canEditParent() {
             if (this.isRoot) {
                 return false;
             }
-            const parentId = this.structuralElement.relationships.parent.data.id;
-            const parent = this.structuralElementById({ id: parentId });
+            if (!parent) {
+                return false;
+            }
 
-            return parent.attributes['can-edit'];
+            return this.parent.attributes['can-edit'];
         },
 
         isRoot() {
             return this.structuralElement.relationships.parent.data === null;
+        },
+        showRootLayout() {
+            return this.isRoot && this.rootLayout !== 'classic';
+        },
+        hideRootContent() {
+            return this.isRoot && this.rootLayout === 'none';
+        },
+        deletable() {
+            if (this.isRoot) {
+                return false;
+            }
+
+            if (!this.showRootElement && this.countSiblings <= 1) {
+                return false;
+            }
+
+            return true;
         },
 
         editor() {
@@ -995,7 +1046,7 @@ export default {
             if (this.context.type === 'users') {
                 menu.push({ id: 8, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
             }
-            if (!this.isRoot && this.canEdit && !this.isTask && !this.blocked) {
+            if (this.deletable && this.canEdit && !this.isTask && !this.blocked) {
                 menu.push({
                     id: 8,
                     label: this.$gettext('Seite löschen'),
@@ -1097,15 +1148,6 @@ export default {
             const taskGroup = this.relatedTaskGroups({ parent: this.task, relationship: 'task-group' });
 
             return taskGroup?.attributes['solver-may-add-blocks'];
-        },
-        showEmptyElementBox() {
-            if (!this.empty) {
-                return false;
-            }
-
-            return (
-                (!this.isRoot && this.canEdit) || !this.canEdit || (!this.noContainers && this.isRoot && this.canEdit)
-            );
         },
 
         linkedElement() {
@@ -1415,6 +1457,13 @@ export default {
         },
         async deleteCurrentElement() {
             await this.loadStructuralElement(this.currentElement.id);
+            if (!this.deletable) {
+                this.companionWarning({
+                        info: this.$gettext('Diese Seite darf nicht gelöscht werden')
+                });
+                this.showElementDeleteDialog(false);
+                return false;
+            }
             if (this.blockedByAnotherUser) {
                 this.companionWarning({
                     info: this.$gettextInterpolate(
@@ -1425,7 +1474,7 @@ export default {
                 this.showElementDeleteDialog(false);
                 return false;
             }
-            let parent_id = this.structuralElement.relationships.parent.data.id;
+            const redirect_id = this.prevElement.id;
             this.showElementDeleteDialog(false);
             this.companionInfo({ info: this.$gettext('Lösche Seite und alle darunter liegenden Elemente.') });
             this.deleteStructuralElement({
@@ -1433,7 +1482,7 @@ export default {
                 parentId: this.structuralElement.relationships.parent.data.id,
             })
             .then(response => {
-                this.$router.push(parent_id);
+                this.$router.push(redirect_id);
                 this.companionInfo({ info: this.$gettext('Die Seite wurde gelöscht.') });
             })
             .catch(error => {

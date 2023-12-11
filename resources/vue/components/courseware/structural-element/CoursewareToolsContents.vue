@@ -1,10 +1,10 @@
 <template>
     <div class="cw-tools cw-tools-contents">
-        <router-link :to="'/structural_element/' + rootElement.id" :class="{'root-is-current': rootIsCurrent}">
+        <component :is="headerComponent" :to="'/structural_element/' + rootElement.id" :class="{'root-is-current': rootIsCurrent, 'root-is-hidden': hideRoot}">
             <div v-if="rootElement" class="cw-tools-contents-header">
+                <studip-ident-image v-model="identimage" :baseColor="headerColor.hex" :pattern="rootElement.attributes.title" />
                 <div
                     class="cw-tools-contents-header-image"
-                    :class="[headerImageUrl ? '' : 'default-image']"
                     :style="headerImageStyle"
                 ></div>
                 <div class="cw-tools-contents-header-details">
@@ -12,25 +12,34 @@
                     <p>{{ rootElement.attributes.payload.description }}</p>
                 </div>
             </div>
-        </router-link>
+        </component>
         <courseware-tree v-if="structuralElements.length" />
     </div>
 </template>
 
 <script>
 import CoursewareTree from './CoursewareTree.vue';
+import colorMixin from '@/vue/mixins/courseware/colors.js';
+import StudipIdentImage from './../../StudipIdentImage.vue';
 import { mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-tools-contents',
+    mixins: [colorMixin],
     components: {
         CoursewareTree,
+        StudipIdentImage,
     },
-
+    data() {
+        return {
+            identimage: '',
+        };
+    },
     computed: {
         ...mapGetters({
             courseware: 'courseware',
             relatedStructuralElement: 'courseware-structural-elements/related',
+            rootLayout: 'rootLayout',
             structuralElements: 'courseware-structural-elements/all',
             structuralElementById: 'courseware-structural-elements/byId',
         }),
@@ -49,13 +58,22 @@ export default {
             if (this.headerImageUrl) {
                 return { 'background-image': 'url(' + this.headerImageUrl + ')' };
             }
-            return {};
+            return { 'background-image': 'url(' + this.identimage + ')' };
         },
-
+        headerColor() {
+            const rootColor = this.rootElement?.attributes?.payload?.color ?? 'studip-blue';
+            return this.mixinColors.find((color) => color.class === rootColor);
+        },
         rootIsCurrent() {
             const id = this.$route?.params?.id;
             return this.rootElement.id === id;
         },
+        hideRoot() {
+            return this.rootLayout === 'none';
+        },
+        headerComponent() {
+            return this.hideRoot ? 'span' : 'router-link';
+        }
     },
 };
 </script>
@@ -73,10 +91,6 @@ export default {
         background-repeat: no-repeat;
         background-position: center;
         background-color: var(--content-color-20);
-        &.default-image {
-            background-image: url("../images/icons/blue/courseware.svg");
-            background-size: 64px;
-        }
     }
 
     .cw-tools-contents-header-details {
@@ -102,6 +116,13 @@ export default {
         header {
             color: var(--black);
             font-weight: 600;
+        }
+    }
+}
+.root-is-hidden {
+    .cw-tools-contents-header-details {
+        header {
+            color: var(--black);
         }
     }
 }

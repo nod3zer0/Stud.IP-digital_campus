@@ -74,6 +74,16 @@ class CoursewareInstancesUpdate extends JsonApiController
             }
         }
 
+        if (self::arrayHas($json, 'data.attributes.root-layout')) {
+            $rootLayout = self::arrayGet($json, 'data.attributes.root-layout');
+            if (!is_string($rootLayout)) {
+                return 'Attribute `root-layout` must be a string.';
+            }
+            if (!$data->isValidRootLayout($rootLayout)) {
+                return 'Attribute `root-layout` contains an invalid value.';
+            }
+        }
+
         if (self::arrayHas($json, 'data.attributes.editing-permission-level')) {
             $editingPermissionLevel = self::arrayGet($json, 'data.attributes.editing-permission-level');
             if (!is_string($editingPermissionLevel)) {
@@ -117,6 +127,9 @@ class CoursewareInstancesUpdate extends JsonApiController
 
         $favorites = $get('data.attributes.favorite-block-types');
         $instance->setFavoriteBlockTypes($user, $favorites);
+
+        $rootLayout = $get('data.attributes.root-layout');
+        $instance->setRootLayout($rootLayout);
 
         $sequentialProgression = $get('data.attributes.sequential-progression');
         $instance->setSequentialProgression($sequentialProgression);

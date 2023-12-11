@@ -3,8 +3,8 @@
     display: flex;
     flex-wrap: wrap;
     padding-left: 0;
-    row-gap: 5px;
-    column-gap: 5px;
+    gap: 5px;
+    overflow: hidden;
 }
 .cw-tiles .tile,
 .cw-tile {
@@ -29,9 +29,6 @@
         background-repeat: no-repeat;
         background-color: var(--content-color-20);
         background-position: center;
-        &.default-image {
-            @include background-icon(courseware, clickable, 128);
-        }
 
         .overlay-handle {
             @extend .drag-handle;

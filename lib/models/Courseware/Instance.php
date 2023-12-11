@@ -175,6 +175,45 @@ class Instance
     }
 
     /**
+     * Returns which layout is set for root node of this coursware instance
+     *
+     * @return string name of the layout
+     */
+    public function getRootLayout(): string
+    {
+        $rootLayout = $this->unit->config['root_layout'];
+        if ($rootLayout) {
+            $this->validateRootLayout($rootLayout);
+            return $rootLayout;
+        }
+
+        return 'default';
+    }
+
+    /**
+     * Sets layout of the root node page of this courseware
+     *
+     * @param string name of the layout
+     */
+    public function setRootLayout(string $rootLayout): void
+    {
+        $this->validateRootLayout($rootLayout);
+        $this->unit->config['root_layout'] = $rootLayout;
+    }
+
+    public function isValidRootLayout(string $rootLayout): bool
+    {
+        return in_array($rootLayout, ['default', 'toc', 'classic', 'none']);
+    }
+
+    private function validateRootLayout(string $rootLayout): void
+    {
+        if (!$this->isValidRootLayout($rootLayout)) {
+            throw new \InvalidArgumentException('Invalid root layout for courseware.');
+        }
+    }
+
+    /**
      * Returns whether this courseware instance uses a sequential progression through the structural elements.
      *
      * @return bool true if this courseware instance uses a sequential progression, false otherwise

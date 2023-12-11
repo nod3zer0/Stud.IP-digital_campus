@@ -35,10 +35,10 @@ abstract class CoursewareController extends AuthenticatedController
         if ($last_element) {
             $last_element_unit = $last_element->findUnit();
         }
-        if (isset($last_element_unit) && $last_element_unit->id === $unit->id) {
+        if (isset($last_element_unit) && $last_element_unit->id === $unit->id && $last_element_unit->hasRootLayout()) {
             $this->entry_element_id = $last_element->id;
         } else {
-            $this->entry_element_id = $unit->structural_element_id;
+            $this->entry_element_id = $unit->findOrCreateFirstElement()->id;
         }
         if ($this->entry_element_id) {
             $last_element_item = $context === 'user' ? 'global' : $rangeId;

@@ -21,7 +21,6 @@
                             <option value="1">{{ $gettext('Sequentiell') }}</option>
                         </select>
                     </label>
-
                     <label>
                         <span>{{ $gettext('Editierberechtigung für Tutor/-innen') }}</span>
                         <select class="size-s" v-model="currentPermissionLevel">
@@ -209,6 +208,7 @@ export default {
         return {
             currentInstance: null,
             loadSettings: false,
+            currentRootLayout: 'default',
             currentPermissionLevel: '',
             currentProgression: 0,
             makeCert: false,
@@ -260,6 +260,7 @@ export default {
             await this.loadInstance(context);
         },
         initData() {
+            this.currentRootLayout = this.currentInstance.attributes['root-layout'];
             this.currentPermissionLevel = this.currentInstance.attributes['editing-permission-level'];
             this.currentProgression = this.currentInstance.attributes['sequential-progression'] ? '1' : '0';
             this.certSettings = this.currentInstance.attributes['certificate-settings'];
@@ -286,6 +287,7 @@ export default {
         },
         storeSettings() {
             this.$emit('close');
+            this.currentInstance.attributes['root-layout'] = this.currentRootLayout;
             this.currentInstance.attributes['editing-permission-level'] = this.currentPermissionLevel;
             this.currentInstance.attributes['sequential-progression'] = this.currentProgression;
             this.currentInstance.attributes['certificate-settings'] = this.generateCertificateSettings();

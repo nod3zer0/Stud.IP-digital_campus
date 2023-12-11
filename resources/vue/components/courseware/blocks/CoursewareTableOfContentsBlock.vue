@@ -1,29 +1,17 @@
 <template>
     <div class="cw-block cw-block-table-of-contents">
-        <courseware-default-block
-            :block="block"
-            :canEdit="canEdit"
-            :isTeacher="isTeacher"
-            :preview="true"
-            @showEdit="initCurrentData"
-            @storeEdit="storeText"
-            @closeEdit="initCurrentData"
-        >
+        <courseware-default-block :block="block" :canEdit="canEdit" :isTeacher="isTeacher" :preview="true"
+            @showEdit="initCurrentData" @storeEdit="storeText" @closeEdit="initCurrentData">
             <template #content>
                 <div v-if="childElementsWithTasks.length > 0">
                     <div v-if="currentStyle !== 'tiles' && currentTitle !== ''" class="cw-block-title">
                         {{ currentTitle }}
                     </div>
-                    <ul
-                        v-if="currentStyle === 'list-details' || currentStyle === 'list'"
-                        :class="['cw-block-table-of-contents-' + currentStyle]"
-                    >
+                    <ul v-if="currentStyle === 'list-details' || currentStyle === 'list'"
+                        :class="['cw-block-table-of-contents-' + currentStyle]">
                         <li v-for="child in childElementsWithTasks" :key="child.id">
                             <router-link :to="'/structural_element/' + child.id">
-                                <div
-                                    class="cw-block-table-of-contents-title-box"
-                                    :class="[child.attributes.payload.color]"
-                                >
+                                <div class="cw-block-table-of-contents-title-box" :class="[child.attributes.payload.color]">
                                     {{ child.attributes.title }}
                                     <span v-if="child.attributes.purpose === 'task'"> | {{ child.solverName }}</span>
                                     <p v-if="currentStyle === 'list-details'">
@@ -34,63 +22,37 @@
                         </li>
                     </ul>
                     <ul v-if="currentStyle === 'tiles'" class="cw-block-table-of-contents-tiles cw-tiles">
-                        <li
-                            v-for="child in childElementsWithTasks"
-                            :key="child.id"
-                            class="tile"
-                            :class="[child.attributes.payload.color]"
-                        >
-                            <router-link
-                                :to="'/structural_element/' + child.id"
-                                :title="
-                                    child.attributes.purpose === 'task'
-                                        ? child.attributes.title + ' | ' + child.solverName
-                                        : child.attributes.title
-                                "
-                            >
-                                <div
-                                    class="preview-image"
-                                    :class="[hasImage(child) ? '' : 'default-image']"
-                                    :style="getChildStyle(child)"
-                                >
-                                    <div v-if="child.attributes.purpose === 'task'" class="overlay-text">
-                                        {{ child.solverName }}
-                                    </div>
-                                </div>
-                                <div class="description">
-                                    <header
-                                        :class="[
-                                            child.attributes.purpose !== ''
-                                                ? 'description-icon-' + child.attributes.purpose
-                                                : '',
-                                        ]"
-                                    >
-                                        {{ child.attributes.title || '–' }}
-                                    </header>
-                                    <div class="description-text-wrapper">
-                                        <p>{{ child.attributes.payload.description }}</p>
-                                    </div>
-                                    <footer>
-                                        {{ countChildChildren(child) }}
-                                        <translate :translate-n="countChildChildren(child)" translate-plural="Seiten">
-                                            Seite
-                                        </translate>
-                                    </footer>
-                                </div>
+                        <li v-for="child in childElementsWithTasks" :key="child.id">
+                            <router-link :to="'/structural_element/' + child.id" :title="child.attributes.purpose === 'task'
+                                    ? child.attributes.title + ' | ' + child.solverName
+                                    : child.attributes.title
+                                ">
+                                <courseware-tile tag="div" :color="child.attributes.payload.color"
+                                    :title="child.attributes.title" :imageUrl="getChildImageUrl(child)">
+                                    <template #description>
+                                        {{ child.attributes.payload.description }}
+                                    </template>
+                                    <template #footer>
+                                        {{
+                                            $gettextInterpolate(
+                                                $ngettext(
+                                                    '%{length} Seite',
+                                                    '%{length} Seiten',
+                                                    countChildChildren(child)
+                                                ),
+                                                { length: countChildChildren(child) })
+                                        }}
+                                    </template>
+                                </courseware-tile>
                             </router-link>
                         </li>
                     </ul>
                 </div>
-                <courseware-companion-box
-                    v-if="viewMode === 'edit' && childElementsWithTasks.length === 0"
-                    :msgCompanion="
-                        $gettext(
-                            'Es sind noch keine Unterseiten vorhanden. ' +
-                                'Sobald Sie weitere Unterseiten anlegen, erscheinen diese automatisch hier im Inhaltsverzeichnis.'
-                        )
-                    "
-                    mood="pointing"
-                />
+                <courseware-companion-box v-if="viewMode === 'edit' && childElementsWithTasks.length === 0" :msgCompanion="$gettext(
+                    'Es sind noch keine Unterseiten vorhanden. ' +
+                    'Sobald Sie weitere Unterseiten anlegen, erscheinen diese automatisch hier im Inhaltsverzeichnis.'
+                )
+                    " mood="pointing" />
             </template>
             <template v-if="canEdit" #edit>
                 <form class="default" @submit.prevent="">
@@ -115,13 +77,14 @@
 
 <script>
 import BlockComponents from './block-components.js';
+import CoursewareTile from '../layouts/CoursewareTile.vue';
 import blockMixin from '@/vue/mixins/courseware/block.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-table-of-contents-block',
     mixins: [blockMixin],
-    components: Object.assign(BlockComponents, {}),
+    components: Object.assign(BlockComponents, { CoursewareTile }),
     props: {
         block: Object,
         canEdit: Boolean,
@@ -208,14 +171,8 @@ export default {
                 containerId: this.block.relationships.container.data.id,
             });
         },
-        getChildStyle(child) {
-            let url = child.relationships?.image?.meta?.['download-url'];
-
-            if (url) {
-                return { 'background-image': 'url(' + url + ')' };
-            } else {
-                return {};
-            }
+        getChildImageUrl(child) {
+            return child.relationships?.image?.meta?.['download-url'];
         },
         countChildChildren(child) {
             return this.childrenById(child.id).length + 1;

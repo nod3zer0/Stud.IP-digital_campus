@@ -172,4 +172,33 @@ class Unit extends \SimpleORMap implements \PrivacyObject
         $stmt = $db->prepare($query);
         $stmt->execute($args);
     }
+
+    public function hasRootLayout()
+    {
+        return !isset($this->config['root_layout']) || $this->config['root_layout'] !== 'none';
+    }
+
+    public function findOrCreateFirstElement(): StructuralElement
+    {
+        if ($this->hasRootLayout()) {
+            return $this->structural_element;
+        }
+
+        $children = $this->structural_element->children;
+        if (count($children) > 0) {
+            return $children[0];
+        }
+
+        $struct = StructuralElement::create([
+            'parent_id' => $this->structural_element->id,
+            'range_id' => $this->range_id,
+            'range_type' => $this->range_type,
+            'owner_id' => $this->structural_element->owner_id,
+            'editor_id' => $this->structural_element->editor_id,
+            'title' => _('neue Seite'),
+        ]);
+
+
+        return $struct;
+    }
 }

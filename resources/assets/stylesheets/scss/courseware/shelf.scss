@@ -62,3 +62,14 @@
         height: 416px;
     }
 }
+
+.cw-unit-item-dialog-layout-content {
+    display: flex;
+    .cw-unit-item-dialog-layout-content-image {
+        padding-right: 2em;
+    }
+    .cw-unit-item-dialog-layout-content-settings {
+        width: 100%;
+        max-width: 500px;
+    }
+}

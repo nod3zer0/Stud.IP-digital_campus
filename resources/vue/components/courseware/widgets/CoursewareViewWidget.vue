@@ -42,6 +42,7 @@ export default {
         ...mapGetters({
             viewMode: 'viewMode',
             context: 'context',
+            rootLayout: 'rootLayout'
         }),
         readView() {
             return this.viewMode === 'read';
@@ -58,6 +59,9 @@ export default {
             }
             return this.structuralElement.attributes['can-edit'];
         },
+        isRoot() {
+            return this.structuralElement.relationships.parent.data === null;
+        }
     },
     methods: {
         ...mapActions({

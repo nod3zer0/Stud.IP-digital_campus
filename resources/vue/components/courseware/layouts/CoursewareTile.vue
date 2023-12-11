@@ -1,6 +1,7 @@
 <template>
     <component :is="tag" class="cw-tile" :class="[color]">
-        <div class="preview-image" :class="[hasImage ? '' : 'default-image']" :style="previewImageStyle">
+        <studip-ident-image v-model="identimage" :baseColor="tileColor.hex" :pattern="title" />
+        <div class="preview-image" :style="previewImageStyle">
             <div
                 v-if="handle"
                 class="overlay-handle cw-tile-handle"
@@ -40,10 +41,16 @@
 </template>
 
 <script>
+import colorMixin from '@/vue/mixins/courseware/colors.js';
+import StudipIdentImage from './../../StudipIdentImage.vue';
 import { mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-tile',
+    mixins: [colorMixin],
+    components: {
+        StudipIdentImage
+    },
     props: {
         tag: {
             type: String,
@@ -111,6 +118,11 @@ export default {
             type: String
         }
     },
+    data() {
+        return {
+            identimage: '',
+        };
+    },
     computed: {
         ...mapGetters({
             userIsTeacher: 'userIsTeacher'
@@ -127,9 +139,9 @@ export default {
         previewImageStyle() {
             if (this.hasImage) {
                 return { 'background-image': 'url(' + this.imageUrl + ')' };
-            } else {
-                return {};
-            }
+            } 
+
+            return { 'background-image': 'url(' + this.identimage + ')' };
         },
         progressTitle() {
             if (this.userIsTeacher) {
@@ -139,6 +151,9 @@ export default {
         },
         hasDescriptionLink() {
             return this.descriptionLink !== '';
+        },
+        tileColor() {
+            return this.mixinColors.find((color) => color.class === this.color);
         },
     },
     methods: {

@@ -37,6 +37,7 @@ class Instance extends SchemaProvider
             'block-types' => array_map([$this, 'mapBlockType'], $resource->getBlockTypes()),
             'container-types' => array_map([$this, 'mapContainerType'], $resource->getContainerTypes()),
             'favorite-block-types' => $resource->getFavoriteBlockTypes($user),
+            'root-layout' => $resource->getRootLayout(),
             'sequential-progression' => $resource->getSequentialProgression(),
             'editing-permission-level' => $resource->getEditingPermissionLevel(),
             'certificate-settings' => $resource->getCertificateSettings(),

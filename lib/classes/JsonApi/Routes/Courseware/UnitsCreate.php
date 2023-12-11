@@ -111,6 +111,12 @@ class UnitsCreate extends JsonApiController
             'withdraw_date' => self::arrayGet($json, 'data.attributes.withdraw-date'),
         ]);
 
+        $instance = new \Courseware\Instance($struct);
+
+        $instance->setRootLayout(self::arrayGet($json, 'data.attributes.settings.root-layout'));
+
+        $instance->getUnit()->store();
+
         return $unit;
     }
 

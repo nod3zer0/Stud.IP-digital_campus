@@ -62,7 +62,7 @@
 
         <courseware-unit-item-dialog-export v-if="showExportDialog" :unit="unit" @close="showExportDialog = false" />
         <courseware-unit-item-dialog-settings v-if="showSettingsDialog" :unit="unit" @close="closeSettingsDialog"/>
-        <courseware-unit-item-dialog-layout v-if="showLayoutDialog" :unitElement="unitElement" @close="closeLayoutDialog"/>
+        <courseware-unit-item-dialog-layout v-if="showLayoutDialog" :unit="unit" :unitElement="unitElement" @close="closeLayoutDialog"/>
     </li>
 </template>
 

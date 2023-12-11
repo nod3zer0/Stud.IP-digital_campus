@@ -5,79 +5,91 @@
         confirmClass="accept"
         :closeText="$gettext('Schließen')"
         closeClass="cancel"
-        height="720"
-        width="500"
+        height="470"
+        width="870"
         @close="$emit('close')"
         @confirm="storeLayout"
     >
         <template v-slot:dialogContent>
-            <form v-if="currentElement" class="default" @submit.prevent="">
-                <label>{{ $gettext('Vorschaubild') }}</label>
-                <img
-                    v-if="showPreviewImage"
-                    :src="image"
-                    class="cw-structural-element-image-preview"
-                    :alt="$gettext('Vorschaubild')"
-                />
-                <label v-if="showPreviewImage">
-                    <button class="button" @click="deleteImage">{{ $gettext('Bild löschen') }}</button>
-                </label>
-                <courseware-companion-box
-                    v-if="uploadFileError"
-                    :msgCompanion="uploadFileError"
-                    mood="sad"
-                />
-                <label v-if="!showPreviewImage">
+            <div v-if="currentElement && !loadingInstance" class="cw-unit-item-dialog-layout-content">
+                <form class="default cw-unit-item-dialog-layout-content-image" @submit.prevent="">
+                    <label>{{ $gettext('Vorschaubild') }}</label>
                     <img
-                        v-if="currentFile"
-                        :src="uploadImageURL"
+                        v-if="showPreviewImage"
+                        :src="image"
                         class="cw-structural-element-image-preview"
                         :alt="$gettext('Vorschaubild')"
                     />
-                    <div v-else class="cw-structural-element-image-preview-placeholder"></div>
-                    {{ $gettext('Bild hochladen') }}
-                    <input class="cw-file-input" ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
-                </label>
-
-                <label>
-                    {{ $gettext('Titel') }}
-                    <input type="text" v-model="currentElement.attributes.title"/>
-                </label>
-                <label>
-                    {{ $gettext('Beschreibung') }}
-                    <textarea
-                        v-model="currentElement.attributes.payload.description"
-                        class="cw-structural-element-description"
+                    <label v-if="showPreviewImage">
+                        <button class="button" @click="deleteImage">{{ $gettext('Bild löschen') }}</button>
+                    </label>
+                    <courseware-companion-box
+                        v-if="uploadFileError"
+                        :msgCompanion="uploadFileError"
+                        mood="sad"
                     />
-                </label>
-                <label>
-                    {{ $gettext('Farbe') }}
-                    <studip-select
-                        v-model="currentElement.attributes.payload.color"
-                        :options="colors"
-                        :reduce="(color) => color.class"
-                        label="class"
-                        class="cw-vs-select"
-                    >
-                        <template #open-indicator="selectAttributes">
-                            <span v-bind="selectAttributes"
-                                ><studip-icon shape="arr_1down" :size="10"
-                            /></span>
-                        </template>
-                        <template #no-options>
-                            {{ $gettext('Es steht keine Auswahl zur Verfügung') }}.
-                        </template>
-                        <template #selected-option="{ name, hex }">
-                            <span class="vs__option-color" :style="{ 'background-color': hex }"></span
-                            ><span>{{ name }}</span>
-                        </template>
-                        <template #option="{ name, hex }">
-                            <span class="vs__option-color" :style="{ 'background-color': hex }"></span
-                            ><span>{{ name }}</span>
-                        </template>
-                    </studip-select>
-                </label>
-            </form>
+                    <label v-if="!showPreviewImage">
+                        <img
+                            v-if="currentFile"
+                            :src="uploadImageURL"
+                            class="cw-structural-element-image-preview"
+                            :alt="$gettext('Vorschaubild')"
+                        />
+                        <div v-else class="cw-structural-element-image-preview-placeholder"></div>
+                        {{ $gettext('Bild hochladen') }}
+                        <input class="cw-file-input" ref="upload_image" type="file" accept="image/*" @change="checkUploadFile" />
+                    </label>
+                </form>
+                <form class="default cw-unit-item-dialog-layout-content-settings" @submit.prevent="">
+                    <label>
+                        {{ $gettext('Titel') }}
+                        <input type="text" v-model="currentElement.attributes.title"/>
+                    </label>
+                    <label>
+                        {{ $gettext('Beschreibung') }}
+                        <textarea
+                            v-model="currentElement.attributes.payload.description"
+                            class="cw-structural-element-description"
+                        />
+                    </label>
+                    <label>
+                        {{ $gettext('Farbe') }}
+                        <studip-select
+                            v-model="currentElement.attributes.payload.color"
+                            :options="colors"
+                            :reduce="(color) => color.class"
+                            label="class"
+                            class="cw-vs-select"
+                        >
+                            <template #open-indicator="selectAttributes">
+                                <span v-bind="selectAttributes"
+                                    ><studip-icon shape="arr_1down" :size="10"
+                                /></span>
+                            </template>
+                            <template #no-options>
+                                {{ $gettext('Es steht keine Auswahl zur Verfügung') }}.
+                            </template>
+                            <template #selected-option="{ name, hex }">
+                                <span class="vs__option-color" :style="{ 'background-color': hex }"></span
+                                ><span>{{ name }}</span>
+                            </template>
+                            <template #option="{ name, hex }">
+                                <span class="vs__option-color" :style="{ 'background-color': hex }"></span
+                                ><span>{{ name }}</span>
+                            </template>
+                        </studip-select>
+                    </label>
+                    <label>
+                        {{ $gettext('Titelseite') }}
+                        <select v-model="currentRootLayout">
+                            <option value="default">{{ $gettext('Automatisch') }}</option>
+                            <option value="toc">{{ $gettext('Automatisch mit Inhaltsverzeichnis') }}</option>
+                            <option value="classic">{{ $gettext('Frei bearbeitbar') }}</option>
+                            <option value="none">{{ $gettext('Keine') }}</option>
+                        </select>
+                    </label>
+                </form>
+            </div>
         </template>
     </studip-dialog>
 </template>
@@ -95,6 +107,7 @@ export default {
         CoursewareCompanionBox
     },
     props: {
+        unit: Object,
         unitElement: Object
     },
     mixins: [colorMixin],
@@ -105,10 +118,14 @@ export default {
             uploadFileError: '',
             currentFile: null,
             uploadImageURL: null,
+            currentRootLayout: 'default',
+            loadingInstance: false,
         }
     },
     computed: {
         ...mapGetters({
+            context: 'context',
+            instanceById: 'courseware-instances/byId',
             userId: 'userId'
         }),
         colors() {
@@ -121,9 +138,21 @@ export default {
         showPreviewImage() {
             return this.image !== null && this.deletingPreviewImage === false;
         },
+        instance() {
+            if (this.inCourseContext) {
+                return this.instanceById({id: 'course_' + this.context.id + '_' + this.unit.id});
+            } else {
+                return this.instanceById({id: 'user_' + this.context.id + '_' + this.unit.id});
+            }
+            
+        },
+        inCourseContext() {
+            return this.context.type === 'courses';
+        }
     },
     methods: {
         ...mapActions({
+            loadInstance: 'loadInstance',
             companionSuccess: 'companionSuccess',
             companionWarning: 'companionWarning',
             loadStructuralElement: 'loadStructuralElement',
@@ -132,9 +161,15 @@ export default {
             updateStructuralElement: 'updateStructuralElement',
             uploadImageForStructuralElement: 'uploadImageForStructuralElement',
             deleteImageForStructuralElement: 'deleteImageForStructuralElement',
+            storeCoursewareSettings: 'storeCoursewareSettings',
         }),
+        async loadUnitInstance() {
+            const context = {type: this.context.type, id: this.context.id, unit: this.unit.id};
+            await this.loadInstance(context);
+        },
         initData() {
             this.currentElement = _.cloneDeep(this.unitElement);
+            this.currentRootLayout = this.instance.attributes['root-layout'];
         },
         checkUploadFile() {
             const file = this.$refs?.upload_image?.files[0];
@@ -188,9 +223,20 @@ export default {
                 id: this.currentElement.id,
             });
             await this.unlockObject({ id: this.currentElement.id, type: 'courseware-structural-elements' });
+
+            if (this.instance.attributes['root-layout'] !== this.currentRootLayout) {
+                let currentInstance = _.cloneDeep(this.instance);
+                currentInstance.attributes['root-layout'] = this.currentRootLayout;
+                this.storeCoursewareSettings({
+                    instance: currentInstance,
+                });
+            }
         }
     },
     async mounted() {
+        this.loadingInstance = true;
+        await this.loadUnitInstance();
+        this.loadingInstance = false;
         this.initData();
     }
 }

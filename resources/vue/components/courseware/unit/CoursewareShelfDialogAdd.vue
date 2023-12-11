@@ -76,6 +76,15 @@
                         </template>
                     </studip-select>
                 </label>
+                <label>
+                    <span>{{ $gettext('Titelseite') }}</span>
+                    <select v-model="addWizardData.rootLayout">
+                        <option value="default">{{ $gettext('Automatisch') }}</option>
+                        <option value="toc">{{ $gettext('Automatisch mit Inhaltsverzeichnis') }}</option>
+                        <option value="classic">{{ $gettext('Frei bearbeitbar') }}</option>
+                        <option value="none">{{ $gettext('Keine') }}</option>
+                    </select>
+                </label>
             </form>
         </template>
         <template v-slot:advanced>
@@ -157,7 +166,7 @@ export default {
             wizardSlots: [
                 { id: 1, valid: false, name: 'basic', title: this.$gettext('Grundeinstellungen'), icon: 'courseware',
                   description: this.$gettext('Wählen Sie einen kurzen, prägnanten Titel und beschreiben Sie in einigen Worten den Inhalt des Lernmaterials. Eine Beschreibung erleichtert Lernenden die Auswahl des Lernmaterials.') },
-                { id: 2, valid: true, name: 'layout', title: this.$gettext('Erscheinung'), icon: 'picture',
+                { id: 2, valid: true, name: 'layout', title: this.$gettext('Darstellung'), icon: 'picture',
                   description: this.$gettext('Ein Vorschaubild motiviert Lernende das Lernmaterial zu erkunden. Die Kombination aus Bild und Farbe erleichtert das wiederfinden des Lernmaterials in der Übersicht.') },
                 { id: 3, valid: true, name: 'advanced', title: this.$gettext('Zusatzangaben'), icon: 'info-list',
                   description: this.$gettext('Hier können Sie detaillierte Angaben zum Lernmaterial eintragen. Diese sind besonders interessant wenn das Lernmaterial als OER geteilt wird.') }
@@ -210,6 +219,7 @@ export default {
                 description: '',
                 purpose: 'content',
                 color: 'studip-blue',
+                rootLayout: 'default'
             }
         },
         validateSlots() {
@@ -252,6 +262,9 @@ export default {
                         required_time: this.purposeIsOer ? this.addWizardData.required_time : '',
                         difficulty_start: this.purposeIsOer ? this.addWizardData.difficulty_start : '',
                         difficulty_end: this.purposeIsOer ? this.addWizardData.difficulty_end : ''
+                    },
+                    settings: {
+                        'root-layout': this.addWizardData.rootLayout
                     }
                 },
                 relationships: {
