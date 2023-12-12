@@ -18,9 +18,6 @@
             <MountingPortal mountTo="#courseware-view-widget" name="sidebar-views">
                 <courseware-view-widget v-if="!showSearchResults" :structural-element="selected" :canVisit="canVisit"></courseware-view-widget>
             </MountingPortal>
-            <MountingPortal mountTo="#courseware-import-widget" name="sidebar-import">
-                <courseware-import-widget v-if="!showSearchResults && canEditSelected" :structural-element="selected"></courseware-import-widget>
-            </MountingPortal>
         </div>
         <studip-progress-indicator
             v-if="structureLoadingState === 'loading'"
@@ -43,7 +40,6 @@ import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
 import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
 import CoursewareViewWidget from './widgets/CoursewareViewWidget.vue';
 import CoursewareActionWidget from './widgets/CoursewareActionWidget.vue';
-import CoursewareImportWidget from './widgets/CoursewareImportWidget.vue';
 import CoursewareSearchWidget from './widgets/CoursewareSearchWidget.vue';
 
 import StudipProgressIndicator from '../StudipProgressIndicator.vue';
@@ -58,7 +54,6 @@ export default {
         CoursewareActionWidget,
         CoursewareCompanionBox,
         StudipProgressIndicator,
-        CoursewareImportWidget,
         CoursewareSearchWidget,
         CoursewareCompanionOverlay,
     },

@@ -10,6 +10,8 @@ const getDefaultState = () => {
         showUnitCopyDialog: false,
         showUnitImportDialog: false,
         showUnitLinkDialog: false,
+        showUnitNewDialog: false,
+        showUnitTopicsDialog: false,
         licenses: null,
         userId: null,
         exportState: '',
@@ -58,6 +60,12 @@ const getters = {
     },
     showUnitLinkDialog(state) {
         return state.showUnitLinkDialog;
+    },
+    showUnitNewDialog(state) {
+        return state.showUnitNewDialog;
+    },
+    showUnitTopicsDialog(state) {
+        return state.showUnitTopicsDialog;
     },
     licenses(state) {
         return state.licenses;
@@ -118,6 +126,12 @@ export const actions = {
     },
     setShowUnitLinkDialog({ commit }, show) {
         commit('setShowUnitLinkDialog', show);
+    },
+    setShowUnitNewDialog({ commit }, show) {
+        commit('setShowUnitNewDialog', show);
+    },
+    setShowUnitTopicsDialog({ commit }, show) {
+        commit('setShowUnitTopicsDialog', show);
     },
     setLicenses({ commit }, licenses) {
         commit('setLicenses', licenses);
@@ -742,6 +756,12 @@ export const mutations = {
     },
     setShowUnitLinkDialog(state, data) {
         state.showUnitLinkDialog = data;
+    },
+    setShowUnitNewDialog(state, data) {
+        state.showUnitNewDialog = data;
+    },
+    setShowUnitTopicsDialog(state, data) {
+        state.showUnitTopicsDialog = data;
     },
     setLicenses(state, data) {
         state.licenses = data;

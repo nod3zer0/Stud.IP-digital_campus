@@ -39,9 +39,10 @@ export default {
         ...mapActions({
             showElementAddDialog: 'showElementAddDialog',
             showElementExportChooserDialog: 'showElementExportChooserDialog',
+            showElementAddChooserDialog: 'showElementAddChooserDialog',
         }),
         addElement() {
-            this.showElementAddDialog(true);
+            this.showElementAddChooserDialog(true);
         },
         exportElement() {
             this.showElementExportChooserDialog(true);

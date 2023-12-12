@@ -4,14 +4,13 @@
             <courseware-unit-items />
             <courseware-shared-items v-if="!inCourseContext" />
         </div>
-        <courseware-shelf-dialog-add v-if="showUnitAddDialog" />
+        <courseware-shelf-dialog-add-chooser v-if="showUnitAddDialog"/>
+        <courseware-shelf-dialog-add v-if="showUnitNewDialog" />
         <courseware-shelf-dialog-copy v-if="showUnitCopyDialog" />
         <courseware-shelf-dialog-import v-if="showUnitImportDialog" />
+        <courseware-shelf-dialog-topics v-if="showUnitTopicsDialog" />
         <MountingPortal v-if="userIsTeacher || !inCourseContext" mountTo="#courseware-action-widget" name="sidebar-actions">
             <courseware-shelf-action-widget></courseware-shelf-action-widget>
-        </MountingPortal>
-        <MountingPortal v-if="userIsTeacher || !inCourseContext" mountTo="#courseware-import-widget" name="sidebar-imports">
-            <courseware-shelf-import-widget></courseware-shelf-import-widget>
         </MountingPortal>
         <courseware-companion-overlay />
     </div>
@@ -19,10 +18,11 @@
 
 <script>
 import CoursewareShelfActionWidget from './widgets/CoursewareShelfActionWidget.vue';
-import CoursewareShelfImportWidget from './widgets/CoursewareShelfImportWidget.vue';
 import CoursewareShelfDialogAdd from './unit/CoursewareShelfDialogAdd.vue';
+import CoursewareShelfDialogAddChooser from './unit/CoursewareShelfDialogAddChooser.vue';
 import CoursewareShelfDialogCopy from './unit/CoursewareShelfDialogCopy.vue';
 import CoursewareShelfDialogImport from './unit/CoursewareShelfDialogImport.vue';
+import CoursewareShelfDialogTopics from './unit/CoursewareShelfDialogTopics.vue';
 import CoursewareUnitItems from './unit/CoursewareUnitItems.vue';
 import CoursewareSharedItems from './unit/CoursewareSharedItems.vue';
 import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
@@ -32,10 +32,11 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
     components: {
         CoursewareShelfActionWidget,
-        CoursewareShelfImportWidget,
         CoursewareShelfDialogAdd,
+        CoursewareShelfDialogAddChooser,
         CoursewareShelfDialogCopy,
         CoursewareShelfDialogImport,
+        CoursewareShelfDialogTopics,
         CoursewareUnitItems,
         CoursewareSharedItems,
         CoursewareCompanionOverlay,
@@ -46,6 +47,8 @@ export default {
             showUnitCopyDialog: 'showUnitCopyDialog',
             showUnitImportDialog: 'showUnitImportDialog',
             showUnitLinkDialog: 'showUnitLinkDialog',
+            showUnitNewDialog: 'showUnitNewDialog',
+            showUnitTopicsDialog: 'showUnitTopicsDialog',
             licenses: 'licenses',
             context:'context',
             userIsTeacher: 'userIsTeacher',
@@ -55,14 +58,6 @@ export default {
             return this.context.type === 'courses';
         }
 
-    },
-    methods: {
-        ...mapActions({
-            setShowUnitAddDialog: 'setShowUnitAddDialog',
-            setShowUnitCopyDialog: 'setShowUnitCopyDialog',
-            setShowUnitImportDialog: 'setShowUnitImportDialog',
-            setShowUnitLinkDialog: 'setShowUnitLinkDialog',
-        }),
     },
 }
 </script>

@@ -569,6 +569,7 @@
                 <courseware-structural-element-dialog-export-chooser v-if="showExportChooserDialog" :canEdit="canEdit" :canVisit="canVisit" />
                 <courseware-structural-element-dialog-export v-if="showExportDialog" :structuralElement="currentElement" />
                 <courseware-structural-element-dialog-export-pdf v-if="showPdfExportDialog" :structuralElement="currentElement" />
+                <courseware-structural-element-dialog-add-chooser v-if="showAddChooserDialog" />
             </div>
             <div v-else>
                 <courseware-companion-box
@@ -593,6 +594,7 @@ import CoursewarePluginComponents from '../plugin-components.js';
 import CoursewareRootContent from './CoursewareRootContent.vue';
 
 import CoursewareStructuralElementDialogAdd from './CoursewareStructuralElementDialogAdd.vue';
+import CoursewareStructuralElementDialogAddChooser from './CoursewareStructuralElementDialogAddChooser.vue';
 import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
 import CoursewareStructuralElementDialogImport from './CoursewareStructuralElementDialogImport.vue';
 import CoursewareStructuralElementDialogLink from './CoursewareStructuralElementDialogLink.vue';
@@ -618,6 +620,7 @@ export default {
     components: Object.assign(StructuralElementComponents, {
         CoursewareRootContent,
         CoursewareStructuralElementDialogAdd,
+        CoursewareStructuralElementDialogAddChooser,
         CoursewareStructuralElementDialogCopy,
         CoursewareStructuralElementDialogImport,
         CoursewareStructuralElementDialogLink,
@@ -713,6 +716,7 @@ export default {
             pluginManager: 'pluginManager',
             showEditDialog: 'showStructuralElementEditDialog',
             showAddDialog: 'showStructuralElementAddDialog',
+            showAddChooserDialog: 'showStructuralElementAddChooserDialog',
             showImportDialog: 'showStructuralElementImportDialog',
             showCopyDialog: 'showStructuralElementCopyDialog',
             showLinkDialog: 'showStructuralElementLinkDialog',
@@ -1225,6 +1229,7 @@ export default {
             setStockImageForStructuralElement: 'setStockImageForStructuralElement',
             showElementEditDialog: 'showElementEditDialog',
             showElementAddDialog: 'showElementAddDialog',
+            showElementAddChooserDialog: 'showElementAddChooserDialog',
             showElementExportDialog: 'showElementExportDialog',
             showElementPdfExportDialog: 'showElementPdfExportDialog',
             showElementInfoDialog: 'showElementInfoDialog',
@@ -1276,7 +1281,7 @@ export default {
                     break;
                 case 'addElement':
                     this.errorEmptyChapterName = false;
-                    this.showElementAddDialog(true);
+                    this.showElementAddChooserDialog(true);
                     break;
                 case 'deleteCurrentElement':
                     await this.loadStructuralElement(this.currentId);

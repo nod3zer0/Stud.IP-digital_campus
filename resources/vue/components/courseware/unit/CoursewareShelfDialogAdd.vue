@@ -6,7 +6,7 @@
         :slots="wizardSlots"
         :lastRequiredSlotId="1"
         :requirements="requirements"
-        @close="setShowUnitAddDialog(false)"
+        @close="setShowUnitNewDialog(false)"
         @confirm="createUnit"
     >
         <template v-slot:basic>
@@ -208,7 +208,7 @@ export default {
             companionInfo: 'companionInfo',
             companionSuccess: 'companionSuccess',
             createCoursewareUnit: 'courseware-units/create',
-            setShowUnitAddDialog: 'setShowUnitAddDialog',
+            setShowUnitNewDialog: 'setShowUnitNewDialog',
             setStockImageForStructuralElement: 'setStockImageForStructuralElement',
             loadStructuralElementById: 'courseware-structural-elements/loadById',
             uploadImageForStructuralElement: 'uploadImageForStructuralElement',
@@ -276,7 +276,7 @@ export default {
                     }
                 }
             };
-            this.setShowUnitAddDialog(false);
+            this.setShowUnitNewDialog(false);
 
             await this.createCoursewareUnit(unit, { root: true });
             this.companionSuccess({ info: this.$gettext('Neues Lernmaterial angelegt.') });

@@ -27,6 +27,7 @@ const getDefaultState = () => {
 
         showStructuralElementEditDialog: false,
         showStructuralElementAddDialog: false,
+        showStructuralElementAddChooserDialog: false,
         showStructuralElementImportDialog: false,
         showStructuralElementCopyDialog: false,
         showStructuralElementLinkDialog: false,
@@ -180,6 +181,9 @@ const getters = {
     },
     showStructuralElementAddDialog(state) {
         return state.showStructuralElementAddDialog;
+    },
+    showStructuralElementAddChooserDialog(state) {
+        return state.showStructuralElementAddChooserDialog;
     },
     showStructuralElementCopyDialog(state) {
         return state.showStructuralElementCopyDialog;
@@ -901,6 +905,10 @@ export const actions = {
         context.commit('setShowStructuralElementAddDialog', bool);
     },
 
+    showElementAddChooserDialog(context, bool) {
+        context.commit('setShowStructuralElementAddChooserDialog', bool);
+    },
+
     showElementImportDialog(context, bool) {
         context.commit('setShowStructuralElementImportDialog', bool);
     },
@@ -1521,6 +1529,10 @@ export const mutations = {
 
     setShowStructuralElementAddDialog(state, showAdd) {
         state.showStructuralElementAddDialog = showAdd;
+    },
+
+    setShowStructuralElementAddChooserDialog(state, showAddChooser) {
+        state.showStructuralElementAddChooserDialog = showAddChooser;
     },
 
     setShowStructuralElementImportDialog(state, showImport) {

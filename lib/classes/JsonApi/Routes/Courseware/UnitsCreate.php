@@ -117,6 +117,10 @@ class UnitsCreate extends JsonApiController
 
         $instance->getUnit()->store();
 
+        if (self::arrayGet($json, 'data.template.type') === 'topics') {
+            $struct->createChildrenFromCourseTopics();
+        }
+
         return $unit;
     }
 

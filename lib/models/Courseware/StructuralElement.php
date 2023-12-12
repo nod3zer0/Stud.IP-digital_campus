@@ -1168,4 +1168,26 @@ SQL;
         }
 
     }
+
+    public function createChildrenFromCourseTopics()
+    {
+        if ($this->range_type === 'user') {
+            return null;
+        }
+        $topics = \CourseTopic::findBySeminar_id($this->course->id);
+        foreach($topics as $key => $topic) {
+            self::create([
+                'parent_id' => $this->id,
+                'range_id' => $this->range_id,
+                'range_type' => $this->range_type,
+                'owner_id' => $this->owner_id,
+                'editor_id' => $this->editor_id,
+                'edit_blocker_id' => '',
+                'title' => $topic->title,
+                'purpose' => $this->purpose,
+                'payload' => '',
+                'position' => $key
+            ]);
+        }
+    }
 }

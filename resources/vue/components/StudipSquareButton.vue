@@ -46,6 +46,7 @@ $size: 130px;
     }
     span {
         color: var(--base-color);
+        min-width: 110px;
     }
     &:hover span {
         color: var(--red);
