@@ -332,8 +332,8 @@ class Form extends Part
             $callback = $this->getStoringCallback($input);
             if (is_callable($callback)) {
                 $stored += $callback($value, $input);
-                $all_values[$input->getName()] = $value;
             }
+            $all_values[$input->getName()] = $value;
         }
 
         foreach ($this->parts as $part) {
