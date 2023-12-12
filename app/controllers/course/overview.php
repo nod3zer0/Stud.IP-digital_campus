@@ -75,7 +75,7 @@ class Course_OverviewController extends AuthenticatedController
             $show_link         = $GLOBALS["perm"]->have_studip_perm('autor', $this->course_id) && $this->course->isToolActive('schedule');
             $this->times_rooms = $this->sem->getDatesTemplate('dates/seminar_html', ['link_to_dates' => $show_link, 'show_room' => true]);
 
-            // Fetch teachers
+            // Fettch teachers
             $dozenten      = $this->sem->getMembers('dozent');
             $this->num_dozenten  = count($dozenten);
             $show_dozenten = [];

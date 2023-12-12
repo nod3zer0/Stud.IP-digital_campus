@@ -37,7 +37,6 @@ class ContentBoxHelper {
         // Check if new
         if ($is_new) {
             $classes[] = 'new';
-            $classes[] = 'open';
         }
 
         // Return classes
