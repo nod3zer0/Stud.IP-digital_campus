@@ -91,6 +91,24 @@ class Accessibility_FormsController extends StudipController
             )
         );
 
+        // Add a honeypot value and timestamp
+        $personal_data_part->addInput(
+            new \Studip\Forms\TextInput(
+                'homepage',
+                _('Homepage'),
+                '',
+                [
+                    'aria-hidden' => 'true',
+                    'class'       => 'sr-only',
+                    'placeholder' => _('Dieses Feld nicht ausfüllen'),
+                    'title'       => _('Dieses Feld nicht ausfüllen'),
+                ]
+            )
+        );
+        $this->form->addInput(
+            new \Studip\Forms\HiddenInput('time', '', time())
+        );
+
         $personal_data_part->addText(sprintf('<p>%s</p>',
             _('Informationen zum Datenschutz dieses Formulars finden Sie in der Datenschutzerklärung.')));
 
@@ -118,6 +136,13 @@ class Accessibility_FormsController extends StudipController
         $this->form->setURL($this->report_barrierURL());
         $this->form->addStoreCallback(
             function ($form, $form_values) {
+                if (
+                    $form_values['time'] >= time() - 2
+                    || !empty($form_values['homepage'])
+                ) {
+                    return 0;
+                }
+
                 $recipients = Config::get()->ACCESSIBILITY_RECEIVER_EMAIL;
                 if (empty($recipients)) {
                     //Fallback: Use the UNI_CONTACT mail address:

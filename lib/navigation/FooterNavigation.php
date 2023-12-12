@@ -62,16 +62,24 @@ class FooterNavigation extends Navigation
             );
         }
 
-        $this->addSubNavigation(
-            'report_barrier',
-            new Navigation(
-                _('Barriere melden'),
-                URLHelper::getURL(
-                    'dispatch.php/accessibility/forms/report_barrier',
-                    ['page' => Request::url(), 'cancel_login' => '1']
-                )
+        if (
+            Config::get()->REPORT_BARRIER_MODE === 'on'
+            || (
+                Config::get()->REPORT_BARRIER_MODE === 'logged-in'
+                && User::findCurrent()
             )
-        );
+        ) {
+            $this->addSubNavigation(
+                'report_barrier',
+                new Navigation(
+                    _('Barriere melden'),
+                    URLHelper::getURL(
+                        'dispatch.php/accessibility/forms/report_barrier',
+                        ['page' => Request::url(), 'cancel_login' => '1']
+                    )
+                )
+            );
+        }
 
         $easy_read_url = Config::get()->EASY_READ_URL;
         if ($this->checkSiteinfoURL($easy_read_url)) {

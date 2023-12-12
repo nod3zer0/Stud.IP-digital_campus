@@ -1,4 +1,4 @@
-<div class="formpart">
+<div class="formpart" data-form-input-for="<?= htmlReady($name) ?>">
     <label<?= ($this->required ? ' class="studiprequired"' : '') ?> for="<?= $id ?>">
         <span class="textlabel">
             <?= htmlReady($this->title) ?>

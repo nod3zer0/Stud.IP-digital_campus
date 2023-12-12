@@ -138,3 +138,10 @@ div.indent { margin-left: 2em; }
         }
     }
 }
+
+// Hide honeypot field from report barrier form
+body#accessibility-forms-report_barrier {
+    .formpart[data-form-input-for="homepage"] {
+        @extend .sr-only;
+    }
+}
