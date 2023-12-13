@@ -68,7 +68,7 @@ class NewsRangesSearch extends SearchType
                                    SELECT CONCAT(s.`Seminar_id`, '__seminar') AS `range_id`,
                                           TRIM(CONCAT({$number_sql} s.`name`, {$semester_sql})) AS `name`
                                    FROM `seminare` AS s
-                                   JOIN `seminar_user` USING (`Seminar_id`) AS su
+                                   JOIN `seminar_user` AS su USING (`Seminar_id`) 
                                    LEFT JOIN `semester_courses` AS sc ON s.`Seminar_id` = sc.`course_id`
                                    LEFT JOIN `semester_data` USING (`semester_id`)
                                    WHERE s.`name` LIKE :input
