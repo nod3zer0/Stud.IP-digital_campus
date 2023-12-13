@@ -2,7 +2,7 @@
     background-color: var(--dark-gray-color-5);
     border: solid thin var(--dark-gray-color-30);
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     height: auto;
     justify-content: flex-start;
     margin-bottom: 15px;
@@ -70,9 +70,14 @@
     }
 
     .contentbar-wrapper-right {
+        align-items: center;
         display: flex;
         justify-content: flex-end;
         position: relative;
+
+        .contentbar-info {
+            flex: 0 1 auto;
+        }
 
         .contentbar-button-wrapper {
             height: 24px;
