@@ -623,7 +623,8 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
 
     private function findCoursewareElements($user): array
     {
-        $root = $this->getCourseware($this->range_id, $this->range_type);
+        $unit = $this->findUnit();
+        $root = $unit->structural_element;
         $elements = array_merge([$root], $root->findDescendants($user));
 
         return $elements;
