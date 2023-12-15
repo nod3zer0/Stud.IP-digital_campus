@@ -273,12 +273,13 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_action($user_id = null, $parent = '')
     {
-        $delete_documents           = (bool) Request::int('documents');
-        $delete_content_from_course = (bool) Request::int('coursecontent');
-        $delete_personal_documents  = (bool) Request::int('personaldocuments');
-        $delete_personal_content    = (bool) Request::int('personalcontent');
-        $delete_names               = (bool) Request::int('personalnames');
-        $delete_memberships         = (bool) Request::int('memberships');
+        $delete_documents           = Request::bool('documents');
+        $delete_courseware          = Request::bool('courseware');
+        $delete_content_from_course = Request::bool('coursecontent');
+        $delete_personal_documents  = Request::bool('personaldocuments');
+        $delete_personal_content    = Request::bool('personalcontent');
+        $delete_names               = Request::bool('personalnames');
+        $delete_memberships         = Request::bool('memberships');
 
         //deleting one user
         if (!is_null($user_id)) {
@@ -299,7 +300,7 @@ class Admin_UserController extends AuthenticatedController
                 $umanager->getFromDatabase($user_id);
 
                 //delete
-                if ($umanager->deleteUser($delete_documents, $delete_content_from_course, $delete_personal_documents, $delete_personal_content, $delete_names, $delete_memberships, !Request::bool('mail'))) {
+                if ($umanager->deleteUser($delete_documents, $delete_content_from_course, $delete_personal_documents, $delete_personal_content, $delete_names, $delete_memberships, !Request::bool('mail'), $delete_courseware)) {
                     $details = explode('§', str_replace(['msg§', 'info§', 'error§'], '', mb_substr($umanager->msg, 0, -1)));
                     PageLayout::postSuccess(htmlReady(sprintf(_('"%s (%s)" wurde erfolgreich gelöscht.'), $user->getFullName(), $user->username)), $details);
                 } else {

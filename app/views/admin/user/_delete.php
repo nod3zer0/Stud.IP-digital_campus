@@ -52,6 +52,12 @@
         </label>
 
         <label>
+            <input type="checkbox" id="courseware" name="courseware" value="1" checked>
+            <?= _('Lernmaterialien löschen?') ?>
+            <?= tooltipHtmlIcon(_('Courseware Lernmaterialien, Seiten, Abschnitte und Blöcke')) ?>
+        </label>
+
+        <label>
             <input type="checkbox" id="coursecontent" name="coursecontent" value="1" checked>
             <?= _('Andere Inhalte löschen?') ?>
             <?= tooltipHtmlIcon(_('veranstaltungsbezogene Inhalte, bis auf Wiki und Forum Einträge')) ?>

@@ -800,7 +800,8 @@ class UserManagement
         bool $delete_personal_content = true,
         bool $delete_names = true,
         bool $delete_memberships = true,
-        bool $send_email_notification = true
+        bool $send_email_notification = true,
+        bool $delete_courseware = true
     ): bool {
         global $perm;
 
@@ -981,6 +982,24 @@ class UserManagement
                 $this->msg .= 'info§' . sprintf(_('%s Dateien aus Veranstaltungen und Einrichtungen gelöscht.'), $db_filecount) . '§';
             }
             NotificationCenter::postNotification('UserDataDidRemove', $this->user_data['auth_user_md5.user_id'], 'course_documents');
+        }
+
+        // always delete personal courseware elements of this user
+        \Courseware\Unit::deleteBySQL('range_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+        \Courseware\UserDataField::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+        \Courseware\UserProgress::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+        \Courseware\Bookmark::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+
+        // delete courseware elements in courses of this user
+        if ($delete_courseware) {
+            \Courseware\Unit::deleteBySQL('creator_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\StructuralElement::deleteBySQL('owner_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\StructuralElementFeedback::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\StructuralElementComment::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\Container::deleteBySQL('owner_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\Block::deleteBySQL('owner_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\BlockFeedback::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
+            \Courseware\BlockComment::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
         }
 
         // delete all remaining user data in course context if option selected
