@@ -1014,7 +1014,7 @@ export default {
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
             ];
 
-            if (this.oerEnableSuggestions) {
+            if (this.oerEnableSuggestions && this.inCourse && this.userId !== this.structuralElement.relationships.owner.data.id) {
                 menu.push(
                     { id: 6, label: this.$gettext('Seite für OER Campus vorschlagen'), icon: 'oer-campus',
                         emit: 'showSuggest' }
