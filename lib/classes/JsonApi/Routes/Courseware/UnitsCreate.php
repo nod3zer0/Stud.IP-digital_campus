@@ -96,7 +96,8 @@ class UnitsCreate extends JsonApiController
             'title' => self::arrayGet($json, 'data.attributes.title', ''),
             'purpose' => self::arrayGet($json, 'data.attributes.purpose', ''),
             'payload' => self::arrayGet($json, 'data.attributes.payload', ''),
-            'position' => 0
+            'position' => 0,
+            'commentable' => 0
         ]);
 
         $unit = \Courseware\Unit::create([

@@ -9,6 +9,7 @@
                 v-for="comment in comments"
                 :key="comment.id"
                 :payload="buildPayload(comment)"
+                @delete="deleteComment(comment)"
             />
         </div>
         <div class="cw-structural-element-comment-create">
@@ -62,7 +63,8 @@ export default {
     methods: {
         ...mapActions({
             createComments: 'courseware-structural-element-comments/create',
-            loadRelatedComments: 'courseware-structural-element-comments/loadRelated'
+            loadRelatedComments: 'courseware-structural-element-comments/loadRelated',
+            deleteElementComment: 'courseware-structural-element-comments/delete'
         }),
         async loadComments() {
             const parent = {
@@ -110,11 +112,15 @@ export default {
                 chdate: comment.attributes.chdate,
                 mkdate: comment.attributes.mkdate,
                 user_id: commenter.id,
-                user_name: commenter.attributes['formatted-name'],
+                user_formatted_name: commenter.attributes['formatted-name'],
+                username: commenter?.attributes?.username ?? '',
                 user_avatar: commenter.meta.avatar.small,
             };
 
             return payload;
+        },
+        deleteComment(comment) {
+            this.deleteElementComment({ id: comment.id, type: comment.type });
         },
         updateSrMessage(message) {
             this.srMessage = '';

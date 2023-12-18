@@ -1,5 +1,5 @@
 <template>
-    <div v-if="block.attributes.visible || canEdit" class="cw-default-block">
+    <div v-if="block.attributes.visible || canEdit" class="cw-default-block" :class="[showEditMode ? 'cw-default-block-active' : '']">
         <div class="cw-content-wrapper" :class="[showEditMode ? 'cw-content-wrapper-active' : '']">
             <header v-if="showEditMode" class="cw-block-header">
                 <a href="#" class="cw-block-header-toggle" :aria-expanded="isOpen" @click.prevent="isOpen = !isOpen">
@@ -24,6 +24,9 @@
                     @deleteBlock="displayDeleteDialog()"
                     @removeLock="displayRemoveLockDialog()"
                     @copyToClipboard="copyToClipboard"
+                    @deactivateComments="deactivateComments"
+                    @activateComments="activateComments"
+                    @showFeedback="showFeedback"
                 />
             </header>
             <div v-show="isOpen">
@@ -55,12 +58,12 @@
                 </div>
             </div>
         </div>
-        <div v-if="discussView" class="cw-discuss-wrapper">
-            <courseware-block-discussion
-                :block="block"
-                :canEdit="canEdit"
-            />
-        </div>
+        <courseware-block-discussion
+            :block="block"
+            :canEdit="canEdit"
+            :commentable="commentable"
+            :displayFeedback="displayFeedback"
+        />
         <studip-dialog
             v-if="showDeleteDialog"
             :title="textDeleteTitle"
@@ -138,6 +141,7 @@ export default {
             textRemoveLockTitle: this.$gettext('Sperre aufheben'),
             textRemoveLockAlert: this.$gettext('Möchten Sie die Sperre dieses Blocks wirklich aufheben?'),
             isOpen: true,
+            displayFeedback: false,
         };
     },
     computed: {
@@ -148,7 +152,7 @@ export default {
             userId: 'userId',
             userById: 'users/byId',
             viewMode: 'viewMode',
-            currentElementisLink: 'currentElementisLink'
+            currentElementisLink: 'currentElementisLink',
         }),
         showEditMode() {
             let show = (this.viewMode === 'edit' || this.blockedByThisUser) && !this.currentElementisLink;
@@ -156,9 +160,6 @@ export default {
                 this.displayFeature(false);
             }
             return show;
-        },
-        discussView() {
-            return this.viewMode === 'discuss';
         },
         blocked() {
             return this.block?.relationships?.['edit-blocker']?.data !== null;
@@ -189,7 +190,10 @@ export default {
         },
         public() {
             return this.context.type === 'public';
-        }
+        },
+        commentable() {
+            return this.block?.attributes?.commentable ?? false;
+        },
     },
     mounted() {
         if (this.blocked) {
@@ -199,6 +203,9 @@ export default {
         }
         if (!this.public && this.userProgress && this.userProgress.attributes.grade === 0 && this.defaultGrade) {
             this.userProgress = 1;
+        }
+        if (this.canEdit) {
+            this.loadFeedback(this.block.id);
         }
     },
     methods: {
@@ -212,7 +219,10 @@ export default {
             loadContainer: 'loadContainer',
             loadBlock: 'courseware-blocks/loadById',
             updateContainer: 'updateContainer',
-            createClipboard: 'courseware-clipboards/create'
+            createClipboard: 'courseware-clipboards/create',
+            activateBlockComments: 'activateBlockComments',
+            deactivateBlockComments: 'deactivateBlockComments',
+            loadRelatedFeedback: 'courseware-block-feedback/loadRelated',
         }),
         async displayFeature(element) {
             if (this.showEdit && element === 'Edit') {
@@ -377,7 +387,30 @@ export default {
 
             await this.createClipboard(clipboard, { root: true });
             this.companionSuccess({ info: this.$gettext('Block wurde in Merkliste abgelegt.') });
-        }
+        },
+        activateComments() {
+            this.activateBlockComments({ block: this.block });
+        },
+        deactivateComments() {
+            this.deactivateBlockComments({ block: this.block });
+        },
+        showFeedback() {
+            console.log('displayFeedback');
+            this.displayFeedback = true;
+        },
+        async loadFeedback() {
+            const parent = {
+                type: this.block.type,
+                id: this.block.id,
+            };
+            await this.loadRelatedFeedback({
+                parent,
+                relationship: 'feedback',
+                options: {
+                    include: 'user',
+                },
+            });
+        },
 
     },
     watch: {

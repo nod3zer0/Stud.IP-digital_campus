@@ -102,6 +102,7 @@ class BlocksCreate extends JsonApiController
             'block_type'      => $get('data.attributes.block-type'),
             'payload'         => '',
             'visible'         => 1,
+            'commentable'     => 0
         ]);
 
         $payload = $get('data.attributes.payload');

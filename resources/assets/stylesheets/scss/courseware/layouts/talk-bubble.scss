@@ -1,58 +1,99 @@
-.cw-talk-bubble {
-    margin: 10px 20px;
-    position: relative;
-    width: 85%;
-    height: auto;
-    background-color: var(--dark-gray-color-10);
-    float: left;
+$color: var(--base-color-20);
+$ownColor: var(--petrol-40);
 
-    .cw-talk-bubble-talktext {
-        padding: 1em;
-        text-align: left;
-        line-height: 1.5em;
+.cw-talk-bubble-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
 
-        .cw-talk-bubble-talktext-time {
-            color: var(--dark-gray-color-80);
-            text-align: right;
-            font-size: 0.8em;
-            margin-bottom: -0.5em;
+    .cw-talk-bubble-avatar {
+        padding: 8px;
+    }
+
+    .cw-talk-bubble {
+        margin: 10px 20px;
+        position: relative;
+        max-width: 80%;
+        height: auto;
+        background-color: $color;
+        border-radius: 10px;
+
+        .cw-talk-bubble-content {
+            padding: 8px 1em;
+
+            .cw-talk-bubble-header {
+                margin-bottom: 8px;
+
+                a {
+                    font-weight: 700;
+                }
+            }
+
+            .cw-talk-bubble-talktext {
+                margin-bottom: 4px;
+                text-align: left;
+                line-height: 1.5em;
+
+                .cw-talk-bubble-footer {
+                    float: right;
+                    margin-top: 4px;
+                    padding-bottom: 4px;
+
+                    &:before {
+                        content: " ";
+                        width: 1em;
+                        display: inline-block;
+                    }
+
+                    .cw-talk-bubble-talktext-time {
+                        text-align: right;
+                        font-size: 0.8em;
+                        margin-bottom: -0.5em;
+                    }
+
+                    button {
+                        border: none;
+                        background-color: transparent;
+                        vertical-align: middle;
+                        cursor: pointer;
+                    }
+                }
+
+            }
+        }
+
+        &:after {
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: 0px;
+            bottom: auto;
+            border: 16px solid;
+            border-color: $color transparent transparent transparent;
+            border-radius: 4px;
+            left: -14px;
+            right: auto;
         }
     }
 
     &.cw-talk-bubble-own-post {
-        float: right;
-    }
+        justify-content: end;
 
-    &:after {
-        content: ' ';
-        position: absolute;
-        width: 0;
-        height: 0;
-        top: 0px;
-        bottom: auto;
-        border: 22px solid;
-        border-color: var(--dark-gray-color-10) transparent transparent transparent;
-        left: -20px;
-        right: auto;
-    }
+        .cw-talk-bubble {
+            flex-direction: row-reverse;
+            background-color: $ownColor;
 
-    &.cw-talk-bubble-own-post:after {
-        left: auto;
-        right: -20px;
-    }
-
-    .cw-talk-bubble-user {
-        padding: 1em 1em 0 1em;
-
-        .cw-talk-bubble-avatar {
-            display: inline-block;
+            &:after {
+                border-color: $ownColor transparent transparent transparent;
+                left: auto;
+                right: -14px;
+            }
         }
 
-        span {
-            padding-left: 4px;
-            color: var(--dark-gray-color-45);
-            font-weight: 600;
-            vertical-align: top;
+
+        .cw-talk-bubble-header {
+            flex-direction: row-reverse;
         }
     }
 }

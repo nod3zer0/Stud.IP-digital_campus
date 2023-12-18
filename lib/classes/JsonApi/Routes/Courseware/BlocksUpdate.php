@@ -84,6 +84,10 @@ class BlocksUpdate extends JsonApiController
                 $resource->visible = $get('data.attributes.visible');
             }
 
+            if (is_bool($get('data.attributes.commentable'))) {
+                $resource->commentable = $get('data.attributes.commentable');
+            }
+
             if ($get('data.relationships.container.data.id')) {
                 $resource->container_id = $get('data.relationships.container.data.id');
             }

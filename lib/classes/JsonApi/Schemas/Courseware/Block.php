@@ -40,6 +40,7 @@ class Block extends SchemaProvider
             'block-type' => (string) $resource->getBlockType(),
             'title' => (string) $resource->type->getTitle(),
             'visible' => (bool) $resource['visible'],
+            'commentable' => (bool) $resource['commentable'],
             'payload' => $resource->type->getPayload(),
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),

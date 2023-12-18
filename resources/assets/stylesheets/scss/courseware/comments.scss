@@ -1,17 +1,11 @@
-.cw-structural-element-feedback,
-.cw-structural-element-comments {
-    padding: 0 1em;
-}
-
 .cw-structural-element-feedback-items,
 .cw-structural-element-comments-items,
 .cw-block-feedback-items,
 .cw-block-comments-items {
     min-height: 1em;
-    max-height: 225px;
+    max-height: 270px;
     overflow-y: auto;
     overflow-x: hidden;
-    margin: -1em -1em 0em 0em;
     padding: 0em 1em 0em 0em;
     scroll-behavior: smooth;
 }
@@ -30,7 +24,7 @@
 .cw-block-feedback-create,
 .cw-block-comment-create {
     border-top: solid thin var(--content-color-40);
-    padding-top: 1em;
+    padding: 8px 1em 0 1em;
     textarea {
         width: calc(100% - 6px);
         resize: none;
@@ -54,4 +48,20 @@
 
 .cw-comments-overview-dialog-comments-context {
     margin: 0 0 1.5em 0;
+}
+
+.cw-block-discussion {
+    .cw-call-to-action:not(:first-child) {
+        border-top: none;
+    }
+}
+
+.cw-default-block-active {
+    .cw-block-discussion {
+        margin: 0 -2px 0 0px;
+        .cw-call-to-action {
+            border-top: none;
+        }
+    }
+    
 }

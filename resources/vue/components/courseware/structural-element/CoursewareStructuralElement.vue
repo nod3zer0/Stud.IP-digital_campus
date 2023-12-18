@@ -77,11 +77,30 @@
                                 @linkElement="menuAction('linkElement')"
                                 @removeLock="menuAction('removeLock')"
                                 @activateFullscreen="menuAction('activateFullscreen')"
+                                @activateComments="menuAction('activateComments')"
+                                @deactivateComments="menuAction('deactivateComments')"
+                                @showFeedback="menuAction('showFeedback')"
                             />
                         </template>
                     </courseware-ribbon>
                     <div class="cw-page-wrapper">
                         <div class="cw-page-content">
+                            <courseware-call-to-action-box
+                                v-if="canEdit && (hasFeedback || displayFeedback)"
+                                class="cw-structural-element-feedback-wrapper"
+                                iconShape="exclaim-circle"
+                                :actionTitle="callToActionTitleFeedback"
+                                :titleClosed="$gettext('Anmerkungen anzeigen')"
+                                :titleOpen="$gettext('Anmerkungen ausblenden')"
+                                :foldable="true"
+                            >
+                                <template #content>
+                                    <courseware-structural-element-feedback
+                                        :structuralElement="structuralElement"
+                                        :canEdit="canEdit"
+                                    />
+                                </template>
+                            </courseware-call-to-action-box>
                             <div v-if="structuralElementLoaded && !isLink" class="cw-companion-box-wrapper">
                                 <courseware-companion-box
                                     v-if="!canVisit"
@@ -113,14 +132,8 @@
                                 class="cw-container-wrapper"
                                 :class="{
                                     'cw-container-wrapper-consume': consumeMode,
-                                    'cw-container-wrapper-discuss': discussView,
                                 }"
                             >
-                                <courseware-structural-element-discussion
-                                    v-if="!noContainers && discussView"
-                                    :structuralElement="structuralElement"
-                                    :canEdit="canEdit"
-                                />
                                 <component
                                     v-for="container in containers"
                                     :key="container.id"
@@ -138,14 +151,8 @@
                                 class="cw-container-wrapper"
                                 :class="{
                                     'cw-container-wrapper-consume': consumeMode,
-                                    'cw-container-wrapper-discuss': discussView,
                                 }"
                             >
-                                <courseware-structural-element-discussion
-                                    v-if="discussView"
-                                    :structuralElement="structuralElement"
-                                    :canEdit="canEdit"
-                                />
                                 <div v-if="editView" class="cw-companion-box-wrapper">
                                     <courseware-companion-box
                                         :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
@@ -211,6 +218,22 @@
                         </div>
                         <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" /> 
                     </div>
+                    <courseware-call-to-action-box
+                        v-if="commentable"
+                        class="cw-structural-element-comments-wrapper"
+                        iconShape="chat"
+                        :actionTitle="callToActionTitleComments"
+                        :titleClosed="$gettext('Kommentare anzeigen')"
+                        :titleOpen="$gettext('Kommentare ausblenden')"
+                        :foldable="true"
+                        :open="false"
+                    >
+                        <template #content>
+                            <courseware-structural-element-comments
+                                :structuralElement="structuralElement"
+                            />
+                        </template>
+                    </courseware-call-to-action-box>
                 </div>
                 <studip-dialog
                     v-if="showEditDialog"
@@ -593,6 +616,8 @@ import StructuralElementComponents from './structural-element-components.js';
 import CoursewarePluginComponents from '../plugin-components.js';
 import CoursewareRootContent from './CoursewareRootContent.vue';
 
+import CoursewareStructuralElementComments from './CoursewareStructuralElementComments.vue';
+import CoursewareStructuralElementFeedback from './CoursewareStructuralElementFeedback.vue';
 import CoursewareStructuralElementDialogAdd from './CoursewareStructuralElementDialogAdd.vue';
 import CoursewareStructuralElementDialogAddChooser from './CoursewareStructuralElementDialogAddChooser.vue';
 import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
@@ -609,6 +634,7 @@ import CoursewareExport from '@/vue/mixins/courseware/export.js';
 import CoursewareOerMessage from '@/vue/mixins/courseware/oermessage.js';
 import colorMixin from '@/vue/mixins/courseware/colors.js';
 import wizardMixin from '@/vue/mixins/courseware/wizard.js';
+import CoursewareCallToActionBox from '../layouts/CoursewareCallToActionBox.vue';
 import CoursewareDateInput from '../layouts/CoursewareDateInput.vue';
 import StockImageSelector from '../../stock-images/SelectorDialog.vue';
 import StudipDialog from '../../StudipDialog.vue';
@@ -620,6 +646,8 @@ export default {
     name: 'courseware-structural-element',
     components: Object.assign(StructuralElementComponents, {
         CoursewareRootContent,
+        CoursewareStructuralElementComments,
+        CoursewareStructuralElementFeedback,
         CoursewareStructuralElementDialogAdd,
         CoursewareStructuralElementDialogAddChooser,
         CoursewareStructuralElementDialogCopy,
@@ -632,6 +660,7 @@ export default {
         CoursewareStructuralElementPermissions,
         CoursewareContentPermissions,
         CoursewareWelcomeScreen,
+        CoursewareCallToActionBox,
         CoursewareDateInput,
         StockImageSelector,
         StudipDialog,
@@ -699,6 +728,7 @@ export default {
             uploadImageURL: null,
             showStockImageSelector: false,
             selectedStockImage: null,
+            displayFeedback: false,
         };
     },
 
@@ -710,6 +740,8 @@ export default {
             containerById: 'courseware-containers/byId',
             relatedContainers: 'courseware-containers/related',
             relatedStructuralElements: 'courseware-structural-elements/related',
+            getRelatedFeedback: 'courseware-structural-element-feedback/related',
+            getRelatedComments: 'courseware-structural-element-comments/related',
             relatedTaskGroups: 'courseware-task-groups/related',
             relatedUsers: 'users/related',
             structuralElementById: 'courseware-structural-elements/byId',
@@ -1037,6 +1069,24 @@ export default {
                         icon: 'settings',
                         emit: 'editCurrentElement',
                     });
+                    if (this.userIsTeacher) {
+                        menu.push({
+                            id: 2,
+                            label: this.commentable
+                                    ? this.$gettext('Kommentare abschalten')
+                                    : this.$gettext('Kommentare aktivieren'),
+                                icon: 'comment2',
+                                emit: this.commentable ? 'deactivateComments' : 'activateComments',
+                        });
+                        if (!this.hasFeedback && !this.displayFeedback) {
+                            menu.push({
+                                id: 3,
+                                label: this.$gettext('Anmerkungen aktivieren'),
+                                icon: 'exclaim-circle',
+                                emit: 'showFeedback'
+                            });
+                        }
+                    }
                 }
                 if (this.blockedByAnotherUser && this.userIsTeacher) {
                     menu.push({
@@ -1084,9 +1134,6 @@ export default {
         },
         blockingUserName() {
             return this.blockingUser ? this.blockingUser.attributes['formatted-name'] : '';
-        },
-        discussView() {
-            return this.viewMode === 'discuss';
         },
         editView() {
             return this.viewMode === 'edit';
@@ -1211,7 +1258,57 @@ export default {
                 'dispatch.php/course/courseware/courseware/' + this.context.unit,
                 {cid: this.context.id}
             );
-        }
+        },
+        commentable() {
+            return this.currentElement?.attributes?.commentable ?? false;
+        },
+        feedback() {
+            const parent = {
+                type: this.currentElement.type,
+                id: this.currentElement.id,
+            };
+
+            return this.getRelatedFeedback({ parent, relationship: 'feedback' });
+        },
+        feedbackCounter() {
+            return this.feedback?.length ?? 0;
+        },
+        hasFeedback() {
+            if (this.feedback === null || this.feedbackCounter === 0) {
+                return false;
+            }
+
+            return true;
+        },
+        callToActionTitleFeedback() {
+            return this.$gettextInterpolate(
+                this.$ngettext(
+                    '%{length} Anmerkung zur Seite (Nur für Nutzende mit Schreibrechten sichtbar)',
+                    '%{length} Anmerkungen zur Seite (Nur für Nutzende mit Schreibrechten sichtbar)',
+                    this.feedbackCounter
+                ),
+            { length: this.feedbackCounter });
+        },
+        comments() {
+            const parent = {
+                type: this.currentElement.type,
+                id: this.currentElement.id,
+            };
+
+            return this.getRelatedComments({ parent, relationship: 'comments' });
+        },
+        commentsCounter() {
+            return this.comments?.length ?? 0;
+        },
+        callToActionTitleComments() {
+            return this.$gettextInterpolate(
+                this.$ngettext(
+                    '%{length} Kommentar zur Seite',
+                    '%{length} Kommentare zur Seite',
+                    this.commentsCounter
+                ),
+            { length: this.commentsCounter });
+        },
     },
 
     methods: {
@@ -1246,7 +1343,10 @@ export default {
             loadStructuralElement: 'loadStructuralElement',
             createLink: 'createLink',
             setCurrentElementId: 'coursewareCurrentElement',
-            loadProgresses: 'loadProgresses'
+            loadProgresses: 'loadProgresses',
+            activateStructuralElementComments: 'activateStructuralElementComments',
+            deactivateStructuralElementComments: 'deactivateStructuralElementComments',
+            loadRelatedFeedback: 'courseware-structural-element-feedback/loadRelated',
         }),
 
         initCurrent() {
@@ -1254,6 +1354,7 @@ export default {
             this.uploadFileError = '';
             this.deletingPreviewImage = false;
             this.uploadImageURL = null;
+            this.loadFeedback();
         },
         async menuAction(action) {
             switch (action) {
@@ -1314,6 +1415,15 @@ export default {
                     break;
                 case 'activateFullscreen':
                     STUDIP.Fullscreen.activate();
+                    break;
+                case 'activateComments':
+                    this.activateStructuralElementComments({ element: this.currentElement });
+                    break;
+                case 'deactivateComments':
+                    this.deactivateStructuralElementComments({ element: this.currentElement });
+                    break;
+                case 'showFeedback':
+                    this.displayFeedback = true;
                     break;
             }
         },
@@ -1557,6 +1667,19 @@ export default {
             for (let ref of containerRefs) {
                 ref.initCurrentData();
             }
+        },
+        async loadFeedback() {
+            const parent = {
+                type: this.currentElement.type,
+                id: this.currentElement.id,
+            };
+            await this.loadRelatedFeedback({
+                parent,
+                relationship: 'feedback',
+                options: {
+                    include: 'user',
+                },
+            });
         },
         keyHandler(e, containerId) {
             switch (e.keyCode) {

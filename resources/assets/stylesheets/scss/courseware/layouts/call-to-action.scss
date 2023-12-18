@@ -1,0 +1,19 @@
+@use '../../../mixins.scss' as *;
+
+.cw-call-to-action {
+    border: solid thin var(--content-color-40);
+
+    .action-button {
+        width: 100%;
+        background-color: var(--activity-color-20);
+        border: none;
+        text-align: left;
+        padding: 1em;
+        cursor: pointer;
+
+        img {
+            margin: 0 1em;
+            vertical-align: middle;
+        }
+    }
+}

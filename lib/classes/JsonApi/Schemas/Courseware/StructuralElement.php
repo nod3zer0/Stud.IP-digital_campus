@@ -54,6 +54,7 @@ class StructuralElement extends SchemaProvider
             'can-edit' => $resource->canEdit($user),
             'can-visit' => $resource->canVisit($user),
             'is-link' => (int) $resource['is_link'],
+            'commentable' => (bool) $resource['commentable'],
             'target-id' => (int)  $resource['target_id'],
             'external-relations' => $resource['external_relations']->getIterator(),
             'mkdate' => date('c', $resource['mkdate']),

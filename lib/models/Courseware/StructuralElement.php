@@ -31,6 +31,7 @@ use User;
  * @property string|null $purpose database column
  * @property \JSONArrayObject $payload database column
  * @property int $public database column
+ * @property int $commentable database column
  * @property int $release_date database column
  * @property int $withdraw_date database column
  * @property \JSONArrayObject $read_approval database column
@@ -758,6 +759,7 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
             'owner_id' => $user->id,
             'editor_id' => $user->id,
             'title' => _('neue Seite'),
+            'commentable' => 0
         ]);
 
         $struct->store();
@@ -841,6 +843,7 @@ SQL;
             'purpose' => $purpose ?: $this->purpose,
             'position' => 0,
             'payload' => $this->payload,
+            'commentable' => 0
         ]);
 
         $element->store();
@@ -892,7 +895,8 @@ SQL;
             'image_id' => $image_id,
             'image_type' => $this->image_type,
             'read_approval' => $parent->read_approval,
-            'write_approval' => $parent->write_approval
+            'write_approval' => $parent->write_approval,
+            'commentable' => 0
         ]);
 
         $element->store();
@@ -1032,7 +1036,8 @@ SQL;
             'position' => $parent->countChildren(),
             'payload' => $this->payload,
             'read_approval' => $parent->read_approval,
-            'write_approval' => $parent->write_approval
+            'write_approval' => $parent->write_approval,
+            'commentable' => 0
         ]);
 
         $element->store();

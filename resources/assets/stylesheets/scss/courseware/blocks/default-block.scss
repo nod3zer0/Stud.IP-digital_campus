@@ -1,6 +1,7 @@
 .cw-default-block {
     display: flex;
-    flex-flow: row;
+    flex-flow: column nowrap;
+
     .cw-default-block-invisible-info {
         img {
             vertical-align: text-bottom;
@@ -95,21 +96,6 @@
     }
 }
 
-
-.cw-container-wrapper-discuss {
-    .cw-container-colspan-full {
-        .cw-content-wrapper {
-            max-width: $max-content-width;
-        }
-    }
-    .cw-container-colspan-half,
-    .cw-container-colspan-half-center {
-        .cw-content-wrapper {
-            max-width: 540px;
-        }
-    }
-}
-
 .cw-block-title {
     padding: 4px;
     background-color: var(--content-color-20);
@@ -130,24 +116,5 @@
     p {
         text-align: center;
         padding-top: 106px;
-    }
-}
-
-.cw-call-to-action {
-    border: solid thin var(--content-color-40);
-    border-top: none;
-
-    button {
-        width: 100%;
-        background-color: var(--activity-color-20);
-        border: none;
-        text-align: left;
-        padding: 1em;
-        cursor: pointer;
-
-        img {
-            margin: 0 1em;
-            vertical-align: middle;
-        }
     }
 }

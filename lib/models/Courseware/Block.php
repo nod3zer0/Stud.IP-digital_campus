@@ -22,6 +22,7 @@ use User;
  * @property int $position database column
  * @property string|null $block_type database column
  * @property int $visible database column
+ * @property int $commentable database column
  * @property string $payload database column
  * @property int $mkdate database column
  * @property int $chdate database column
@@ -172,6 +173,7 @@ class Block extends \SimpleORMap implements \PrivacyObject
                 'block-type'=> $this->type->getType(),
                 'title'=> $this->type->getTitle(),
                 'visible'=> $this->visible,
+                'commentable' => $this->commentable,
                 'payload'=> $this->type->getPayload(),
                 'mkdate'=> $this->mkdate,
                 'chdate'=> $this->chdate
@@ -204,6 +206,7 @@ class Block extends \SimpleORMap implements \PrivacyObject
             'block_type' => $this->type->getType(),
             'payload' => json_encode($this->type->copyPayload($rangeId)),
             'visible' => 1,
+            'commentable' => 0
         ]);
 
         //update Container payload
@@ -227,6 +230,7 @@ class Block extends \SimpleORMap implements \PrivacyObject
             'block_type' => $data->attributes->{'block-type'},
             'payload' => json_encode($data->attributes->payload),
             'visible' => 1,
+            'commentable' => 0
         ]);
 
         $block->payload = json_encode($block->type->copyPayload($rangeId));

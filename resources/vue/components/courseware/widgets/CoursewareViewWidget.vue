@@ -15,14 +15,6 @@
                         <translate>Bearbeiten</translate>
                     </button>
                 </li>
-                <li
-                    v-if="context.type === 'courses' && canVisit"
-                    :class="{ active: discussView }"
-                >
-                    <button @click="setDiscussView">
-                        <translate>Kommentieren</translate>
-                    </button>
-                </li>
             </ul>
         </template>
     </sidebar-widget>
@@ -50,9 +42,6 @@ export default {
         editView() {
             return this.viewMode === 'edit';
         },
-        discussView() {
-            return this.viewMode === 'discuss';
-        },
         canEdit() {
             if (!this.structuralElement) {
                 return false;
@@ -76,9 +65,6 @@ export default {
         },
         setEditView() {
             this.coursewareViewMode('edit');
-        },
-        setDiscussView() {
-            this.coursewareViewMode('discuss');
         },
     },
 };

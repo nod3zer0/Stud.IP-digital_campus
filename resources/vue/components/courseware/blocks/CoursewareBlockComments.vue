@@ -7,6 +7,7 @@
                     v-for="comment in comments"
                     :key="comment.id"
                     :payload="buildPayload(comment)"
+                    @delete="deleteComment(comment)"
                 />
             </div>
             <div class="cw-block-comment-create">
@@ -61,7 +62,8 @@ export default {
     methods: {
         ...mapActions({
             createComments: 'courseware-block-comments/create',
-            loadRelatedComments: 'courseware-block-comments/loadRelated'
+            loadRelatedComments: 'courseware-block-comments/loadRelated',
+            deleteBlockComment: 'courseware-block-comments/delete'
         }),
         async loadComments() {
             const parent = {
@@ -96,6 +98,9 @@ export default {
             this.loadComments();
             this.createComment = '';
         },
+        deleteComment(comment) {
+            this.deleteBlockComment({id: comment.id, type: comment.type });
+        },
         buildPayload(comment) {
             const commenter = this.relatedUser({
                 parent: { id: comment.id, type: comment.type },
@@ -109,7 +114,8 @@ export default {
                 chdate: comment.attributes.chdate,
                 mkdate: comment.attributes.mkdate,
                 user_id: commenter.id,
-                user_name: commenter.attributes['formatted-name'],
+                user_formatted_name: commenter.attributes['formatted-name'],
+                username: commenter?.attributes?.username ?? '',
                 user_avatar: commenter.meta.avatar.small,
             };
 

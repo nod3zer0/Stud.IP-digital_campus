@@ -10,16 +10,19 @@
                 v-for="feedback in feedback"
                 :key="feedback.id"
                 :payload="buildPayload(feedback)"
+                @delete="deleteFeedback(feedback)"
             />
         </div>
         <courseware-companion-box
-                v-if="!userIsTeacher && feedback.length === 0"
-                :msgCompanion="$gettext('Es wurde noch kein Feedback abgegeben.')"
-                mood="pointing"
-            />
+            v-if="!userIsTeacher && feedback.length === 0"
+            :msgCompanion="$gettext('Es wurde noch keine Anmerkungen abgegeben.')"
+            mood="pointing"
+        />
         <div v-if="userIsTeacher" class="cw-structural-element-feedback-create">
             <textarea v-model="feedbackText" :placeholder="placeHolder" spellcheck="true"></textarea>
-            <button class="button" @click="postFeedback"><translate>Senden</translate></button>
+            <button class="button" @click="postFeedback">
+                {{ $gettext('Senden') }}
+            </button>
         </div>
     </section>
 </template>
@@ -42,8 +45,8 @@ export default {
     data() {
         return {
             feedbackText: '',
-            placeHolder: this.$gettext('Schreiben Sie ein Feedback...'),
-            srMessage: ''
+            placeHolder: this.$gettext('Schreiben Sie eine Anmerkung...'),
+            srMessage: '',
         };
     },
     computed: {
@@ -67,12 +70,13 @@ export default {
             }
 
             return false;
-        }
+        },
     },
     methods: {
         ...mapActions({
             createFeedback: 'courseware-structural-element-feedback/create',
             loadRelatedFeedback: 'courseware-structural-element-feedback/loadRelated',
+            deleteElementFeedback: 'courseware-structural-element-feedback/delete',
         }),
         buildPayload(feedback) {
             const { id, type } = feedback;
@@ -83,7 +87,8 @@ export default {
                 content: feedback.attributes.feedback,
                 chdate: feedback.attributes.chdate,
                 mkdate: feedback.attributes.mkdate,
-                user_name: user?.attributes?.['formatted-name'] ?? '',
+                user_formatted_name: user?.attributes?.['formatted-name'] ?? '',
+                username: user?.attributes?.username ?? '',
                 user_avatar: user?.meta?.avatar.small,
             };
         },
@@ -101,7 +106,7 @@ export default {
             });
         },
         async postFeedback() {
-            this.updateSrMessage(this.$gettext('Feedback gesendet'));
+            this.updateSrMessage(this.$gettext('Anmerkung gesendet'));
             const data = {
                 attributes: {
                     feedback: this.feedbackText,
@@ -110,32 +115,25 @@ export default {
                     'structural-element': {
                         data: {
                             id: this.structuralElement.id,
-                            type: this.structuralElement.type
-                        }
-                    }
+                            type: this.structuralElement.type,
+                        },
+                    },
                 },
             };
-            await this.createFeedback( data, { root: true });
+            await this.createFeedback(data, { root: true });
             this.feedbackText = '';
             this.loadFeedback();
+        },
+        deleteFeedback(feedback) {
+            this.deleteElementFeedback({ id: feedback.id, type: feedback.type });
         },
         updateSrMessage(message) {
             this.srMessage = '';
             this.srMessage = message;
-        }
-    },
-    async mounted() {
-        await this.loadFeedback();
+        },
     },
     updated() {
         this.$refs.feedbacks.scrollTop = this.$refs.feedbacks.scrollHeight;
     },
-    watch: {
-        feedback() {
-            if (this.feedback && this.feedback.length > 0) {
-                this.$emit('hasFeedback');
-            }
-        }
-    }
-}
+};
 </script>

@@ -9,6 +9,9 @@
             @deleteBlock="deleteBlock"
             @removeLock="removeLock"
             @copyToClipboard="copyToClipboard"
+            @deactivateComments="deactivateComments"
+            @activateComments="activateComments"
+            @showFeedback="showFeedback"
         />
     </div>
 </template>
@@ -34,6 +37,7 @@ export default {
         ...mapGetters({
             userId: 'userId',
             userIsTeacher: 'userIsTeacher',
+            getRelatedFeedback: 'courseware-block-feedback/related',
         }),
         blocked() {
             return this.block?.relationships?.['edit-blocker']?.data !== null;
@@ -46,6 +50,16 @@ export default {
         },
         blockedByAnotherUser() {
             return this.blocked && this.userId !== this.blockerId;
+        },
+        hasFeedback() {
+            const { id, type } = this.block;
+            const feedback = this.getRelatedFeedback({ parent: { id, type }, relationship: 'feedback' });
+
+            if (feedback === null || feedback.length === 0) {
+                return false;
+            }
+
+            return true;
         },
         menuItems() {
             let menuItems = [];
@@ -61,6 +75,16 @@ export default {
                             icon: this.block.attributes.visible ? 'visibility-visible' : 'visibility-invisible', // do we change the icons ?
                             emit: 'setVisibility',
                         });
+                        if (this.userIsTeacher) {
+                            menuItems.push({
+                                id: 4,
+                                label: this.block.attributes.commentable
+                                    ? this.$gettext('Kommentare abschalten')
+                                    : this.$gettext('Kommentare aktivieren'),
+                                icon: 'comment2',
+                                emit: this.block.attributes.commentable ? 'deactivateComments' : 'activateComments',
+                            });
+                        }
                     }
                     if (this.blocked && this.blockedByAnotherUser && this.userIsTeacher) {
                         menuItems.push({
@@ -145,6 +169,15 @@ export default {
         },
         copyToClipboard() {
             this.$emit('copyToClipboard');
+        },
+        activateComments() {
+            this.$emit('activateComments')
+        },
+        deactivateComments() {
+            this.$emit('deactivateComments')
+        },
+        showFeedback() {
+            this.$emit('showFeedback');
         }
     },
 };

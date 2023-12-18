@@ -400,7 +400,7 @@ class Authority
         return $perm;
     }
 
-    public static function canUpdateStructuralElementFeedback(User $user, StructuralElementComment $resource)
+    public static function canUpdateStructuralElementFeedback(User $user, StructuralElementFeedback $resource)
     {
         return self::canCreateStructuralElementFeedback($user, $resource->structural_element);
     }
@@ -410,7 +410,7 @@ class Authority
         return $resource->user_id === $user->id || self::canUpdateStructuralElement($user, $resource->structural_element);
     }
 
-    public static function canDeleteStructuralElementFeedback(User $user, StructuralElementComment $resource)
+    public static function canDeleteStructuralElementFeedback(User $user, StructuralElementFeedback $resource)
     {
         return self::canUpdateStructuralElementFeedback($user, $resource);
     }

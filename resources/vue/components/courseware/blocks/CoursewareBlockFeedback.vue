@@ -11,16 +11,19 @@
                     v-for="feedback in feedback"
                     :key="feedback.id"
                     :payload="buildPayload(feedback)"
+                    @delete="deleteFeedback(feedback)"
                 />
             </div>
             <courseware-companion-box
                 v-if="!userIsTeacher && feedback.length === 0"
-                :msgCompanion="$gettext('Es wurde noch kein Feedback abgegeben.')"
+                :msgCompanion="$gettext('Es wurde noch keine Anmerkungen abgegeben.')"
                 mood="pointing"
             />
             <div v-if="userIsTeacher" class="cw-block-feedback-create">
                 <textarea v-model="feedbackText" :placeholder="placeHolder" spellcheck="true"></textarea>
-                <button class="button" @click="postFeedback">{{ $gettext('Senden') }}</button>
+                <button class="button" @click="postFeedback">
+                    {{ $gettext('Senden') }}
+                </button>
             </div>
         </div>
     </section>
@@ -30,7 +33,6 @@
 import CoursewareCompanionBox from '../layouts/CoursewareCompanionBox.vue';
 import CoursewareTalkBubble from '../layouts/CoursewareTalkBubble.vue';
 import { mapActions, mapGetters } from 'vuex';
-
 
 export default {
     name: 'courseware-block-feedback',
@@ -45,8 +47,8 @@ export default {
     data() {
         return {
             feedbackText: '',
-            placeHolder: this.$gettext('Schreiben Sie ein Feedback...'),
-            srMessage: ''
+            placeHolder: this.$gettext('Schreiben Sie eine Anmerkung...'),
+            srMessage: '',
         };
     },
     computed: {
@@ -67,12 +69,13 @@ export default {
             }
 
             return false;
-        }
+        },
     },
     methods: {
         ...mapActions({
             createFeedback: 'courseware-block-feedback/create',
             loadRelatedFeedback: 'courseware-block-feedback/loadRelated',
+            deleteBlockFeedback: 'courseware-block-feedback/delete',
         }),
         buildPayload(feedback) {
             const { id, type } = feedback;
@@ -83,7 +86,8 @@ export default {
                 content: feedback.attributes.feedback,
                 chdate: feedback.attributes.chdate,
                 mkdate: feedback.attributes.mkdate,
-                user_name: user?.attributes?.['formatted-name'] ?? '',
+                user_formatted_name: user?.attributes?.['formatted-name'] ?? '',
+                username: user?.attributes?.username ?? '',
                 user_avatar: user?.meta?.avatar.small,
             };
         },
@@ -119,23 +123,16 @@ export default {
             this.feedbackText = '';
             this.loadFeedback();
         },
+        deleteFeedback(feedback) {
+            this.deleteBlockFeedback({ id: feedback.id, type: feedback.type });
+        },
         updateSrMessage(message) {
             this.srMessage = '';
             this.srMessage = message;
-        }
-    },
-    async mounted() {
-        await this.loadFeedback(this.block.id);
+        },
     },
     updated() {
         this.$refs.feedbacks.scrollTop = this.$refs.feedbacks.scrollHeight;
     },
-    watch: {
-        feedback() {
-            if (this.feedback && this.feedback.length > 0) {
-                this.$emit('hasFeedback');
-            }
-        }
-    }
 };
 </script>

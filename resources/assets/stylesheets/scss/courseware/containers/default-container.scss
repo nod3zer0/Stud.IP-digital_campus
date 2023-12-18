@@ -104,24 +104,6 @@ form.cw-container-dialog-edit-form {
     }
 }
 
-.cw-container-wrapper-discuss {
-    flex-direction: column;
-
-    .cw-container-colspan-full {
-        max-width: unset;
-    }
-    .cw-container-colspan-half-center,
-    .cw-container-colspan-half {
-        max-width: 1050px;
-    }
-    .cw-container-colspan-half-center {
-        width: 100%;
-        .cw-container-content {
-            width: 1050px;
-        }
-    }
-}
-
 .cw-radioset {
     display: flex;
     flex-direction: row;

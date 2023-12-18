@@ -83,7 +83,8 @@ class StructuralElementsCreate extends JsonApiController
             'payload' => self::arrayGet($json, 'data.attributes.payload', ''),
             'read_approval' => $parent->read_approval,
             'write_approval' => $parent->write_approval,
-            'position' => $parent->countChildren()
+            'position' => $parent->countChildren(),
+            'commentable' => 0
         ]);
 
         $struct->store();

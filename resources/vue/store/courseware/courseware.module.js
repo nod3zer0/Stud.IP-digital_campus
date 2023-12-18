@@ -532,6 +532,32 @@ export const actions = {
 
     },
 
+    async activateStructuralElementComments({ dispatch }, { element }) {
+
+        element.attributes.commentable = true;
+
+        const updatedElement =  await dispatch('setStructuralElementComments', { element: element });
+        
+        return updatedElement;
+
+    },
+    async deactivateStructuralElementComments({ dispatch }, { element }) {
+
+        element.attributes.commentable = false;
+
+        const updatedElement =  await dispatch('setStructuralElementComments', { element: element });
+        
+        return updatedElement;
+    },
+
+    async setStructuralElementComments({ dispatch }, { element }) {
+        await dispatch('lockObject', { id: element.id, type: 'courseware-structural-elements' });
+        const updatedElement =  await dispatch('courseware-structural-elements/update', element, { root: true });
+        await dispatch('unlockObject', { id: element.id, type: 'courseware-structural-elements' });
+
+        return updatedElement;
+    },
+
     async createBlockInContainer({ dispatch }, { container, blockType }) {
         const block = {
             attributes: {
@@ -607,6 +633,32 @@ export const actions = {
         await dispatch('courseware-blocks/delete', data, { root: true });
         //TODO throws TypeError: block is undefined after delete
         return dispatch('loadContainer', containerId);
+    },
+
+    async activateBlockComments({ dispatch }, { block }) {
+
+        block.attributes.commentable = true;
+
+        const updatedBlock =  await dispatch('setBlockComments', { block: block });
+        
+        return updatedBlock;
+
+    },
+    async deactivateBlockComments({ dispatch }, { block }) {
+
+        block.attributes.commentable = false;
+
+        const updatedBlock =  await dispatch('setBlockComments', { block: block });
+        
+        return updatedBlock;
+    },
+
+    async setBlockComments({ dispatch }, { block }) {
+        await dispatch('lockObject', { id: block.id, type: 'courseware-blocks' });
+        const updatedBlock =  await dispatch('courseware-blocks/update', block, { root: true });
+        await dispatch('unlockObject', { id: block.id, type: 'courseware-blocks' });
+
+        return updatedBlock;
     },
 
     async storeCoursewareSettings({ dispatch, getters },
