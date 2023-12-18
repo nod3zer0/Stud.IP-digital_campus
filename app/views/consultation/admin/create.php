@@ -201,7 +201,7 @@ $intervals = [
     <? if ($range instanceof Course): ?>
         <label>
             <input type="checkbox" name="mail-to-tutors" value="1" checked>
-            <?= _('Tutor/innen beim Versand allgemeiner Nachrichten berücksichtigen?') ?>
+            <?= _('Tutor/innen beim Versand von Buchungsbenachrichtigungen berücksichtigen?') ?>
         </label>
     <? endif; ?>
 

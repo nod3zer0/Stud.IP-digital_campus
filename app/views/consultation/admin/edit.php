@@ -61,7 +61,7 @@
         <label>
             <input type="checkbox" name="mail-to-tutors" value="1"
                 <? if ($block->mail_to_tutors) echo 'checked'; ?>>
-            <?= _('Tutor/innen beim Versand allgemeiner Nachrichten berücksichtigen?') ?>
+            <?= _('Tutor/innen beim Versand von Buchungsbenachrichtigungen berücksichtigen?') ?>
         </label>
     <? endif; ?>
 
