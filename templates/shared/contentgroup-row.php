@@ -6,7 +6,7 @@
         <?= $image ?>
     </a>
     <div class="action-menu-content">
-    	<? if (!empty($label)): ?>
+        <? if (!empty($label)): ?>
         <div class="action-menu-title" aria-hidden="true">
             <?= htmlReady(_($label)) ?>
         </div>
@@ -19,7 +19,7 @@
 
                 <? if ($has_link_icons): ?>
                     <? if ($action['icon']): ?>
-                        <?= $action['icon'] ?>
+                        <?= $action['icon']->asImg(false, ['class' => 'action-menu-item-icon']) ?>
                     <? else: ?>
                         <span class="action-menu-no-icon"></span>
                     <? endif; ?>
@@ -29,7 +29,11 @@
             <? elseif ($action['type'] === 'button'): ?>
                 <label>
                 <? if ($action['icon']): ?>
-                    <?= $action['icon']->asInput(['name' => $action['name']]) ?>
+                    <?= $action['icon']->asInput(false, [
+                        'class' => 'action-menu-item-icon',
+                        'name'  => $action['name'],
+                        'title' => $action['label'],
+                    ]) ?>
                 <? else: ?>
                     <span class="action-menu-no-icon"></span>
                     <button type="submit" name="<?= htmlReady($action['name']) ?>" style="display: none;"></button>
