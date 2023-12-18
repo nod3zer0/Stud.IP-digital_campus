@@ -125,6 +125,24 @@ class NewsRangesSearch extends SearchType
             $parameters[':user_id'] = $user->id;
             $parameters[':user_name'] = $user->getFullname();
             $parameters[':profile_name'] = _('Profilseite');
+
+            $deputy_number = 1;
+            $deputies = Deputy::findBySQL(
+                "`range_id` = :user_id",
+                ['user_id' => $user->id]
+            );
+            foreach ($deputies as $deputy) {
+                $sql_searches[] = "SELECT *
+                    FROM (
+                        SELECT CAST(CONCAT(:deputy_id{$deputy_number}, '__person') AS BINARY) AS `range_id`,
+                            CONCAT_WS(' - ', :deputy_name{$deputy_number}, :deputy_profile_name{$deputy_number}) AS `name`
+                    ) AS tmp_user_table
+                    WHERE `name` LIKE :input";
+                $parameters[":deputy_id{$deputy_number}"] = $deputy->user_id;
+                $parameters[":deputy_name{$deputy_number}"] = $deputy->deputy->getFullName();
+                $parameters[":deputy_profile_name{$deputy_number}"] = _('Profilseite');
+                $deputy_number++;
+            }
         }
 
         $searches = implode(' UNION ALL ', $sql_searches);
