@@ -362,7 +362,10 @@ class Navigation implements IteratorAggregate
     public function setImage(\Icon $image = null, $linkAttributes = [])
     {
         $this->image = $image;
-        $this->setLinkAttributes($linkAttributes);
+        $this->link_attributes = array_merge(
+            $this->link_attributes,
+            $linkAttributes
+        );
     }
 
     /**
@@ -377,7 +380,10 @@ class Navigation implements IteratorAggregate
     public function setActiveImage(\Icon $image = null, $linkAttributes = [])
     {
         $this->active_image = $image;
-        $this->setLinkAttributes($linkAttributes);
+        $this->link_attributes = array_merge(
+            $this->link_attributes,
+            $linkAttributes
+        );
     }
 
     /**
