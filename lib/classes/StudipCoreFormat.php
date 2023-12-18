@@ -568,7 +568,8 @@ class StudipCoreFormat extends TextFormat
         if (
             in_array($pu['scheme'], ['http', 'https'])
             && (
-                $pu['host'] === $_SERVER['HTTP_HOST']
+                !isset($pu['host'])
+                || $pu['host'] === $_SERVER['HTTP_HOST']
                 || (isset($pu['port']) && $pu['host'] . ':' . $pu['port'] === $_SERVER['HTTP_HOST'])
             )
             && mb_strpos($pu['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0

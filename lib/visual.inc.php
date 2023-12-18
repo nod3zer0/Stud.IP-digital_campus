@@ -313,7 +313,7 @@ function idna_link($link, $mail = false) {
         return $link;
     }
     $pu = @parse_url($link);
-    if (preg_match('/&\w+;/i', $pu['host'])) { //umlaute?  (html-coded)
+    if (isset($pu['host']) && preg_match('/&\w+;/i', $pu['host'])) { //umlaute?  (html-coded)
         $IDN = new Algo26\IdnaConvert\ToIdn();
         $out = false;
         if ($mail){

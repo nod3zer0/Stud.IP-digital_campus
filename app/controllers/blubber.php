@@ -351,7 +351,7 @@ class BlubberController extends AuthenticatedController
                     if (mb_strpos($file['type'], 'video') !== false) {
                         $type = 'video';
                     }
-                    if (mb_strpos($file['type'], 'audio') !== false || mb_strpos($file_ref['name'], '.ogg') !== false) {
+                    if (mb_strpos($file['type'], 'audio') !== false || mb_strpos($file['name'], '.ogg') !== false) {
                         $type = 'audio';
                     }
                     if ($type) {
