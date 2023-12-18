@@ -4,6 +4,7 @@
         containerClass="cw-container-accordion"
         :canEdit="canEdit"
         :isTeacher="isTeacher"
+        :editDataValid="editDataValid"
         @showEdit="setShowEdit"
         @storeContainer="storeContainer"
         @closeEdit="initCurrentData"
@@ -89,13 +90,17 @@
         </template>
         <template v-slot:containerEditDialog>
             <form class="default cw-container-dialog-edit-form" @submit.prevent="">
-                <fieldset v-for="(section, index) in currentContainer.attributes.payload.sections.filter(section => !section.locked)" :key="index">
+                <fieldset
+                    v-for="(section, index) in currentContainer.attributes.payload.sections.filter(section => !section.locked)"
+                    :key="index"
+                    :class="{ invalid: !section.name && !section.icon }"
+                >
                     <label>
-                        {{ $gettext('Title')}}
+                        {{ $gettext('Titel')}}
                         <input type="text" v-model="section.name" />
                     </label>
                     <label>
-                        {{ $gettext('Icon')}}
+                        {{ $gettext('Symbol')}}
                         <studip-select :options="icons" v-model="section.icon">
                             <template #open-indicator="selectAttributes">
                                 <span v-bind="selectAttributes"><studip-icon shape="arr_1down" :size="10"/></span>
@@ -166,6 +171,7 @@ export default {
             assistiveLive: '',
             showDeleteDialog: false,
             currentSection: null,
+            editDataValid: true,
         };
     },
     computed: {
@@ -268,6 +274,7 @@ export default {
         async storeContainer() {
             const timeout = setTimeout(() => this.processing = true, 800);
             this.currentContainer.attributes.payload.sections = this.currentContainer.attributes.payload.sections.filter(section => !section.locked);
+            let validSections = true;
             this.currentContainer.attributes.payload.sections.forEach(section => {
                 section.blocks = section.blocks.map((block) => {return block.id;});
                 delete section.locked;
@@ -416,6 +423,17 @@ export default {
                         this.$refs['sortableHandle' + this.keyboardSelected][0].focus();
                     });
                 }
+            },
+            deep: true
+        },
+        currentContainer: {
+            handler() {
+                this.editDataValid = true;
+                this.currentContainer.attributes.payload.sections.forEach(section => {
+                    if (!section.icon && !section.name) {
+                        this.editDataValid = false;
+                    }
+                });
             },
             deep: true
         }
