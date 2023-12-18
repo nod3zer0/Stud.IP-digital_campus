@@ -310,6 +310,10 @@ class NewsController extends StudipController
             $news['news_ranges'][] = $range;
         }
 
+        $url_params = [];
+        if (Request::submitted('username')) {
+            $url_params['username'] = Request::username('username');
+        }
 
         $this->form = \Studip\Forms\Form::fromSORM(
             $news,
@@ -368,7 +372,7 @@ class NewsController extends StudipController
                     ]
                 ]
             ],
-            URLHelper::getURL('?')
+            URLHelper::getURL('?', $url_params)
         )->addSORM(
             $news,
             [
