@@ -1,20 +1,33 @@
 <template>
-    <a href="#" @click.prevent="addContainer">
-        <div class="cw-containeradder-item" :class="['cw-containeradder-item-' + type]">
-            <header class="cw-containeradder-item-title">
-                {{ title }}
-            </header>
-            <p class="cw-containeradder-item-description">
-                {{ description }}
-            </p>
-        </div>
-    </a>
+    <div class="cw-containeradder-item-wrapper">
+        <span class="cw-sortable-handle cw-sortable-handle-containeradder"></span>
+        <a href="#" @click.prevent="addNewContainer">
+            <div class="cw-containeradder-item" :class="['cw-containeradder-item-' + type]">
+                <header class="cw-containeradder-item-title">
+                    {{ title }}
+                </header>
+                <p class="cw-containeradder-item-description">
+                    {{ description }}
+                </p>
+            </div>
+        </a>
+        <li class="cw-container-dragitem cw-container-item-sortable" ref="container-drag-item">
+            <div class="cw-container cw-container-list cw-container-item" :class="['cw-container-colspan-' + colspan]">
+                <div class="cw-container-content">
+                    <header class="cw-container-header">{{ title }}</header>
+                    <div class="cw-block-wrapper">{{ description }}</div>
+                </div>
+            </div>
+        </li>
+    </div>
 </template>
 <script>
+import containerMixin from '@/vue/mixins/courseware/container';
 import { mapActions } from 'vuex';
+
 export default {
     name: 'courseware-container-adder-item',
-    components: {},
+    mixins: [containerMixin],
     props: {
         title: String,
         description: String,
@@ -22,31 +35,24 @@ export default {
         colspan: String,
         firstSection: String,
         secondSection: String,
+        newPosition: Number,
     },
     methods: {
         ...mapActions({
             createContainer: 'createContainer',
             companionSuccess: 'companionSuccess',
         }),
-        async addContainer() {
-            let attributes = {};
-            attributes["container-type"] = this.type;
-            let sections = [];
-            if (this.type === 'list') {
-                sections = [{ name: this.firstSection, icon: '', blocks: [] }];
-            } else {
-                sections = [{ name: this.firstSection, icon: '', blocks: [] },{ name: this.secondSection, icon: '', blocks: [] }];
-            }
-            attributes.payload = {
+        addNewContainer() {
+            this.addContainer({
+                type: this.type,
                 colspan: this.colspan,
-                sections: sections,
-            };
-            await this.createContainer({ structuralElementId: this.$route.params.id, attributes: attributes });
-            this.companionSuccess({
-                info: this.$gettext('Der Abschnitt wurde erfolgreich eingefügt.'),
+                sections: {
+                    firstSection: this.firstSection, 
+                    secondSection: this.secondSection
+                },
+                newPosition: null
             });
         },
     },
-    mounted() {},
 };
 </script>

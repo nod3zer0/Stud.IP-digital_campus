@@ -371,11 +371,13 @@ export default {
         },
     },
     mounted() {
-        this.loadFileRefs(this.block.id).then((response) => {
-            this.file = response[0];
-            this.currentFile = this.file;
-            this.initPdfTask();
-        });
+        if (this.block.id) {
+            this.loadFileRefs(this.block.id).then((response) => {
+                this.file = response[0];
+                this.currentFile = this.file;
+                this.initPdfTask();
+            });
+        }
         this.initCurrentData();
     },
     methods: {

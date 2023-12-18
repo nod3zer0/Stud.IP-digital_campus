@@ -322,13 +322,15 @@ export default {
         }
     },
     mounted() {
-        this.loadFileRefs(this.block.id).then((response) => {
-            this.file = response[0];
-            this.currentFile = this.file;
-            this.initCurrentData();
-            this.buildCanvas();
-        });
-        this.loadImageFile();
+        if (this.block.id) {
+            this.loadFileRefs(this.block.id).then((response) => {
+                this.file = response[0];
+                this.currentFile = this.file;
+                this.initCurrentData();
+                this.buildCanvas();
+            });
+            this.loadImageFile();
+        }
     },
     methods: {
         ...mapActions({
@@ -632,7 +634,9 @@ export default {
             data.attributes.payload.canvas_draw.clickTool = JSON.stringify(this.clickTool);
             data.attributes.payload.canvas_draw.Text = JSON.stringify(this.Text);
 
-            await this.updateUserDataFields(data);
+            if (data.id) {
+                await this.updateUserDataFields(data);
+            }
         },
         storeBlock() {
             let attributes = {};

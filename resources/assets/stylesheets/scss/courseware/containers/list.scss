@@ -1,0 +1,19 @@
+.cw-container-list {
+    .cw-block-wrapper-active {
+
+        >.cw-companion-box {
+            border: none;
+            margin-bottom: 0;
+        }
+
+        .cw-container-list-block-list:empty {
+            height: 4em;
+            border: dashed 2px var(--content-color-40);
+        }
+    }
+
+    .cw-container-list-block-list {
+        padding: 0;
+        list-style: none;
+    }
+}

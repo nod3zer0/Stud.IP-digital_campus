@@ -1,0 +1,23 @@
+.cw-container-accordion {
+
+    .cw-block-wrapper-active {
+        .cw-container-accordion-block-list:empty {
+            height: 4em;
+            border: dashed 2px var(--content-color-40);
+        }
+    }
+
+    .cw-collapsible-content > .cw-companion-box {
+        border: none;
+        margin-bottom: 0;
+    }
+
+    .cw-container-accordion-block-list {
+        list-style: none;
+        padding: 0;
+
+        &.cw-container-accordion-sort-mode {
+            padding: 8px 0 0 0;
+        }
+    }
+}

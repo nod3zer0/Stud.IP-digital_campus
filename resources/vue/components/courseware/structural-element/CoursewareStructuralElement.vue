@@ -209,7 +209,7 @@
                                 <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
                             </div>
                         </div>
-                        <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" />
+                        <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" /> 
                     </div>
                 </div>
                 <studip-dialog
@@ -613,6 +613,7 @@ import CoursewareDateInput from '../layouts/CoursewareDateInput.vue';
 import StockImageSelector from '../../stock-images/SelectorDialog.vue';
 import StudipDialog from '../../StudipDialog.vue';
 import draggable from 'vuedraggable';
+import containerMixin from '@/vue/mixins/courseware/container.js';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
@@ -638,7 +639,7 @@ export default {
     }),
     props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
 
-    mixins: [CoursewareExport, CoursewareOerMessage, colorMixin, wizardMixin],
+    mixins: [CoursewareExport, CoursewareOerMessage, colorMixin, wizardMixin, containerMixin],
 
     data() {
         return {
@@ -1239,6 +1240,7 @@ export default {
             showElementRemoveLockDialog: 'showElementRemoveLockDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
             updateContainer: 'updateContainer',
+            createContainer: 'createContainer',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
             loadTask: 'loadTask',
             loadStructuralElement: 'loadStructuralElement',

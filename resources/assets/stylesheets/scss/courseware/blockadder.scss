@@ -101,13 +101,21 @@
         border: solid thin var(--content-color-40);
         max-width: 268px;
 
+        .cw-sortable-handle {
+            opacity: 0;
+        }
+
         &:hover {
             border-color: var(--base-color);
+
+            .cw-sortable-handle {
+                opacity: 1;
+            }
         }
         .cw-blockadder-item {
             padding: 64px 10px 4px 10px;
             @include background-icon(unit-test, clickable, 48);
-            background-position: 10px 10px;
+            background-position: 16px 10px;
             background-repeat: no-repeat;
             cursor: pointer;
 
@@ -116,7 +124,6 @@
                     @include background-icon($icon, clickable, 48);
                 }
             }
-            .cw-clipboard-item-title,
             .cw-blockadder-item-title {
                 display: inline-block;
                 font-weight: 600;
@@ -124,7 +131,7 @@
             }
             .cw-blockadder-item-description {
                 display: inline-block;
-                margin: 0 0 4px;
+                margin: 0 0 4px;   
             }
         }
         .cw-blockadder-item-fav {
@@ -184,29 +191,41 @@
     margin-top: 5px;
 }
 
-.cw-containeradder-item {
-    margin-bottom: 4px;
-    padding: 1em 1em 1em 6em;
-    @include background-icon(unit-test, clickable, 48);
-    background-position: 12px center;
-    background-repeat: no-repeat;
+.cw-containeradder-item-wrapper {
     border: solid thin var(--content-color-40);
-    cursor: pointer;
+    .cw-sortable-handle {
+        opacity: 0;
+    }
 
     &:hover {
         border-color: var(--base-color);
-    }
 
-    @each $item, $icon in $containeradder-items {
-        &.cw-containeradder-item-#{$item} {
-            @include background-icon($icon, clickable, 48);
+        .cw-sortable-handle {
+            opacity: 1;
         }
     }
 
-    .cw-containeradder-item-title {
-        font-weight: 600;
+    .cw-containeradder-item {
+        margin-bottom: 4px;
+        padding: 1em 1em 1em 6em;
+        @include background-icon(unit-test, clickable, 48);
+        background-position: 16px center;
+        background-repeat: no-repeat;
+        cursor: pointer;
+
+        @each $item, $icon in $containeradder-items {
+            &.cw-containeradder-item-#{$item} {
+                @include background-icon($icon, clickable, 48);
+            }
+        }
+
+        .cw-containeradder-item-title {
+            font-weight: 600;
+        }
     }
 }
+
+
 
 .cw-container-style-selector {
     display: flex;
@@ -264,15 +283,23 @@
         border: solid thin var(--content-color-40);
         max-width: 248px;
 
+        .cw-sortable-handle {
+            opacity: 0;
+        }
+
         &:hover {
             border-color: var(--base-color);
+
+            .cw-sortable-handle {
+                opacity: 1;
+            }
         }
 
         .cw-clipboard-item {
             width: calc(100% - 36px);
             padding: 64px 10px 4px 10px;
             @include background-icon(unit-test, clickable, 48);
-            background-position: 10px 10px;
+            background-position: 16px 10px;
             background-repeat: no-repeat;
             cursor: pointer;
             background-color: var(--white);
@@ -295,6 +322,16 @@
                 display: inline-block;
                 font-weight: 600;
                 margin-bottom: 2px;
+            }
+
+            .cw-clipboard-item-description {
+                display: -webkit-box;
+                margin: 0 0 4px;
+                max-height: 4em;
+                word-break: break-word;
+                overflow: hidden;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
             }
         }
         .cw-clipboard-item-action-menu-wrapper {

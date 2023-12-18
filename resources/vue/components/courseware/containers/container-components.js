@@ -32,6 +32,7 @@ import CoursewareTimelineBlock from '../blocks/CoursewareTimelineBlock.vue';
 import CoursewareTypewriterBlock from '../blocks/CoursewareTypewriterBlock.vue';
 import CoursewareVideoBlock from '../blocks/CoursewareVideoBlock.vue';
 //layout
+import CoursewareCompanionBox from '../layouts/CoursewareCompanionBox.vue';
 import StudipIcon from '../../StudipIcon.vue';
 import StudipProgressIndicator from '../../StudipProgressIndicator.vue';
 
@@ -70,6 +71,7 @@ const ContainerComponents = {
     CoursewareTypewriterBlock,
     CoursewareVideoBlock,
     //layout
+    CoursewareCompanionBox,
     StudipIcon,
     StudipProgressIndicator,
 };

@@ -1,0 +1,23 @@
+.cw-container-tabs {
+    .cw-tab-active > .cw-companion-box {
+        border: none;
+        margin-bottom: 0;
+    }
+
+    .cw-container-tabs-block-list {
+        list-style: none;
+        padding: 4px 0;
+    }
+
+    .cw-block-wrapper-active {
+
+        .cw-container-tabs-block-list:empty {
+            height: 4em;
+            border: dashed 2px var(--content-color-40);
+        }
+
+        .cw-tabs-content {
+            padding: 8px 0 0 0;
+        }
+    }
+}

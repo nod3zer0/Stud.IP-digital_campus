@@ -45,9 +45,14 @@
                     </ul>
                     <template v-else>
                         <template v-if="canEdit">
+                            <courseware-companion-box
+                                v-if="section.blocks.length === 0"
+                                mood="pointing"
+                                :msgCompanion="$gettext('Dieses Fach enthält keine Blöcke.')">
+                            </courseware-companion-box>
                             <draggable
-                                class="cw-container-list-block-list cw-container-list-sort-mode"
-                                :class="[section.blocks.length === 0 ? 'cw-container-list-sort-mode-empty' : '']"
+                                class="cw-container-tabs-block-list cw-container-tabs-sort-mode"
+                                :class="[section.blocks.length === 0 ? 'cw-container-tabs-sort-mode-empty' : '']"
                                 tag="ol"
                                 role="listbox"
                                 v-model="section.blocks"
@@ -79,9 +84,6 @@
                                     />
                                 </li>
                             </draggable>
-                            <template v-if="canAddElements">
-                                <courseware-block-adder-area :container="container" :section="index" @updateContainerContent="updateContent"/>
-                            </template>
                         </template>
                     </template>
                 </courseware-tab>
@@ -187,7 +189,7 @@ export default {
             return this.viewMode === 'edit';
         },
         blocks() {
-            if (!this.container) {
+            if (!this.container || this.container.newContainer) {
                 return [];
             }
 
@@ -215,12 +217,14 @@ export default {
 
             const unallocated = new Set(this.blocks.map(({ id }) => id));
 
-            for (let section of sections) {
-                section.locked = false;
-                section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter(Boolean);
-                for (let sectionBlock of section.blocks) {
-                    if (sectionBlock?.id && unallocated.has(sectionBlock.id)) {
-                        unallocated.delete(sectionBlock.id);
+            if (sections) {
+                for (let section of sections) {
+                    section.locked = false;
+                    section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter(Boolean);
+                    for (let sectionBlock of section.blocks) {
+                        if (sectionBlock?.id && unallocated.has(sectionBlock.id)) {
+                            unallocated.delete(sectionBlock.id);
+                        }
                     }
                 }
             }

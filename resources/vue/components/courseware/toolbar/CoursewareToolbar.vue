@@ -52,9 +52,12 @@
 import CoursewareToolbarBlocks from './CoursewareToolbarBlocks.vue';
 import CoursewareToolbarContainers from './CoursewareToolbarContainers.vue';
 import CoursewareToolbarClipboard from './CoursewareToolbarClipboard.vue';
+import containerMixin from '@/vue/mixins/courseware/container.js';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-toolbar',
+    mixins: [containerMixin],
     components: {
         CoursewareToolbarBlocks,
         CoursewareToolbarContainers,
@@ -73,6 +76,10 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            relatedContainers: 'courseware-containers/related',
+            structuralElementById: 'courseware-structural-elements/byId',
+        }),
         toolbarStyle() {
             const footerHeight = document.getElementById('main-footer').getBoundingClientRect().height;
             const scrollTopStyles = window.getComputedStyle(document.getElementById('scroll-to-top'));
@@ -86,6 +93,12 @@ export default {
                 minHeight: height + 'px',
                 top: this.toolbarTop + 'px',
             };
+        },
+        containers() {
+            return this.relatedContainers({
+                parent: this.structuralElementById({id: this.$route.params.id}), 
+                relationship: 'containers'    
+            });
         },
         toolbarHeader() {
             let header = '';
@@ -142,6 +155,7 @@ export default {
             window.addEventListener('scroll', this.updateToolbarTop);
             window.addEventListener('resize', this.onResize);
         });
+        this.resetAdderStorage();
     },
     beforeDestroy() { 
         window.removeEventListener('scroll', this.updateToolbarTop);
@@ -149,6 +163,11 @@ export default {
     },
 
     watch: {
+        containers(oldValue, newValue) {
+            if (newValue && oldValue.length !== newValue.length) {
+                this.resetAdderStorage();
+            }
+        },
         toolsActive(newState, oldState) {
             let view = this;
             if (newState) {

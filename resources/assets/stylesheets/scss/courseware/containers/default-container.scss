@@ -75,31 +75,16 @@
 
         &.cw-block-wrapper-active {
             padding: 14px 10px;
-
-            .cw-tabs-content {
-                padding: 14px 0;
-            }
         }
 
         .cw-block-item {
             padding: 0;
             margin: 0 0 1em 0;
+
+            &:last-child {
+                margin: 0;
+            }
         }
-    }
-
-    .cw-container-list-block-list {
-        padding: 0;
-        list-style: none;
-    }
-
-    .cw-container-tabs-block-list {
-        list-style: none;
-        padding: 1em 1em 0 1em;
-    }
-
-    .cw-container-accordion-block-list {
-        list-style: none;
-        padding: 0 1em;
     }
 }
 

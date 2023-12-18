@@ -35,10 +35,15 @@
                 </ul>
                 <template v-else>
                     <template v-if="!processing">
+                        <courseware-companion-box
+                            v-if="section.blocks.length === 0"
+                            mood="pointing"
+                            :msgCompanion="$gettext('Dieses Fach enthält keine Blöcke.')">
+                        </courseware-companion-box>
                         <draggable
                             v-if="canEdit"
-                            class="cw-container-list-block-list cw-container-list-sort-mode"
-                            :class="[section.blocks.length === 0 ? 'cw-container-list-sort-mode-empty' : '']"
+                            class="cw-container-accordion-block-list cw-container-accordion-sort-mode"
+                            :class="[section.blocks.length === 0 ? 'cw-container-accordion-sort-mode-empty' : '']"
                             tag="ol"
                             role="listbox"
                             v-model="section.blocks"
@@ -46,7 +51,6 @@
                             handle=".cw-sortable-handle"
                             group="blocks"
                             @start="isDragging = true"
-                            @end="dropBlock"
                             :containerId="container.id"
                             :sectionId="index"
                         >
@@ -70,9 +74,6 @@
                                 />
                             </li>
                         </draggable>
-                        <template v-if="canAddElements">
-                            <courseware-block-adder-area :container="container" :section="index" @updateContainerContent="updateContent"/>
-                        </template>
                     </template>
                     <div v-else class="progress-wrapper">
                         <studip-progress-indicator :description="$gettext('Vorgang wird bearbeitet...')" />
@@ -184,7 +185,7 @@ export default {
             return this.viewMode === 'edit';
         },
         blocks() {
-            if (!this.container) {
+            if (!this.container || this.container.newContainer) {
                 return [];
             }
 
@@ -211,13 +212,14 @@ export default {
             let sections = this.currentContainer.attributes.payload.sections;
 
             const unallocated = new Set(this.blocks.map(({ id }) => id));
-
-            for (let section of sections) {
-                section.locked = false;
-                section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter(Boolean);
-                for (let sectionBlock of section.blocks) {
-                    if (sectionBlock?.id && unallocated.has(sectionBlock.id)) {
-                        unallocated.delete(sectionBlock.id);
+            if (sections) {
+                for (let section of sections) {
+                    section.locked = false;
+                    section.blocks = section.blocks.map((id) =>  view.blockById({id})).filter(Boolean);
+                    for (let sectionBlock of section.blocks) {
+                        if (sectionBlock?.id && unallocated.has(sectionBlock.id)) {
+                            unallocated.delete(sectionBlock.id);
+                        }
                     }
                 }
             }
@@ -417,7 +419,14 @@ export default {
             }
         },
         currentSections: {
-            handler() {
+            handler(newSections, oldSections) {
+                if (oldSections.length > 0 && 
+                    newSections[oldSections.length -1].blocks.length > oldSections[oldSections.length - 1].blocks.length) {
+                        this.$emit('blockAdded');
+                        this.$nextTick(() => {
+                            this.sortInSlots.push(oldSections.length - 1);
+                        });
+                }
                 if (this.keyboardSelected) {
                     this.$nextTick(() => {
                         this.$refs['sortableHandle' + this.keyboardSelected][0].focus();

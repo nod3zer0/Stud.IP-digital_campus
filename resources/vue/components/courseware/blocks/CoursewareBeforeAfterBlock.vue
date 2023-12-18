@@ -152,22 +152,25 @@ export default {
         },
     },
     mounted() {
-        this.loadFileRefs(this.block.id).then((response) => {
-            for (let i = 0; i < response.length; i++) {
-                if (response[i].id === this.beforeFileId) {
-                    this.beforeFile = response[i];
+        if (this.block.id) {
+            this.loadFileRefs(this.block.id).then((response) => {
+                for (let i = 0; i < response.length; i++) {
+                    if (response[i].id === this.beforeFileId) {
+                        this.beforeFile = response[i];
+                    }
+
+                    if (response[i].id === this.afterFileId) {
+                        this.afterFile = response[i];
+                    }
                 }
 
-                if (response[i].id === this.afterFileId) {
-                    this.afterFile = response[i];
-                }
-            }
+                this.currentBeforeFile = this.beforeFile;
+                this.currentAfterFile  = this.afterFile;
+            });
 
-            this.currentBeforeFile = this.beforeFile;
-            this.currentAfterFile = this.afterFile;
-        });
-
-        this.loadImages();
+            this.loadImages();
+        }
+        
         this.initCurrentData();
     },
     methods: {

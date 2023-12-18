@@ -18,6 +18,11 @@
                     <span id="operation" class="assistive-text">
                         {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
                     </span>
+                    <courseware-companion-box
+                        v-if="empty"
+                        mood="pointing"
+                        :msgCompanion="$gettext('Dieser Abschnitt enthält keine Blöcke.')">
+                    </courseware-companion-box>
                     <draggable
                         v-if="showEditMode && canEdit"
                         class="cw-container-list-block-list cw-container-list-sort-mode"
@@ -57,7 +62,6 @@
                             />
                         </li>
                     </draggable>
-                    <courseware-block-adder-area :container="container" :section="0" />
                 </template>
                 <div v-else class="progress-wrapper" :style="{ height: contentHeight + 'px' }">
                     <studip-progress-indicator :description="$gettext('Vorgang wird bearbeitet...')" />
@@ -124,7 +128,7 @@ export default {
             return this.viewMode === 'edit';
         },
         blocks() {
-            if (!this.container) {
+            if (!this.container || this.container.newContainer) {
                 return [];
             }
             let containerBlocks = this.container.relationships.blocks.data.map(({ id }) => this.blockById({ id })).filter(Boolean);
@@ -135,6 +139,9 @@ export default {
 
             return sortedBlocks.concat(unallocatedBlocks);
         },
+        empty() {
+            return this.blockList.length === 0;
+        }
     },
     methods: {
         ...mapActions({

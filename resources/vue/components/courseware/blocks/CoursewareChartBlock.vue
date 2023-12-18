@@ -172,7 +172,7 @@ export default {
             updateBlock: 'updateBlockInContainer',
         }),
         initCurrentData() {
-            this.currentContent = this.content;
+            this.currentContent = this.content || [];
             this.currentLabel = this.label;
             this.currentType = this.type;
             this.setItemTab = 0;

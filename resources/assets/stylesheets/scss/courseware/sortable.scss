@@ -7,6 +7,47 @@
     &.cw-sortable-handle-dragging {
         cursor: grabbing;
     }
+    &.cw-sortable-handle-blocks {
+        position: relative;
+        top: -42px;
+        left: -2px;
+        margin-right: -15px;
+        margin-bottom: -10px;
+    }
+    &.cw-sortable-handle-containers {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        margin-top: -12px;
+    }
+
+    &.cw-sortable-handle-blockadder {
+        display: block;
+        position: absolute;
+        padding: 8px 64px 24px 4px;
+        margin: 8px 4px;
+        background-position: top left;
+    }
+
+    &.cw-sortable-handle-containeradder {
+        display: block;
+        position: absolute;
+        padding: 8px 64px 48px 4px;
+        margin: 8px 4px;
+        background-position: top left;
+    }
+
+    &.cw-sortable-handle-clipboard {
+        display: block;
+        position: absolute;
+        padding: 8px 64px 24px 4px;
+        margin: 8px 4px;
+        background-position: top left;
+    }
+}
+
+.cw-container-dragitem {
+    display: none;
 }
 
 .cw-block-item-sortable {
@@ -29,12 +70,6 @@
     }
 }
 
-.container-ghost,
-.block-ghost {
-    opacity: 0.6;
-}
-
-
 .cw-container-wrapper-edit {
     width: calc(100% - 64px);
 
@@ -55,5 +90,68 @@
 .cw-container-item-selected {
     .cw-container-header {
         font-style: italic;
+    }
+}
+
+.cw-sortable-handle-blocks {
+    position: relative;
+}
+
+.cw-container-dragitem {
+    display: none;
+}
+
+.container-ghost {
+    background: var(--white);
+    border: dashed 2px var(--content-color-40);
+    margin-top: -5px;
+    margin-bottom: 15px;
+    
+    a {
+        opacity: 0;
+    }
+
+    button {
+        opacity: 0;
+    }
+
+    &.cw-clipboard-item-wrapper {
+        .cw-clipboard-item-action-menu-wrapper {
+            opacity: 0;
+        }
+    }
+
+    .cw-sortable-handle,
+    .cw-container {
+        opacity: 0;
+    }
+}
+
+.block-ghost {
+    background: var(--white);
+    border: dashed 2px var(--content-color-40);
+    padding-top: 5px;
+    padding-left: 5px;
+    height: 100px;
+    margin-bottom: 15px;
+    margin-top: -5px;
+
+    a {
+        opacity: 0;
+    }
+
+    button {
+        opacity: 0;
+    }
+
+    &.cw-clipboard-item-wrapper {
+        .cw-clipboard-item-action-menu-wrapper {
+            opacity: 0;
+        }
+    }
+
+    .cw-sortable-handle,
+    .cw-block {
+        opacity: 0;
     }
 }

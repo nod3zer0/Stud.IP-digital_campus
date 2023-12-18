@@ -1,7 +1,7 @@
 <template>
     <div
-        class="cw-container cw-container-list"
-        :class="['cw-container-colspan-' + colSpan, showEditMode && canEdit ? 'cw-container-active' : '']"
+        class="cw-container"
+        :class="['cw-container-colspan-' + colSpan, showEditMode && canEdit ? 'cw-container-active' : '', containerClass]"
     >
         <div class="cw-container-content">
             <header v-if="showEditMode && canEdit" class="cw-container-header" :class="{ 'cw-container-header-open': isOpen }">
