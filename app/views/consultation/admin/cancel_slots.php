@@ -1,5 +1,6 @@
 <form action="<?= $action ?>" method="post" class="default">
     <?= CSRFProtection::tokenTag() ?>
+    <input type="hidden" name="cancel" value="1">
 
     <?= addHiddenFields('slot-id', $slots->map(function ($slot) {
         return "{$slot->block_id}-{$slot->id}";
