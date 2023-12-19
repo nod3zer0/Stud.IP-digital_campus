@@ -9,7 +9,7 @@
     <fieldset>
         <legend><?= _('Termine absagen') ?></legend>
 
-    <? if ($allow_delete): ?>
+    <? if (!empty($allow_delete)): ?>
         <p>
             <?= _('Die folgenden Termine sind belegt und müssen abgesagt werden bevor sie gelöscht werden können.') ?>
         <? if ($mixed): ?>
@@ -38,7 +38,7 @@
     </fieldset>
 
     <footer data-dialog-button>
-    <? if ($allow_delete): ?>
+    <? if (!empty($allow_delete)): ?>
         <?= Studip\Button::createAccept(_('Termine absagen und löschen'), 'delete', [
             'value' => 'cancel',
         ]) ?>
@@ -52,7 +52,7 @@
     <? endif; ?>
         <?= Studip\LinkButton::createCancel(
             _('Abbrechen'),
-            $controller->indexURL($page, "#block-{$block->id}")
+            $controller->indexURL($page ?? null, "#block-{$block->id}")
         ) ?>
     </footer>
 </form>
