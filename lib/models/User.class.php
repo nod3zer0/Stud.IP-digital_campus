@@ -201,6 +201,11 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
             'on_delete'         => 'delete',
         ];
 
+        $config['has_many']['extern_pages_configs'] = [
+            'class_name' => ExternPageConfig::class,
+            'assoc_foreign_key' => 'author_id'
+        ];
+
         $config['additional_fields']['config']['get'] = function ($user) {
             return UserConfig::get($user->id);
         };

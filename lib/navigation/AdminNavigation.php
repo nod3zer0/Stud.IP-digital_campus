@@ -80,7 +80,7 @@ class AdminNavigation extends Navigation
         }
 
         if (Config::get()->EXTERN_ENABLE) {
-            $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?view=extern_inst'));
+            $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'dispatch.php/institute/extern'));
         }
 
         if ($perm->have_perm("root") || ($perm->is_fak_admin() && Config::get()->INST_FAK_ADMIN_PERMS != 'none')) {
@@ -106,7 +106,7 @@ class AdminNavigation extends Navigation
             }
 
             if (Config::get()->EXTERN_ENABLE) {
-                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
+                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'dispatch.php/admin/extern'));
             }
 
             $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));

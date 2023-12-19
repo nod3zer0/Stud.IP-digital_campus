@@ -49,7 +49,7 @@ StudipAutoloader::addAutoloadPath('lib/activities', 'Studip\\Activity');
 StudipAutoloader::addAutoloadPath('lib/evaluation/classes');
 StudipAutoloader::addAutoloadPath('lib/evaluation/classes/db');
 
-StudipAutoloader::addAutoloadPath('lib/extern/lib');
+StudipAutoloader::addAutoloadPath('lib/extern');
 StudipAutoloader::addAutoloadPath('lib/calendar/lib');
 StudipAutoloader::addAutoloadPath('lib/elearning');
 StudipAutoloader::addAutoloadPath('lib/ilias_interface');

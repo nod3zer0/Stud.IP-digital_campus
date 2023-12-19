@@ -209,11 +209,6 @@ class DB_Seminar extends DB_Sql
     }
 }
 
-if (Config::get()->EXTERN_ENABLE) {
-    require_once $GLOBALS['STUDIP_BASE_PATH'] . '/lib/extern/extern_config.inc.php';
-    require_once $GLOBALS['STUDIP_BASE_PATH'] . '/lib/extern/lib/extern_functions.inc.php';
-}
-
 if (Config::get()->CALENDAR_ENABLE) {
     require_once 'lib/calendar_functions.inc.php';
 }
