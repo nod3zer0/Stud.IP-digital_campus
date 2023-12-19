@@ -9,7 +9,7 @@ class AddSiteinfoDraftField extends Migration {
 
     public function up()
     {
-        DBManager::get()->exec("ALTER TABLE `siteinfo_details` ADD `draft_status` TINYINT(1) AFTER `position`");
+        DBManager::get()->exec("ALTER TABLE `siteinfo_details` ADD `draft_status` TINYINT NOT NULL DEFAULT '0' AFTER `position`");
     }
 
     public function down()

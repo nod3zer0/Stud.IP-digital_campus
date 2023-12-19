@@ -4,9 +4,9 @@ use Studip\Button, Studip\LinkButton;
 
 ?>
 <div class="white" style="padding: 1ex;">
-    <? if (!$execute): ?>
+    <? if (empty($execute)): ?>
         <div style="text-align: center;padding: 10px;">
-        <? if ($detail) :?>
+        <? if (!empty($detail)) :?>
             <p><?= _("Wollen Sie die Seite wirklich löschen?") ?></p>
         <? else : ?>
             <p><?= _("Wollen Sie die Rubrik mit allen Seiten wirklich löschen?") ?></p>
@@ -17,8 +17,11 @@ use Studip\Button, Studip\LinkButton;
            $abort_url = 'siteinfo/show/'.$currentrubric;
            $abort_url .= $detail ? "/".$currentdetail : '';
         ?>
-        <?= LinkButton::create(_('Löschen'), $controller->url_for($delete_url)) ?>
-        <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for($abort_url)) ?>
+            <form method="POST" action="<?=$controller->link_for($delete_url)?>">
+                <?=CSRFProtection::tokenTag() ?>
+                <?= Button::create(_('Löschen')) ?>
+                <?= LinkButton::createCancel(_('Abbrechen'), $controller->url_for($abort_url)) ?>
+            </form>
     </div>
     <div>
         <hr>

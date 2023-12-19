@@ -99,13 +99,10 @@ class FooterNavigation extends Navigation
             $url_parts = explode('/', $url);
             $detail_id = $url_parts[4];
             $si = new Siteinfo();
-            try {
-                $isdraft = $si->get_detail_draft_status($detail_id);
-                if ($isdraft) {
-                    return '';
-                }
-            } catch (PDOException $e) {}
-
+            $detail = $si->get_detail($detail_id);
+            if (empty($detail) || !empty($detail['draft_status']) || (!empty($detail['page_disabled_nobody']) && $GLOBALS['user']->id === 'nobody')) {
+                return '';
+            }
         }
         return $url;
     }

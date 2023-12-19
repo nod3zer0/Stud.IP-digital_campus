@@ -12,6 +12,9 @@ class SiteinfoController extends StudipController
 {
     protected $with_session = true;
 
+    /**
+     * @var Siteinfo
+     */
     private $si;
 
     /**
@@ -25,13 +28,19 @@ class SiteinfoController extends StudipController
         $this->si = new Siteinfo();
 
         $this->populate_ids($args);
-        $this->add_navigation($action);
+        $detail            = $this->si->get_detail($this->currentdetail);
+        $this->page_is_draft = $detail['draft_status'] ?? false;
+        $this->page_disabled_nobody = $detail['page_disabled_nobody'] ?? false;
 
         if (is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm('root')) {
             $this->setupSidebar();
         } else {
             $action = 'show';
+            if ($this->page_is_draft || ($this->page_disabled_nobody && $GLOBALS['user']->id === 'nobody')) {
+                throw new Trails_Exception(404);
+            }
         }
+        $this->add_navigation($action);
 
         PageLayout::setTitle(_('Impressum'));
         PageLayout::setTabNavigation('/footer/siteinfo');
@@ -47,11 +56,11 @@ class SiteinfoController extends StudipController
             if (isset($args[1]) && is_numeric($args[1])) {
                 $this->currentdetail = $args[1];
             } else {
-                $this->currentdetail = $this->si->first_detail_id($args[0]);
+                $this->currentdetail = $this->si->first_detail_id($args[0], !$GLOBALS['perm']->have_perm('root'), $GLOBALS['user']->id === 'nobody');
             }
         } else {
             $this->currentrubric = $this->si->first_rubric_id();
-            $this->currentdetail = $this->si->first_detail_id();
+            $this->currentdetail = $this->si->first_detail_id(null, !$GLOBALS['perm']->have_perm('root'), $GLOBALS['user']->id === 'nobody');
         }
     }
 
@@ -67,20 +76,16 @@ class SiteinfoController extends StudipController
         }
 
         foreach ($this->si->get_all_details() as $detail) {
-            $detail[2] = language_filter($detail[2]);
-            if ($detail[2] == '') {
-                $detail[2] = _('unbenannt');
+            if ((!$GLOBALS['perm']->have_perm('root') && $detail['draft_status'])
+                || ($detail['page_disabled_nobody'] && $GLOBALS['user']->id === 'nobody')) {
+                continue;
             }
-
-            // check draft status and possibly hide site in navigation
-            if ($detail[3] == 1 && $GLOBALS['perm']->have_perm('root')) {
-
-                Navigation::addItem('/footer/siteinfo/'.$detail[1].'/'.$detail[0],
-                    new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
-            } else if ($detail[3] != 1) {
-                Navigation::addItem('/footer/siteinfo/'.$detail[1].'/'.$detail[0],
-                    new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
+            $detail['name'] = language_filter($detail['name']);
+            if ($detail['name'] == '') {
+                $detail['name'] = _('unbenannt');
             }
+            Navigation::addItem('/footer/siteinfo/'.$detail['rubric_id'].'/'.$detail['detail_id'],
+                new Navigation($detail['name'], $this->url_for('siteinfo/show/'.$detail['rubric_id'].'/'.$detail['detail_id'])));
         }
 
         if ($action != 'new') {
@@ -96,7 +101,7 @@ class SiteinfoController extends StudipController
     {
         $sidebar = Sidebar::get();
 
-        if (empty($GLOBALS['rubrics_empty'])) {
+        if (count($this->si->get_all_rubrics())) {
             $actions = new ActionsWidget();
             $actions->setTitle(_('Seiten-Aktionen'));
 
@@ -140,11 +145,15 @@ class SiteinfoController extends StudipController
             throw new AccessDeniedException();
         }
         $this->output = $this->si->get_detail_content_processed($this->currentdetail);
+        if ($this->page_is_draft) {
+            PageLayout::postInfo(_('Diese Seite befindet sich im Entwurfsmodus und ist daher noch unsichtbar.'));
+        }
     }
 
     public function new_action($givenrubric = null)
     {
-        $this->edit_rubric = false;
+        $GLOBALS['perm']->check('root');
+        $this->edit_rubric = null;
         if ($givenrubric === null) {
             Navigation::addItem('/footer/siteinfo/rubric_new',
                                 new AutoNavigation(_('Neue Rubrik'),
@@ -160,48 +169,70 @@ class SiteinfoController extends StudipController
 
     public function edit_action($givenrubric = null, $givendetail = null)
     {
-        $this->edit_rubric = false;
+        $GLOBALS['perm']->check('root');
+        $this->edit_rubric = null;
         if (is_numeric($givendetail)) {
-            $this->rubrics      = $this->si->get_all_rubrics();
-            $this->rubric_id    = $this->si->rubric_for_detail($this->currentdetail);
-            $this->detail_name  = $this->si->get_detail_name($this->currentdetail);
-            $this->content      = $this->si->get_detail_content($this->currentdetail);
-            $this->draft_status = $this->si->get_detail_draft_status($this->currentdetail);
+            $this->rubrics     = $this->si->get_all_rubrics();
+            $detail            = $this->si->get_detail($this->currentdetail);
+            $this->rubric_id   = $detail['rubric_id'];
+            $this->detail_name = $detail['name'];
+            $this->content     = $detail['content'];
+            $this->draft_status = $detail['draft_status'];
+            $this->page_disabled_nobody = $detail['page_disabled_nobody'];
+            $this->page_position = $detail['position'];
         } else {
             $this->edit_rubric = true;
             $this->rubric_id = $this->currentrubric;
-       }
-        $this->rubric_name = $this->si->rubric_name($this->currentrubric);
+        }
+        $rubric = $this->si->rubric($this->currentrubric);
+        $this->rubric_name = $rubric['name'];
+        $this->rubric_position = $rubric['position'];
     }
 
     public function save_action()
     {
-        $detail_name    = Request::get('detail_name');
-        $rubric_name    = Request::get('rubric_name');
-        $content        = Request::get('content');
-        $rubric_id      = Request::int('rubric_id');
-        $detail_id      = Request::int('detail_id');
-        $draft_status   = Request::get('draft_status');
+
+        $GLOBALS['perm']->check('root');
+
+        CSRFProtection::verifyUnsafeRequest();
+        $detail_name = Request::get('detail_name');
+        $rubric_name = Request::get('rubric_name');
+        $content     = Request::get('content');
+        $rubric_id   = Request::int('rubric_id');
+        $detail_id   = Request::int('detail_id');
+        $draft_status = Request::submitted('draft_status');
+        $page_disabled_nobody = Request::submitted('page_disabled_nobody');
+        $page_position = Request::int('page_position');
+        $rubric_position = Request::int('rubric_position');
 
         if ($rubric_id) {
             if ($detail_id) {
-                list($rubric, $detail) = $this->si->save('update_detail', compact('rubric_id', 'detail_name', 'content', 'detail_id', 'draft_status'));
+                list($rubric, $detail) = $this->si->save('update_detail', compact('rubric_id', 'detail_name', 'content', 'detail_id', 'draft_status', 'page_disabled_nobody', 'page_position'));
             } else {
-                if ($content) {
-                    list($rubric, $detail) = $this->si->save('insert_detail', compact('rubric_id', 'detail_name','content', 'draft_status'));
+                if (isset($content)) {
+                    if (!$page_position) {
+                        $page_position = $this->si->get_detail_max_position($rubric_id) + 1;
+                    }
+                    list($rubric, $detail) = $this->si->save('insert_detail', compact('rubric_id', 'detail_name','content', 'draft_status', 'page_disabled_nobody', 'page_position'));
                 } else {
-                    list($rubric, $detail) = $this->si->save('update_rubric', compact('rubric_id', 'rubric_name'));
+                    list($rubric, $detail) = $this->si->save('update_rubric', compact('rubric_id', 'rubric_name', 'rubric_position'));
                 }
             }
         } else {
-            list($rubric, $detail) = $this->si->save('insert_rubric', compact('rubric_name'));
+            if (!$rubric_position) {
+                $rubric_position = $this->si->get_rubric_max_position() + 1;
+            }
+            list($rubric, $detail) = $this->si->save('insert_rubric', compact('rubric_name', 'rubric_position'));
         }
         $this->redirect('siteinfo/show/' . $rubric . '/' . $detail);
     }
 
     public function delete_action($givenrubric = null, $givendetail = null, $execute = false)
     {
+        $GLOBALS['perm']->check('root');
+
         if ($execute) {
+            CSRFProtection::verifyUnsafeRequest();
             if ($givendetail === 'all') {
                 $this->si->delete('rubric', $this->currentrubric);
                 $this->redirect('siteinfo/show/');

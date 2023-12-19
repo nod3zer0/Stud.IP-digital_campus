@@ -11,17 +11,21 @@ use Studip\Button, Studip\LinkButton;
 
     <fieldset>
         <legend>
-            <? if($edit_rubric): ?>
+            <? if(isset($edit_rubric)): ?>
                 <?= _('Neue Rubrik anlegen') ?>
             <? else : ?>
                 <?= _('Neue Seite anlegen') ?>
             <? endif ?>
         </legend>
 
-        <? if($edit_rubric): ?>
+        <? if(isset($edit_rubric)): ?>
             <label>
                 <?= _('Titel der Rubrik') ?>
                 <input type="text" name="rubric_name" id="rubric_name">
+            </label>
+            <label>
+                <?= _('Position der Rubrik') ?>
+                <input type="number" name="rubric_position" id="rubric_position">
             </label>
         <? else: ?>
             <label>
@@ -39,13 +43,23 @@ use Studip\Button, Studip\LinkButton;
             </label>
 
             <label>
-                <input type="checkbox" name="draft_status" id="draft_status" value="1" <?= $draft_status ? 'checked' : ''?>>
+                <input type="checkbox" name="draft_status" id="draft_status" checked>
                 <?= _('Entwurfsmodus (nur sichtbar für root)') ?>
             </label>
 
             <label>
+                <input type="checkbox" name="page_disabled_nobody" id="page_disabled_nobody">
+                <?= _('Seite nicht anzeigen für nicht angemeldete Benutzer') ?>
+            </label>
+
+            <label>
+                <?= _('Position der Seite') ?>
+                <input type="number" name="page_position" id="page_position">
+            </label>
+
+            <label>
                 <?= _('Seiteninhalt') ?>
-                <textarea style="width: 90%;height: 15em;" name="content" id="content"></textarea><br>
+                <textarea style="width: 90%;height: 15em;" class="add_toolbar size-l wysiwyg" name="content" id="content"></textarea><br>
             </label>
         <? endif ?>
     </fieldset>
@@ -56,6 +70,6 @@ use Studip\Button, Studip\LinkButton;
     </footer>
 </form>
 
-<? if(!$edit_rubric): ?>
+<? if(!isset($edit_rubric)): ?>
     <?= $this->render_partial('siteinfo/help') ?>
 <? endif ?>

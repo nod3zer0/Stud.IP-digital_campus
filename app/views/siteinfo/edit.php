@@ -7,18 +7,22 @@ use Studip\Button, Studip\LinkButton;
     <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
-            <? if ($edit_rubric): ?>
+            <? if(isset($edit_rubric)): ?>
                 <?= _('Rubrik bearbeiten') ?>
             <? else : ?>
                 <?= _('Seite bearbeiten') ?>
             <? endif ?>
         </legend>
 
-        <? if ($edit_rubric): ?>
+        <? if(isset($edit_rubric)): ?>
             <input type="hidden" name="rubric_id" value="<?= htmlReady($rubric_id) ?>">
             <label>
                 <?= _('Titel der Rubrik')?>
                 <input type="text" name="rubric_name" id="rubric_name" value="<?= htmlReady($rubric_name) ?>">
+            </label>
+            <label>
+                <?= _('Position der Rubrik') ?>
+                <input type="number" name="rubric_position" id="rubric_position" value="<?= (int)$rubric_position ?>">
             </label>
         <? else: ?>
             <label>
@@ -38,8 +42,18 @@ use Studip\Button, Studip\LinkButton;
             </label>
 
             <label>
-                <input type="checkbox" name="draft_status" id="draft_status" value="1" <?= $draft_status ? 'checked' : ''?>>
+                <input type="checkbox" name="draft_status" id="draft_status" <?= $draft_status ? 'checked' : ''?>>
                 <?= _('Entwurfsmodus (nur sichtbar für root)') ?>
+            </label>
+
+            <label>
+                <input type="checkbox" name="page_disabled_nobody" id="page_disabled_nobody" <?= $page_disabled_nobody ? 'checked' : ''?>>
+                <?= _('Seite nicht anzeigen für nicht angemeldete Benutzer') ?>
+            </label>
+
+            <label>
+                <?= _('Position der Seite') ?>
+                <input type="number" name="page_position" id="page_position" value="<?= (int)$page_position ?>">
             </label>
 
             <label>
@@ -57,6 +71,6 @@ use Studip\Button, Studip\LinkButton;
     </footer>
 </form>
 
- <? if (!$edit_rubric): ?>
+<? if(!isset($edit_rubric)): ?>
     <?= $this->render_partial('siteinfo/help.php') ?>
 <? endif; ?>

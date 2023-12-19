@@ -49,6 +49,7 @@ class Siteinfo {
         }
     }
 
+
     public function get_detail_draft_status($id) {
         $sql = "SELECT draft_status
                 FROM siteinfo_details
@@ -59,14 +60,14 @@ class Siteinfo {
         return $statement->fetchColumn();
     }
 
-    function get_detail_name($id) {
-        $sql = "SELECT name
+    function get_detail($id) {
+        $sql = "SELECT *
                 FROM siteinfo_details
                 WHERE detail_id = :id";
         $statement = DBManager::get()->prepare($sql);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
         $statement->execute();
-        return $statement->fetchColumn();
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
     function get_detail_content_processed($id) {
@@ -76,18 +77,25 @@ class Siteinfo {
     }
 
     function get_all_details() {
-        $sql = "SELECT detail_id, rubric_id, name, draft_status
+        $sql = "SELECT *
                 FROM siteinfo_details
                 ORDER BY position, detail_id ASC";
         $result = $this->db->query($sql);
         return $result->fetchAll();
     }
 
-    function first_detail_id($rubric = NULL) {
+    function first_detail_id($rubric = null, $nodraft = null, $nobody = null) {
         $rubric_id = $rubric ?: $this->first_rubric_id();
         $sql = "SELECT detail_id
                 FROM siteinfo_details
-                WHERE rubric_id = IFNULL(?, rubric_id)
+                WHERE rubric_id = IFNULL(?, rubric_id)";
+        if ($nodraft) {
+            $sql .= " AND draft_status = 0 ";
+        }
+        if ($nobody) {
+            $sql .= " AND page_disabled_nobody = 0 ";
+        }
+        $sql .= "
                 ORDER BY position, detail_id ASC
                 LIMIT 1";
         $statement = DBManager::get()->prepare($sql);
@@ -98,7 +106,7 @@ class Siteinfo {
     }
 
     function get_all_rubrics() {
-        $sql = "SELECT rubric_id, name
+        $sql = "SELECT rubric_id, name, position
                 FROM siteinfo_rubrics
                 ORDER BY position, rubric_id ASC";
         $result = $this->db->query($sql);
@@ -130,24 +138,37 @@ class Siteinfo {
         return $statement->fetchColumn();
     }
 
-    function rubric_name($id) {
-        $sql = "SELECT name
+    function rubric($id) {
+        $sql = "SELECT *
                 FROM siteinfo_rubrics
                 WHERE rubric_id = :id";
         $statement = DBManager::get()->prepare($sql);
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
         $statement->execute();
-        return $statement->fetchColumn();
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function get_rubric_max_position()
+    {
+        return DBManager::get()->fetchColumn("SELECT MAX(position) FROM siteinfo_rubrics");
+    }
+
+    function get_detail_max_position($rubric_id)
+    {
+        return DBManager::get()->fetchColumn("SELECT MAX(position) FROM siteinfo_details WHERE rubric_id=?", [$rubric_id]);
     }
 
     function save($type, $input) {
         //distinguish the subject and the action (modification/insertion)
         $rubric = '';
         $detail = '';
+
         switch ($type) {
             case 'update_detail':
+                $old_detail = $this->get_detail($input['detail_id']);
                 $query = "UPDATE siteinfo_details
-                          SET rubric_id = :rubric_id, name = :name, content = :content, draft_status = :draft_status
+                          SET rubric_id = :rubric_id, name = :name, content = :content,
+                              draft_status = :draft_status, position = :position, page_disabled_nobody = :page_disabled_nobody
                           WHERE detail_id = :detail_id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);
@@ -155,44 +176,55 @@ class Siteinfo {
                 $statement->bindValue(':content', $input['content']);
                 $statement->bindValue(':detail_id', $input['detail_id'], PDO::PARAM_INT);
                 $statement->bindValue(':draft_status', $input['draft_status']);
+                $statement->bindValue(':position', $input['page_position'], PDO::PARAM_INT);
+                $statement->bindValue(':page_disabled_nobody', $input['page_disabled_nobody'], PDO::PARAM_BOOL);
+
                 $statement->execute();
+                $this->renumber_details($input['rubric_id'], $input['detail_id'], $old_detail['position'] <=> $input['page_position']);
 
                 $rubric = $input['rubric_id'];
                 $detail = $input['detail_id'];
                 break;
             case 'insert_detail':
-                $query = "INSERT INTO siteinfo_details (rubric_id, name, content, draft_status)
-                          VALUES (:rubric_id, :name, :content, :draft_status)";
+                $query = "INSERT INTO siteinfo_details (rubric_id, name, content, draft_status, position, page_disabled_nobody )
+                          VALUES (:rubric_id, :name, :content, :draft_status, :position, :page_disabled_nobody)";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':rubric_id', $input['rubric_id'], PDO::PARAM_INT);
                 $statement->bindValue(':name', $input['detail_name']);
                 $statement->bindValue(':content', $input['content']);
                 $statement->bindValue(':draft_status', $input['draft_status']);
+                $statement->bindValue(':position', $input['page_position'], PDO::PARAM_INT);
+                $statement->bindValue(':page_disabled_nobody', $input['page_disabled_nobody'], PDO::PARAM_INT);
                 $statement->execute();
+                $detail = DBManager::get()->lastInsertId();
+                $this->renumber_details($input['rubric_id'], $detail, 1);
 
                 $rubric = $input['rubric_id'];
-                $detail = DBManager::get()->lastInsertId();
                 break;
             case "update_rubric":
+                $old_rubric = $this->rubric($input['rubric_id']);
                 $query = "UPDATE siteinfo_rubrics
-                          SET name = :name
+                          SET name = :name, position = :position
                           WHERE rubric_id = :id";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':name', $input['rubric_name']);
                 $statement->bindValue(':id', $input['rubric_id'], PDO::PARAM_INT);
+                $statement->bindValue(':position', $input['rubric_position'], PDO::PARAM_INT);
                 $statement->execute();
+                $this->renumber_rubrics($input['rubric_id'], $old_rubric['position'] <=> $input['rubric_position']);
 
                 $rubric = $input['rubric_id'];
                 $detail = $this->first_detail_id($rubric);
                 break;
             case "insert_rubric":
-                $query = "INSERT INTO siteinfo_rubrics (name)
-                          VALUES (:name)";
+                $query = "INSERT INTO siteinfo_rubrics (name, position)
+                          VALUES (:name, :position)";
                 $statement = DBManager::get()->prepare($query);
                 $statement->bindValue(':name', $input['rubric_name']);
+                $statement->bindValue(':position', $input['rubric_position'], PDO::PARAM_INT);
                 $statement->execute();
-
                 $rubric = DBManager::get()->lastInsertId();
+                $this->renumber_rubrics($rubric, 1);
                 $detail = 0;
         }
         return [$rubric, $detail];
@@ -212,6 +244,29 @@ class Siteinfo {
             $query = "DELETE FROM siteinfo_details WHERE detail_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$id]);
+        }
+    }
+
+    public function renumber_rubrics($changed = 0, $direction = 0)
+    {
+        $db = DBManager::get();
+        $position = 1;
+        foreach($db->fetchFirst("SELECT rubric_id
+                                FROM siteinfo_rubrics
+                                ORDER BY position, rubric_id=" . (int)$changed . ($direction > 0 ? ' desc' : ' asc')) as $rubric_id) {
+            $db->execute("UPDATE siteinfo_rubrics SET position=? WHERE rubric_id=?", [$position++, $rubric_id]);
+        }
+    }
+
+    public function renumber_details($rubric_id, $changed = 0, $direction = 0)
+    {
+        $db = DBManager::get();
+        $page_position = 1;
+        foreach($db->fetchFirst("SELECT detail_id
+                                FROM siteinfo_details
+                                WHERE rubric_id = ?
+                                ORDER BY position, detail_id=" . (int)$changed . ($direction > 0 ? ' desc' : ' asc'), [$rubric_id]) as $detail_id) {
+            $db->execute("UPDATE siteinfo_details SET position=? WHERE detail_id=?", [$page_position++, $detail_id]);
         }
     }
 }
