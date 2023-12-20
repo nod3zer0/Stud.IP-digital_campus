@@ -104,6 +104,6 @@ class RootFolder extends StandardFolder
         $this->folderdata['data_content'] = [
             'locked' => $request['locked'] ? 1 : 0
         ];
-        return parent::setDataFromEditTemplate($request);
+        return $this;
     }
 }
