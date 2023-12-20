@@ -29,7 +29,7 @@ import { $gettext } from './lib/gettext.js';
 (function ($, MultiSelect) {
     'use strict';
 
-    var originals = {
+    const originals = {
         generateLisFromOption: MultiSelect.prototype.generateLisFromOption,
         addOption: MultiSelect.prototype.addOption,
         escapeHTML: MultiSelect.prototype.escapeHTML,
@@ -37,16 +37,15 @@ import { $gettext } from './lib/gettext.js';
     };
 
     MultiSelect.prototype.generateLisFromOption = function (option, index, $container) {
-        var $option       = $(option),
-            chunks        = $option.text().split('--');
-
+        let $option = $(option),
+            chunks = $option.html().split(/\s--\s/);
         if (index === -1) {
             $option.prop('disabled', true);
             index = undefined;
         }
 
         if (chunks.length > 1) {
-            $option.attr('style', 'background-image: url(' + chunks.shift()  + ')');
+            $option.attr('style', 'background-image: url(' + encodeURI(chunks.shift().trim())  + ')');
 
             $option.text(chunks.join("\n"));
 
@@ -68,7 +67,7 @@ import { $gettext } from './lib/gettext.js';
     };
 
     MultiSelect.prototype.escapeHTML = function (text) {
-        var result = originals.escapeHTML.call(this, text);
+        const result = originals.escapeHTML.call(this, text);
         return result.replace("\n", '<br>');
     };
 

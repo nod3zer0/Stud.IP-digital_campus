@@ -12,7 +12,7 @@
                          ? $booking->resource->getDerivedClassInstance()
                          : null ?>
     <?= $derived_resource
-      ? $derived_resource->getFullName()
+      ? htmlReady($derived_resource->getFullName())
       : _('unbekannt') ?>
 
     <h3><?= _('Zeiträume') ?></h3>
@@ -117,7 +117,7 @@
             <h3><?= _('Gebucht für:') ?></h3>
             <a href="<?= URLHelper::getScriptLink(
                      'dispatch.php/profile',
-                     ['username' => $booking->assigned_user->username]
+                     ['username' =>$booking->assigned_user->username]
                      ) ?>">
                 <?= htmlReady($booking->assigned_user->getFullName()) ?>
             </a>
