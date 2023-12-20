@@ -1030,7 +1030,7 @@ class IliasSoap extends StudipSoapClient
         $update = $user_data["id"];
 
         $usr_xml = "<Users>
-<User".($update ? ' Id="'.$user_data["id"].'"' : '')." Action=".($update ? '"Update"' : '"Insert"').">
+<User ".($update ? 'Id="'.$user_data["id"].'"' : 'Id=""')." Action=".($update ? '"Update"' : '"Insert"').">
 <UDFDefinitions></UDFDefinitions>
 <Login>".$user_data["login"]."</Login>
 <Password Type=\"PLAIN\">".$user_data["passwd"]."</Password>
@@ -1062,7 +1062,7 @@ class IliasSoap extends StudipSoapClient
                         'sid' => $this->getSID(),
                         'folder_id' => -1,
                         'usr_xml' => $usr_xml,
-                        'conflict_role' => 1,
+                        'conflict_rule' => 1,
                         'send_account_mail' => 0
         ];
         $result = $this->call('importUsers', $param);

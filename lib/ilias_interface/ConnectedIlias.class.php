@@ -359,7 +359,6 @@ class ConnectedIlias
         } else {
             $role_id = 4;
         }
-
         $this->soap_client->setCachingStatus(false);
         $this->soap_client->clearCache();
         $user_id = $this->soap_client->addUser($user_data, $role_id);
@@ -1046,17 +1045,19 @@ class ConnectedIlias
      */
     public function checkUser()
     {
-        $user_exists = $this->soap_client->getUser($this->user->getId());
-        if (!is_array($user_exists)) {
-            $admin_user_id = $this->soap_client->lookupUser($this->ilias_config['admin']);
-            $admin_user_exists = $this->soap_client->getUser($admin_user_id);
-            if (is_array($admin_user_exists)) {
-                $this->user->unsetConnection(true);
-                if ($this->newUser()) {
-                    PageLayout::postSuccess(_("Neue Verknüpfung zu ILIAS-User angelegt."));
+        if ($this->user->getId()) {
+            $user_exists = $this->soap_client->getUser($this->user->getId());
+            if (!is_array($user_exists)) {
+                $admin_user_id = $this->soap_client->lookupUser($this->ilias_config['admin']);
+                $admin_user_exists = $this->soap_client->getUser($admin_user_id);
+                if (is_array($admin_user_exists)) {
+                    $this->user->unsetConnection(true);
+                    if ($this->newUser()) {
+                        PageLayout::postSuccess(_("Neue Verknüpfung zu ILIAS-User angelegt."));
+                    }
                 }
-            }
-        } else return true;
+            } else return true;
+        }
         return false;
     }
 
