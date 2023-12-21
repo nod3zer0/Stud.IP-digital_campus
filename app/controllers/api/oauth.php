@@ -36,13 +36,11 @@ class Api_OauthController extends StudipController
      **/
     public function request_token_action()
     {
-        try {
-            $server = new OAuthServer();
-            $token = $server->requestToken();
-            $this->render_nothing();
-        } catch (Exception $e) {
-            $this->render_text($e->getMessage());
-        }
+        $server = new OAuthServer();
+        $token = $server->requestToken();
+
+        $this->response->headers = [];
+        $this->render_nothing();
     }
 
     /**
@@ -109,6 +107,7 @@ class Api_OauthController extends StudipController
         $server = new OAuthServer();
         $server->accessToken();
 
+        $this->response->headers = [];
         $this->render_nothing();
     }
 }
