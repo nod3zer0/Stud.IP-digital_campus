@@ -17,18 +17,18 @@
             <a href="#" class="quickfilter" data-quickfilter="<?= md5($title); ?>"><?= htmlReady($title); ?> (<?= count($users); ?>)</a>
             <select multiple="multiple" id="<?= $name . '_quickfilter_' . md5($title); ?>" style="display: none;">
             <? foreach($users as $user) : ?>
-                <option value="<?= $user->id ?>"><?= Avatar::getAvatar($user->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady($user->getFullName('full_rev')) ?> -- <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
+                <option value="<?= $user->id ?>" data-avatar="<?= htmlReady(Avatar::getAvatar($user->id)->getURL(Avatar::MEDIUM)) ?>"><?= htmlReady($user->getFullName('full_rev')) ?> -- <?= htmlReady($user->perms) ?> (<?= htmlReady($user->username)?>)</option>
             <? endforeach; ?>
              </select>
         <? endforeach; ?></p>
         <select multiple="multiple" id="<?= $name . '_selectbox'; ?>" name="<?= $name . '_selectbox'; ?>[]" data-init-js="true">
             <? foreach ($defaultSelectableUsers as $person): ?>
-                <option value="<?= $person->id ?>"><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady($person->getFullName('full_rev')) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
+                <option value="<?= $person->id ?>" data-avatar="<?= htmlReady(Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM)) ?>"><?= htmlReady($person->getFullName('full_rev')) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
             <? endforeach; ?>
         </select>
         <select multiple="multiple" id="<?= $name . '_selectbox_default'; ?>" style="display: none;">
             <? foreach ($defaultSelectedUsers as $person): ?>
-                <option value="<?= $person->id ?>"><?= Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM); ?> -- <?= htmlReady($person->getFullName('full_rev')) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
+                <option value="<?= $person->id ?>" data-avatar="<?= htmlReady(Avatar::getAvatar($person->id)->getURL(Avatar::MEDIUM)) ?>"><?= htmlReady($person->getFullName('full_rev')) ?> -- <?= htmlReady($person->perms) ?> (<?= htmlReady($person->username)?>)</option>
             <? endforeach; ?>
         </select>
 

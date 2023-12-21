@@ -38,15 +38,13 @@ import { $gettext } from './lib/gettext.js';
 
     MultiSelect.prototype.generateLisFromOption = function (option, index, $container) {
         let $option = $(option),
-            chunks = $option.html().split(/\s--\s/);
+            chunks = $option.text().split(/\s--\s/);
         if (index === -1) {
             $option.prop('disabled', true);
             index = undefined;
         }
 
         if (chunks.length > 1) {
-            $option.attr('style', 'background-image: url(' + encodeURI(chunks.shift().trim())  + ')');
-
             $option.text(chunks.join("\n"));
 
             if ($option.is(':disabled')) {

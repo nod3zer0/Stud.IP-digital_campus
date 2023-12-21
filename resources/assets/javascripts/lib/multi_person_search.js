@@ -62,12 +62,13 @@ const MultiPersonSearch = {
             count += MultiPersonSearch.append(
                 $(this).val(),
                 $(this).text(),
+                $(this).data('avatar'),
                 MultiPersonSearch.isAlreadyMember($(this).val())
             );
         });
 
         if (count == 0) {
-            MultiPersonSearch.append('--', $gettext(' Dieser Filter enthält keine (neuen) Personen.'), true);
+            MultiPersonSearch.append('--', $gettext(' Dieser Filter enthält keine (neuen) Personen.'), null, true);
         }
 
         MultiPersonSearch.refresh();
@@ -95,14 +96,15 @@ const MultiPersonSearch = {
                 $.each(data, function(i, item) {
                     searchcount += MultiPersonSearch.append(
                         item.user_id,
-                        item.avatar + ' -- ' + item.text,
+                        item.text,
+                        item.avatar,
                         item.member
                     );
                 });
                 MultiPersonSearch.refresh();
 
                 if (searchcount == 0) {
-                    MultiPersonSearch.append('--', not_found_template({ needle: searchterm }), true);
+                    MultiPersonSearch.append('--', not_found_template({ needle: searchterm }), null, true);
                     MultiPersonSearch.refresh();
                 }
             }
@@ -135,13 +137,16 @@ const MultiPersonSearch = {
         MultiPersonSearch.removeAllNotSelected();
     },
 
-    append: function(value, text, selected) {
+    append: function(value, text, avatar, disabled) {
         if ($('#' + this.name + '_selectbox option[value=' + value + ']').length == 0) {
             $('#' + this.name + '_selectbox').multiSelect('addOption', {
                 value: value,
                 text: text,
-                disabled: selected
+                disabled: disabled
             });
+            if (avatar) {
+                $('#' + this.name + '_selectbox option[value=' + value + ']').attr('style', 'background-image: url(' + avatar + ')');
+            }
             return 1;
         }
         return 0;
