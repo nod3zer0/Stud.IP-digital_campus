@@ -328,6 +328,15 @@ class Oer_EndpointsController extends StudipController
             throw new Exception(_('Die gewünschte Datei konnte nicht gefunden werden.'));
         }
         $filesize = filesize($this->material->getFilePath());
+        $content_type = $this->material['content_type'];
+        if (!in_array($content_type, get_mime_types())) {
+            $content_type = 'application/octet-stream';
+        }
+        if ($content_type === 'application/octet-stream') {
+            $content_disposition = 'attachment';
+        } else {
+            $content_disposition = $disposition === 'attachment' ? 'attachment' : 'inline';
+        }
         header("Accept-Ranges: bytes");
         $start = 0;
         $end = $filesize - 1;
@@ -373,8 +382,8 @@ class Oer_EndpointsController extends StudipController
             header("Cache-Control: no-store, no-cache, must-revalidate");   // HTTP/1.1
         }
         header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Content-Type: ".$this->material['content_type']);
-        header("Content-Disposition: " . ($disposition ?: "inline") . "; " . encode_header_parameter('filename', $this->material['filename']));
+        header("Content-Type: " . $content_type);
+        header("Content-Disposition: " . $content_disposition . "; " . encode_header_parameter('filename', $this->material['filename']));
 
         readfile_chunked($this->material->getFilePath(), $start, $end);
 
@@ -392,10 +401,17 @@ class Oer_EndpointsController extends StudipController
     public function download_front_image_action($material_id)
     {
         $this->material = new OERMaterial($material_id);
-        $this->set_content_type($this->material['front_image_content_type']);
-        $this->response->add_header('Content-Disposition', 'inline');
-        $this->response->add_header('Content-Length', filesize($this->material->getFrontImageFilePath()));
-        $this->render_text(file_get_contents($this->material->getFrontImageFilePath()));
+        if (
+            stripos($this->material['front_image_content_type'], 'image') === 0
+            && stripos($this->material['front_image_content_type'], 'svg') === false
+        ) {
+            $this->set_content_type($this->material['front_image_content_type']);
+            $this->response->add_header('Content-Disposition', 'inline');
+            $this->response->add_header('Content-Length', filesize($this->material->getFrontImageFilePath()));
+            $this->render_text(file_get_contents($this->material->getFrontImageFilePath()));
+        } else {
+            throw new Trails_Exception(404);
+        }
     }
 
     /**

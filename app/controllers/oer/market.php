@@ -8,6 +8,15 @@ class Oer_MarketController extends StudipController
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+        if (
+            !Config::get()->OERCAMPUS_ENABLED
+            || (
+                Config::get()->OER_PUBLIC_STATUS !== 'nobody'
+                && !$GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS)
+            )
+        ) {
+            throw new AccessDeniedException();
+        }
         Helpbar::Get()->addPlainText(
             _("Lernmaterialien"),
             _("Übungszettel, Musterlösungen, Vorlesungsmitschriften oder gar Folien, selbsterstellte Lernkarteikarten oder alte Klausuren. Das alles wird einmal erstellt und dann meist vergessen. Auf dem Lernmaterialienmarktplatz bleiben sie erhalten. Jeder kann was hochladen und jeder kann alles herunterladen. Alle Inhalte hier sind frei verfügbar für jeden.")
@@ -17,9 +26,6 @@ class Oer_MarketController extends StudipController
 
     public function index_action()
     {
-        if (!$GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS)) {
-            throw new AccessDeniedException();
-        }
         if (Navigation::hasItem("/oer/market")) {
             Navigation::activateItem("/oer/market");
         }
@@ -153,9 +159,6 @@ class Oer_MarketController extends StudipController
 
     public function search_action()
     {
-        if (!$GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS)) {
-            throw new AccessDeniedException();
-        }
         if (Navigation::hasItem("/oer/market")) {
             Navigation::activateItem("/oer/market");
         }

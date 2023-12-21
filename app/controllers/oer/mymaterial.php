@@ -7,6 +7,13 @@ class Oer_MymaterialController extends AuthenticatedController
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
+        if (
+            !Config::get()->OERCAMPUS_ENABLED
+            ||
+            !$GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS)
+        ) {
+            throw new AccessDeniedException();
+        }
         PageLayout::setTitle(_('Lernmaterialien'));
     }
 
@@ -47,7 +54,7 @@ class Oer_MymaterialController extends AuthenticatedController
             $material['host_id'] = null;
             $material['license_identifier'] = Request::get('license', 'CC-BY-SA-4.0');
             if (!empty($_FILES['file']['tmp_name'])) {
-                $material['content_type'] = $_FILES['file']['type'];
+                $material['content_type'] = get_mime_type($_FILES['file']['name']);
                 if (in_array($material['content_type'], $content_types)) {
                     mkdir($tmp_folder);
                     \Studip\ZipArchive::extractToPath($_FILES['file']['tmp_name'], $tmp_folder);
@@ -73,8 +80,8 @@ class Oer_MymaterialController extends AuthenticatedController
             }
 
 
-            if (!empty($_FILES['image']['tmp_name'])) {
-                $material['front_image_content_type'] = $_FILES['image']['type'];
+            if (!empty($_FILES['image']['tmp_name']) && is_array(getimagesize($_FILES['image']['tmp_name']))) {
+                $material['front_image_content_type'] = get_mime_type($_FILES['image']['name']);
                 move_uploaded_file($_FILES['image']['tmp_name'], $material->getFrontImageFilePath());
             } elseif (!empty($_SESSION['NEW_OER']['image_tmp_name'])) {
                 $material['front_image_content_type'] = get_mime_type($_SESSION['NEW_OER']['image_tmp_name']);

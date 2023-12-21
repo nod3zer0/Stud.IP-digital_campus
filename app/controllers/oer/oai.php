@@ -8,6 +8,13 @@
 class Oer_OaiController extends StudipController
 {
 
+    public function before_filter(&$action, &$args)
+    {
+        parent::before_filter($action, $args);
+        if (!Config::get()->OERCAMPUS_ENABLED) {
+            throw new AccessDeniedException();
+        }
+    }
     public function index_action()
     {
         $this->set_content_type('text/xml;charset=utf-8');

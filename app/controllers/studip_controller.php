@@ -504,8 +504,15 @@ abstract class StudipController extends Trails_Controller
         }
 
         if ($content_type === null) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $content_type = finfo_file($finfo, $file);
+            $content_type = get_mime_type($filename ?: $file);
+        }
+
+        if (!in_array($content_type, get_mime_types())) {
+            $content_type = 'application/octet-stream';
+        }
+
+        if ($content_type === 'application/octet-stream') {
+            $content_disposition = 'attachment';
         }
 
         $this->set_content_type($content_type);
