@@ -107,7 +107,7 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
 
         $config['registered_callbacks']['before_store'][] = 'cbAddPosition';
         $config['registered_callbacks']['after_delete'][] = 'cbReorderPositions';
-
+        $config['registered_callbacks']['after_delete'][] = 'cbRemoveTasks';
         $config['i18n_fields']['name'] = true;
         $config['i18n_fields']['name_w'] = true;
         $config['i18n_fields']['name_m'] = true;
@@ -702,6 +702,18 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
         }
 
         self::reorderPositionsForRange($this->range_id);
+    }
+
+    /**
+     * This callback is called after deleting a User.
+     * It removes courseware task entries that are associated with the group.
+     */
+    public function cbRemoveTask()
+    {
+        \Courseware\Task::deleteBySQL(
+            '`solver_id` = ? AND `solver_type`= "group"',
+            [$this->id]
+        );
     }
 
     /**

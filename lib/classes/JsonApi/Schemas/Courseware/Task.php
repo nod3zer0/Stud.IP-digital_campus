@@ -46,21 +46,23 @@ class Task extends SchemaProvider
     {
         $relationships = [];
 
-        $relationships[self::REL_FEEDBACK] = $resource->getFeedback()
+        $feedback = $resource->getFeedback();
+        $relationships[self::REL_FEEDBACK] = $feedback
             ? [
                 self::RELATIONSHIP_LINKS => [
-                    Link::RELATED => $this->createLinkToResource($resource->getFeedback()),
+                    Link::RELATED => $this->createLinkToResource($feedback),
                 ],
-                self::RELATIONSHIP_DATA => $resource->getFeedback(),
+                self::RELATIONSHIP_DATA => $feedback,
             ]
             : [self::RELATIONSHIP_DATA => null];
 
-        $relationships[self::REL_SOLVER] = $resource['solver_id']
+        $solver = $resource->getSolver();
+        $relationships[self::REL_SOLVER] = $solver
             ? [
                 self::RELATIONSHIP_LINKS => [
-                    Link::RELATED => $this->createLinkToResource($resource->getSolver()),
+                    Link::RELATED => $this->createLinkToResource($solver),
                 ],
-                self::RELATIONSHIP_DATA => $resource->getSolver(),
+                self::RELATIONSHIP_DATA => $solver,
             ]
             : [self::RELATIONSHIP_DATA => null];
 
