@@ -90,12 +90,15 @@ final class TwoFactorAuth
             return;
         }
 
-        $secret = TFASecret::find($user->id);
-        if (!$secret) {
+        if (!self::isEnabledForUser($user)) {
             return;
         }
 
-        $this->secret = $secret;
+        if (!TFASecret::exists($user->id)) {
+            return;
+        }
+
+        $this->secret = TFASecret::find($user->id);
     }
 
     /**
