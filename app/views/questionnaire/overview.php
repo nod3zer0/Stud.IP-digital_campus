@@ -1,15 +1,15 @@
 <form action="<?= $controller->link_for("questionnaire/bulkdelete", compact('range_type', 'range_id')) ?>"
       method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <table class="default" id="questionnaire_overview">
+    <table class="default sortable-table" data-sortlist="[[1, 0]]" id="questionnaire_overview">
         <thead>
             <tr>
                 <th width="20"><input type="checkbox" data-proxyfor="#questionnaire_overview > tbody input[type=checkbox]"></th>
-                <th><?= _('Fragebogen') ?></th>
-                <th><?= _('Startet') ?></th>
-                <th><?= _('Endet') ?></th>
-                <th><?= _('Eingebunden') ?></th>
-                <th><?= _('Teilnehmende') ?></th>
+                <th data-sort="text"><?= _('Fragebogen') ?></th>
+                <th data-sort="digit"><?= _('Startet') ?></th>
+                <th data-sort="digit"><?= _('Endet') ?></th>
+                <th data-sort="text"><?= _('Eingebunden') ?></th>
+                <th data-sort="digit"><?= _('Teilnehmende') ?></th>
                 <th class="actions"><?= _('Aktionen') ?></th>
             </tr>
         </thead>

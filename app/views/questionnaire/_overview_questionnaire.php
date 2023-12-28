@@ -8,14 +8,14 @@
             <?= htmlReady($questionnaire['title']) ?>
         </a>
     </td>
-    <td>
+    <td data-text="<?= (int) $questionnaire['startdate'] ?>">
     <? if ($questionnaire['startdate']): ?>
         <?= date('d.m.Y H:i', $questionnaire['startdate']) ?>
     <? else: ?>
         <?= _('händisch') ?>
     <? endif; ?>
     </td>
-    <td>
+    <td data-text="<?= (int) $questionnaire['stopdate'] ?>">
     <? if ($questionnaire['stopdate']): ?>
         <?= date('d.m.Y H:i', $questionnaire['stopdate']) ?>
     <? else: ?>
@@ -67,7 +67,7 @@
     <? endif ?>
     </td>
     <td>
-        <?= htmlReady($countedAnswers) ?>
+        <?= htmlReady($countedAnswers ?: '0') ?>
     </td>
     <td class="actions">
     <? if ($questionnaire->isRunning() && $countedAnswers) : ?>
