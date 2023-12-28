@@ -1,14 +1,14 @@
 <form class="default" action="<?= $controller->link_for('course/gradebook/lecturers/store_grades') ?>" method="POST">
     <?= CSRFProtection::tokenTag()?>
     <div style="overflow-x:auto;">
-        <table class="default gradebook-lecturer-custom-definitions">
+        <table class="default gradebook-lecturer-custom-definitions sortable-table" data-sortlist="[[0, 0]]">
             <caption>
                 <?= _('Noten manuell erfassen') ?>
             </caption>
 
             <thead>
-                <tr class="tablesorter-ignoreRow">
-                    <th><?= _('Name') ?></th>
+                <tr class="sortable">
+                    <th data-sort="text"><?= _('Name') ?></th>
                     <? if (count($customDefinitions)) { ?>
                         <? foreach ($customDefinitions as $definition) { ?>
                             <th>
@@ -35,13 +35,26 @@
                                 <td class="gradebook-grade-input">
                                     <? $instance = $controller->getInstanceForUser($definition, $student) ?>
                                     <? $rawgrade = $instance ? $instance->rawgrade : 0 ?>
+                                    <? $passed = $instance ? $instance->passed : 0 ?>
+                                    <? $feedback = $instance ? $instance->feedback : '' ?>
                                     <label class="undecorated">
                                         <input type="number"
                                                name="grades[<?= htmlReady($student->user_id) ?>][<?= htmlReady($definition->id) ?>]"
                                                value="<?= $controller->formatAsPercent($rawgrade) ?>"
                                                min="0"> %
                                     </label>
-
+                                    <label>
+                                        <?=_('Bestanden')?>
+                                        <input type="checkbox"
+                                               name="passed[<?= htmlReady($student->user_id) ?>][<?= htmlReady($definition->id) ?>]"
+                                               value="1"
+                                               <?= $passed ? 'checked' : ''?>>
+                                    </label>
+                                    <label>
+                                        <input type="text"
+                                               name="feedback[<?= htmlReady($student->user_id) ?>][<?= htmlReady($definition->id) ?>]"
+                                               value="<?=htmlReady($feedback)?>" placeholder="<?=_('Feedback')?>">
+                                    </label>
                                 </td>
                             <? } ?>
                     <? } elseif ($index === 0) { ?>

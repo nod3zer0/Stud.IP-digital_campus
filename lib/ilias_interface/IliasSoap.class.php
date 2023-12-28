@@ -1672,4 +1672,41 @@ class IliasSoap extends StudipSoapClient
         }
         return false;
     }
+
+    /**
+     * @param string $ref_id
+     * @param bool $sum_only
+     * @return array|false
+     * @throws Exception
+     */
+    public function getTestResults($ref_id, $sum_only = true)
+    {
+        $param = [
+            'sid'    => $this->getSID(),
+            'ref_id' => $ref_id,
+            'sum_only' => $sum_only
+        ];
+        $result = $this->call('getTestResults', $param);
+        if ($result !== false) {
+            $columns = [];
+            $data = [];
+            $xml = simplexml_load_string($result);
+            foreach ($xml->colspecs->colspec as $colspec) {
+                $columns[] = (string)$colspec['name'];
+            }
+            foreach ($xml->rows->row as $row) {
+                $data_row = [];
+                $i = 0;
+                foreach ($row->column as $column) {
+                    $data_row[$columns[$i++]] = (string)$column;
+                }
+                if (isset($data_row['user_id'])) {
+
+                }
+                $data[] = $data_row;
+            }
+            return $data;
+        }
+        return false;
+    }
 }

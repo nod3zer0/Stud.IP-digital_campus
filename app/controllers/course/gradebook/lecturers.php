@@ -43,6 +43,7 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         $this->groupedInstances = $this->groupedInstances($course);
         $this->sumOfWeights = $this->getSumOfWeights($gradingDefinitions);
         $this->totalSums = $this->sumOfWeights ? $this->getTotalSums($gradingDefinitions) : 0;
+        $this->totalPassed = $this->getTotalPassed($gradingDefinitions);
     }
 
     /**
@@ -71,6 +72,7 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
             $categoryName = Definition::CUSTOM_DEFINITIONS_CATEGORY === $category ? _('Manuell eingetragen') : $category;
             foreach ($this->groupedDefinitions[$category] as $definition) {
                 $headerLine[] = $categoryName.': '.$definition->name;
+                $headerLine[] = _('bestanden') . '(' . $categoryName.': '.$definition->name . ')';
             }
         }
         $studentLines = [];
@@ -81,6 +83,9 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
                     $studentLine[] = isset($this->groupedInstances[$user->user_id][$definition->id])
                                    ? $this->groupedInstances[$user->user_id][$definition->id]->rawgrade
                                    : 0;
+                    $studentLine[] = isset($this->groupedInstances[$user->user_id][$definition->id])
+                        ? $this->groupedInstances[$user->user_id][$definition->id]->passed
+                        : 0;
                 }
             }
             $studentLines[] = $studentLine;
@@ -166,6 +171,8 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         )->pluck('id');
 
         $grades = \Request::getArray('grades');
+        $passed = \Request::getArray('passed');
+        $feedback = \Request::getArray('feedback');
         foreach ($grades as $studentId => $studentGrades) {
             if (!in_array($studentId, $studentIds)) {
                 continue;
@@ -177,6 +184,8 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
 
                 $instance = new Instance([$definitionId, $studentId]);
                 $instance->rawgrade = ((int) $strGrade) / 100.0;
+                $instance->passed = $passed[$studentId][$definitionId] ?? 0;
+                $instance->feedback = $feedback[$studentId][$definitionId] ?? '';
                 $instance->store();
             }
         }
@@ -195,6 +204,9 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         $gradingDefinitions = Definition::findByCourse($course);
         $this->groupedDefinitions = $this->getGroupedDefinitions($gradingDefinitions);
         $this->customDefinitions = $this->groupedDefinitions[Definition::CUSTOM_DEFINITIONS_CATEGORY] ?? [];
+        if (!count($this->customDefinitions )) {
+            PageLayout::postInfo(_('Es sind keine manuellen Leistungen definiert.'));
+        }
     }
 
     /**
@@ -294,6 +306,131 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         $this->redirect('course/gradebook/lecturers/edit_custom_definitions');
     }
 
+    public function edit_ilias_definitions_action()
+    {
+        if (Navigation::hasItem('/course/gradebook/edit_ilias_definitions')) {
+            Navigation::activateItem('/course/gradebook/edit_ilias_definitions');
+        }
+
+        $course = \Context::get();
+        $gradingDefinitions = Definition::findByCourse($course);
+        $this->groupedDefinitions = $this->getGroupedDefinitions($gradingDefinitions);
+        $this->customDefinitions = $this->groupedDefinitions['ILIAS'] ?? [];
+        $this->setupIliasSidebar(count($this->customDefinitions));
+        if (!count($this->customDefinitions )) {
+            PageLayout::postInfo(_('Es sind keine ILIAS-Tests als Leistungen definiert.'));
+        }
+    }
+
+    public function new_ilias_definition_action()
+    {
+        $this->ilias_modules = [];
+        $course = Course::findCurrent();
+        $already_defined = new SimpleCollection(Definition::findBySQL("course_id = ? AND category='ILIAS'", [$course->id]));
+        foreach (Config::get()->ILIAS_INTERFACE_SETTINGS as $ilias_index => $ilias_config) {
+            if ($ilias_config['is_active']) {
+                $ilias = new ConnectedIlias($ilias_index);
+                $this->ilias_modules[$ilias_index] = array_filter(
+                    DBManager::get()->fetchFirst(
+                        "SELECT module_id FROM object_contentmodules WHERE object_id=? AND system_type=? AND module_type='tst'", [$course->id, $ilias_index],
+                        function ($module_id) use ($ilias, $already_defined) {
+                            $item = $ilias->index . '-' . $module_id;
+                            if (!$already_defined->findOneBy('item', $item)) {
+                                return $ilias->getModule($module_id);
+                            }
+                            return null;
+                        }
+                    )
+                );
+            }
+        }
+    }
+
+    public function delete_ilias_definition_action($definitionId)
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        if (!$definition = Definition::findOneBySQL(
+            'id = ? AND course_id = ?',
+            [$definitionId, \Context::getId()]
+        )
+        ) {
+            \PageLayout::postError(_('Die Leistung konnte nicht gelöscht werden.'));
+        } else {
+            if (Definition::deleteBySQL('id = ?', [$definition->id])) {
+                \PageLayout::postSuccess(_('Die Leistung wurde gelöscht.'));
+            } else {
+                \PageLayout::postError(_('Die Leistung konnte nicht gelöscht werden.'));
+            }
+        }
+
+        $this->redirect('course/gradebook/lecturers/edit_ilias_definitions');
+    }
+
+    public function create_ilias_definition_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+        $ilias_module = Request::get('ilias_module');
+        $module_import = Request::int('result') + Request::int('passed');
+        if (!$module_import) {
+            $module_import = 3;
+        }
+        if ($ilias_module) {
+            [$index, $module_id] = explode('-', $ilias_module);
+            $ilias = new ConnectedIlias($index);
+            $module = $ilias->getModule($module_id);
+            if ($module) {
+                $definition = Definition::create(
+                    [
+                        'course_id' => \Context::getId(),
+                        'item'      => $ilias_module . '-' . $module_import,
+                        'name'      => $module->getTitle(),
+                        'tool'      => 'ILIAS',
+                        'category'  => 'ILIAS',
+                        'position'  => 0,
+                        'weight'    => 0.0,
+                    ]
+                );
+
+                if (!$definition) {
+                    \PageLayout::postError(_('Die Leistung konnte nicht definiert werden.'));
+                } else {
+                    \PageLayout::postSuccess(_('Die Leistung wurde erfolgreich definiert.'));
+                }
+            }
+        }
+        $this->redirect('course/gradebook/lecturers/edit_ilias_definitions');
+    }
+
+    public function edit_ilias_definition_action($definition_id)
+    {
+        $this->definition = Definition::find($definition_id);
+        if ($this->definition && Request::submitted('test_name')) {
+            CSRFProtection::verifyUnsafeRequest();
+            $module_import = Request::int('result') + Request::int('passed');
+            [$index, $module_id] = explode('-', $this->definition->item );
+            $this->definition->name = Request::get('test_name');
+            $this->definition->item = $index . '-' . $module_id . '-' . $module_import;
+            if ($this->definition->store()) {
+                \PageLayout::postSuccess(_('Die Leistung wurde erfolgreich aktualisiert.'));
+            }
+
+            $this->redirect('course/gradebook/lecturers/edit_ilias_definitions');
+        }
+    }
+
+    public function import_ilias_results_action()
+    {
+        $num = IliasObjectConnections::importIliasResultsForCourse(Course::findCurrent());
+        PageLayout::postInfo(sprintf(
+            ngettext(
+                '%s Resultat wurde importiert.',
+                '%s Resultate wurden importiert.',
+                $num),
+            $num)
+        );
+        $this->redirect('course/gradebook/lecturers/edit_ilias_definitions');
+    }
+
     public function getInstanceForUser(Definition $definition, \CourseMember $user)
     {
         if (!isset($this->groupedInstances[$user->user_id])) {
@@ -341,5 +478,32 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
         }
 
         return $totalSums;
+    }
+
+    private function getTotalPassed($gradingDefinitions)
+    {
+        $gradingDefinitions = \SimpleCollection::createFromArray($gradingDefinitions);
+        $totalPassed = [];
+        foreach ($this->students as $student) {
+            if (!isset($totalPassed[$student->user_id])) {
+                $totalPassed[$student->user_id] = 0;
+            }
+
+            if (!isset($this->groupedInstances[$student->user_id])) {
+                continue;
+            }
+
+            foreach ($this->groupedInstances[$student->user_id] as $definitionId => $instance) {
+                if ($gradingDefinitions->findOneBy('id', $definitionId)) {
+                    $totalPassed[$student->user_id] += $instance->passed;
+                }
+            }
+        }
+        $count = $gradingDefinitions->count();
+        $totalPassed = array_map(
+            function($p) use ($count) {
+                return $p == $count ? $p : 0;
+                }, $totalPassed);
+        return $totalPassed;
     }
 }

@@ -1346,4 +1346,19 @@ class ConnectedIlias
     public function deleteConnectedModules($object_id){
         return IliasObjectConnections::DeleteAllConnections($object_id, $this->index);
     }
+
+    /**
+     * @param string $ilias_user_id
+     * @return IliasUser|void
+     */
+    public function getConnectedUser(string $ilias_user_id)
+    {
+        $user_id = DBManager::get()->fetchColumn(
+            "SELECT studip_user_id FROM auth_extern WHERE external_user_id = ? AND external_user_system_type = ?",
+            [$ilias_user_id, $this->index]
+        );
+        if ($user_id) {
+            return new IliasUser($this->index, $this->ilias_config['version'], $user_id);
+        }
+    }
 }

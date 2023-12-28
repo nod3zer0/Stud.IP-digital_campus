@@ -135,7 +135,7 @@ class IliasObjectConnections
             return false;
         }
     }
-    
+
     /**
     * get module-id
     *
@@ -272,5 +272,40 @@ class IliasObjectConnections
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$object_id, $cms_type]);
         return $statement->rowCount();
+    }
+
+    /**
+     * @param Course $course
+     * @return int
+     */
+    public static function importIliasResultsForCourse(Course $course): int
+    {
+        $connected_ilias = [];
+        $students = new SimpleCollection($course->getMembersWithStatus('autor'));
+        $num = 0;
+        foreach (Grading\Definition::findBySQL("course_id = ? AND tool='ILIAS'", [$course->id]) as $definition) {
+            [$index, $module_id, $import_type] = explode('-', $definition->item);
+            if (!isset($connected_ilias[$index])) {
+                $connected_ilias[$index] = new ConnectedIlias($index);
+            }
+            $test_result = $connected_ilias[$index]->soap_client->getTestResults($module_id);
+            foreach ($test_result as $result) {
+                $ilias_user = $connected_ilias[$index]->getConnectedUser($result['user_id']);
+                if ($ilias_user) {
+                    $member = $students->findOneBy('user_id', $ilias_user->getStudipId());
+                    if ($member) {
+                        $grade = Grading\Instance::import([
+                                'definition_id' => $definition->id,
+                                'user_id'       => $member->user_id,
+                                'rawgrade'      => $import_type & 1 && $result['maximum_points'] ? $result['received_points'] / $result['maximum_points'] : 0,
+                                'passed'        => $import_type & 2 ? $result['passed'] : 0
+                            ]
+                        );
+                        $num += $grade->store();
+                    }
+                }
+            }
+        }
+        return $num;
     }
 }

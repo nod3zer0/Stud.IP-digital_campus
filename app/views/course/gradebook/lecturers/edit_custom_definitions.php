@@ -42,13 +42,6 @@
                 </tr>
             <? } ?>
         </tbody>
-    <? } else { ?>
-        <tbody>
-            <tr>
-                <td colspan="2">
-                    <?= \MessageBox::info(_('Es sind keine manuellen Leistungen definiert.')) ?>
-                </td>
-        </tbody>
     <? } ?>
 
 

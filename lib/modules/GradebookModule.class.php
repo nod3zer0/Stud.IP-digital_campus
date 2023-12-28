@@ -112,6 +112,12 @@ class GradebookModule extends CorePlugin implements SystemPlugin, StudipModule
             'custom_definitions',
             new Navigation(_('Noten manuell erfassen'), 'dispatch.php/course/gradebook/lecturers/custom_definitions')
         );
+        if (Config::get()->ILIAS_INTERFACE_ENABLE && $cid && Course::findCurrent()->isToolActive('IliasInterfaceModule')) {
+            $navigation->addSubNavigation(
+                'edit_ilias_definitions',
+                new Navigation(_('ILIAS-Test als Leistung definieren'), 'dispatch.php/course/gradebook/lecturers/edit_ilias_definitions')
+            );
+        }
     }
 
     /**

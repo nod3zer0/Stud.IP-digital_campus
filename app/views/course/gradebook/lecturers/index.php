@@ -45,17 +45,21 @@
                             <?= $studentName ?>
                         </a>
                     </td>
-                    <? $totalSum = isset($totalSums[$student->user_id]) ? $totalSums[$student->user_id] : 0 ?>
-                    <td data-sort-value="<?= $totalSum?>">
-                        <?= $controller->formatAsPercent($totalSum) ?> %
+                    <? $totalSum = $totalSums[$student->user_id] ?? 0 ?>
+                    <? $totalPassed = $totalPassed[$student->user_id] ?? 0 ?>
+                    <td data-sort-value="<?= $totalSum + $totalPassed?>">
+                        <?= $totalSum > 0 ? $controller->formatAsPercent($totalSum) . ' %' : ''?>
+                        <?= $totalPassed ? _('bestanden') : ''?>
                     </td>
 
                     <? foreach ($categories as $category) { ?>
                         <? foreach ($groupedDefinitions[$category] as $definition) { ?>
                             <? $instance = $controller->getInstanceForUser($definition, $student) ?>
                             <? $rawgrade = $instance ? $instance->rawgrade : 0 ?>
-                            <td data-sort-value="<? $rawgrade ?>">
-                                <?= $controller->formatAsPercent($rawgrade) ?> %
+                            <? $passed = $instance ? $instance->passed : 0 ?>
+                            <td data-sort-value="<?= $rawgrade + $passed ?>">
+                                <?= $rawgrade > 0 ? $controller->formatAsPercent($rawgrade) . ' %' : ''?>
+                                <?= $passed ? _('bestanden') : ''?>
                             </td>
                         <? } ?>
                     <? } ?>

@@ -45,6 +45,8 @@ class Course_Gradebook_StudentsController extends AuthenticatedController
         $this->sumOfWeights = $this->getSumOfWeights($this->gradingDefinitions);
         $this->subtotals = $this->getSubtotalGrades();
         $this->total = $this->getTotalGrade();
+        $this->subpassed = $this->getSubpassed();
+        $this->passed = array_sum($this->subpassed);
     }
 
     /**
@@ -75,6 +77,7 @@ class Course_Gradebook_StudentsController extends AuthenticatedController
                     $definition->name,
                     $definition->tool,
                     $instance ? $instance->rawgrade : 0,
+                    $instance ? $instance->passed : 0,
                     $instance ? $instance->feedback : null,
                 ];
             }
@@ -85,6 +88,7 @@ class Course_Gradebook_StudentsController extends AuthenticatedController
             _('Leistung'),
             _('Werkzeug'),
             _('Fortschritt'),
+            _('Bestanden'),
             _('Feedback'),
         ];
         $data = array_merge([$headerLine], $lines);
@@ -138,5 +142,24 @@ class Course_Gradebook_StudentsController extends AuthenticatedController
         }
 
         return $sumOfWeights ? $sumOfWeightedGrades / $sumOfWeights : 0;
+    }
+
+    private function getSubpassed()
+    {
+        $subpassed = [];
+
+        foreach ($this->groupedDefinitions as $category => $definitions) {
+            $passed = 0;
+
+            foreach ($definitions as $definition) {
+                if (isset($this->groupedInstances[$definition->id])) {
+                    $instance = $this->groupedInstances[$definition->id];
+                    $passed += $instance->passed;
+                }
+            }
+            $subpassed[$category] = $passed == count($definitions) ? $passed : 0;
+        }
+
+        return $subpassed;
     }
 }

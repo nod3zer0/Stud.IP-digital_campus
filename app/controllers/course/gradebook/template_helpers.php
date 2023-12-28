@@ -87,4 +87,23 @@ trait GradebookTemplateHelpers
         \PageLayout::setTitle(Context::getHeaderLine().' - Gradebook');
         \PageLayout::setHelpKeyword("Basis.Gradebook");
     }
+
+    protected function setupIliasSidebar($num_definitions = 0)
+    {
+        $ilias = new \LinksWidget();
+        $ilias->setTitle(_('ILIAS'));
+        $ilias->addLink(
+            _('Test als Leistung hinzufügen'),
+            $this->url_for('course/gradebook/lecturers/new_ilias_definition'),
+            Icon::create('learnmodule+add')
+        )->asDialog();
+        if ($num_definitions) {
+            $ilias->addLink(
+                _('Ergebnisse aus ILIAS importieren'),
+                $this->url_for('course/gradebook/lecturers/import_ilias_results'),
+                Icon::create('refresh')
+            );
+        }
+        \Sidebar::Get()->addWidget($ilias);
+    }
 }

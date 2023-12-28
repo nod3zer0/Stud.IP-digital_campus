@@ -10,16 +10,25 @@
 <article class="gradebook-student">
     <header>
         <h1><?= _("Gesamt") ?></h1>
-        <?= $this->render_partial("course/gradebook/_progress", ['value' => $controller->formatAsPercent($total)])?>
+        <? if ($total > 0) : ?>
+            <?= $this->render_partial("course/gradebook/_progress", ['value' => $controller->formatAsPercent($total)])?>
+        <? endif ?>
+        <? if ($passed) : ?>
+            <div><?= _('bestanden')?></div>
+        <? endif ?>
     </header>
 
     <? foreach ($categories as $category) { ?>
         <section class="gradebook-student-category">
             <header>
                 <h2><?= $controller->formatCategory($category) ?></h2>
-                <?= $this->render_partial("course/gradebook/_progress", ['value' => $controller->formatAsPercent($subtotals[$category])])?>
             </header>
-
+            <? if ($subtotals[$category] > 0) : ?>
+                <?= $this->render_partial("course/gradebook/_progress", ['value' => $controller->formatAsPercent($subtotals[$category])])?>
+            <? endif ?>
+            <? if ($subpassed[$category]) : ?>
+                <div><?= _('bestanden')?></div>
+            <? endif ?>
             <table class="default">
                 <colgroup>
                     <col width="200px" />
@@ -43,11 +52,15 @@
                         $instance = $groupedInstances[$definition->id] ?? null;
                         $grade = $controller->formatAsPercent($instance ? $instance->rawgrade : 0);
                         $feedback = $instance ? $instance->feedback : '';
+                        $passed = $instance ? $instance->passed : 0;
                     ?>
                         <tr>
                             <td>
                                 <span class="gradebook-definition-name"><?= htmlReady($definition->name) ?></span>
-                                <?= $this->render_partial("course/gradebook/_progress", ['value' => (int) $grade])?>
+                                <? if ($grade > 0) : ?>
+                                    <?= $this->render_partial("course/gradebook/_progress", ['value' => (int) $grade])?>
+                                <? endif ?>
+                                <div><?= $passed ? _('bestanden') : '' ?></div>
                             </td>
                             <td>
                                 <?= htmlReady($definition->tool) ?>
