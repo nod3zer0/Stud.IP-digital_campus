@@ -9,6 +9,10 @@
  * the License, or (at your option) any later version.
  */
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 require_once 'studip_controller_properties_trait.php';
 require_once 'studip_response.php';
 
@@ -795,6 +799,38 @@ abstract class StudipController extends Trails_Controller
     {
         $dt = DateTime::createFromFormat($format, $datetime);
         return $dt && $dt->format($format) == date('H:i',strtotime($datetime));
+    }
+
+    /**
+     * Export xlsx and csv files via PhpSpreadsheet
+     * @param $header
+     * @param $data
+     * @param $format
+     * @param $filename
+     * @param $filepath
+     * @return void
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function render_spreadsheet($header, $data, $format, $filename, $filepath = null)
+    {
+        if ($filepath == null) {
+            $filepath = 'php://output';
+        }
+        $spreadsheet = new Spreadsheet();
+        $activeWorksheet = $spreadsheet->getActiveSheet();
+        $activeWorksheet->fromArray($header, NULL, 'A1');
+        $activeWorksheet->fromArray($data, NULL, 'A2');
+
+        $this->set_content_type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $this->response->add_header('Content-Disposition', 'attachment;' . encode_header_parameter('filename', $filename));
+        $this->response->add_header('Cache-Control', 'cache, must-revalidate');
+        if ($format == 'xlsx') {
+            $writer = new Xlsx($spreadsheet);
+        } else if ($format == 'csv') {
+            $writer = new Csv($spreadsheet);
+        }
+
+        $writer->save($filepath);
     }
 
     /**

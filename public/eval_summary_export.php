@@ -44,8 +44,6 @@ include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 require_once 'lib/evaluation/evaluation.config.php';
 require_once EVAL_FILE_EVAL;
 require_once EVAL_FILE_OBJECTDB;
-require_once 'lib/export/export_tmp_gc.inc.php';
-require_once 'lib/export/export_xml_func.inc.php';
 
 // Start of Output
 $eval_id = Request::option('eval_id');
@@ -58,7 +56,6 @@ if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count
 }
 
 $tmp_path_export = $GLOBALS['TMP_PATH'];
-export_tmp_gc();
 
 // Template vorhanden?
 $eval_templates = [];

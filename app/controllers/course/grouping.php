@@ -13,8 +13,6 @@
  * @package     admin
  */
 
-require_once 'lib/export/export_studipdata_func.inc.php'; // Funktionne für den Export
-require_once 'lib/export/export_linking_func.inc.php';
 
 /**
  * @addtogroup notifications

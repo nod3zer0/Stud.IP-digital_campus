@@ -130,10 +130,6 @@ class StartNavigation extends Navigation
         if ($perm->have_perm('admin') || (Config::get()->ALLOW_DOZENT_COURSESET_ADMIN && $perm->have_perm('dozent'))) {
             $navigation->addSubNavigation('coursesets', new Navigation(_('Anmeldesets'), 'dispatch.php/admission/courseset'));
         }
-        // export
-        if (Config::get()->EXPORT_ENABLE && $perm->have_perm('tutor')) {
-            $navigation->addSubNavigation('export', new Navigation(_('Export'), 'export.php'));
-        }
 
         $this->addSubNavigation('my_courses', $navigation);
 

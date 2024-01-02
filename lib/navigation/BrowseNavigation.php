@@ -66,7 +66,7 @@ class BrowseNavigation extends Navigation
             }
 
             $navigation->addSubNavigation('list', new Navigation(
-                $GLOBALS['perm']->have_perm('admin') ? _('Veranstaltungsadministration') : _('Aktuelle Veranstaltungen'), 
+                $GLOBALS['perm']->have_perm('admin') ? _('Veranstaltungsadministration') : _('Aktuelle Veranstaltungen'),
                 'dispatch.php/my_courses'
             ));
 
@@ -108,11 +108,6 @@ class BrowseNavigation extends Navigation
                 $navigation->addSubNavigation('restricted_courses', new Navigation(_('teilnahmebeschränkte Veranstaltungen'), 'dispatch.php/admission/restricted_courses'));
             }
 
-            // export
-            if (Config::get()->EXPORT_ENABLE && $GLOBALS['perm']->have_perm('tutor')) {
-                $navigation = new Navigation(_('Export'), 'export.php');
-                $this->addSubNavigation('export', $navigation);
-            }
 
         }
     }

@@ -16,9 +16,10 @@
  */
 
 require_once 'lib/messaging.inc.php'; //Funktionen des Nachrichtensystems
-require_once 'lib/export/export_studipdata_func.inc.php'; // Funktionne für den Export
-require_once 'lib/export/export_linking_func.inc.php';
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Course_MembersController extends AuthenticatedController
 {
@@ -1655,35 +1656,21 @@ class Course_MembersController extends AuthenticatedController
             if (Config::get()->EXPORT_ENABLE) {
                 $widget = $sidebar->addWidget(new ExportWidget());
 
-                // create csv-export link
-                $csvExport = export_link(
-                    $this->course_id,
-                    'person',
-                    sprintf('%s %s', $this->status_groups['autor'], $this->course_title),
-                    'csv',
-                    'csv-teiln',
-                    '',
-                    _('Liste als csv-Dokument exportieren'),
-                    'passthrough'
-                );
-                $widget->addLinkFromHTML(
-                    $csvExport,
+                $widget->addLink(
+                    _('Als Excel-Datei exportieren'),
+                    URLHelper::getURL('dispatch.php/course/members/export', [
+                        'course_id' => $this->course_id,
+                        'format' => 'xlsx',
+                    ]),
                     Icon::create('export')
                 );
 
-                // create csv-export link
-                $rtfExport = export_link(
-                    $this->course_id,
-                    'person',
-                    sprintf('%s %s', $this->status_groups['autor'], $this->course_title),
-                    'rtf',
-                    'rtf-teiln',
-                    '',
-                    _('Liste als rtf-Dokument exportieren'),
-                    'passthrough'
-                );
-                $widget->addLinkFromHTML(
-                    $rtfExport,
+                $widget->addLink(
+                    _('Als CSV-Datei exportieren'),
+                    URLHelper::getURL('dispatch.php/course/members/export', [
+                        'course_id' => $this->course_id,
+                        'format' => 'csv',
+                    ]),
                     Icon::create('export')
                 );
 
@@ -1763,38 +1750,27 @@ class Course_MembersController extends AuthenticatedController
         }
     }
 
-    public function export_members_csv_action()
+    public function export_action()
     {
-        if (!$this->is_tutor) {
-            throw new AccessDeniedException();
-        }
-        $filtered_members = CourseMember::getMembers($this->sort_status, $this->sort_by . ' ' . $this->order);
-        $filtered_members = array_merge(
-            $filtered_members,
-            AdmissionApplication::getAdmissionMembers(
-                $this->course_id,
-                $this->sort_status,
-                $this->sort_by . ' ' . $this->order )
-        );
-        $dozenten = $filtered_members['dozent']->toArray('user_id username vorname nachname visible mkdate');
-        $tutoren = $filtered_members['tutor']->toArray('user_id username vorname nachname visible mkdate');
-        $autoren = $filtered_members['autor']->toArray('user_id username vorname nachname visible mkdate');
+        $export_format = Request::get('format');
 
-        $header = [_('Titel'), _('Vorname'), _('Nachname'), _('Titel2'), _('Nutzernamen'), _('Privatadr'), _('Privatnr'), _('E-Mail'), _('Anmeldedatum'), _('Studiengänge')];
-        $data = [$header];
-        foreach ([$dozenten, $tutoren, $autoren] as $usergroup) {
-            foreach ($usergroup as $dozent) {
-                $line = [
-                    '',
-                    $dozent['Vorname'],
-                    $dozent['Nachname'],
-                    '',
-                    $dozent['username']
-                ];
-                $data[] = $line;
-            }
+        if ($export_format !== 'csv' && $export_format !== 'xlsx') {
+            throw new Exception('Wrong format');
         }
-        $csv = array_to_csv($data);
+
+        $header = [_('Status'), _('Anrede'), _('Titel'), _('Vorname'), _('Nachname'), _('Titel nachgestellt'), _('Benutzername'), _('Adresse'), _('Telefonnr.'),
+            _('E-Mail'), _('Anmeldedatum'), _('Matrikelnummer'), _('Studiengänge')];
+        $members = CourseMember::getMemberDataByCourse($this->course_id);
+
+        foreach ($members as &$member) {
+            $member['Anmeldedatum'] = $member['Anmeldedatum'] ? date("d.m.Y", $member['Anmeldedatum']) : _("unbekannt");
+            unset($member['user_id']);
+        }
+
+        $filename = _('Teilnehmendenexport') . ' ' . $this->course_title . '.' . $export_format;
+
+        $this->render_spreadsheet($header, $members, $export_format, $filename);
+        $this->render_nothing();
     }
 
     public function toggle_student_mailing_action($state)

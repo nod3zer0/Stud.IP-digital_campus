@@ -23,7 +23,6 @@ require '../lib/bootstrap.php';
 require_once 'lib/evaluation/evaluation.config.php';
 require_once EVAL_FILE_EVAL;
 require_once EVAL_FILE_OBJECTDB;
-require_once 'lib/export/export_tmp_gc.inc.php';
 
 ob_start();
 page_open(["sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"]);
@@ -53,7 +52,6 @@ $eval_templates = [];
 $question_type  = "";
 
 $tmp_path_export = $GLOBALS['TMP_PATH'];
-export_tmp_gc();
 
 if (isset($cmd)) {
     if ($cmd=="change_group_type" && isset($evalgroup_id) && isset($group_type)) {

@@ -1890,3 +1890,15 @@ function randomString(int $length = 32): string
 
     return $string;
 }
+
+/**
+ * escapes special characters for xml use
+ *
+ * @param string $string the string to escape
+ * @return string
+ */
+function xml_escape($string)
+{
+    $string = preg_replace('/[\x00-\x08\x0b\x0c\x0e-\x1f]/', '', $string);
+    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+}

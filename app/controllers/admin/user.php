@@ -15,6 +15,11 @@
  * @package     admin
  * @since       2.1
  */
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 require_once 'vendor/email_message/blackhole_message.php';
 require_once 'lib/statusgruppe.inc.php';
 
@@ -1612,6 +1617,79 @@ class Admin_UserController extends AuthenticatedController
 
         $this->redirect($this->show_user_coursesURL($user));
     }
+
+    public function batch_export_members_action()
+    {
+        PageLayout::setTitle(_('Teilnehmendendaten exportieren'));
+
+        $courseIds = Request::optionArray('export_members');
+        $order = Config::get()->IMPORTANT_SEMNUMBER
+            ? "ORDER BY `start_time` DESC, `VeranstaltungsNummer`, `Name`"
+            : "ORDER BY `start_time` DESC,  `Name`";
+        $this->courses = array_filter(
+            Course::findMany($courseIds, $order),
+            function (Course $course): bool {
+                /*
+                 * Check if sem_tree entries are allowed and may be changed and remove all courses
+                 * where this is not the case.
+                 */
+                return !LockRules::Check($course->id, 'sem_tree', 'sem')
+                    && $course->getSemClass()['bereiche'];
+            }
+        );
+
+        // check if at least one course was selected (this can only happen from admin courses overview):
+        if (count($this->courses) === 0) {
+            PageLayout::postWarning('Es wurde keine Veranstaltung gewählt.');
+            $this->relocate('admin/courses');
+        }
+
+    }
+
+    /*
+     * Export member data of all selected courses
+     */
+    public function do_batch_export_action()
+    {
+        CSRFProtection::verifyUnsafeRequest();
+
+        if (Request::submitted('xlsx')) {
+            $export_format = 'xlsx';
+        } else if (Request::submitted('csv')) {
+            $export_format = 'csv';
+        } else {
+            PageLayout::postError('Nicht unterstütztes Exportformat.');
+            $this->relocate('admin/courses');
+        }
+
+        $tmp_folder = $GLOBALS['TMP_PATH'] . '/temp_folder_' . md5(uniqid());
+        mkdir($tmp_folder);
+
+        $courses = Course::findMany(Request::optionArray('courses'));
+
+        foreach ($courses as $course) {
+            $header = ['Status', 'Anrede', 'Titel', 'Vorname', 'Nachname', 'Titel nachgestellt', 'Benutzername', 'Adresse', 'Telefonnr.',
+                'E-Mail', 'Anmeldedatum', 'Matrikelnummer', 'Studiengänge'];
+            $members = CourseMember::getMemberDataByCourse($course->seminar_id);
+
+            foreach ($members as &$member) {
+                $member['Anmeldedatum'] = $member['Anmeldedatum'] ? date('d.m.Y', $member['Anmeldedatum']) : _('unbekannt');
+                unset($member['user_id']);
+            }
+
+            $filename = FileManager::cleanFileName('Teilnehmendenexport ' . $course->Name . '.' . $export_format);
+            $filepath = $tmp_folder . '/'. $filename;
+
+            $this->render_spreadsheet($header, $members, $export_format, $filename, $filepath);
+
+        }
+        $archive_file_path = $GLOBALS['TMP_PATH'] . '/archiv.zip';
+        $archive_filename = 'Export_Teilnehmendendaten.zip';
+        FileArchiveManager::createArchiveFromPhysicalFolder($tmp_folder, $archive_file_path);
+        rmdirr($tmp_folder);
+        $this->render_temporary_file($archive_file_path, $archive_filename, 'application/zip');
+    }
+
 
     /**
      * Init sidebar

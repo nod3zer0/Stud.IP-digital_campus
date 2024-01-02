@@ -13,9 +13,11 @@
  * @since       3.5
  */
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 require_once 'lib/messaging.inc.php'; //Funktionen des Nachrichtensystems
-require_once 'lib/export/export_studipdata_func.inc.php'; // Funktionen für den Export
-require_once 'lib/export/export_linking_func.inc.php';
 
 class Course_StatusgroupsController extends AuthenticatedController
 {
@@ -253,23 +255,23 @@ class Course_StatusgroupsController extends AuthenticatedController
             }
             if (Config::get()->EXPORT_ENABLE) {
                 $export = new ExportWidget();
-                // create csv-export link
-                $csvExport = export_link($this->course_id, 'person',
-                    sprintf('%s %s', _('Gruppenliste'), htmlReady($this->course_title)),
-                    'csv', 'csv-gruppen', 'status',
-                    _('Als CSV-Dokument exportieren'),
-                    'passthrough');
-                $element = LinkElement::fromHTML($csvExport, Icon::create('export'));
-                $export->addElement($element);
+                $export->addLink(
+                    _('Als Excel-Datei exportieren'),
+                    URLHelper::getURL('dispatch.php/course/statusgroups/export', [
+                        'course_id' => $this->course_id,
+                        'format' => 'xlsx',
+                    ]),
+                    Icon::create('export')
+                );
 
-                // create rtf-export link
-                $rtfExport = export_link($this->course_id, 'person',
-                    sprintf('%s %s', _('Gruppenliste'), htmlReady($this->course_title)),
-                    'rtf', 'rtf-gruppen', 'status',
-                    _('Als RTF-Dokument exportieren'),
-                    'passthrough');
-                $element = LinkElement::fromHTML($rtfExport, Icon::create('export'));
-                $export->addElement($element);
+                $export->addLink(
+                    _('Als .csv exportieren'),
+                    URLHelper::getURL('dispatch.php/course/statusgroups/export', [
+                        'course_id' => $this->course_id,
+                        'format' => 'csv',
+                    ]),
+                    Icon::create('export')
+                );
 
                 $sidebar->addWidget($export);
             }
@@ -296,6 +298,71 @@ class Course_StatusgroupsController extends AuthenticatedController
             );
         }
         $sidebar->addWidget($actions);
+    }
+
+    /**
+     *
+     */
+    public function export_action()
+    {
+        $export_format = Request::get('format');
+
+        if ($export_format !== 'csv' && $export_format !== 'xlsx') {
+            throw new Exception('Wrong format');
+        }
+
+        if (Request::get('institute_id')) {
+            $institute_id = Request::get('institute_id');
+        }
+
+        $header = [_('Gruppe'), _('Titel'), _('Vorname'), _('Nachname'), _('Titel nachgestellt'), _('Nutzername'),
+            _('Privatadresse'), _('Privatnr.'), _('E-Mail'), _('Anmeldedatum'), _('Studiengänge')];
+
+        $temp = [];
+
+        $groups = Statusgruppen::findBySeminar_id($this->course_id);
+        if ($groups) {
+            foreach ($groups as $group) {
+                foreach ($group['members'] as $mem) {
+                    $member_data = CourseMember::getMemberDataByCourse($this->course_id, $mem['user_id']);
+
+                    foreach ($member_data as &$mem_data) {
+                        $mem_data['Anmeldedatum'] = $mem_data['Anmeldedatum'] ? date('d.m.Y', $mem_data['Anmeldedatum']) : _('unbekannt');
+
+                        if (!isset($temp[$group['name']])) {
+                            $temp[$group['name']] = [];
+                        }
+                        $temp[$group['name']][$mem_data['user_id']] = [
+                            'Gruppe'               => $group['name'],
+                            'Titel'                => $mem_data['title_front'],
+                            'Vorname'              => $mem_data['Vorname'],
+                            'Nachname'             => $mem_data['Nachname'],
+                            'Titel nachgestellt'   => $mem_data['title_rear'],
+                            'Nutzername'           => $mem_data['title_front'],
+                            'Privatadresse'        => $mem_data['privadr'],
+                            'Privatnr.'            => $mem_data['privatnr'],
+                            'E-Mail'               => $mem_data['Email'],
+                            'Anmeldedatum'         => $mem_data['Anmeldedatum'],
+                            'Studiengänge'         => $mem_data['studiengaenge'],
+                        ];
+                    }
+                }
+            }
+        }
+
+        $statusgroup_data = [];
+
+        foreach ($temp as $group => $group_members) {
+            foreach ($group_members as $member) {
+                $statusgroup_data[] = $member;
+            }
+
+        }
+
+        $filename = FileManager::cleanFileName(_('Gruppenliste') . ' ' . $this->course_title . '.' . $export_format);
+
+        $this->render_spreadsheet($header, $statusgroup_data, $export_format, $filename);
+        $this->render_nothing();
     }
 
     /**

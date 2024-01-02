@@ -30,8 +30,6 @@ page_open(["sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Sem
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
-require_once 'lib/export/export_linking_func.inc.php';
-
 $intro_text = $head_text = '';
 
 $level = Request::option('level');
@@ -112,15 +110,6 @@ case "s":
     break;
 }
 
-if (Request::int('send_excel')){
-    $tmpfile = basename($sem_browse_obj->create_result_xls($excel_text));
-    if($tmpfile){
-        header('Location: ' . FileManager::getDownloadURLForTemporaryFile( $tmpfile, _("Veranstaltungsübersicht.xls"), 4));
-        page_close();
-        die;
-    }
-}
-
 PageLayout::setHelpKeyword("Basis.Informationsseite");
 PageLayout::setTitle(($level == "s" ? Context::getHeaderLine() ." - " : "").$head_text);
 if ($level == "s" && Context::getId() && Context::isInstitute()) {
@@ -144,38 +133,6 @@ foreach ($sem_browse_obj->group_by_fields as $i => $field){
 }
 $sidebar->addWidget($grouping);
 
-if (Config::get()->EXPORT_ENABLE && $perm->have_perm("tutor")) {
-    $export = new LinksWidget();
-    $export->setTitle(_("Daten ausgeben:"));
-    if ($level == "s") {
-        $export->addLink(
-            _("Diese Daten exportieren"),
-            URLHelper::getURL("export.php", ['range_id' => Context::getId(),
-                'o_mode' => 'choose', 'ex_type' => "veranstaltung",
-                'xslt_filename' => Context::get()->Name, 'ex_sem' => $show_semester]),
-            Icon::create('download', 'info')
-        );
-        $export->addLink(
-            _("Download als Excel Tabelle"),
-            URLHelper::getURL('?send_excel=1&group_by=' . (int)$group_by),
-            Icon::create('file-xls', 'info')
-        );
-    }
-    if ($level == "sbb") {
-        $export->addLink(
-            _("Diese Daten exportieren"),
-            URLHelper::getURL("export.php", ['range_id' => $id, 'o_mode' => 'choose', 'ex_type' => "veranstaltung", 'xslt_filename' => $id, 'ex_sem' => $show_semester]),
-            Icon::create('download', 'info')
-        );
-        $export->addLink(
-            _("Download als Excel Tabelle"),
-            URLHelper::getURL('?send_excel=1&group_by=' . (int)$group_by),
-            Icon::create('file-xls', 'info')
-        );
-    }
-    $sidebar->addWidget($export);
-
-}
 
 ?>
 <div><?= $intro_text ?></div>

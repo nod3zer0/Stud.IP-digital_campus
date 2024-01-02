@@ -226,7 +226,7 @@ class Admin_CoursesController extends AuthenticatedController
             }
             $export = new ExportWidget();
             $export->addLink(
-                _('Als Excel exportieren'),
+                _('Als CSV-Datei exportieren'),
                  URLHelper::getURL('dispatch.php/admin/courses/export_csv', $params),
                  Icon::create('file-excel')
             )->asDialog('size=auto');
@@ -458,6 +458,16 @@ class Admin_CoursesController extends AuthenticatedController
                     _('Mehrfachzuordnung von Studienbereichen'), 'batch_assign_semtree',
                     [
                         'formaction' => URLHelper::getURL('dispatch.php/admin/tree/batch_assign_semtree'),
+                        'data-dialog' => 'size=big'
+                    ]);
+                break;
+            case 22: //Mehrfachzuordnung Studienbereiche
+                $data['buttons_top'] = '<label>' . _('Alle auswählen') .
+                    '<input type="checkbox" data-proxyfor=".course-admin td:last-child :checkbox"></label>';
+                $data['buttons_bottom'] = (string) \Studip\Button::createAccept(
+                    _('Teilnehmendenexport'), 'batch_export_members',
+                    [
+                        'formaction' => URLHelper::getURL('dispatch.php/admin/user/batch_export_members'),
                         'data-dialog' => 'size=big'
                     ]);
                 break;
@@ -753,6 +763,16 @@ class Admin_CoursesController extends AuthenticatedController
                 break;
             case 21: //Mehrfachzuweisung Studienbereiche
                 $template = $tf->open('admin/courses/batch_assign_semtree');
+                $template->course = $course;
+                $d['action'] = $template->render();
+                break;
+            case 22: //Masssenexport Teilnehmendendaten
+                $template = $tf->open('admin/courses/batch_export_members');
+                $template->course = $course;
+                $d['action'] = $template->render();
+                break;
+            case 22: //Masssenexport Teilnehmendendaten
+                $template = $tf->open('admin/courses/batch_export_members');
                 $template->course = $course;
                 $d['action'] = $template->render();
                 break;
@@ -1341,6 +1361,15 @@ class Admin_CoursesController extends AuthenticatedController
                 'dialogform' => true,
                 'multimode'  => true,
                 'partial'    => 'batch_assign_semtree.php'
+            ],
+            22 => [
+                'name'       => _('Teilnehmendenexport'),
+                'title'      => _('Teilnehmendenexport'),
+                'url'        => 'dispatch.php/admin/user/batch_export_members',
+                'dialogform' => true,
+                'multimode'  => true,
+                'partial'    => 'batch_export_members.php'
+
             ],
         ];
 
