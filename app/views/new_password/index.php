@@ -6,7 +6,7 @@
         </legend>
 
         <label>
-            <?= _('Geben sie die Mail-Adresse des Zugangs an, für den sie das Passwort zurücksetzen möchten') ?>
+            <?= _('Geben Sie die Mail-Adresse des Zugangs an, für den Sie das Passwort zurücksetzen möchten') ?>
             <input type="text" name="mail" placeholder="<?= _('Ihre Mail-Adresse') ?>" required>
         </label>
     </fieldset>

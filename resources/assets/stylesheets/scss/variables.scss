@@ -43,6 +43,7 @@ $drag_and_drop_z_index: 1000;
 $drag_and_drop_border: 1px solid $base-color;
 
 $transition-duration: .3s;
+$transition-duration-slow: .5s;
 
 // Layout
 $page-margin: 15px;
@@ -171,8 +172,10 @@ $grid-gap: 0;
     #{"--"}group-color-8: $brown;
 
     #{"--"}transition-duration: $transition-duration;
+    #{"--"}transition-duration-slow: $transition-duration-slow;
 
     @media (prefers-reduced-motion) {
         #{"--"}transition-duration: 0s;
+        #{"--"}transition-duration-slow: 0s;
     }
 }

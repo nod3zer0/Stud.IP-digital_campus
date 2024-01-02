@@ -11,6 +11,7 @@
 
 class Admin_LoginStyleController extends AuthenticatedController
 {
+    protected $_autobind = true;
     /**
      * common tasks for all actions
      *
@@ -21,15 +22,24 @@ class Admin_LoginStyleController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        // user must have root permission
         $GLOBALS['perm']->check('root');
 
         //setting title and navigation
         PageLayout::setTitle(_('Hintergrundbilder für den Startbildschirm'));
         Navigation::activateItem('/admin/locations/loginstyle');
 
-        // Setup sidebar
-        $this->setSidebar();
+        $views = new ViewsWidget();
+        $views->addLink(
+            _('Bilder'),
+            $this->indexURL()
+        )->setActive($action === 'index');
+
+        $views->addLink(
+            _('Hinweise zum Login'),
+            $this->login_faqURL()
+        )->setActive($action === 'login_faq');
+
+        Sidebar::Get()->addWidget($views);
     }
 
     /**
@@ -37,6 +47,8 @@ class Admin_LoginStyleController extends AuthenticatedController
      */
     public function index_action()
     {
+        // Setup sidebar
+        $this->setSidebar('index');
         $this->pictures = LoginBackground::findBySQL("1 ORDER BY `background_id`");
     }
 
@@ -50,7 +62,7 @@ class Admin_LoginStyleController extends AuthenticatedController
     /**
      * Adds a new picture ass possible login background.
      */
-    public function add_action()
+    public function add_pic_action()
     {
         CSRFProtection::verifyRequest();
         $success = 0;
@@ -96,15 +108,16 @@ class Admin_LoginStyleController extends AuthenticatedController
                 $fail
             ), $fail));
         }
-        $this->relocate('admin/loginstyle');
+        $this->relocate($this->indexURL());
     }
 
     /**
      * Deletes the given picture.
-     * @param $id the picture to delete
+     * @param string $id the picture to delete
      */
-    public function delete_action($id)
+    public function delete_pic_action($id)
     {
+        CSRFProtection::verifyUnsafeRequest();
         $pic = LoginBackground::find($id);
         if ($pic->in_release) {
             PageLayout::postError(_('Dieses Bild wird vom System mitgeliefert und kann daher nicht gelöscht werden.'));
@@ -114,17 +127,22 @@ class Admin_LoginStyleController extends AuthenticatedController
             PageLayout::postError(_('Das Bild konnte nicht gelöscht werden.'));
         }
 
-        $this->relocate('admin/loginstyle');
+        $this->relocate($this->indexURL());
     }
 
     /**
      * (De-)activate the given picture for given view.
-     * @param $id the picture to change activation for
-     * @param $view one of 'desktop', 'mobile', view to (de-) activate picture for
-     * @param $newStatus new activation status for given view.
+     * @param string $id the picture to change activation for
+     * @param string $view one of 'desktop', 'mobile', view to (de-) activate picture for
+     * @param string $newStatus new activation status for given view.
      */
     public function activation_action($id, $view, $newStatus)
     {
+        CSRFProtection::verifyUnsafeRequest();
+        if (!in_array($view, ['desktop', 'mobile'])) {
+            throw new InvalidArgumentException('You may not change this attribute.');
+        }
+
         $pic = LoginBackground::find($id);
         $pic->$view = $newStatus;
         if ($pic->store()) {
@@ -132,22 +150,74 @@ class Admin_LoginStyleController extends AuthenticatedController
         } else {
             PageLayout::postSuccess(_('Der Aktivierungsstatus konnte nicht gespeichert werden.'));
         }
-        $this->relocate('admin/loginstyle');
+        $this->relocate($this->indexURL());
+    }
+
+
+    /**
+     * FAQ part of login page
+     */
+    public function login_faq_action()
+    {
+        PageLayout::setTitle(_('Hinweise zum Login für den Startbildschirm'));
+
+        $this->setSidebar('login_faq');
+        $this->faq_entries = LoginFaq::findBySql('1');
+    }
+
+    public function edit_faq_action(LoginFaq $entry = null)
+    {
+        PageLayout::setTitle(
+            $entry->isNew() ? _('Hinweistext hinzufügen') : _('Hinweistext bearbeiten')
+        );
+    }
+
+    public function store_faq_action(LoginFaq $entry = null)
+    {
+        CSRFProtection::verifyRequest();
+
+        $entry->setData([
+            'title' => trim(Request::get('title')),
+            'description' => trim(Request::get('description')),
+        ]);
+
+        if ($entry->store()) {
+            PageLayout::postSuccess(_('Hinweistext wurde gespeichert.'));
+        }
+
+        $this->relocate($this->login_faqURL());
+    }
+
+    public function delete_faq_action(LoginFaq $entry)
+    {
+        CSRFProtection::verifyRequest();
+
+        if ($entry->delete()) {
+            PageLayout::postSuccess(_('Der Hinweistext wurde gelöscht.'));
+        }
+
+        $this->relocate($this->login_faqURL());
     }
 
     /**
      * Adds the content to sidebar
      */
-    protected function setSidebar()
+    protected function setSidebar($action)
     {
-        $sidebar = Sidebar::get();
-
         $links = new ActionsWidget();
-        $links->addLink(
-            _('Bild hinzufügen'),
-            $this->url_for('admin/loginstyle/newpic'),
-            Icon::create('add', 'clickable')
-        )->asDialog('size=auto');
-        $sidebar->addWidget($links);
+        if ($action === 'index') {
+            $links->addLink(
+                _('Bild hinzufügen'),
+                $this->newpicURL(),
+                Icon::create('add')
+            )->asDialog('size=auto');
+        } else if ($action === 'login_faq') {
+            $links->addLink(
+                _('Hinweistext hinzufügen'),
+                $this->edit_faqURL(),
+                Icon::create('add')
+            )->asDialog();
+        }
+        Sidebar::get()->addWidget($links);
     }
 }

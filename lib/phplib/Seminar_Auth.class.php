@@ -301,6 +301,27 @@ class Seminar_Auth
             throw new AccessDeniedException();
         }
 
+        // if desired, switch to high contrast stylesheet and store when user logs in
+        if (Request::get('unset_contrast')) {
+            unset($_SESSION['contrast']);
+            PageLayout::removeStylesheet('accessibility.css');
+
+        }
+        if (Request::get('set_contrast') ) {
+            $_SESSION['contrast'] = true;
+            PageLayout::addStylesheet('accessibility.css');
+
+        }
+
+        // evaluate language clicks
+        // has to be done before seminar_open to get switching back to german (no init of i18n at all))
+        if (Request::get('set_language')) {
+            if (array_key_exists(Request::get('set_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
+                $_SESSION['forced_language'] = Request::get('set_language');
+                $_SESSION['_language'] = Request::get('set_language');
+            }
+        }
+
         $this->check_environment();
 
         PageLayout::setBodyElementId('login');
@@ -322,6 +343,13 @@ class Seminar_Auth
             $login_template->set_attribute('error_msg', $this->error_msg);
             $login_template->set_attribute('uname', (isset($this->auth["uname"]) ? $this->auth["uname"] : Request::username('loginname')));
             $login_template->set_attribute('self_registration_activated', Config::get()->ENABLE_SELF_REGISTRATION);
+
+            $query = "SHOW TABLES LIKE 'login_faq'";
+            $result = DBManager::get()->query($query);
+
+            if ($result && $result->rowCount() > 0) {
+                $login_template->set_attribute('faq_entries', LoginFaq::findBySQL("1"));
+            }
         }
         PageLayout::setHelpKeyword('Basis.AnmeldungLogin');
         $header_template = $GLOBALS['template_factory']->open('header');

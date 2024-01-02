@@ -3,7 +3,8 @@
  * @var Admin_LoginStyleController $controller
  */
 ?>
-<form class="default" action="<?= $controller->link_for('admin/loginstyle/add') ?>" method="post" enctype="multipart/form-data">
+<form class="default" action="<?= $controller->add_pic() ?>" method="post" enctype="multipart/form-data">
+    <?= CSRFProtection::tokenTag() ?>
     <fieldset>
         <legend>
             <?= _('Bild(er) hinzufügen') ?>
@@ -33,6 +34,6 @@
     <footer data-dialog-button>
         <?= CSRFProtection::tokenTag() ?>
         <?= Studip\Button::createAccept(_('Speichern'), 'store') ?>
-        <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->url_for('loginstyle/index')) ?>
+        <?= Studip\LinkButton::createCancel(_('Abbrechen'), $controller->indexURL()) ?>
     </footer>
 </form>

@@ -110,7 +110,6 @@ class AdminNavigation extends Navigation
             }
 
             $navigation->addSubNavigation('sem_classes', new Navigation(_('Veranstaltungskategorien'), 'dispatch.php/admin/sem_classes/overview'));
-            $navigation->addSubNavigation('loginstyle', new Navigation(_('Startbildschirm'), 'dispatch.php/admin/loginstyle'));
             $navigation->addSubNavigation(
                 'content_terms_of_use',
                 new Navigation(
@@ -157,12 +156,22 @@ class AdminNavigation extends Navigation
                     'dispatch.php/admin/accessibility_info_text/index'
                 )
             );
-
         }
 
         if ($GLOBALS['perm']->have_perm('admin')) {
             $pool = new Navigation(_('Bilder-Pool'), 'dispatch.php/stock_images', []);
             $navigation->addSubNavigation('stock_images', $pool);
+        }
+
+        if ($perm->have_perm('root')) {
+            $navigation->addSubNavigation(
+                'loginstyle',
+                new Navigation(
+                    _('Startseite'),
+                    'dispatch.php/admin/login_style'
+                )
+            );
+
         }
 
         $this->addSubNavigation('locations', $navigation);

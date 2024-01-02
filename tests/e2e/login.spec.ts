@@ -8,7 +8,7 @@ test.describe('Loggin In - HTML Web Form @auth', () => {
 
             await expect(page.locator('#loginbox')).toBeVisible();
 
-            const loginLink = page.getByRole('link', { name: 'Login für registrierte NutzerInnen' });
+            const loginLink = page.getByRole('link', { name: 'Login für registrierte Nutzende' });
             await expect(loginLink).toBeVisible();
             await loginLink.click();
 

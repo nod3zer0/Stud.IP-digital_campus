@@ -105,6 +105,13 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
             UserConfig::get($GLOBALS['user']->id)->store('USER_HIGH_CONTRAST', $_SESSION['contrast']);
             unset($_SESSION['contrast']);
         }
+        // store last language click
+        if (!empty($_SESSION['forced_language'])) {
+            User::findCurrent()->preferred_language = $_SESSION['forced_language'];
+            User::findCurrent()->store();
+            $_SESSION['_language'] = $_SESSION['forced_language'];
+        }
+        $_SESSION['forced_language'] = null;
         $user_did_login = true;
     }
 

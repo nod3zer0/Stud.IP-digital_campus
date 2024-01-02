@@ -91,6 +91,14 @@ class StudipAuthAbstract
     public $error_head;
 
     /**
+     * toggles display of standard login
+     *
+     *
+     * @var      bool $show_login
+     */
+    public $show_login;
+
+    /**
      * @var $plugin_instances
      */
     private static $plugin_instances;
@@ -118,6 +126,38 @@ class StudipAuthAbstract
             }
         }
         return ($plugin_name) ? self::$plugin_instances[strtoupper($plugin_name)] : self::$plugin_instances;
+    }
+
+    /**
+     * static method to check if SSO login is enabled
+     *
+     * @return bool
+     */
+    public static function isSSOEnabled(): bool
+    {
+        self::getInstance();
+        foreach (self::$plugin_instances as $auth_plugin) {
+            if ($auth_plugin instanceof StudipAuthSSO) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * static method to check if standard login is enabled
+     *
+     * @return bool
+     */
+    public static function isLoginEnabled(): bool
+    {
+        self::getInstance();
+        foreach (self::$plugin_instances as $auth_plugin) {
+            if ($auth_plugin->show_login === true) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

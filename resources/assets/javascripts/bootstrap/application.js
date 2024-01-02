@@ -355,3 +355,68 @@ jQuery(document).on('click', 'a[data-behaviour~="ajax-toggle"]', function (event
         $('#open_variable').attr('value', $(this).parent('fieldset').data('open'));
     });
 }(jQuery));
+
+STUDIP.domReady(function () {
+    const loginForm = document.getElementById('login-form');
+    if (!loginForm) {
+        return;
+    }
+
+    const passwordInput = document.getElementById('password');
+    const usernameInput = document.getElementById('loginname');
+    const passwordCapsText = document.getElementById('password-caps');
+    const iconPasswordVisible = document.getElementById('visible-password');
+    const iconPasswordInVisible = document.getElementById('invisible-password');
+
+    [usernameInput, passwordInput].forEach((input) => {
+        input.addEventListener('keydown', (event) => {
+            if (event.getModifierState('CapsLock')) {
+                passwordCapsText.style.display = 'block';
+            } else {
+                passwordCapsText.style.display = 'none';
+            }
+        });
+    });
+
+    const toggleLogin = document.getElementById('toggle-login');
+    if (toggleLogin) {
+        loginForm.addEventListener('transitionend', (event) => {
+            if (event.propertyName !== 'max-height') {
+                return;
+            }
+
+            if (!loginForm.classList.contains('hide')) {
+                usernameInput.scrollIntoView({
+                    behavior: 'smooth'
+                });
+                usernameInput.focus();
+            } else {
+                loginForm.setAttribute('hidden', '');
+            }
+        });
+
+        toggleLogin.addEventListener('click', (event) => {
+            if (loginForm.classList.contains('hide')) {
+                loginForm.removeAttribute('hidden');
+            }
+
+            setTimeout(() => {
+                loginForm.classList.toggle('hide');
+            }, 0);
+
+            event.preventDefault();
+        });
+    }
+
+    document.getElementById('password-toggle').addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            iconPasswordVisible.style.display = 'none';
+            iconPasswordInVisible.style.display = '';
+        } else {
+            passwordInput.type = 'password';
+            iconPasswordVisible.style.display = '';
+            iconPasswordInVisible.style.display = 'none';
+        }
+    });
+});

@@ -1,4 +1,4 @@
-<?
+<?php
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter010: TODO
@@ -10,4 +10,3 @@ interface CASUserDataMapping {
     // reads one attribute identified by a key of a given user
     function getUserData ($key, $username);
 }
-?>

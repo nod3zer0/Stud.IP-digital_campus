@@ -40,6 +40,7 @@ class StudipAuthLdap extends StudipAuthAbstract
     public $username_attribute = 'uid';
     public $ldap_filter;
     public $bad_char_regex = '/[^0-9_a-zA-Z]/';
+    public $show_login = true;
 
     public $conn = null;
     public $user_data = null;

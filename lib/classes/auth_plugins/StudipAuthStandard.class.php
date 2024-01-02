@@ -37,6 +37,7 @@ class StudipAuthStandard extends StudipAuthAbstract
 {
 
     var $bad_char_regex =  false;
+    public $show_login = true;
 
     /**
     *

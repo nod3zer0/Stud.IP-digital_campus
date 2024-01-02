@@ -22,7 +22,7 @@ class StartNavigation extends Navigation
     {
         $url = (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody')
              ? 'dispatch.php/start'
-             : 'index.php';
+             : 'index.php?again=yes';
         parent::__construct(_('Start'), $url);
     }
 

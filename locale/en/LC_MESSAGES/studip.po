@@ -41881,7 +41881,7 @@ msgid "Sie haben keine alten empfangenen Nachrichten"
 msgstr "You do not have any old received messages"
 
 #: lib/navigation/LoginNavigation.php:27
-msgid "für registrierte NutzerInnen"
+msgid "für registrierte Nutzende"
 msgstr "for registered users"
 
 #: lib/navigation/LoginNavigation.php:40

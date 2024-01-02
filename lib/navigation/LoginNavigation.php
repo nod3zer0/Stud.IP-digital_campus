@@ -23,13 +23,20 @@ class LoginNavigation extends Navigation
     {
         parent::initSubNavigation();
 
-        $navigation = new Navigation(_('Login'), 'index.php?again=yes');
-        $navigation->setDescription(_('für registrierte NutzerInnen'));
-        $this->addSubNavigation('login', $navigation);
-
+        $standard_login_active = false;
         foreach (StudipAuthAbstract::getInstance() as $auth_plugin) {
+            if ($auth_plugin->show_login && !$standard_login_active) {
+                $navigation = new Navigation(_('Login'), '');
+                $navigation->setDescription($auth_plugin->login_description ?: _('für registrierte Nutzende'));
+                $navigation->setLinkAttributes([
+                    'id' => 'toggle-login'
+                ]);
+                $navigation->setURL('#login-form');
+                $this->addSubNavigation('standard_login', $navigation);
+                $standard_login_active = true;
+            }
             if ($auth_plugin instanceof StudipAuthSSO && isset($auth_plugin->login_description)) {
-                $navigation = new Navigation($auth_plugin->plugin_fullname . ' ' . _('Login'), 'index.php?again=yes&sso=' . $auth_plugin->plugin_name);
+                $navigation = new Navigation($auth_plugin->plugin_fullname . ' ' . _('Login'), '?sso=' . $auth_plugin->plugin_name);
                 $navigation->setDescription($auth_plugin->login_description);
                 $this->addSubNavigation('login_' . $auth_plugin->plugin_name, $navigation);
             }
@@ -37,7 +44,7 @@ class LoginNavigation extends Navigation
 
         if (Config::get()->ENABLE_SELF_REGISTRATION) {
             $navigation = new Navigation(_('Registrieren'), 'register1.php');
-            $navigation->setDescription(_('um NutzerIn zu werden'));
+            $navigation->setDescription(_('um das System erstmalig zu nutzen'));
             $this->addSubNavigation('register', $navigation);
         }
 
