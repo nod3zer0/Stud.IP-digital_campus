@@ -2,13 +2,16 @@
 $inputs = [];
 $allinputs = $form->getAllInputs();
 $required_inputs = [];
+$server_validation = false;
 foreach ($allinputs as $input) {
     foreach ($input->getAllInputNames() as $name) {
         $inputs[$name] = $input->getValue();
     }
-
     if ($input->required) {
         $required_inputs[] = $input->getName();
+    }
+    if ($input->hasValidation()) {
+        $server_validation = true;
     }
 }
 $form_id = md5(uniqid());
@@ -21,12 +24,14 @@ $form_id = md5(uniqid());
           data-url="<?= htmlReady($form->getURL()) ?>"
       <? endif ?>
       @submit="submit"
+      @cancel=""
       novalidate
       <?= $form->getDataSecure() ? 'data-secure' : '' ?>
       id="<?= htmlReady($form_id) ?>"
       data-inputs="<?= htmlReady(json_encode($inputs)) ?>"
       data-debugmode="<?= htmlReady(json_encode($form->getDebugMode())) ?>"
       data-required="<?= htmlReady(json_encode($required_inputs)) ?>"
+      data-server_validation="<?= $server_validation ? 1 : 0?>"
       class="default studipform<?= $form->isCollapsable() ? ' collapsable' : '' ?>">
 
     <?= CSRFProtection::tokenTag(['ref' => 'securityToken']) ?>
@@ -52,7 +57,7 @@ $form_id = md5(uniqid());
         <div v-if="STUDIPFORM_DISPLAYVALIDATION && (STUDIPFORM_VALIDATIONNOTES.length > 0)">
             <?= _('Folgende Angaben müssen korrigiert werden, um das Formular abschicken zu können:') ?>
             <ul>
-                <li v-for="note in STUDIPFORM_VALIDATIONNOTES" :aria-describedby="note.describedby">{{ note.name + ": " + note.description }}</li>
+                <li v-for="note in ordererValidationNotes" :aria-describedby="note.describedby">{{ note.label.trim() + ": " + note.description }}</li>
             </ul>
         </div>
     </article>
@@ -64,7 +69,8 @@ $form_id = md5(uniqid());
     </div>
     <? if (!Request::isDialog()) : ?>
         <footer>
-            <?= \Studip\Button::create($form->getSaveButtonText(), $form->getSaveButtonName(), ['form' => $form_id]) ?>
+            <?= \Studip\Button::createAccept($form->getSaveButtonText(), $form->getSaveButtonName(), ['form' => $form_id]) ?>
+            <?= \Studip\LinkButton::createCancel($form->getCancelButtonText(), $form->getCancelButtonName()) ?>
         </footer>
     <? endif ?>
 </form>

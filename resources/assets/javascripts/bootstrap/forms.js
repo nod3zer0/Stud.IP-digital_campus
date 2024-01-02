@@ -250,12 +250,15 @@ STUDIP.ready(function () {
                     data() {
                         let params = JSON.parse(f.dataset.inputs);
                         params.STUDIPFORM_REQUIRED = f.dataset.required ? JSON.parse(f.dataset.required) : [];
+                        params.STUDIPFORM_SERVERVALIDATION = f.dataset.server_validation > 0;
                         params.STUDIPFORM_DISPLAYVALIDATION = false;
                         params.STUDIPFORM_VALIDATIONNOTES = [];
                         params.STUDIPFORM_AUTOSAVEURL = f.dataset.autosave;
                         params.STUDIPFORM_REDIRECTURL = f.dataset.url;
-                        params.STUDIPFORM_SELECTEDLANGUAGES = {};
-                        params.STUDIPFORM_DEBUGMODE = JSON.parse(f.dataset.debugmode);
+                        params.STUDIPFORM_INPUTS_ORDER = [];
+                        for (let i in JSON.parse(f.dataset.inputs)) {
+                            params.STUDIPFORM_INPUTS_ORDER.push(i);
+                        }
                         return params;
                     },
                     methods: {
@@ -265,31 +268,31 @@ STUDIP.ready(function () {
                             this.STUDIPFORM_DISPLAYVALIDATION = true;
 
                             //validation:
-                            let validated = this.validate();
+                            let validation_promise = this.validate();
+                            validation_promise.then(function (validated) {
+                                if (!validated) {
+                                    v.$el.scrollIntoView({
+                                        behavior: 'smooth'
+                                    });
+                                    return;
+                                }
 
-                            if (!validated) {
-                                e.preventDefault();
-                                v.$el.scrollIntoView({
-                                    "behavior": "smooth"
-                                });
-                                return;
-                            }
+                                if (v.STUDIPFORM_AUTOSAVEURL) {
+                                    let params = v.getFormValues();
 
-                            if (this.STUDIPFORM_AUTOSAVEURL) {
-                                let params = this.getFormValues();
-
-                                $.ajax({
-                                    url: this.STUDIPFORM_AUTOSAVEURL,
-                                    data: params,
-                                    type: 'post',
-                                    success() {
-                                        if (v.STUDIPFORM_REDIRECTURL && !v.STUDIPFORM_DEBUGMODE) {
-                                            window.location.href = v.STUDIPFORM_REDIRECTURL;
+                                    $.ajax({
+                                        url: v.STUDIPFORM_AUTOSAVEURL,
+                                        data: params,
+                                        type: 'post',
+                                        success() {
+                                            if (v.STUDIPFORM_REDIRECTURL) {
+                                                window.location.href = v.STUDIPFORM_REDIRECTURL
+                                            }
                                         }
-                                    }
-                                });
-                                e.preventDefault();
-                            }
+                                    });
+                                }
+                            });
+                            e.preventDefault();
                         },
                         getFormValues() {
                             let v = this;
@@ -311,32 +314,74 @@ STUDIP.ready(function () {
                             let v = this;
                             this.STUDIPFORM_VALIDATIONNOTES = [];
 
-                            let validated = this.$el.checkValidity();
+                            let validation_promise = new Promise(function (resolve, reject) {
+                                let validated = v.$el.checkValidity();
 
-                            $(this.$el).find('input, select, textarea').each(function () {
-                                if (!this.validity.valid) {
-                                    let note = {
-                                        name: $(this.labels[0]).find('.textlabel').text(),
-                                        description: $gettext('Fehler!'),
-                                        describedby: this.id
-                                    };
-                                    if (this.validity.tooShort) {
-                                        note.description = $gettextInterpolate(
-                                            $gettext('Geben Sie mindestens %{min} Zeichen ein.'),
-                                            {min: this.minLength}
-                                        );
-                                    }
-                                    if (this.validity.valueMissing) {
-                                        if (this.type === 'checkbox') {
-                                            note.description = $gettext('Dieses Feld muss ausgewählt sein.');
-                                        } else {
-                                            note.description = $gettext('Hier muss ein Wert eingetragen werden.');
+                                $(v.$el).find('input, select, textarea').each(function () {
+                                    let name = $(this).attr('name');
+                                    if (!this.validity.valid) {
+                                        let note = {
+                                            name: this.name,
+                                            label: $(this.labels[0]).find('.textlabel').text(),
+                                            description: $gettext('Fehler!'),
+                                            describedby: this.id
+                                        };
+                                        if ($(this).data('validation_requirement')) {
+                                            note.description = $(this).data('validation_requirement');
                                         }
+                                        if (this.validity.tooShort) {
+                                            note.description = $gettextInterpolate(
+                                                $gettext('Geben Sie mindestens %{min} Zeichen ein.'),
+                                                {min: this.minLength}
+                                            );
+                                        }
+                                        if (this.validity.valueMissing) {
+                                            if (this.type === 'checkbox') {
+                                                note.description = $gettext('Dieses Feld muss ausgewählt sein.');
+                                            } else {
+                                                if (this.minLength > 0) {
+                                                    note.description = $gettextInterpolate(
+                                                        $gettext('Hier muss ein Wert mit mindestens %{min} Zeichen eingetragen werden.'),
+                                                        {min: this.minLength}
+                                                    );
+                                                } else {
+                                                    note.description = $gettext('Hier muss ein Wert eingetragen werden.');
+                                                }
+
+                                            }
+                                        }
+                                        v.STUDIPFORM_VALIDATIONNOTES.push(note);
                                     }
-                                    v.STUDIPFORM_VALIDATIONNOTES.push(note);
+                                });
+                                if (v.STUDIPFORM_SERVERVALIDATION) {
+
+                                    let params = v.getFormValues();
+                                    params.STUDIPFORM_SERVERVALIDATION = 1;
+
+                                    $.ajax({
+                                        url: v.STUDIPFORM_AUTOSAVEURL,
+                                        data: params,
+                                        type: 'post',
+                                        dataType: 'json',
+                                        success(output) {
+                                            for (let i in output) {
+                                                let note = {
+                                                    name: output[i].name,
+                                                    label: output[i].label,
+                                                    description: output[i].error,
+                                                    describedby: null
+                                                };
+                                                v.STUDIPFORM_VALIDATIONNOTES.push(note);
+                                            }
+                                            validated = v.STUDIPFORM_VALIDATIONNOTES.length < 1;
+                                            resolve(validated);
+                                        }
+                                    });
+                                } else {
+                                    resolve(validated);
                                 }
                             });
-                            return validated;
+                            return validation_promise;
                         },
                         setInputs(inputs) {
                             for (const [key, value] of Object.entries(inputs)) {
@@ -353,6 +398,19 @@ STUDIP.ready(function () {
                             this.STUDIPFORM_SELECTEDLANGUAGES = languages;
                         }
                     },
+                    computed: {
+                        ordererValidationNotes: function () {
+                            let orderedNotes = [];
+                            for (let i in this.STUDIPFORM_INPUTS_ORDER) {
+                                for (let k in this.STUDIPFORM_VALIDATIONNOTES) {
+                                    if (this.STUDIPFORM_VALIDATIONNOTES[k].name === this.STUDIPFORM_INPUTS_ORDER[i]) {
+                                        orderedNotes.push(this.STUDIPFORM_VALIDATIONNOTES[k]);
+                                    }
+                                }
+                            }
+                            return orderedNotes;
+                        }
+                    },
                     mounted () {
                         $(this.$el).addClass("vueified");
                     }
@@ -362,7 +420,7 @@ STUDIP.ready(function () {
     }
 
     // Well, this is really nasty: Select2 can't determine the select
-    // element's width if it is hidden (by itself or by it's parent).
+    // element's width if it is hidden (by itself or by its parent).
     // This is due to the fact that elements are not rendered when hidden
     // (which seems pretty obvious when you think about it) but elements
     // only have a width when they are rendered (pretty obvious as well).

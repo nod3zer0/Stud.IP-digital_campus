@@ -17,6 +17,8 @@ class Form extends Part
     protected $save_button_text = '';
     protected $save_button_name = '';
 
+    protected $cancel_button_text = '';
+    protected $cancel_button_name = '';
     protected $autoStore = false;
     protected $debugmode = false;
     protected $success_message = '';
@@ -207,6 +209,31 @@ class Form extends Part
         return $this->save_button_name ?: $this->getSaveButtonText();
     }
 
+    public function setCancelButtonText(string $text): Form
+    {
+        $this->cancel_button_text = $text;
+        return $this;
+    }
+
+    /**
+     * @return string The text for the "save" button in the form.
+     */
+    public function getCancelButtonText() : string
+    {
+        return $this->cancel_button_text ?: _('Abbrechen');
+    }
+
+    public function setCancelButtonName(string $name): Form
+    {
+        $this->cancel_button_name = $name;
+        return $this;
+    }
+
+    public function getCancelButtonName() : string
+    {
+        return $this->cancel_button_name ?: $this->getCancelButtonText();
+    }
+
     public function setSuccessMessage(string $success_message): Form
     {
         $this->success_message = $success_message;
@@ -250,12 +277,35 @@ class Form extends Part
     {
         $this->autoStore = true;
         if (\Request::isPost() && \Request::isAjax() && !\Request::isDialog()) {
-            $this->store();
-            if ($this->success_message) {
-                \PageLayout::postSuccess($this->success_message);
+            if (\Request::submitted('STUDIPFORM_SERVERVALIDATION')) {
+                //verify the user input:
+                $output = [];
+                foreach ($this->getAllInputs() as $input) {
+                    if ($input->validate) {
+                        $callback = $input->getValidationCallback();
+                        $value = $this->getStorableValueFromRequest($input);
+                        $valid = $callback($value, $input);
+                        if ($valid !== true) {
+                            $output[$input->getName()] = [
+                                'name' => $input->getName(),
+                                'label' => $input->getTitle(),
+                                'error' => $callback($value, $input)
+                            ];
+                        }
+                    }
+                }
+                echo json_encode($output);
+                page_close();
+                die();
+            } else {
+                //storing the input
+                $this->store();
+                if ($this->success_message) {
+                    \PageLayout::postSuccess($this->success_message);
+                }
+                page_close();
+                die();
             }
-            page_close();
-            die();
         }
         return $this;
     }
@@ -324,6 +374,17 @@ class Form extends Part
         \NotificationCenter::postNotification('FormWillStore', $this);
 
         $stored = 0;
+
+        foreach ($this->getAllInputs() as $input) {
+            if ($input->validate) {
+                $callback = $input->getValidationCallback();
+                $value = $this->getStorableValueFromRequest($input);
+                $valid = $callback($value, $input);
+                if ($valid !== true) {
+                    return $stored;
+                }
+            }
+        }
 
         //store by each input
         $all_values = [];

@@ -10,4 +10,7 @@
              name="<?= htmlReady($name) ?>"
              value="<?= htmlReady($value) ?>"
              id="<?= $id ?>"
-             <?= $attributes ?>></range-input>
+             min="<?= $min ?>"
+             max="<?= $max ?>"
+             step="<?= $step ?>"
+    <?= $attributes ?>></range-input>

@@ -11,6 +11,7 @@ abstract class Input
     protected $parent = null;
     public $mapper = null;
     public $store = null;
+    public $validate = null;
     public $if = null;
     public $permission = true;
     public $required = false;
@@ -133,6 +134,21 @@ abstract class Input
         return $this->name;
     }
 
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function hasValidation()
+    {
+        return $this->validate !== null;
+    }
+
+    public function getValidationCallback()
+    {
+        return $this->validate;
+    }
+
     /**
      * Returns the value of this input.
      * @return null
@@ -216,6 +232,18 @@ abstract class Input
     }
 
     /**
+     * Sets the server-side verify function of this input. The callable returns true if the given value is okay, or
+     * false or a textstring representing the error.
+     * @param callable $verify
+     * @return $this
+     */
+    public function setValidationFunction(Callable $validate)
+    {
+        $this->validate = $validate;
+        return $this;
+    }
+
+    /**
      * Sets a condition to display this input. The condition is a javascript condition which is used by vue to
      * hide the input if the condition is not satisfies.
      * @param string $if
@@ -261,7 +289,7 @@ abstract class Input
 
     protected function extractOptionsFromAttributes(array &$attributes)
     {
-        $options = null;
+        $options = [];
         if (isset($attributes['options'])) {
             $options = $attributes['options'];
             unset($attributes['options']);

@@ -235,6 +235,7 @@ abstract class Part
             $attributes['type'],
             $attributes['mapper'],
             $attributes['store'],
+            $attributes['validate'],
             $attributes['if'],
             $attributes['permission'],
             $attributes['required'],
@@ -256,6 +257,9 @@ abstract class Part
         }
         if (isset($data['store']) && is_callable($data['store'])) {
             $input->store = $data['store'];
+        }
+        if (isset($data['validate']) && is_callable($data['validate'])) {
+            $input->validate = $data['validate'];
         }
         if (!empty($data['if'])) {
             $input->if = $data['if'];
