@@ -182,7 +182,7 @@ class MvvContactRange extends ModuleManagementModel
     /**
      * Returns the 'PERSONEN_GRUPPEN' from mvv config of given range type.
      *
-     * @param sting $range_type type of the mvv object.
+     * @param string $range_type type of the mvv object.
      * @return array PERSONEN_GRUPPEN
      */
     public static function getCategoriesByRangetype($range_type)
@@ -212,6 +212,32 @@ class MvvContactRange extends ModuleManagementModel
     {
         $cats = self::getCategoriesByRangetype($this->range_type);
         return $cats[$this->category]['name'];
+    }
+
+    protected function logChanges($action = null)
+    {
+        $log_action = 'MVV_CONTACT_RANGE_' . mb_strtoupper($action);
+        $affected = $this->contact_id;
+        $co_affected = $this->range_id;
+        $info = ['mvv_contacts_ranges.*'];
+        $debug_info = $this->id;
+        if ($action === 'update') {
+            $logged_fields = [
+                'range_type',
+                'type',
+                'category',
+                'position',
+            ];
+            foreach ($logged_fields as $logged_field) {
+                if ($this->isFieldDirty($logged_field)) {
+                    $info[] = $logged_field
+                        . ': ' . ($this->getValue($logged_field) ?? '-')
+                        . ' (' . ($this->getPristineValue($logged_field) ?? '-')
+                        . ')';
+                }
+            }
+        }
+        StudipLog::log($log_action, $affected, $co_affected, implode(' | ', $info), $debug_info);
     }
 
 }

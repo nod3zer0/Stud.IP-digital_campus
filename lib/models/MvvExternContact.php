@@ -43,4 +43,30 @@ class MvvExternContact extends ModuleManagementModel
 
         parent::configure($config);
     }
+
+    protected function logChanges($action = null)
+    {
+        $log_action = 'MVV_EXTERN_CONTACT_' . mb_strtoupper($action);
+        $affected = $this->id;
+        $info = ['mvv_extern_contacts.*'];
+        $debug_info = $this->getDisplayName();
+        if ($action === 'update') {
+            $logged_fields = [
+                'name',
+                'vorname',
+                'homepage',
+                'mail',
+                'tel',
+            ];
+            foreach ($logged_fields as $logged_field) {
+                if ($this->isFieldDirty($logged_field)) {
+                    $info[] = $logged_field
+                        . ': ' . ($this->getValue($logged_field) ?? '-')
+                        . ' (' . ($this->getPristineValue($logged_field) ?? '-')
+                        . ')';
+                }
+            }
+        }
+        StudipLog::log($log_action, $affected, null, implode(' | ', $info), $debug_info);
+    }
 }

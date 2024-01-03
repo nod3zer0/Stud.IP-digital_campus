@@ -452,4 +452,26 @@ class MvvContact extends ModuleManagementModel
         ];
     }
 
+    protected function logChanges($action = null)
+    {
+        $log_action = 'MVV_CONTACT_' . mb_strtoupper($action);
+        $affected = $this->id;
+        $info = ['mvv_contacts.*'];
+        $debug_info = $this->getDisplayName();
+        if ($action === 'update') {
+            if ($this->isFieldDirty('contact_status')) {
+                $info[] = 'contatct_status: '
+                    . ($this->contact_status ?? '-')
+                    . ' (' . ($this->getPristineValue('contact_status') ?? '-')
+                    . ')';
+            }
+            if ($this->isFieldDirty('alt_mail')) {
+                $info[] = 'alt_mail: '
+                    . ($this->alt_mail ?? '-')
+                    . ' (' . ($this->getPristineValue('alt_mail') ?? '-')
+                    . ')';
+            }
+        }
+        StudipLog::log($log_action, $affected, '', implode(' | ', $info), $debug_info);
+    }
 }

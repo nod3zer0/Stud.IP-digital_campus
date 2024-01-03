@@ -369,7 +369,7 @@ class MvvFile extends ModuleManagementModel
     /**
      * Adds this mvvfile to given range.
      *
-     * @param sting $range_id Id of the mvv object.
+     * @param string $range_id Id of the mvv object.
      */
     public function addToRange($range_id, $range_type)
     {
@@ -487,6 +487,32 @@ class MvvFile extends ModuleManagementModel
         $stm = DBManager::get()->prepare($sql);
         $stm->execute();
         return $stm->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
+
+    protected function logChanges($action = null)
+    {
+        $log_action = 'MVV_FILE_' . mb_strtoupper($action);
+        $affected = $this->id;
+        $info = ['mvv_files.*'];
+        $debug_info = $this->getDisplayName();
+        if ($action === 'update') {
+            $logged_fields = [
+                'year',
+                'type',
+                'category',
+                'tags',
+                'extern_visible',
+            ];
+            foreach ($logged_fields as $logged_field) {
+                if ($this->isFieldDirty($logged_field)) {
+                    $info[] = $logged_field
+                        . ': ' . ($this->getValue($logged_field) ?? '-')
+                        . ' (' . ($this->getPristineValue($logged_field) ?? '-')
+                        . ')';
+                }
+            }
+        }
+        StudipLog::log($log_action, $affected, null, implode(' | ', $info), $debug_info);
     }
 
 }

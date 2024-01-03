@@ -86,7 +86,6 @@ class MVV implements Loggable {
         $templ = $event->action->info_template;
 
         $table = explode('.', $event->info);
-
         switch ($table[0]) {
 
             case 'abschluss':
@@ -115,22 +114,6 @@ class MVV implements Loggable {
                 if ($co_kategorie) {
                     $url = URLHelper::getURL('dispatch.php/fachabschluss/kategorien/details/' . $co_kategorie->getId(), [], true);
                     $templ = str_replace('%abskategorie(%coaffected)', '<a href="' . $url . '">' . htmlReady($co_kategorie->getDisplayName()) . '</a>', $templ);
-                }
-                break;
-
-            case 'mvv_files':
-                $dokument = MvvFile::find($event->affected_range_id);
-                if ($dokument) {
-                    $url = URLHelper::getURL('dispatch.php/materialien/dokumente/details/' . $dokument->getId(), [], true);
-                    $templ = str_replace('%dokument(%affected)', '<a href="' . $url . '">' . htmlReady($dokument->getDisplayName()) . '</a>', $templ);
-                    if ($event->coaffected_range_id) {
-                        $mmv_object = call_user_func([$event->dbg_info, 'find'], $event->coaffected_range_id);
-                        if ($mmv_object) {
-                            $templ = str_replace('%object_type(%coaffected)', 'in ' . htmlReady($mmv_object->getDisplayName()), $templ);
-                        } else {
-                            $templ = str_replace('%object_type(%coaffected)', '', $templ);
-                        }
-                    }
                 }
                 break;
 
@@ -312,6 +295,148 @@ class MVV implements Loggable {
                 }
                 break;
 
+            case 'mvv_contacts':
+                $contact = MvvContact::find($event->affected_range_id);
+                if ($contact) {
+                    $url = URLHelper::getLink('dispatch.php/shared/contacts/details/index/' . $contact->id);
+                    $templ = str_replace(
+                        '%contact(%affected)',
+                        '<a href="' . $url . '">' . htmlReady($contact->getDisplayName()) . '</a>',
+                        $templ
+                    );
+                }
+                break;
+
+            case 'mvv_contacts_ranges':
+                $contact_range = MvvContactRange::find($event->dbg_info);
+                if ($contact_range) {
+                    if ($contact_range->contact) {
+                        $url_affected = URLHelper::getLink(
+                            'dispatch.php/shared/contacts/details/index/' . $contact_range->contact->id);
+                        $templ = str_replace(
+                            '%contact(%affected)',
+                            '<a href="' . $url_affected . '">' . htmlReady($contact_range->contact->getDisplayName()) . '</a>',
+                            $templ
+                        );
+                    }
+                    $range = null;
+                    switch ($contact_range->range_type) {
+                        case 'Modul':
+                            $range = Modul::find($event->coaffected_range_id);
+                            $url_coaffected = URLHelper::getLink(
+                                'dispatch.php/module/module/details/' . $range->id,
+                                [],
+                                true
+                            );
+                            break;
+                        case 'Studiengang':
+                            $range = Studiengang::find($event->coaffected_range_id);
+                            $url_coaffected = URLHelper::getLink(
+                                'dispatch.php/studiengaenge/studiengaenge/details_studiengang/' . $range->id,
+                                [],
+                                true
+                            );
+                            break;
+                        case 'StudiengangTeil':
+                            $range = StudiengangTeil::find($event->coaffected_range_id);
+                            $url_coaffected = URLHelper::getLink(
+                                'dispatch.php/studiengaenge/studiengangteile/details_versionen/' . $range->id,
+                                [],
+                                true
+                            );
+
+                    }
+                    if ($range) {
+                        $templ = str_replace(
+                            '%range(%coaffected)',
+                            '<a href="' . $url_coaffected . '">' . htmlReady($range->getDisplayName()) . '</a>',
+                            $templ
+                        );
+                    }
+                }
+                break;
+
+            case 'mvv_extern_contacts':
+                $extern_contact = MvvExternContact::find($event->affected_range_id);
+                if ($extern_contact) {
+                    $url = URLHelper::getLink('dispatch.php/shared/contacts/details/index/' . $extern_contact->id);
+                    $templ = str_replace(
+                        '%contact(%affected)',
+                        '<a href="' . $url . '">' . htmlReady($extern_contact->getDisplayName()) . '</a>',
+                        $templ
+                    );
+                }
+                break;
+
+            case 'mvv_files':
+                $file = MvvFile::find($event->affected_range_id);
+                if ($file) {
+                    $url = URLHelper::getLink('dispatch.php/materialien/files/index/' . $file->id);
+                    $templ = str_replace(
+                        '%file(%affected)',
+                        '<a href="' . $url . '">' . htmlReady($file->getDisplayName()) . '</a>',
+                        $templ
+                    );
+                }
+                break;
+
+            case 'mvv_files_filerefs':
+                $fileref = MvvFileFileref::find($event->affected_range_id);
+                if ($fileref) {
+                    $url = URLHelper::getLink('dispatch.php/materialien/index/' . $fileref->mvvfile_id);
+                    $templ = str_replace(
+                        '%fileref(%affected)',
+                        '<a href="' . $url . '">' . htmlReady($fileref->getDisplayName()) . '</a>',
+                        $templ
+                    );
+                }
+                break;
+
+            case 'mvv_files_ranges':
+                $file_range = MvvFileRange::find([
+                    $event->affected_range_id,
+                    $event->coaffected_range_id
+                ]);
+                if ($file_range) {
+                    if ($file_range->mvv_file) {
+                        $url_affected = URLHelper::getLink(
+                            'dispatch.php/materialien/index/' . $file_range->mvvfile_id
+                        );
+                        $templ = str_replace(
+                            '%fileref(%affected)',
+                            '<a href="' . $url_affected . '">' . htmlReady($file_range->mvv_file->getDisplayName()) . '</a>',
+                            $templ
+                        );
+                    }
+                    $range = null;
+                    switch ($file_range->range_type) {
+                        case 'Studiengang':
+                            $range = Studiengang::find($event->coaffected_range_id);
+                            $url_coaffected = URLHelper::getLink(
+                                'dispatch.php/studiengaenge/studiengaenge/details_studiengang/' . $range->id,
+                                [],
+                                true
+                            );
+                            break;
+                        case 'StgteilVersion':
+                            $range = StgteilVersion::find($event->coaffected_range_id);
+                            $url_coaffected = URLHelper::getLink(
+                                'dispatch.php/studiengaenge/studiengangteile/version/' . $range->id,
+                                [],
+                                true
+                            );
+
+                    }
+                    if ($range) {
+                        $templ = str_replace(
+                            '%range(%coaffected)',
+                            '<a href="' . $url_coaffected . '">' . htmlReady($range->getDisplayName()) . '</a>',
+                            $templ
+                        );
+                    }
+                }
+                break;
+
             default:
                 break;
         }
@@ -320,7 +445,6 @@ class MVV implements Loggable {
         // Benutzergruppen im Modul z.B. Modulverantwortlicher
         $templ = str_replace('%gruppe', $event->dbg_info, $templ);
         // Objekt konnte nicht eingesetzt werden da es vermutlich nicht mehr existiert, beim delete landet der alte Bezeichner im debug
-        $templ = str_replace('%dokument(%affected)', $event->dbg_info, $templ);
         $templ = str_replace('%modul(%affected)', $event->dbg_info, $templ);
         $templ = str_replace('%modulteil(%affected)', $event->dbg_info, $templ);
         $templ = str_replace('%modulteildesk(%affected)', $event->dbg_info, $templ);
@@ -341,10 +465,10 @@ class MVV implements Loggable {
         $templ = str_replace('%language(%coaffected)', $event->dbg_info, $templ);
         $templ = str_replace('%stgteilabs(%coaffected)', $event->dbg_info, $templ);
         $templ = str_replace('%stgteil(%coaffected)', $event->dbg_info, $templ);
+        $templ = str_replace('%contact', $event->dbg_info, $templ);
 
         return $templ;
     }
-
 
     /**
      * This method searches the log-entries for log-actions of the mvv classes.
@@ -358,7 +482,6 @@ class MVV implements Loggable {
     public static function logSearch($needle, $action_name = null)
     {
         $result = [];
-        $sql_needle = DBManager::get()->quote($needle);
 
         $modul_actions = [
             'MVV_MODUL_NEW',
@@ -385,8 +508,14 @@ class MVV implements Loggable {
         ];
 
         if (in_array($action_name, $modul_actions)) {
-            $module = Modul::findBySQL("code LIKE CONCAT('%', " . $sql_needle . ", '%') OR modul_id = " . $sql_needle);
-            $deskriptoren = ModulDeskriptor::findBySql("bezeichnung LIKE CONCAT('%', " . $sql_needle . ", '%') OR deskriptor_id = " . $sql_needle);
+            $module = Modul::findBySQL(
+                "code LIKE CONCAT('%', :needle, '%') OR modul_id = :needle"
+            );
+            $deskriptoren = ModulDeskriptor::findBySql(
+                "bezeichnung LIKE CONCAT('%', :needle, '%')
+                 OR deskriptor_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($module as $modul) {
                 $result[] = [
                     $modul->getId(),
@@ -418,7 +547,11 @@ class MVV implements Loggable {
         ];
 
         if (in_array($action_name, $modulteile_actions)) {
-            $deskriptoren = ModulDeskriptor::findBySql("bezeichnung LIKE CONCAT('%', " . $sql_needle . ", '%') OR deskriptor_id = " . $sql_needle);
+            $deskriptoren = ModulDeskriptor::findBySql(
+                "bezeichnung LIKE CONCAT('%', :needle, '%')
+                 OR deskriptor_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($deskriptoren as $desk) {
                 $modulteil = Modulteil::find($desk->modulteil_id);
                 $result[] = [
@@ -436,7 +569,11 @@ class MVV implements Loggable {
             'MVV_STG_STGTEIL_DEL',
             'MVV_STG_STGTEIL_UPDATE'
         ])) {
-            $stg = Studiengang::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR studiengang_id = " . $sql_needle);
+            $stg = Studiengang::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR studiengang_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($stg as $studiengang) {
                 $result[] = [
                     $studiengang->getId(),
@@ -453,7 +590,12 @@ class MVV implements Loggable {
             'MVV_FACHBERATER_UPDATE',
             'MVV_FACHBERATER_DEL'
         ])) {
-            $stgteile = StudiengangTeil::findBySQL("zusatz LIKE CONCAT('%', " . $sql_needle . ", '%') OR zusatz_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR stgteil_id = " . $sql_needle);
+            $stgteile = StudiengangTeil::findBySQL(
+                "zusatz LIKE CONCAT('%', :needle, '%')
+                 OR zusatz_en LIKE CONCAT('%', :needle, '%')
+                 OR stgteil_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($stgteile as $stgteil) {
                 $result[] = [
                     $stgteil->getId(),
@@ -467,7 +609,12 @@ class MVV implements Loggable {
             'MVV_STGTEILVERSION_UPDATE',
             'MVV_STGTEILVERSION_DEL'
         ])) {
-            $versionen = StgteilVersion::findBySQL("code LIKE CONCAT('%', " . $sql_needle . ", '%') OR version_id = " . $sql_needle . " OR stgteil_id = " . $sql_needle);
+            $versionen = StgteilVersion::findBySQL(
+                "code LIKE CONCAT('%', :needle, '%')
+                 OR version_id = :needle
+                 OR stgteil_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($versionen as $version) {
                 $result[] = [
                     $version->getId(),
@@ -481,7 +628,12 @@ class MVV implements Loggable {
             'MVV_STGTEILBEZ_UPDATE',
             'MVV_STGTEILBEZ_DEL'
         ])) {
-            $stgbez = StgteilBezeichnung::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR stgteil_bez_id = " . $sql_needle);
+            $stgbez = StgteilBezeichnung::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR name_en LIKE CONCAT('%', :needle, '%')
+                 OR stgteil_bez_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($stgbez as $bez) {
                 $result[] = [
                     $bez->getId(),
@@ -506,7 +658,12 @@ class MVV implements Loggable {
         ];
 
         if (in_array($action_name, $stgteil_actions)) {
-            $stgteilabs = Lvgruppe::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR abschnitt_id = " . $sql_needle);
+            $stgteilabs = Lvgruppe::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR name_en LIKE CONCAT('%', :needle, '%')
+                 OR abschnitt_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($stgteilabs as $abschnitt) {
                 $result[] = [
                     $abschnitt->getId(),
@@ -526,7 +683,12 @@ class MVV implements Loggable {
             'MVV_LVSEMINAR_DEL',
             'MVV_LVSEMINAR_UPDATE'
         ])) {
-            $lvgruppen = Lvgruppe::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR lvgruppe_id = " . $sql_needle);
+            $lvgruppen = Lvgruppe::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR name_en LIKE CONCAT('%', :needle, '%')
+                 OR lvgruppe_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($lvgruppen as $lvgruppe) {
                 $result[] = [
                     $lvgruppe->getId(),
@@ -543,7 +705,12 @@ class MVV implements Loggable {
             'MVV_FACHINST_DEL',
             'MVV_FACHINST_UPDATE'
         ])) {
-            $faecher = Fach::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR fach_id = " . $sql_needle);
+            $faecher = Fach::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR name_en LIKE CONCAT('%', :needle, '%')
+                 OR fach_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($faecher as $fach) {
                 $result[] = [
                     $fach->getId(),
@@ -560,7 +727,12 @@ class MVV implements Loggable {
             'MVV_ABS_ZUORD_DEL',
             'MVV_ABS_ZUORD_UPDATE'
         ])) {
-            $abschluesse = Abschluss::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR abschluss_id = " . $sql_needle);
+            $abschluesse = Abschluss::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR name_en LIKE CONCAT('%', :needle, '%')
+                 OR abschluss_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($abschluesse as $abschluss) {
                 $result[] = [
                     $abschluss->getId(),
@@ -577,7 +749,12 @@ class MVV implements Loggable {
             'MVV_ABS_ZUORD_DEL',
             'MVV_ABS_ZUORD_UPDATE'
         ])) {
-            $abskategorien = AbschlussKategorie::findBySQL("name LIKE CONCAT('%', " . $sql_needle . ", '%') OR name_en LIKE CONCAT('%', " . $sql_needle . ", '%') OR kategorie_id = " . $sql_needle);
+            $abskategorien = AbschlussKategorie::findBySQL(
+                "name LIKE CONCAT('%', :needle, '%')
+                 OR name_en LIKE CONCAT('%', :needle, '%')
+                 OR kategorie_id = :needle",
+                [':needle' => $needle]
+            );
             foreach ($abskategorien as $abskategorie) {
                 $result[] = [
                     $abskategorie->getId(),
@@ -587,22 +764,70 @@ class MVV implements Loggable {
         }
 
         if (in_array($action_name, [
-            'MVV_DOKUMENT_NEW',
-            'MVV_DOKUMENT_UPDATE',
-            'MVV_DOKUMENT_DEL',
-            'MVV_DOK_ZUORD_NEW',
-            'MVV_DOK_ZUORD_DEL',
-            'MVV_DOK_ZUORD_UPDATE'
+            'MVV_CONTACT_NEW',
+            'MVV_CONTACT_UPDATE',
+            'MVV_CONTACT_DELETE',
+            'MVV_CONTACT_RANGE_NEW',
+            'MVV_CONTACT_RANGE_UPDATE',
+            'MVV_CONTACT_RANGE_DELETE',
+            'MVV_CONTACT_EXTERN_NEW',
+            'MVV_CONTACT_EXTERN_UPDATE',
+            'MVV_CONTACT_EXTERN_DELETE'
         ])) {
-            MvvFile::findEachBySQL(
-                function (MvvFile $file) use (&$result) {
-                    $result[] = [
-                        $file->id,
-                        $file->getDisplayName(),
-                    ];
-                },
-                "name LIKE CONCAT('%', " . $sql_needle . ", '%') OR mvvfile_id = " . $sql_needle
+            $contacts_intern = MvvContact::findBySQL(
+                "LEFT JOIN `auth_user_md5`
+                   ON `mvv_contacts`.`contact_id` = `auth_user_md5`.`user_id`
+                 WHERE `auth_user_md5`.`username` LIKE CONCAT('%', :needle, '%')
+                    OR `auth_user_md5`.`nachname` LIKE CONCAT('%', :needle, '%')
+                    OR `auth_user_md5`.`email` = :needle",
+                [':needle' => $needle]
             );
+            $contacts_extern = MvvContact::findBySQL(
+                "LEFT JOIN `mvv_extern_contacts`
+                   ON `mvv_contacts`.`contact_id` = `mvv_extern_contacts`.`extern_contact_id`
+                 WHERE `mvv_extern_contacts`.`name` = :needle
+                    OR `mvv_extern_contacts`.`mail` = :needle",
+                [':needle' => $needle]
+            );
+            $contacts = array_merge($contacts_intern, $contacts_extern);
+            foreach ($contacts as $contact) {
+                $result[] = [
+                    $contact->id,
+                    $contact->getDisplayName()
+                ];
+            }
+        }
+
+        if (in_array($action_name, [
+            'MVV_FILE_NEW',
+            'MVV_FILE_UPDATE',
+            'MVV_FILE_DELETE',
+            'MVV_FILE_RANGE_NEW',
+            'MVV_FILE_RANGE_UPDATE',
+            'MVV_FILE_RANGE_DELETE',
+            'MVV_FILE_FILEREF_NEW',
+            'MVV_FILE_FILEREF_UPDATE',
+            'MVV_FILE_FILEREF_DEL'
+        ])) {
+            $files = MvvFile::findBySQL(
+                "LEFT JOIN `mvv_files_filerefs` USING (`mvvfile_id`)
+                 LEFT JOIN `file_refs`
+                   ON `mvv_files_filerefs`.`fileref_id` = `file_refs`.`id`
+                 LEFT JOIN `files`
+                   ON `file_refs`.`file_id` = `files`.`id`
+                 WHERE `mvv_files`.`tags` LIKE CONCAT('%', :needle, '%')
+                    OR `mvv_files_filerefs`.`name` LIKE CONCAT('%', :needle, '%')
+                    OR `file_refs`.`name` LIKE CONCAT('%', :needle, '%')
+                    OR `files`.`name` = :needle
+                    OR `files`.`author_name` = :needle",
+                [':needle' => $needle]
+            );
+            foreach ($files as $file) {
+                $result[$file->id] = [
+                    $file->id,
+                    $file->getDisplayName()
+                ];
+            }
         }
 
         return $result;

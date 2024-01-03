@@ -55,4 +55,28 @@ class MvvFileRange extends ModuleManagementModel
         return $this->range_type;
     }
 
+    protected function logChanges($action = null)
+    {
+        $log_action = 'MVV_FILE_RANGE_' . mb_strtoupper($action);
+        $affected = $this->mvvfile_id;
+        $co_affected = $this->range_id;
+        $info = ['mvv_files_ranges.*'];
+        $debug_info = $this->id;
+        if ($action === 'update') {
+            $logged_fields = [
+                'range_type',
+                'position',
+            ];
+            foreach ($logged_fields as $logged_field) {
+                if ($this->isFieldDirty($logged_field)) {
+                    $info[] = $logged_field
+                        . ': ' . ($this->getValue($logged_field) ?? '-')
+                        . ' (' . ($this->getPristineValue($logged_field) ?? '-')
+                        . ')';
+                }
+            }
+        }
+        StudipLog::log($log_action, $affected, $co_affected, implode(' | ', $info), $debug_info);
+    }
+
 }

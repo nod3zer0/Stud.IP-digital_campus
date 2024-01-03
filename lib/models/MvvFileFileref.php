@@ -111,4 +111,27 @@ class MvvFileFileref extends ModuleManagementModel
 
         return false;
     }
+
+    protected function logChanges($action = null)
+    {
+        $log_action = 'MVV_FILEREF_' . mb_strtoupper($action);
+        $affected = $this->id;
+        $info = ['mvv_files_filerefs.*'];
+        $debug_info = $this->getDisplayName();
+        if ($action === 'update') {
+            $logged_fields = [
+                'file_language',
+                'name',
+            ];
+            foreach ($logged_fields as $logged_field) {
+                if ($this->isFieldDirty($logged_field)) {
+                    $info[] = $logged_field
+                        . ': ' . ($this->getValue($logged_field) ?? '-')
+                        . ' (' . ($this->getPristineValue($logged_field) ?? '-')
+                        . ')';
+                }
+            }
+        }
+        StudipLog::log($log_action, $affected, null, implode(' | ', $info), $debug_info);
+    }
 }
