@@ -282,8 +282,20 @@ class PluginManager
         $state = $active ? 1 : 0;
         unset($this->plugins_activated_cache[$user_id]);
 
-        return $db->execute("REPLACE INTO plugins_activated (pluginid, range_type, range_id, state)
-	                          VALUES (?, 'user', ?, ?)", [$pluginid, $user_id, $state]);
+        $query = "REPLACE INTO plugins_activated (pluginid, range_type, range_id, state)
+                  VALUES (?, 'user', ?, ?)";
+        $result = $db->execute($query, [$pluginid, $user_id, $state]);
+
+        if ($result > 0) {
+            $plugin = $this->getPluginById($pluginid);
+            if ($active) {
+                call_user_func([get_class($plugin), 'onActivation'], $pluginid, $user_id);
+            } else {
+                call_user_func([get_class($plugin), 'onDeactivation'], $pluginid, $user_id);
+            }
+        }
+
+        return $result;
     }
 
     /**
