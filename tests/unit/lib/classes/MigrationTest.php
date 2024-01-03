@@ -58,7 +58,7 @@ class MigrationTest extends \Codeception\Test\Unit
 
             public function get($branch = 0)
             {
-                return $this->versions[$branch];
+                return $this->versions[$branch] ?? 0;
             }
 
             public function set($version, $branch = 0)

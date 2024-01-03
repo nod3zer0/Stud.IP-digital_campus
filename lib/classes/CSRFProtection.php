@@ -44,6 +44,35 @@ class CSRFProtection
 
     const AJAX_TOKEN = 'HTTP_X_CSRF_TOKEN';
 
+    protected static $storage = null;
+
+    /**
+     * Set a storage to use.
+     *
+     * @param $storage
+     */
+    public static function setStorage(&$storage): void
+    {
+        self::$storage = &$storage;
+    }
+
+    /**
+     * Returns a reference to the used storage.
+     *
+     * @return array|null
+     */
+    public static function &getStorage()
+    {
+        if (!isset(self::$storage)) {
+            // w/o a session, throw an exception since we cannot use it
+            if (session_id() === '') {
+                throw new SessionRequiredException();
+            }
+
+            self::$storage = $_SESSION;
+        }
+        return self::$storage;
+    }
 
     /**
      * This checks the request and throws an InvalidSecurityTokenException if
@@ -118,17 +147,14 @@ class CSRFProtection
      */
     public static function token()
     {
-        // w/o a session, throw an exception
-        if (session_id() === '') {
-            throw new SessionRequiredException();
-        }
+        $storage = &self::getStorage();
 
         // create a token, if there is none
-        if (!isset($_SESSION[self::TOKEN])) {
-            $_SESSION[self::TOKEN] = base64_encode(random_bytes(32));
+        if (!isset($storage[self::TOKEN])) {
+            $storage[self::TOKEN] = base64_encode(random_bytes(32));
         }
 
-        return $_SESSION[self::TOKEN];
+        return $storage[self::TOKEN];
     }
 
     /**

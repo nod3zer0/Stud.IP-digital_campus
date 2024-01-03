@@ -515,8 +515,6 @@ class StudipCoreFormat extends TextFormat
         $email = $matches[2];
         $domain = $matches[3];
 
-        $intern = $domain === $_SERVER['HTTP_HOST'];
-
         return sprintf('<a href="mailto:%1$s">%2$s</a>',
             $email,
             $link_text
@@ -567,6 +565,7 @@ class StudipCoreFormat extends TextFormat
         $intern = false;
         if (
             in_array($pu['scheme'], ['http', 'https'])
+            && isset($_SERVER['HTTP_HOST'])
             && (
                 !isset($pu['host'])
                 || $pu['host'] === $_SERVER['HTTP_HOST']

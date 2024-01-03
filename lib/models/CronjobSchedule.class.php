@@ -130,7 +130,7 @@ class CronjobSchedule extends SimpleORMap
         }
         if (in_array($type, ['after_initialize', 'after_store']) && is_string($this->parameters)) {
             $parameters = json_decode($this->parameters, true) ?: [];
-            if ($this->task->valid) {
+            if ($this->task && $this->task->valid) {
                 $default_parameters = $this->task->extractDefaultParameters();
                 foreach ($default_parameters as $key => $value) {
                     if (!isset($parameters[$key])) {

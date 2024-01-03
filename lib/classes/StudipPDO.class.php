@@ -83,6 +83,7 @@ class StudipPDO extends PDO
             // split string into parts at quotes and backslash
             $parts = preg_split('/([\\\\"\'])/', $statement, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             $result = '';
+            $quote_chr = null;
 
             for ($part = current($parts); $part !== false; $part = next($parts)) {
                 // inside quotes, "" is ", '' is ' and \x is x

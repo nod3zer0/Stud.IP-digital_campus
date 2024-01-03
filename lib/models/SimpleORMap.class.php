@@ -863,7 +863,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (is_array($id_or_object)) {
             $pk = static::pk();
             $key_values = [];
-            foreach($pk as $key) {
+            foreach ($pk as $key) {
                 if (array_key_exists($key, $id_or_object)) {
                     $key_values[] = $id_or_object[$key];
                 }
@@ -874,6 +874,8 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 } else {
                     $id = $key_values;
                 }
+            } else {
+                $id = null;
             }
         } else {
             $id = $id_or_object;

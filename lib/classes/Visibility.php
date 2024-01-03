@@ -500,8 +500,8 @@ class Visibility
      */
     private static function getUser(&$user)
     {
-        if ($user == null) {
-            $user = $GLOBALS['user']->user_id;
+        if (!$user && User::findCurrent()) {
+            $user = User::findCurrent()->id;
         }
     }
 

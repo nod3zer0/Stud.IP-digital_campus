@@ -12,27 +12,18 @@
 
 class CSRFProtectionTokenTest extends \Codeception\Test\Unit
 {
-    private $original_session;
+    use CsrfProtectionSessionTrait;
 
     function setUp(): void
     {
-        if (session_id() === '') {
-            session_id("test-session");
-        }
-        $this->original_session = $_SESSION;
-        $_SESSION = [];
-    }
-
-    function tearDown(): void
-    {
-        $_SESSION = $this->original_session;
+        $this->initializeTokenStorage();
     }
 
     function testTokenGeneration()
     {
-        $this->assertEquals(sizeof($_SESSION), 0);
+        $this->assertEquals(count($this->storage), 0);
         CSRFProtection::token();
-        $this->assertEquals(sizeof($_SESSION), 1);
+        $this->assertEquals(count($this->storage), 1);
     }
 
     function testTokenIdentity()
@@ -44,7 +35,7 @@ class CSRFProtectionTokenTest extends \Codeception\Test\Unit
     {
         $token1 = CSRFProtection::token();
 
-        $_SESSION = [];
+        $this->storage = [];
 
         $token2 = CSRFProtection::token();
 
@@ -66,16 +57,17 @@ class CSRFProtectionTokenTest extends \Codeception\Test\Unit
 
 class CSRFRequestTest extends \Codeception\Test\Unit
 {
+    use CsrfProtectionSessionTrait;
+
     private $original_state;
     private $token;
 
     function setUp(): void
     {
-        if (session_id() === '') {
-            session_id("test-session");
-        }
-        $this->original_state = [$_SESSION, $_POST, $_SERVER];
-        $_SESSION = [];
+        $this->initializeTokenStorage();
+
+        $this->original_state = [$_POST, $_SERVER];
+
         $_POST = [];
         $this->token = CSRFProtection::token();
         $_SERVER['HTTP_X_REQUESTED_WITH'] = null;
@@ -83,7 +75,7 @@ class CSRFRequestTest extends \Codeception\Test\Unit
 
     function tearDown(): void
     {
-        list($_SESSION, $_POST, $_SERVER) = $this->original_state;
+        [$_POST, $_SERVER] = $this->original_state;
     }
 
     function testInvalidUnsafeRequest()
@@ -96,7 +88,7 @@ class CSRFRequestTest extends \Codeception\Test\Unit
     function testValidUnsafeRequest()
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_POST['security_token'] = $this->token;
+        $_POST[CSRFProtection::TOKEN] = $this->token;
         CSRFProtection::verifyUnsafeRequest();
         $this->assertTrue(true);
     }
@@ -132,5 +124,15 @@ class CSRFRequestTest extends \Codeception\Test\Unit
         $_POST['security_token'] = $this->token;
         CSRFProtection::verifyUnsafeRequest();
         $this->assertTrue(true);
+    }
+}
+
+trait CsrfProtectionSessionTrait
+{
+    protected $storage = [];
+
+    protected function initializeTokenStorage()
+    {
+        CSRFProtection::setStorage($this->storage);
     }
 }

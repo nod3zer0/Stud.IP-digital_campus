@@ -101,6 +101,7 @@ function markupList($markup, $matches)
     $rows = explode("\n", rtrim($matches[0]));
     $indent = 0;
 
+    $result = '';
     foreach ($rows as $row) {
         list($level, $text) = explode(' ', $row, 2);
         $level = mb_strlen($level);
