@@ -17,6 +17,12 @@ $options = $vote->questiondata['options'];
 </div>
 
 <table class="default nohover">
+    <colgroup>
+        <col>
+        <? foreach ($options as $option) : ?>
+        <col style="width: 70px">
+        <? endforeach ?>
+    </colgroup>
     <thead>
         <tr>
             <th><?= _('Aussage') ?></th>
@@ -34,7 +40,17 @@ $options = $vote->questiondata['options'];
                     <strong><?= htmlReady($statement) ?></strong>
                 </td>
 
-                <? foreach($options as $option_index => $option) : ?>
+                <?
+            $average = 0;
+            if (count($answers) > 0) {
+                foreach ($answers as $answer) {
+                    $average += $answer['answerdata']['answers'][$key];
+                }
+                $average /= count($answers);
+            }
+            ?>
+
+            <? foreach($options as $option_index => $option) : ?>
                     <?
                     $hits = 0;
                     $names = [];
@@ -46,22 +62,60 @@ $options = $vote->questiondata['options'];
                             }
                         }
                     }
-                    $color = 'hsl(0 0% '.round(70 + (30 * (1 - ($hits / $countAnswers ?? 1)) )).'%)';
                     ?>
-                    <td style="background-color: <?= $color ?>;" <?= count($names) > 0 ? 'title="'.htmlReady(implode(', ', $names)).'"' : ''?>>
+                <td <?= count($names) > 0 ? 'title="'.htmlReady(implode(', ', $names)).'"' : ''?>>
+                    <? if ($option_index === 0 && count($answers)) : ?>
+                        <div class="average" style="margin-left: <?=  80 * $average + 34 ?>px;">
+                            Ø<?= htmlReady(str_replace('.', ',', (string) round($average, 2) + 1)) ?>
+                        </div>
+                    <? endif ?><?
+                    $bubble_width = 70;
+                    $font_size = 2.5;
+                    if ($countAnswers === 1) {
+                        $bubble_width /= 3;
+                        $font_size /= 3;
+                    } elseif ($countAnswers === 2) {
+                        $bubble_width /= 2;
+                        $font_size /= 2;
+                    } elseif ($countAnswers === 3) {
+                        $bubble_width /= 1.5;
+                        $font_size /= 1.5;
+                    }
+                    ?>
+                    <? if (count($answers) > 0) : ?>
+                        <div class="centerline"></div>
+                    <? endif ?>
+                    <? if ($countAnswers) : ?>
+                        <? $bubble_width = $hits > 0 ? ($bubble_width - 14) * $hits / $countAnswers + 14 : 0 ?>
+                        <? $font_size = $hits > 0 ? ($font_size - 0.5) * $hits / $countAnswers + 0.5 : 0 ?>
                         <? if ($filtered !== null && $filtered == $key.'_'.$option_index) : ?>
                             <a href=""
+                               class="questionnaire-evaluation-circle-container"
                                onclick="STUDIP.Questionnaire.removeFilter('<?= htmlReady($vote['questionnaire_id']) ?>'); return false;"
                                title="<?= _('Zeige wieder alle Ergebnisse ohne Filterung an.') ?>">
+                                <div class="questionnaire-evaluation-circle">
+                                    <div class="value" style="font-size: <?= $font_size ?>em; max-width: <?= $bubble_width ?>px; max-height: <?= $bubble_width ?>px;">
+                                        <?= htmlReady($hits) ?>
+                                    </div>
+                                </div>
                                 <?= Icon::create('filter2', Icon::ROLE_CLICKABLE)->asImg(16, ['class' => 'text-bottom']) ?>
                                 <?= round(100 * $hits / $countAnswers) ?>%
                             </a>
                         <? else : ?>
                             <a href=""
+                               class="questionnaire-evaluation-circle-container"
                                onclick="STUDIP.Questionnaire.addFilter('<?= htmlReady($vote['questionnaire_id']) ?>', '<?= htmlReady($vote->getId()) ?>', '<?= $key.'_'.$option_index ?>'); return false;"
                                title="<?= _('Zeige nur Ergebnisse von Personen an, die diese Option gewählt haben.') ?>">
+                                <div class="questionnaire-evaluation-circle">
+                                    <div class="value" style="font-size: <?= $font_size ?>em; max-width: <?= $bubble_width ?>px; max-height: <?= $bubble_width ?>px;">
+                                        <?= htmlReady($hits) ?>
+                                    </div>
+                                </div>
                                 <?= round(100 * $hits / $countAnswers) ?>%
                             </a>
+                        <? endif ?>
+                    <? else : ?>
+                        0%
                         <? endif ?>
                     </td>
                 <? endforeach ?>
