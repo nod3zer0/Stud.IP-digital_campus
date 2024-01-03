@@ -55,9 +55,9 @@ class MvvContactRange extends ModuleManagementModel
     /**
      * Returns the name of the object to display in a specific context..
      *
-     * @return string The name for
+     * @return string The name.
      */
-    public function getDisplayName($options = null)
+    public function getDisplayName()
     {
         return $this->contact->name;
     }

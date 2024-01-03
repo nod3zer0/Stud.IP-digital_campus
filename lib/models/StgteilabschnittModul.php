@@ -68,38 +68,23 @@ class StgteilabschnittModul extends ModuleManagementModelTreeItem
             : _('Modul'));
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
-        $options = ($options !== self::DISPLAY_DEFAULT)
-                ? $options : self::DISPLAY_CODE;
-        $with_code = $options & self::DISPLAY_CODE;
         if ($this->isNew()) {
-            return parent::getDisplayName($options);
+            return parent::getDisplayName();
         }
-
-        /* Augsburg
-        return ($this->bezeichnung ? $this->bezeichnung . ': ' : '')
-            . $this->getModul()->getDisplayName();
-         *
-         */
-
-        $start_sem = Semester::find($this->modul->start);
-        $end_sem = Semester::find($this->modul->end);
-
-        $code = trim($this->modulcode) ?: trim($this->modul->code);
-
-        $name = ($with_code && $code) ? $code . ' - ' : '';
-        $name .= trim($this->bezeichnung) ?: trim($this->modul->getDeskriptor()->bezeichnung);
-        if ($end_sem || $start_sem) {
-            if ($end_sem) {
-                $name .= sprintf(_(', gültig %s bis %s'),
-                        $start_sem->name, $end_sem->name);
-            } else {
-                $name .= sprintf(_(', gültig ab %s'), $start_sem->name);
-            }
-        }
-
-        return $name;
+        $template = Config::get()->MVV_TEMPLATE_NAME_STGTEILABSCHNITTMODUL;
+        $placeholders = [
+            'module_code',
+            'module_name',
+            'semester_validity'
+        ];
+        $replacements = [
+            trim($this->modulcode) ?: trim($this->modul->code),
+           trim($this->bezeichnung) ?: trim($this->modul->getDeskriptor()->bezeichnung),
+            $this->modul->getDisplaySemesterValidity()
+        ];
+        return self::formatDisplayName($template, $placeholders, $replacements);
     }
 
     /**

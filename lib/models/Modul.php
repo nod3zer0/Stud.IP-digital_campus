@@ -332,22 +332,23 @@ class Modul extends ModuleManagementModelTreeItem
         return StgteilabschnittModul::findBySQL('modul_id = ?', [$this->id]);
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT) {
-        $options = ($options !== self::DISPLAY_DEFAULT)
-                ? $options : self::DISPLAY_CODE;
-        $with_code = $options & self::DISPLAY_CODE;
+    public function getDisplayName() {
         if ($this->isNew()) {
-            return parent::getDisplayName($options);
+            return parent::getDisplayName();
         }
-        $name = ($with_code && trim($this->code)) ? $this->code . ' - ' : '';
-        $name .= $this->deskriptoren->bezeichnung;
-        if ($options & self::DISPLAY_SEMESTER) {
-            $sem_validity = $this->getDisplaySemesterValidity();
-            if ($sem_validity) {
-                $name .= ', ' . $sem_validity;
-            }
-        }
-        return trim($name);
+        $template = Config::get()->MVV_TEMPLATE_NAME_MODUL;
+        $placeholders = [
+            'module_code',
+            'module_name',
+            'semester_validity'
+        ];
+        $replacements = [
+            trim($this->code),
+            trim($this->deskriptoren->bezeichnung),
+            $this->getDisplaySemesterValidity()
+        ];
+
+        return self::formatDisplayName($template, $placeholders, $replacements);
     }
 
     /**

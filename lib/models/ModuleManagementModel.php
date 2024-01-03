@@ -18,56 +18,6 @@ require_once 'config/mvv_config.php';
 
 abstract class ModuleManagementModel extends SimpleORMap implements ModuleManagementInterface
 {
-    /**
-     * Usable as option for ModuleManagementModel::getDisplayName().
-     * Use the deafault display options for this object.
-     */
-    const DISPLAY_DEFAULT = 1;
-
-    /**
-     * Usable as option for ModuleManagementModel::getDisplayName().
-     * Displays semesters of the validity period if available for this object.
-     */
-    const DISPLAY_SEMESTER = 2;
-
-    /**
-     * Usable as option for ModuleManagementModel::getDisplayName().
-     * Displays the code (usually a unique identifier) if available for this object.
-     */
-    const DISPLAY_CODE = 4;
-
-    /**
-     * Usable as option for ModuleManagementModel::getDisplayName().
-     * Displays the name of the faculty if available for this object.
-     */
-    const DISPLAY_FACULTY = 8;
-
-    /**
-     * Usable as option for ModuleManagementModel::getDisplayName().
-     * Displays the name of the Fach (subject of study) if available for this object.
-     */
-    const DISPLAY_FACH = 16;
-
-    /**
-     * Usable as option for ModuleManagementModel::getDisplayName().
-     * Displays the name of the Studiengangteil if available for this object.
-     */
-    const DISPLAY_STGTEIL = 32;
-
-    /**
-     * Usable as option ModuleManagementModel::getDisplayName().
-     * Displays the name of the Abschluss if available for this object.
-     */
-    const DISPLAY_ABSCHLUSS = 64;
-
-    /**
-     * Usable as option ModuleManagementModel::getDisplayName().
-     * Displays the name of the Abschluss-Kategorie
-     * if available for this object.
-     */
-    const DISPLAY_KATEGORIE = 128;
-
-
     protected static $filter_params = [];
     protected $is_dirty = false;
     private static $language = null;
@@ -546,10 +496,9 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
      * of the mvv objects to display more complex names glued together from
      * fields of related objects.
      *
-     * @param mixed $options An optional parameter to set display options.
-     * @return string The name for
+     * @return string The display name for this object
      */
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
         if ($this->isField('name')) {
             return (string) $this->getValue('name');
@@ -817,7 +766,7 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
      * Returns the suffix for ordinal numbers if the selected locale is EN or
      * a simple point if not.
      *
-     * @param type $num
+     * @param int $num
      * @return string The ordinal suffix or a point.
      */
     public static function getLocaleOrdinalNumberSuffix($num)
@@ -965,5 +914,45 @@ abstract class ModuleManagementModel extends SimpleORMap implements ModuleManage
             static::$object_cache[$index][$id] = $finder();
         }
         return static::$object_cache[$index][$id];
+    }
+
+    /**
+     * Formats the name of the object by given template and appropriate placeholders and replacements.
+     *
+     * @param string $template The template.
+     * @param array $placeholders All placeholders (words) without regeexp stuff.
+     * @param array $values Values to replace the placeholders. Empty strings will be ignored.
+     * @return string The formatted name.
+     * @throws Exception If the template is not usable.
+     */
+    protected static function formatDisplayName(
+        string $template,
+        array $placeholders, 
+        array $replacements
+    ): string {
+        if (mb_strlen($template) === 0) {
+            return '';
+        }
+        $placeholders = array_map(
+            function ($placeholder) {
+                return '/^(.*?)' . $placeholder . '(.*?)$/';
+            },
+            $placeholders
+        );
+        $replacements = array_map(
+            function ($replacement) {
+                return mb_strlen($replacement) ? '$1' . $replacement . '$2' : '';
+            },
+            $replacements
+        );
+        $markup = new TextFormat();
+        $markup->addMarkup(
+            'mvv',
+            '\{\{', '\}\}',
+            function ($markup, $matches, $content) use ($placeholders, $replacements) {
+                return preg_replace($placeholders, $replacements, $content);
+            }
+        );
+        return $markup->format($template);
     }
 }

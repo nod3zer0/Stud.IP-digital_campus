@@ -138,14 +138,13 @@ abstract class ModuleManagementModelTreeItem extends ModuleManagementModel imple
      * in class ModuleManagementModel.
      * @return type
      */
-    public static function getPathes($trails, $delimiter = ' · ',
-            $display_options = self::DISPLAY_DEFAULT)
+    public static function getPathes($trails, $delimiter = ' · ')
     {
         $pathes =  [];
         foreach ($trails as $trail) {
             $pathes[] = join($delimiter, array_map(
-                    function($a) use ($display_options) {
-                        return $a->getDisplayName($display_options);
+                    function($a) {
+                        return $a->getDisplayName();
                     }, $trail));
         }
         sort($pathes, SORT_LOCALE_STRING);

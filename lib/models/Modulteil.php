@@ -164,7 +164,25 @@ class Modulteil extends ModuleManagementModelTreeItem
         );
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT) {
+    public function getDisplayName()
+    {
+        $deskriptor = $this->getDeskriptor(self::getLanguage());
+        $template = Config::get()->MVV_TEMPLATE_NAME_MODULTEIL;
+        if (trim($template)) {
+            $placeholders = [
+                'part_number',
+                'part_number_label',
+                'part_name',
+                'teaching_method'
+            ];
+            $replacements = [
+                $this->nummer,
+                $GLOBALS['MVV_MODULTEIL']['NUM_BEZEICHNUNG']['values'][$this->num_bezeichnung]['name'] ?? '',
+                trim($deskriptor->bezeichnung),
+                $GLOBALS['MVV_MODULTEIL']['LERNLEHRFORM']['values'][$this->lernlehrform]['name'] ?? ''
+            ];
+            return self::formatDisplayName($template, $placeholders, $replacements);
+        }
         $name = '';
         if ($this->num_bezeichnung) {
             $name .= $GLOBALS['MVV_MODULTEIL']['NUM_BEZEICHNUNG']['values'][$this->num_bezeichnung]['name'];
@@ -174,12 +192,10 @@ class Modulteil extends ModuleManagementModelTreeItem
             $name .= $this->nummer . ': ';
         }
         $name .= $GLOBALS['MVV_MODULTEIL']['LERNLEHRFORM']['values'][$this->lernlehrform]['name'] ?? '';
-        $deskriptor = $this->getDeskriptor(self::getLanguage());
         if (strlen(trim($deskriptor->bezeichnung))) {
             $name .= $name == '' ? $deskriptor->bezeichnung
                     : ' (' . $deskriptor->bezeichnung . ')';
         }
-
         return trim($name);
     }
 

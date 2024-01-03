@@ -67,7 +67,7 @@ class StgteilVersionCondition extends UserFilterField
 
         foreach ($this->validValues as $version_id => $name) {
             $stgteilversion = StgteilVersion::find($version_id);
-            $this->validValues[$version_id] = $stgteilversion->getDisplayname();
+            $this->validValues[$version_id] = $stgteilversion->getDisplayName();
         }
     }
 

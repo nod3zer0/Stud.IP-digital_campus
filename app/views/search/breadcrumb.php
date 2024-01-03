@@ -11,11 +11,11 @@
             <a href="<?= $link ?>"><?= htmlReady($mvv_object->getDisplayName() . ' (' . $additional_object->name . ')') ?></a>
         <? endif; ?>
         <? if ($mvv_object && $type == 'StgteilBezeichnung' && $additional_object = StudiengangTeil::find($point['add']['StudiengangTeil'])) : ?>
-            <a href="<?= $link ?>"><?= htmlReady($mvv_object->getDisplayName() . ': ' . $additional_object->getDisplayName(ModuleManagementModel::DISPLAY_FACH)) ?></a>
+            <a href="<?= $link ?>"><?= htmlReady($mvv_object->getDisplayName() . ': ' . $additional_object->getDisplayName()) ?></a>
         <? endif; ?>
     <? else : ?>
         <? if ($type == 'StudiengangTeil' && $mvv_object = $type::find($point['id'])) : ?>
-            <a href="<?= $link ?>"><?= htmlReady($mvv_object->getDisplayName(ModuleManagementModel::DISPLAY_FACH)) ?></a>
+            <a href="<?= $link ?>"><?= htmlReady($mvv_object->getDisplayName()) ?></a>
         <? elseif (!empty($point['id']) && $mvv_object = $type::find($point['id'])) : ?>
             <a href="<?= $link ?>"><?= htmlReady($mvv_object->getDisplayName(0)) ?></a>
         <? else : ?>

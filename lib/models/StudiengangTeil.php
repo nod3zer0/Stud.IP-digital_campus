@@ -122,22 +122,23 @@ class StudiengangTeil extends ModuleManagementModelTreeItem
         return false;
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
-        $options = $options !== self::DISPLAY_DEFAULT
-                ? $options : self::DISPLAY_FACH;
-        $with_fach = $options & self::DISPLAY_FACH;
         if ($this->isNew()) {
             return '';
         }
-        if ($this->fach) {
-            $name = $with_fach ? $this->fach->name . ' ' : '';
-        } else {
-            $name = '';
-        }
-        $name .= $this->kp ?  $this->kp . ' CP ' : '';
-        $name .= $this->zusatz ? $this->zusatz  : '';
-        return trim($name);
+        $template = Config::get()->MVV_TEMPLATE_NAME_STUDIENGANGTEIL;
+        $placeholders = [
+            'subject_name',
+            'credit_points',
+            'purpose_addition'
+        ];
+        $replacements = [
+            $this->fach->name,
+            trim($this->kp),
+            trim($this->zusatz)
+        ];
+        return self::formatDisplayName($template, $placeholders, $replacements);
     }
 
     /**

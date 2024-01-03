@@ -73,11 +73,11 @@ class MvvFile extends ModuleManagementModel
     }
 
     /**
-     * Returns the name of the object to display in a specific context..
+     * Returns the name of the object to display in a specific context.
      *
-     * @return string The name for
+     * @return string The name.
      */
-    public function getDisplayName($options = null)
+    public function getDisplayName()
     {
         if ($this->file_refs) {
             return $this->file_refs[0]->name;

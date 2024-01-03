@@ -8,7 +8,7 @@
             <?= htmlReady($studiengangTeilName) ?>
     <? if ($studiengang && !empty($stgTeilBez)) : ?>
         <h3>
-            <?= sprintf(_('%s im Studiengang %s'), htmlReady($stgTeilBez->getDisplayName()), htmlReady($studiengang->getDisplayName(ModuleManagementModel::DISPLAY_ABSCHLUSS))) ?>
+            <?= sprintf(_('%s im Studiengang %s'), htmlReady($stgTeilBez->getDisplayName()), htmlReady($studiengang->getDisplayName())) ?>
             <? if (Config::get()->ENABLE_STUDYCOURSE_INFO_PAGE) : ?>
                 <a href="<?= $controller->link_for('search/studiengaenge/info', $studiengang->id)?>" data-dialog>
                     <?= Icon::create('infopage2', Icon::ROLE_CLICKABLE, ['title' => _('Informationen zum Studiengang')]) ?>

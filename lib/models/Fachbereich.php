@@ -202,14 +202,22 @@ class Fachbereich extends ModuleManagementModelTreeItem
         return count($this->getChildren()) > 0;
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
         if ($this->isFaculty()) {
-            return $this->getValue('Name');
+            return $this->name;
         }
-        if ($options & self::DISPLAY_FACULTY) {
-            return (static::findCached($this->fakultaets_id)->getShortName()
-                . ' - ' . $this->name);
+        $template = Config::get()->MVV_TEPLATE_NAME_FACHBEREICH;
+        if (trim($template)) {
+            $placeholders = [
+                'department_name',
+                'faculty_short_name'
+            ];
+            $replacements = [
+                $this->name,
+                static::findCached($this->fakultaets_id)->getShortName()
+            ];
+            return self::formatDisplayName($template, $placeholders, $replacements);
         }
         return ($this->name);
     }

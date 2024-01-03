@@ -45,7 +45,7 @@ class StudycourseLanguage extends ModuleManagementModel
         parent::configure($config);
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
         return $GLOBALS['MVV_STUDIENGANG']['SPRACHE']['values'][$this->lang]['name'];
     }

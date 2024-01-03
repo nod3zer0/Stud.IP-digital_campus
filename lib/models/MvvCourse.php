@@ -93,7 +93,7 @@ class MvvCourse extends ModuleManagementModelTreeItem
         return false;
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
         return $this->name;
     }

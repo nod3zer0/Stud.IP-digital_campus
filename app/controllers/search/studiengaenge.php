@@ -511,7 +511,7 @@ class Search_StudiengaengeController extends MVVController
                 // semester is unknown
                 $options[$version->id] =
                         trim($options[$version->id])
-                        ?: $version->getDisplayName(ModuleManagementModel::DISPLAY_STGTEIL);
+                        ?: $version->getDisplayName();
             }
             $widget->setOptions($options, $this->cur_version_id);
             $widget->setMaxLength(100);

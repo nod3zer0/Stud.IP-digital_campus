@@ -1,7 +1,7 @@
 <?= $this->render_partial('search/breadcrumb') ?>
 <table class="default nohover">
     <caption>
-        <?= _('Studiengang') ?>: <?= htmlReady($studiengang->getDisplayName(ModuleManagementModel::DISPLAY_ABSCHLUSS)) ?>
+        <?= _('Studiengang') ?>: <?= htmlReady($studiengang->getDisplayName()) ?>
         <? if (Config::get()->ENABLE_STUDYCOURSE_INFO_PAGE) : ?>
             <a href="<?= $controller->url_for('search/studiengaenge/info', $studiengang->id)?>" data-dialog>
                 <?= Icon::create('infopage2', Icon::ROLE_CLICKABLE, ['title' => _('Informationen zum Studiengang')]) ?>

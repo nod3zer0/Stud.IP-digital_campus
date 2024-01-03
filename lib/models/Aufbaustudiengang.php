@@ -47,9 +47,9 @@ class Aufbaustudiengang extends ModuleManagementModel
         parent::configure($config);
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
-        return $this->aufbau_studiengang->getDisplayName($options);
+        return $this->aufbau_studiengang->getDisplayName();
     }
 
     public function validate()

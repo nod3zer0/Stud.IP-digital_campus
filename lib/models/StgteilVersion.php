@@ -280,44 +280,31 @@ class StgteilVersion extends ModuleManagementModelTreeItem
                 });
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
         if ($this->isNew()) {
             return '';
         }
-
-        $options = ($options !== self::DISPLAY_DEFAULT)
-                ? $options : (self::DISPLAY_STGTEIL | self::DISPLAY_FACH);
-        $with_stgteil = $options & self::DISPLAY_STGTEIL;
-        $with_fach = $options & self::DISPLAY_FACH;
-        $start_sem = Semester::find($this->start_sem);
-        $end_sem = Semester::find($this->end_sem);
-        $fassung_nr = $this->fassung_nr
-            ? $this->fassung_nr . ModuleManagementModel::getLocaleOrdinalNumberSuffix($this->fassung_nr). ' '
-            : '';
-        $fassung_typ = $this->fassung_typ
-            ? $GLOBALS['MVV_STGTEILVERSION']['FASSUNG_TYP'][$this->fassung_typ]['name'] . ' '
-            : '';
-        if (!$end_sem) {
-            if (!$start_sem) {
-                $name = $fassung_nr . trim($fassung_typ);
-            } else {
-                $name = $fassung_nr . $fassung_typ . sprintf(_('gültig ab %s'), $start_sem->name);
-            }
-        } else {
-            if ($start_sem->name == $end_sem->name) {
-                $name = $fassung_nr . $fassung_typ . '(' . $start_sem->name . ')';
-            } else {
-                $name = $fassung_nr . $fassung_typ
-                        . sprintf('(%s - %s)', $start_sem->name, $end_sem->name);
-            }
-        }
-        if ($with_stgteil) {
-            return $this->studiengangteil->getDisplayName($with_fach)
-                    . (trim($name) ? ', ' . $name : '');
-        } else {
-            return $name;
-        }
+        $template = Config::get()->MVV_TEMPLATE_NAME_STGTEILVERSION;
+        $placeholders = [
+            'version_number',
+            'version_ordinal_number',
+            'version_type',
+            'subject_name',
+            'semester_validity',
+            'credit_points',
+            'purpose_addition'
+        ];
+        $replacements = [
+            $this->fassung_nr,
+            $this->fassung_nr . ModuleManagementModel::getLocaleOrdinalNumberSuffix($this->fassung_nr),
+            $this->fassung_typ ? $GLOBALS['MVV_STGTEILVERSION']['FASSUNG_TYP'][$this->fassung_typ]['name'] : '',
+            $this->studiengangteil->fach->name,
+            $this->getDisplaySemesterValidity(),
+            trim($this->studiengangteil->kp),
+            trim($this->studiengangteil->zusatz)
+        ];
+        return $this->formatDisplayName($template, $placeholders, $replacements);
     }
 
     /**
@@ -333,9 +320,9 @@ class StgteilVersion extends ModuleManagementModelTreeItem
         if ($end_sem || $start_sem) {
             if ($end_sem) {
                 if ($start_sem->name == $end_sem->name) {
-                    $ret .= sprintf(_('gültig im %s'), $start_sem->name);
+                    $ret .= sprintf(_('%s'), $start_sem->name);
                 } else {
-                    $ret .= sprintf(_('gültig %s bis %s'), $start_sem->name, $end_sem->name);
+                    $ret .= sprintf(_('%s - %s'), $start_sem->name, $end_sem->name);
                 }
             } else {
                 $ret .= sprintf(_('gültig ab %s'), $start_sem->name);

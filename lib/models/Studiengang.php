@@ -508,24 +508,20 @@ class Studiengang extends ModuleManagementModelTreeItem
         return self::get();
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
-        if ($options == self::DISPLAY_DEFAULT) {
-            $options = self::DISPLAY_KATEGORIE;
-        }
-
-        $ret = $this->name;
-        if ($options & self::DISPLAY_ABSCHLUSS) {
-            $ret .= ' (' . $this->abschluss->name . ')';
-        }
-        if ($options & self::DISPLAY_KATEGORIE) {
-            $ret .= (mb_strlen($this->abschluss->category->name)
-                ? ' (' . $this->abschluss->category->name . ')'
-                : ''
-            );
-        }
-
-        return $ret;
+        $template = Config::get()->MVV_TEMPLATE_NAME_STUDIENGANG;
+        $placeholders = [
+            'study_course_name',
+            'degree_name',
+            'degree_category'
+        ];
+        $replacements = [
+            $this->name,
+            $this->abschluss->name,
+            $this->abschluss->category->name
+        ];
+        return self::formatDisplayName($template, $placeholders, $replacements);
     }
 
     /**

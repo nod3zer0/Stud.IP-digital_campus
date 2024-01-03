@@ -362,13 +362,24 @@ class Abschluss extends ModuleManagementModelTreeItem implements PrivacyObject
         return Studiengang::findByAbschluss($this->getId());
     }
 
-    public function getDisplayName($options = self::DISPLAY_DEFAULT)
+    public function getDisplayName()
     {
+        $template = Config::get()->MVV_TEMPLATE_NAME_ABSCHLUSS;
+        if (trim($template)) {
+            $placeholders = [
+                'degree_name',
+                'degree_shortname'
+            ];
+            $replacements = [
+                $this->name,
+                $this->name_kurz
+            ];
+            return self::formatDisplayName($template, $placeholders, $replacements);
+        }
         if ($this->name_kurz != '') {
             return sprintf('%s (%s)', $this->name, $this->name_kurz);
-        } else {
-            return $this->name;
         }
+        return $this->name;
     }
 
     /**
