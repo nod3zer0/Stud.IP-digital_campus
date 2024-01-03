@@ -362,7 +362,6 @@ class Course_StatusgroupsController extends AuthenticatedController
         $filename = FileManager::cleanFileName(_('Gruppenliste') . ' ' . $this->course_title . '.' . $export_format);
 
         $this->render_spreadsheet($header, $statusgroup_data, $export_format, $filename);
-        $this->render_nothing();
     }
 
     /**

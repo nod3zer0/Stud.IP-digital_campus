@@ -803,34 +803,44 @@ abstract class StudipController extends Trails_Controller
 
     /**
      * Export xlsx and csv files via PhpSpreadsheet
-     * @param $header
-     * @param $data
-     * @param $format
-     * @param $filename
-     * @param $filepath
-     * @return void
+     *
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function render_spreadsheet($header, $data, $format, $filename, $filepath = null)
-    {
+    public function render_spreadsheet(
+        array $header,
+        array $data,
+        string $format,
+        string $filename,
+        ?string $filepath = null
+    ): void  {
+        $render_to_browser = false;
         if ($filepath == null) {
-            $filepath = 'php://output';
+            $render_to_browser = true;
+            $filepath = tempnam($GLOBALS['TMP_PATH'], 'spreadsheet');
         }
         $spreadsheet = new Spreadsheet();
         $activeWorksheet = $spreadsheet->getActiveSheet();
-        $activeWorksheet->fromArray($header, NULL, 'A1');
-        $activeWorksheet->fromArray($data, NULL, 'A2');
+        $activeWorksheet->fromArray($header);
+        $activeWorksheet->fromArray($data, null, 'A2');
 
-        $this->set_content_type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $this->response->add_header('Content-Disposition', 'attachment;' . encode_header_parameter('filename', $filename));
-        $this->response->add_header('Cache-Control', 'cache, must-revalidate');
-        if ($format == 'xlsx') {
+        if ($format === 'xlsx') {
             $writer = new Xlsx($spreadsheet);
-        } else if ($format == 'csv') {
+        } elseif ($format === 'csv') {
             $writer = new Csv($spreadsheet);
+        } else {
+            throw new Exception("Format {$format} is not supported");
         }
 
         $writer->save($filepath);
+
+        if ($render_to_browser) {
+            $this->response->add_header('Cache-Control', 'cache, must-revalidate');
+            $this->render_temporary_file(
+                $filepath,
+                $filename,
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            );
+        }
     }
 
     /**

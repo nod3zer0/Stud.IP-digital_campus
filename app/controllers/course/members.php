@@ -1770,7 +1770,6 @@ class Course_MembersController extends AuthenticatedController
         $filename = _('Teilnehmendenexport') . ' ' . $this->course_title . '.' . $export_format;
 
         $this->render_spreadsheet($header, $members, $export_format, $filename);
-        $this->render_nothing();
     }
 
     public function toggle_student_mailing_action($state)

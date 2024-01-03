@@ -566,7 +566,6 @@ class Institute_MembersController extends AuthenticatedController
         $filename = FileManager::cleanFileName(_('Mitarbeitendenexport') . ' ' . $this->institute->name . ' ' . $faculty . '.' . $export_format);
 
         $this->render_spreadsheet($header, $temp, $export_format, $filename);
-        $this->render_nothing();
     }
 
     private function setupSidebar()
