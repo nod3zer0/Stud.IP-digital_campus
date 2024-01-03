@@ -69,7 +69,7 @@ $show_hidden_login = false;
                             <li class="login_link">
                                 <? if (is_internal_url($url = $nav->getURL())) : ?>
                                 <? SkipLinks::addLink($name_and_title[0], $url) ?>
-                                <a href="<?= URLHelper::getLink($url, ['cancel_login' => 1]) ?>" id="<?= $nav->getLinkAttributes()['id'] ?>">
+                                <a href="<?= URLHelper::getLink($url, ['cancel_login' => 1]) ?>" <?= arrayToHtmlAttributes($nav->getLinkAttributes()) ?>>
                                 <? else : ?>
                                 <a href="<?= htmlReady($url) ?>" target="_blank" rel="noopener noreferrer">
                                 <? endif ?>
