@@ -29,8 +29,8 @@ class Jsonapi extends \Codeception\Module
     public function withPHPLib($credentials, $function)
     {
         // EVIL HACK
-        $oldPerm = $GLOBALS['perm'];
-        $oldUser = $GLOBALS['user'];
+        $oldPerm = $GLOBALS['perm'] ?? null;
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['perm'] = new \Seminar_Perm();
         $GLOBALS['user'] = new \Seminar_User(\User::find($credentials['id']));
 

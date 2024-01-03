@@ -58,7 +58,7 @@ class MessagesOutboxTest extends \Codeception\Test\Unit
     private function sendMessage(array $credentials)
     {
         // EVIL HACK
-        $oldUser = $GLOBALS['user'];
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = \User::find($credentials['id']);
 
         $message = \Message::send($credentials['id'], [$credentials['username']], 'empty subject', 'empty message');

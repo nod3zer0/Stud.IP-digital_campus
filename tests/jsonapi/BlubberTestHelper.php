@@ -84,7 +84,7 @@ trait BlubberTestHelper
     private function createBlubberComment(array $credentials, \BlubberThread $thread, $content)
     {
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
-        $oldUser = $GLOBALS['user'];
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = new \Seminar_User(\User::find($credentials['id']));
 
         $blubber = \BlubberComment::create(

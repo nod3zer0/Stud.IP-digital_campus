@@ -22,7 +22,7 @@ class FileRefsCreateByUpload extends NonJsonApiController
             throw new AuthorizationFailedException();
         }
 
-        $term_id = $request->getParsedBody()['term-id'];
+        $term_id = $request->getParsedBody()['term-id'] ?? null;
 
         $fileRef = $this->handleUpload($request, $folder);
 

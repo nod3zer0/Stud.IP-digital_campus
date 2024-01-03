@@ -18,9 +18,15 @@ class ForumCategoryEntriesCreate extends AbstractEntriesCreate
     {
         $json = $this->validate($request);
         $categoryId = $args['id'];
-        $courseId = ForumCat::find($categoryId)->seminar_id;
 
-        if (!$course = \Course::find($courseId)) {
+        if (!ForumCat::exists($categoryId)) {
+            throw new RecordNotFoundException('Could not find category.');
+        }
+
+        $courseId = ForumCat::find($categoryId)->seminar_id;
+        $course = \Course::find($courseId);
+
+        if (!$course) {
             throw new RecordNotFoundException('Could not find course.');
         }
 

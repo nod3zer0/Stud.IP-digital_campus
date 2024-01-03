@@ -129,7 +129,7 @@ class File extends SimpleORMap
             $this->user_id = User::findCurrent()->id;
         }
         if (!$this->author_name) {
-            $user = $this->user_id === User::findCurrent()->id
+            $user = (User::findCurrent() && $this->user_id === User::findCurrent()->id)
                   ? User::findCurrent()
                   : $this->owner;
             $this->author_name = $user ? $user->getFullName('no_title') : "";

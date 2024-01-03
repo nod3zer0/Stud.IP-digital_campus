@@ -27,7 +27,7 @@ class UserEventsIcalTest extends \Codeception\Test\Unit
         $event = $calendar->getNewEvent();
         $event->setTitle('blypyp');
 
-        $oldUser = $GLOBALS['user'];
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = \User::find($credentials['id']);
 
         $calendar->storeEvent($event, [$credentials['id']]);

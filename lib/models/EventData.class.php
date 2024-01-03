@@ -113,7 +113,7 @@ class EventData extends SimpleORMap implements PrivacyObject
     protected function cbDefaultValues()
     {
         if (empty($this->content['uid'])) {
-            $this->content['uid'] = 'Stud.IP-' . $this->event_id . '@' . $_SERVER['SERVER_NAME'];
+            $this->content['uid'] = 'Stud.IP-' . $this->event_id . '@' . ($_SERVER['SERVER_NAME'] ?? parse_url($GLOBALS['ABSOLUTE_URI_STUDIP'],  PHP_URL_HOST));
         }
     }
 

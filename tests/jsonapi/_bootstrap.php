@@ -2,7 +2,7 @@
 
 // Here you can initialize variables that will be available to your tests
 
-global $STUDIP_BASE_PATH, $ABSOLUTE_URI_STUDIP, $CACHING_ENABLE, $CACHING_FILECACHE_PATH, $SYMBOL_SHORT, $TMP_PATH, $UPLOAD_PATH;
+global $STUDIP_BASE_PATH, $ABSOLUTE_URI_STUDIP, $CACHING_ENABLE, $CACHING_FILECACHE_PATH, $SYMBOL_SHORT, $TMP_PATH, $UPLOAD_PATH, $DYNAMIC_CONTENT_PATH, $DYNAMIC_CONTENT_URL;
 
 // common set-up, usually done by lib/bootstraph.php and
 // config/config_local.inc.php when run on web server
@@ -11,6 +11,8 @@ if (!isset($STUDIP_BASE_PATH)) {
     $ABSOLUTE_PATH_STUDIP = $STUDIP_BASE_PATH.'/public/';
     $UPLOAD_PATH = $STUDIP_BASE_PATH.'/data/upload_doc';
     $TMP_PATH = $TMP_PATH ?: '/tmp';
+    $DYNAMIC_CONTENT_PATH = '';
+    $DYNAMIC_CONTENT_URL = '';
 }
 
 // set include path

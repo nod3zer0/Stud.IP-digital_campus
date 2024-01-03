@@ -520,7 +520,7 @@ class SemClass implements ArrayAccess
                return (bool) $this->data['is_group'];
         }
         //ansonsten
-        return $this->data[$offset];
+        return $this->data[$offset] ?? null;
     }
 
     /**

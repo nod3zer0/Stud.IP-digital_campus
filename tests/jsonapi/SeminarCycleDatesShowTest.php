@@ -45,8 +45,8 @@ class SeminarCycleDatesShowTest extends \Codeception\Test\Unit
     private function createSeminarCycleDate($credentials, \Course $course)
     {
         // EVIL HACK
-        $oldUser = $GLOBALS['user'];
-        $oldAuth = $GLOBALS['auth'];
+        $oldUser = $GLOBALS['user'] ?? null;
+        $oldAuth = $GLOBALS['auth'] ?? null;
 
         $GLOBALS['user'] = new \Seminar_User(
             \User::find($credentials['id'])

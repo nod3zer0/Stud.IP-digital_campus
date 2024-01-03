@@ -11,8 +11,8 @@ return function (ContainerBuilder $containerBuilder) {
     // Global Settings Object
     $containerBuilder->addDefinitions([
         'studip-current-user' => function () {
-            if ($user = $GLOBALS['user']) {
-                return $user->getAuthenticatedUser();
+            if (isset($GLOBALS['user'])) {
+                return $GLOBALS['user']->getAuthenticatedUser();
             }
 
             return null;

@@ -28,7 +28,7 @@ class BlubberCommentsShowTest extends \Codeception\Test\Unit
         $thread = $this->createPublicBlubberThreadForUser($credentials, 'Who knows Daskylos?');
 
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
-        $oldUser = $GLOBALS['user'];
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = new \Seminar_User(\User::find($credentials['id']));
 
         $comment = $this->createBlubberComment($credentials, $thread, 'Autolykos knows him.');

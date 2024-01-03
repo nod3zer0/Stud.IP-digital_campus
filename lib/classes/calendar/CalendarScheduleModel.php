@@ -31,14 +31,14 @@ class CalendarScheduleModel
      */
     static function storeEntry($data)
     {
-        if ($data['id']) {     // update
+        if (!empty($data['id'])) {     // update
             $stmt = DBManager::get()->prepare("UPDATE schedule
                 SET start = ?, end = ?, day = ?, title = ?, content = ?, color = ?, user_id = ?
                 WHERE id = ?");
             $stmt->execute([$data['start'], $data['end'], $data['day'], $data['title'],
                 $data['content'], $data['color'], $data['user_id'], $data['id']]);
 
-            NotificationCenter::postNotification('ScheduleDidUpdate', $GLOBALS['user']->id, ['values' => $data]);
+            NotificationCenter::postNotification('ScheduleDidUpdate', $GLOBALS['user']->id ?? null, ['values' => $data]);
 
         } else {
             $stmt = DBManager::get()->prepare("INSERT INTO schedule
@@ -46,7 +46,7 @@ class CalendarScheduleModel
                 VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$data['start'], $data['end'], $data['day'], $data['title'],
                 $data['content'], $data['color'], $data['user_id']]);
-            NotificationCenter::postNotification('ScheduleDidCreate', $GLOBALS['user']->id, ['values' => $data]);
+            NotificationCenter::postNotification('ScheduleDidCreate', $GLOBALS['user']->id ?? null, ['values' => $data]);
         }
     }
 

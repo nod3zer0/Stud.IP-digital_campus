@@ -69,8 +69,8 @@ class CourseEvent extends CourseDate implements Event
             return null;
         };
         $config['additional_fields']['uid']['get'] = function ($date) {
-            return 'Stud.IP-SEM-' . $date->getId()
-                . '@' . $_SERVER['SERVER_NAME'];
+            $host = $_SERVER['SERVER_NAME'] ?? parse_url($GLOBALS['ABSOLUTE_URI_STUDIP'], PHP_URL_HOST);
+            return 'Stud.IP-SEM-' . $date->getId() . '@' . $host;
         };
         $config['additional_fields']['summary']['get'] = function ($date) {
             return $date->course->name;

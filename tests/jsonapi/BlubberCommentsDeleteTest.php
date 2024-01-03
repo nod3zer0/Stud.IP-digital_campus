@@ -32,7 +32,7 @@ class BlubberCommentsDeleteTest extends \Codeception\Test\Unit
         $thread = $this->createPublicBlubberThreadForUser($credentials2, 'Who knows Daskylos?');
 
         // Workaround old-style Stud.IP-API using $GLOBALS['user']
-        $oldUser = $GLOBALS['user'];
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = new \Seminar_User(\User::find($credentials1['id']));
 
         $num = \BlubberComment::countBySQL('1');

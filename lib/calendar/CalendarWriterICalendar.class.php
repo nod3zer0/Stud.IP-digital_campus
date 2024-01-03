@@ -39,7 +39,8 @@ class CalendarWriterICalendar extends CalendarWriter
         if ($this->client_identifier) {
             $header .= "PRODID:" . $this->client_identifier . $this->newline;
         } else {
-            $header .= "PRODID:-//Stud.IP@{$_SERVER['SERVER_NAME']}//Stud.IP_iCalendar Library";
+            $host = $_SERVER['SERVER_NAME'] ?? parse_url($GLOBALS['ABSOLUTE_URI_STUDIP'], PHP_URL_HOST);
+            $header .= "PRODID:-//Stud.IP@{$host}//Stud.IP_iCalendar Library";
             $header .= " //EN" . $this->newline;
         }
         $header .= "METHOD:PUBLISH" . $this->newline;

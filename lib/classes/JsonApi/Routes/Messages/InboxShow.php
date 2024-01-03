@@ -15,7 +15,7 @@ class InboxShow extends BoxController
     public function __invoke(Request $request, Response $response, $args)
     {
         $filtering = $this->getQueryParameters()->getFilteringParameters();
-        $onlyUnread = (bool) $filtering['unread'];
+        $onlyUnread = !empty($filtering['unread']);
 
         return $this->getBoxResponse($request, $args, 'rec', $onlyUnread);
     }

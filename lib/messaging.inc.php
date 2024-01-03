@@ -381,7 +381,7 @@ class messaging
             : 'Stud.IP-System';
         foreach ($rec_id as $one) {
             $insert->execute([$tmp_message_id, $one, $one == $snd_user_id ? 1 : 0]);
-            if ($GLOBALS['MESSAGING_FORWARD_AS_EMAIL']) {
+            if (!empty($GLOBALS['MESSAGING_FORWARD_AS_EMAIL'])) {
                 // mail to original receiver
                 $mailstatus_original = $this->user_wants_email($one);
                 if ($mailstatus_original == 2 || ($mailstatus_original == 3 && $email_request == 1) || $force_email) {

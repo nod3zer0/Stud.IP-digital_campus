@@ -25,7 +25,7 @@ class ConsultationsBlockShowTest extends Codeception\Test\Unit
 
         $resourceObject = $document->primaryResource();
         $this->assertTrue(is_string($resourceObject->id()));
-        $this->assertSame($block->id, $resourceObject->id());
+        $this->assertEquals($block->id, $resourceObject->id());
         $this->assertSame(Schema::TYPE, $resourceObject->type());
 
         $this->assertEquals($block->start, strtotime($resourceObject->attribute('start')));

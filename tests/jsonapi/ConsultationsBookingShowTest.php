@@ -31,7 +31,7 @@ class ConsultationsBookingShowTest extends Codeception\Test\Unit
 
         $resourceObject = $document->primaryResource();
         $this->assertTrue(is_string($resourceObject->id()));
-        $this->assertSame($booking->id, $resourceObject->id());
+        $this->assertEquals($booking->id, $resourceObject->id());
         $this->assertSame(Schema::TYPE, $resourceObject->type());
 
         $this->assertEquals(self::$BOOKING_DATA['reason'], $resourceObject->attribute('reason'));

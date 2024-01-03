@@ -80,7 +80,10 @@ class Authentication
      */
     private function provideUser(Request $request, \User $user): Request
     {
-        if ('nobody' === $GLOBALS['user']->id) {
+        if (
+            !isset($GLOBALS['user'])
+            || 'nobody' === $GLOBALS['user']->id
+        ) {
             $GLOBALS['user'] = new \Seminar_User($user);
             $GLOBALS['auth'] = new \Seminar_Auth();
             $GLOBALS['auth']->auth = [
@@ -90,7 +93,9 @@ class Authentication
             ];
             $GLOBALS['perm'] = new \Seminar_Perm();
             $GLOBALS['MAIL_VALIDATE_BOX'] = false;
-            $GLOBALS['sess']->delete();
+            if (isset($GLOBALS['sess'])) {
+                $GLOBALS['sess']->delete();
+            }
             setTempLanguage($user->id);
         }
 

@@ -36,8 +36,8 @@ class StandardFile implements FileType, ArrayAccess, StandardFileInterface
         $user_id || $user_id = $GLOBALS['user']->id;
 
         $filename   = $data['name'];
-        $mime_type  = $data['type'] ?: get_mime_type($data['name']);
-        $filesize   = $data['size'] ?: filesize($data['tmp_name']);
+        $mime_type  = $data['type'] ?? get_mime_type($data['name']);
+        $filesize   = $data['size'] ?? filesize($data['tmp_name']);
         $file_path  = $data['tmp_name'];
         $error_code = $data['error'] ?? '';
 

@@ -66,8 +66,8 @@ class WikiIndexTest extends \Codeception\Test\Unit
     private function createWikiPage($userId, $courseId, $keyword, $body)
     {
         // EVIL HACK
-        $oldPerm = $GLOBALS['perm'];
-        $oldUser = $GLOBALS['user'];
+        $oldPerm = $GLOBALS['perm'] ?? null;
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['perm'] = new \Seminar_Perm();
         $GLOBALS['user'] = \User::find($userId);
 
@@ -77,7 +77,7 @@ class WikiIndexTest extends \Codeception\Test\Unit
                 'user_id' => $userId,
                 'range_id' => $courseId,
                 'keyword' => $keyword,
-                'version' => $latest->version + 1,
+                'version' => $latest ? $latest->version + 1 : 1,
                 'body' => $body
             ]
         );

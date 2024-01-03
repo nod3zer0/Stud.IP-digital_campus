@@ -263,7 +263,7 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
      */
     public static function findCurrent()
     {
-        if (is_object($GLOBALS['user'])) {
+        if (isset($GLOBALS['user']) && is_object($GLOBALS['user'])) {
             return $GLOBALS['user']->getAuthenticatedUser();
         }
 

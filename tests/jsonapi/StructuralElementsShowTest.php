@@ -32,7 +32,7 @@ class StructuralElementsShowTest extends \Codeception\Test\Unit
         $this->assertTrue($response->isSuccessfulDocument([200]));
 
         $document = $response->document();
-        $this->assertSame($structuralElement->id, $document->primaryResource()->id());
+        $this->assertEquals($structuralElement->id, $document->primaryResource()->id());
         $this->assertFalse($document->hasAnyIncludedResources());
     }
 
@@ -45,7 +45,7 @@ class StructuralElementsShowTest extends \Codeception\Test\Unit
         $this->assertTrue($response->isSuccessfulDocument([200]));
 
         $document = $response->document();
-        $this->assertSame($structuralElement->id, $document->primaryResource()->id());
+        $this->assertEquals($structuralElement->id, $document->primaryResource()->id());
         $this->assertTrue($document->hasAnyIncludedResources());
 
         $includedResources = $document->includedResources();

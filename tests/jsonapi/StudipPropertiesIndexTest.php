@@ -11,6 +11,10 @@ class StudipPropertiesIndexTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
+        if (!isset($GLOBALS['SOFTWARE_VERSION'])) {
+            $GLOBALS['SOFTWARE_VERSION'] = '';
+        }
+
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
     }
 

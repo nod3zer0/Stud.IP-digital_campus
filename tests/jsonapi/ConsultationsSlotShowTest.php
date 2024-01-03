@@ -26,7 +26,7 @@ class ConsultationsSlotShowTest extends Codeception\Test\Unit
 
         $resourceObject = $document->primaryResource();
         $this->assertTrue(is_string($resourceObject->id()));
-        $this->assertSame($slot->id, $resourceObject->id());
+        $this->assertEquals($slot->id, $resourceObject->id());
         $this->assertSame(Schema::TYPE, $resourceObject->type());
 
         $this->assertEquals($slot->start_time, strtotime($resourceObject->attribute('start_time')));

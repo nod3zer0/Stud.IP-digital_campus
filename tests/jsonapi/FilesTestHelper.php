@@ -14,7 +14,7 @@ trait FilesTestHelper
         $course = \Course::find($courseId);
         $this->assertNotNull($course);
 
-        $oldUser = $GLOBALS['user'];
+        $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['user'] = new \Seminar_User($credentials['id']);
 
         $rootFolder = Folder::createTopFolder($course->id, 'course');
