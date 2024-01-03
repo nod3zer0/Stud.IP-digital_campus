@@ -975,8 +975,9 @@ class Studiengaenge_StudiengaengeController extends MVVController
         if (mb_strlen(Request::get('kategorie_filter'))) {
             $this->filter['mvv_abschl_zuord.kategorie_id'] = Request::option('kategorie_filter');
         }
-        if (mb_strlen(Request::get('kategorie_filter'))) {
-            $this->filter['mvv_abschl_zuord.kategorie_id'] = Request::option('kategorie_filter');
+        // Fach
+        if (mb_strlen(Request::get('fach_filter'))) {
+            $this->filter['mvv_stgteil.fach_id'] = Request::option('fach_filter');
         }
         // Verantwortliche Einrichtung
         if (mb_strlen(Request::get('institut_filter'))) {
@@ -1057,6 +1058,7 @@ class Studiengaenge_StudiengaengeController extends MVVController
         $semesters = $semesters->orderBy('beginn desc');
         $selected_semester = $semesters->findOneBy('beginn', $this->filter['start_sem.beginn']);
 
+        $count_faecher = $this->countFaecher($studiengang_ids, $this->filter['mvv_stgteil.fach_id'] ?? '');
         $filter_template = $template_factory->render('shared/filter', [
             'semester'             => $semesters,
             'selected_semester'    => $selected_semester ? $selected_semester->id : '',
@@ -1074,6 +1076,11 @@ class Studiengaenge_StudiengaengeController extends MVVController
             'selected_institut'    => $this->filter['mvv_studiengang.institut_id'],
             'fachbereiche'         => Fach::getAllAssignedInstitutes($studiengang_ids),
             'selected_fachbereich' => $this->filter['mvv_fach_inst.institut_id'] ?? '',
+            'faecher'              => SimpleORMapCollection::createFromArray(
+                Fach::findMany(array_keys($count_faecher))
+            )->orderBy('name'),
+            'selected_fach'        => $this->filter['mvv_stgteil.fach_id'] ?? '',
+            'count_faecher'        => $count_faecher,
             'action'               => $this->action_url('set_filter'),
             'action_reset'         => $this->action_url('reset_filter')
         ]);
@@ -1128,6 +1135,35 @@ class Studiengaenge_StudiengaengeController extends MVVController
         );
         $sidebar->addWidget($widget, 'search');
 
+    }
+
+    /**
+     * Returns the number of study courses grouped by subjects for given study cours ids.
+     *
+     * @param array $studiengang_ids The ids of the study courses.
+     * @param string $fach_id The id of the selected subject.
+     * @return array Number of study courses grouped by subjects.
+     */
+    private function countFaecher(array $studiengang_ids, string $fach_id): array
+    {
+        if ($fach_id === '') {
+            $params = [':studiengang_ids' => $studiengang_ids];
+            $where = "`mvv_stg_stgteil`.`studiengang_id` IN (:studiengang_ids)";
+        } else {
+            $params = [
+                ':fach_id' => $fach_id,
+                ':studiengang_ids' => $studiengang_ids
+            ];
+            $where = "`fach`.`fach_id` = :fach_id
+                      AND `mvv_stg_stgteil`.`studiengang_id` IN (:studiengang_ids)";
+        }
+        $query = "SELECT `fach`.`fach_id`, COUNT(DISTINCT `studiengang_id`) AS `count_faecher`
+                  FROM `fach`
+                  JOIN `mvv_stgteil` USING(`fach_id`)
+                  JOIN `mvv_stg_stgteil` USING(`stgteil_id`)
+                  WHERE {$where}
+                  GROUP BY `fach_id`";
+        return DBManager::get()->fetchPairs($query, $params);
     }
 
     public function approve_action($studiengang_id)

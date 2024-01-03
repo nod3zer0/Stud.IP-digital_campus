@@ -41,6 +41,25 @@ class Lvgruppen_LvgruppenController extends MVVController
 
         $search_result = $this->getSearchResult('Lvgruppe');
 
+        $lvg_ids = [];
+        if (count($search_result) > 0) {
+            $lvg_ids = $search_result;
+        } else {
+            if (!empty($_SESSION['mvv_filter_lvg_fach_id'])) {
+                $lvg_ids = $this->findLvgIdsByFach($_SESSION['mvv_filter_lvg_fach_id']);
+            }
+            if (!empty($_SESSION['mvv_filter_lvg_abschluss_id'])) {
+                if (count($lvg_ids) > 0) {
+                    $lvg_ids = array_intersect(
+                        $lvg_ids,
+                        $this->findLvgIdsByAbschluss($_SESSION['mvv_filter_lvg_abschluss_id'])
+                    );
+                } else {
+                    $lvg_ids = $this->findLvgIdsByAbschluss($_SESSION['mvv_filter_lvg_abschluss_id']);
+                }
+            }
+        }
+
         // Nur LvGruppen an Modulen von verantwortlichen Einrichtungen an denen der User
         // eine Rolle hat
         $own_institutes = MvvPerm::getOwnInstitutes();
@@ -342,7 +361,7 @@ class Lvgruppen_LvgruppenController extends MVVController
         $sidebar = Sidebar::get();
 
         $widget = new SelectWidget(
-            _('Verwendung in Semester:'),
+            _('Verwendet in Semester'),
             $this->action_url('set_filter', ['fachbereich_filter' => $selected_fachbereich]),
             'semester_filter'
         );
@@ -368,7 +387,7 @@ class Lvgruppen_LvgruppenController extends MVVController
         $perm_institutes = MvvPerm::getOwnInstitutes();
         if ($perm_institutes !== false) {
             $widget = new SelectWidget(
-                _('Verwendet von Fachbereich:'),
+                _('Verwendet von Fachbereich'),
                 $this->action_url('set_filter', ['semester_filter' => $this->semester_filter]),
                 'fachbereich_filter'
             );
@@ -400,6 +419,52 @@ class Lvgruppen_LvgruppenController extends MVVController
 
             $sidebar->addWidget($widget, 'fachbereich_filter');
         }
+
+        $selected_fach = $_SESSION['mvv_filter_lvg_fach_id'] ?? '';
+        $widget = new SelectWidget(
+            _('Verwendet von Fach'),
+            $this->action_url('set_filter', ['fach_filter' => $selected_fach]),
+            'fach_filter'
+        );
+        $widget->class = 'nested-select';
+        $widget->addElement(
+            new SelectElement('select-none', _('Alle'), $selected_fach === '')
+        );
+        $faecher = Fach::findBySQL(' 1 ORDER BY `name`');
+        foreach ($faecher as $fach) {
+            $widget->addElement(
+                new SelectElement(
+                    $fach->id,
+                    $fach->name,
+                    $selected_fach === $fach->id
+                ),
+                'select-' . $fach->name
+            );
+        }
+        $sidebar->addWidget($widget, 'fach_filter');
+
+        $selected_abschluss = $_SESSION['mvv_filter_lvg_abschluss_id'] ?? '';
+        $widget = new SelectWidget(
+            _('Verwendet von Abschluss'),
+            $this->action_url('set_filter', ['abschluss_filter' => $selected_abschluss]),
+            'abschluss_filter'
+        );
+        $widget->class = 'nested-select';
+        $widget->addElement(
+            new SelectElement('select-none', _('Alle'), $selected_abschlussh === '')
+        );
+        $abschluesse = Abschluss::findBySQL(' 1 ORDER BY `name`');
+        foreach ($abschluesse as $abschluss) {
+            $widget->addElement(
+                new SelectElement(
+                    $abschluss->id,
+                    $abschluss->name,
+                    $selected_abschluss === $abschluss->id
+                ),
+                'select-' . $abschluss->name
+            );
+        }
+        $sidebar->addWidget($widget, 'abschluss_filter');
     }
 
     /**
@@ -415,6 +480,12 @@ class Lvgruppen_LvgruppenController extends MVVController
         $this->semester_filter =
             mb_strlen(Request::get('semester_filter')) ? Request::option('semester_filter') : null;
 
+        // Fach
+        $_SESSION['mvv_filter_lvg_fach_id'] = Request::option('fach_filter', '');
+
+        // Abschluss
+        $_SESSION['mvv_filter_lvg_abschluss_id'] = Request::option('abschluss_filter', '');
+
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
@@ -424,6 +495,9 @@ class Lvgruppen_LvgruppenController extends MVVController
 
     public function reset_filter_action()
     {
+        $_SESSION['mvv_filter_lvg_fach_id'] = '';
+        $_SESSION['mvv_filter_lvg_abschluss_id'] = '';
+
         $this->filter = [];
         $this->sessRemove('filter');
         $this->semester_filter = null;
@@ -466,5 +540,44 @@ class Lvgruppen_LvgruppenController extends MVVController
                 return ($modul_start <= $end && $modul_end >= $start);
             }
         );
+    }
+
+    /**
+     * Returns the ids of the lvgruppen related to the given subject id.
+     *
+     * @param string $fach_id The id of the selected subject.
+     * @return array The ids of the modules related to the subject.
+     */
+    private function findLvgIdsByFach(string $fach_id): array
+    {
+        $query = "SELECT `mvv_lvgruppe_modulteil`.`lvgruppe_id`
+                  FROM `mvv_lvgruppe_modulteil`
+                  JOIN `mvv_modulteil` USING (`modulteil_id`)
+                  JOIN `mvv_stgteilabschnitt_modul` USING (`modul_id`)
+                  JOIN `mvv_stgteilabschnitt` USING (`abschnitt_id`)
+                  JOIN `mvv_stgteilversion` USING (`version_id`)
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = ?";
+        return DBManager::get()->fetchFirst($query, [$fach_id]);
+    }
+
+    /**
+     * Returns the ids of the lvgruppen related to the given degree id.
+     *
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array The ids of the lvgruppen related to the degree.
+     */
+    private function findLvgIdsByAbschluss(string $abschluss_id): array
+    {
+        $query = "SELECT `mvv_lvgruppe_modulteil`.`lvgruppe_id`
+                  FROM `mvv_lvgruppe_modulteil`
+                  JOIN `mvv_modulteil` USING (`modulteil_id`)
+                  JOIN `mvv_stgteilabschnitt_modul` USING (`modul_id`)
+                  JOIN `mvv_stgteilabschnitt` USING (`abschnitt_id`)
+                  JOIN `mvv_stgteilversion` USING (`version_id`)
+                  JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                  JOIN `mvv_studiengang` USING (`studiengang_id`)
+                  WHERE `mvv_studiengang`.`abschluss_id` = ?";
+        return DBManager::get()->fetchFirst($query, [$abschluss_id]);
     }
 }

@@ -465,18 +465,13 @@ class MvvFile extends ModuleManagementModel
      * @staticvar array $ids The range_ids of assigned files after filtration.
      * @param array $filter An array with keys  (table_name.column_name) and
      * values (skalar or array) used in where clause.
-     * @param boolean $refresh Refresh ids if true.
+     * @param boolean $file_ids Return the file ids instead of the range ids.
      * @return array An array with range_ids of assigned files.
      */
-    public static function getIdsFiltered($filter, $refresh = false)
+    public static function getIdsFiltered($filter, $file_ids = false)
     {
-        static $ids = null;
-
-        if (is_array($ids) && !$refresh) {
-            return $ids;
-        }
-
-        $sql = "SELECT DISTINCT `mvv_files_ranges`.`range_id`
+        $id_type = $file_ids ? 'mvvfile_id' : 'range_id';
+        $sql = "SELECT DISTINCT `mvv_files_ranges`.`{$id_type}`
                 FROM `mvv_files`
                     LEFT JOIN `mvv_files_ranges` USING (`mvvfile_id`)
                     LEFT JOIN `mvv_abschl_zuord` ON (`mvv_abschl_zuord`.`kategorie_id` = `mvv_files_ranges`.`range_id`)

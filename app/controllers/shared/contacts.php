@@ -64,8 +64,28 @@ class Shared_ContactsController extends MVVController
         if (empty($this->filter['mvv_modul_inst.institut_id'])) {
             unset($this->filter['mvv_modul_inst.institut_id']);
         }
-        if ($search_result) {
-            $this->filter['mvv_contacts.contact_id'] = $search_result;
+
+        $contact_ids = [];
+        if (count($search_result) > 0) {
+            $contact_ids = $search_result;
+        } else {
+            if (!empty($_SESSION['mvv_filter_contacts_fach_id'])) {
+                $contact_ids = $this->findContactIdsByFach($_SESSION['mvv_filter_contacts_fach_id']);
+            }
+            if (!empty($_SESSION['mvv_filter_contacts_abschluss_id'])) {
+                if (count($contact_ids) > 0) {
+                    $contact_ids = array_intersect(
+                        $contact_ids,
+                        $this->findContactIdsByAbschluss($_SESSION['mvv_filter_contacts_abschluss_id'])
+                    );
+                } else {
+                    $contact_ids = $this->findContactIdsByAbschluss($_SESSION['mvv_filter_contacts_abschluss_id']);
+                }
+            }
+        }
+
+        if (count($contact_ids) > 0) {
+            $this->filter['mvv_contacts.contact_id'] = $contact_ids;
         }
 
         $own_institutes = MvvPerm::getOwnInstitutes();
@@ -241,6 +261,12 @@ class Shared_ContactsController extends MVVController
             $this->filter['mvv_contacts_ranges.range_type'] = Request::option('zuordnung_filter');
         }
 
+        // Fach
+        $_SESSION['mvv_filter_contacts_fach_id'] = Request::option('fach_filter', '');
+
+        // Abschluss
+        $_SESSION['mvv_filter_contacts_abschluss_id'] = Request::option('abschluss_filter', '');
+
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
@@ -249,6 +275,9 @@ class Shared_ContactsController extends MVVController
 
     public function reset_filter_action()
     {
+        $_SESSION['mvv_filter_contacts_fach_id'] = '';
+        $_SESSION['mvv_filter_contacts_abschluss_id'] = '';
+
         $this->filter = [];
         $this->reset_search();
         $this->sessRemove('filter');
@@ -346,6 +375,9 @@ class Shared_ContactsController extends MVVController
             $this->filter
         );
 
+        $contact_ids = MvvContact::getIdsFiltered($this->filter);
+        $count_faecher = $this->countFaecher($contact_ids, $_SESSION['mvv_filter_contacts_fach_id'] ?? '');
+        $count_abschluesse = $this->countAbschluesse($contact_ids, $_SESSION['mvv_filter_contacts_abschluss_id'] ?? '');
         $semesters = new SimpleCollection(array_reverse(Semester::getAll()));
         $filter_template = $template_factory->render('shared/filter', [
             'semester'           => $semesters,
@@ -365,6 +397,16 @@ class Shared_ContactsController extends MVVController
             'status'             => $this->findStatusByIds(),
             'selected_status'    => $this->filter['mvv_contacts.contact_status'] ?? '',
             'status_array'       => ['intern' => ['name' => _('Intern')], 'extern' => ['name' =>_('Extern')]],
+            'faecher'            => SimpleORMapCollection::createFromArray(
+                Fach::findMany(array_keys($count_faecher))
+            )->orderBy('name'),
+            'count_faecher'      => $count_faecher,
+            'selected_fach'      => $_SESSION['mvv_filter_contacts_fach_id'] ?? '',
+            'abschluesse'        => SimpleORMapCollection::createFromArray(
+                Abschluss::findMany(array_keys($count_abschluesse))
+            )->orderBy('name'),
+            'count_abschluesse'  => $count_abschluesse,
+            'selected_abschluss' => $_SESSION['mvv_filter_contacts_abschluss_id'] ?? '',
             'action'             => $this->action_url('set_filter'),
             'action_reset'       => $this->action_url('reset_filter')
         ]);
@@ -990,5 +1032,232 @@ class Shared_ContactsController extends MVVController
             $result[$range_category->id] = $range_category;
         }
         return $result;
+    }
+
+    /**
+     * Returns the number of contacts grouped by subjects for given contact ids.
+     *
+     * @param array $contact_ids The ids of the contacts.
+     * @param string $fach_id The id of the selected subject.
+     * @return array Number of contacts grouped by subjects.
+     */
+    private function countFaecher(array $contact_ids, string $fach_id): array
+    {
+        if ($fach_id === '') {
+            $params = [':contact_ids' => $contact_ids];
+            $where = "`mvv_contacts_ranges`.`contact_id` IN (:contact_ids)";
+        } else {
+            $params = [
+                ':fach_id' => $fach_id,
+                ':contact_ids' => $contact_ids
+            ];
+            $where = "`fach`.`fach_id` = :fach_id
+                      AND `mvv_contacts_ranges`.`contact_id` IN (:contact_ids)";
+        }
+        $query = "SELECT `counting`.`fach_id`, COUNT(DISTINCT `counting`.`contact_id`)
+                  FROM (
+                      SELECT `fach_id`, `contact_id`
+                      FROM `fach`
+                      JOIN `mvv_stgteil` USING (`fach_id`)
+                      JOIN `mvv_contacts_ranges`
+                        ON (
+                          `mvv_contacts_ranges`.`range_id` = `mvv_stgteil`.`stgteil_id`
+                          AND `mvv_contacts_ranges`.`range_type` = 'StudiengangTeil'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `fach_id`, `contact_id`
+                      FROM `fach`
+                      JOIN `mvv_stgteil` USING (`fach_id`)
+                      JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                      JOIN `mvv_studiengang` USING (`studiengang_id`)
+                      JOIN `mvv_contacts_ranges`
+                        ON (
+                          `mvv_contacts_ranges`.`range_id` = `mvv_studiengang`.`studiengang_id`
+                          AND `mvv_contacts_ranges`.`range_type` = 'Studiengang'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `fach_id`, `contact_id`
+                      FROM `fach`
+                      JOIN `mvv_stgteil` USING (`fach_id`)
+                      JOIN `mvv_stgteilversion` USING (`stgteil_id`)
+                      JOIN `mvv_stgteilabschnitt` USING (`version_id`)
+                      JOIN `mvv_stgteilabschnitt_modul` USING (`abschnitt_id`)
+                      JOIN `mvv_contacts_ranges`
+                        ON (
+                          `mvv_contacts_ranges`.`range_id` = `mvv_stgteilabschnitt_modul`.`modul_id`
+                          AND `mvv_contacts_ranges`.`range_type` = 'Modul'
+                        )
+                      WHERE {$where}
+                  ) AS `counting`
+                  GROUP BY `counting`.`fach_id`";
+        return DBManager::get()->fetchPairs($query, $params);
+    }
+
+    /**
+     * Returns the ids of the contacts related to the given subject id.
+     *
+     * @param string $fach_id The id of the selected subject.
+     * @return array The ids of the contacts related to the subject.
+     */
+    private function findContactIdsByFach(string $fach_id): array
+    {
+        $query = "SELECT `mvv_contacts_ranges`.`contact_id`
+                  FROM `mvv_contacts_ranges`
+                  JOIN `mvv_stgteilabschnitt_modul`
+                    ON (
+                      `mvv_stgteilabschnitt_modul`.`modul_id` = `mvv_contacts_ranges`.`range_id`
+                      AND `mvv_contacts_ranges`.`range_type` = 'Modul'
+                    )
+                  JOIN `mvv_stgteilabschnitt` USING (`abschnitt_id`)
+                  JOIN `mvv_stgteilversion` USING (`version_id`)
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = :fach_id
+
+                  UNION
+
+                  SELECT `mvv_contacts_ranges`.`contact_id`
+                  FROM `mvv_contacts_ranges`
+                  JOIN `mvv_studiengang`
+                    ON (
+                      `mvv_studiengang`.`studiengang_id` = `mvv_contacts_ranges`.`range_id`
+                      AND `mvv_contacts_ranges`.`range_type` = 'Studiengang'
+                    )
+                  JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = :fach_id
+
+                  UNION
+
+                  SELECT `mvv_contacts_ranges`.`contact_id`
+                  FROM `mvv_contacts_ranges`
+                  JOIN `mvv_stgteil`
+                    ON (
+                      `mvv_contacts_ranges`.`range_id` = `mvv_stgteil`.`stgteil_id`
+                      AND `mvv_contacts_ranges`.`range_type` = 'StudiengangTeil'
+                    )
+                  WHERE `mvv_stgteil`.`fach_id` = :fach_id";
+
+        return DBManager::get()->fetchFirst($query, [':fach_id' => $fach_id]);
+    }
+
+    /**
+     * Returns the number of contacts grouped by degrees for given contact ids.
+     *
+     * @param array $contact_ids The ids of the contacts.
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array Number of contacts grouped by degrees.
+     */
+    private function countAbschluesse(array $contact_ids, string $abschluss_id): array
+    {
+        if ($abschluss_id === '') {
+            $params = [':contact_ids' => $contact_ids];
+            $where = "`mvv_contacts_ranges`.`contact_id` IN (:contact_ids)";
+        } else {
+            $params = [
+                ':abschluss_id' => $abschluss_id,
+                ':contact_ids'  => $contact_ids
+            ];
+            $where = "`abschluss`.`abschluss_id` = :abschluss_id
+                      AND `mvv_contacts_ranges`.`contact_id` IN (:contact_ids)";
+        }
+        $query = "SELECT `counting`.`abschluss_id`, COUNT(DISTINCT `counting`.`contact_id`)
+                  FROM (
+                      SELECT `abschluss_id`, `contact_id`
+                      FROM `abschluss`
+                      JOIN `mvv_studiengang` USING (`abschluss_id`)
+                      JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                      JOIN `mvv_stgteil` USING (`stgteil_id`)
+                      JOIN `mvv_contacts_ranges`
+                        ON (
+                          `mvv_contacts_ranges`.`range_id` = `mvv_stgteil`.`stgteil_id`
+                          AND `mvv_contacts_ranges`.`range_type` = 'StudiengangTeil'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `abschluss_id`, `contact_id`
+                      FROM `abschluss`
+                      JOIN `mvv_studiengang` USING (`abschluss_id`)
+                      JOIN `mvv_contacts_ranges`
+                        ON (
+                          `mvv_contacts_ranges`.`range_id` = `mvv_studiengang`.`studiengang_id`
+                          AND `mvv_contacts_ranges`.`range_type` = 'Studiengang'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `abschluss_id`, `contact_id`
+                      FROM `abschluss`
+                      JOIN `mvv_studiengang` USING (`abschluss_id`)
+                      JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                      JOIN `mvv_stgteilversion` USING (`stgteil_id`)
+                      JOIN `mvv_stgteilabschnitt` USING (`version_id`)
+                      JOIN `mvv_stgteilabschnitt_modul` USING (`abschnitt_id`)
+                      JOIN `mvv_contacts_ranges`
+                        ON (
+                          `mvv_contacts_ranges`.`range_id` = `mvv_stgteilabschnitt_modul`.`modul_id`
+                          AND `mvv_contacts_ranges`.`range_type` = 'Modul'
+                        )
+                      WHERE {$where}
+                  ) AS `counting`
+                  GROUP BY `counting`.`abschluss_id`";
+
+        return DBManager::get()->fetchPairs($query, $params);
+    }
+
+    /**
+     * Returns the ids of the contacts related to the given degree id.
+     *
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array The ids of the contacts related to the degree.
+     */
+    private function findContactIdsByAbschluss(string $abschluss_id): array
+    {
+        $query = "SELECT `mvv_contacts_ranges`.`contact_id`
+                  FROM `mvv_contacts_ranges`
+                  JOIN `mvv_stgteilabschnitt_modul`
+                    ON (
+                      `mvv_stgteilabschnitt_modul`.`modul_id` = `mvv_contacts_ranges`.`range_id`
+                      AND `mvv_contacts_ranges`.`range_type` = 'Modul'
+                    )
+                  JOIN `mvv_stgteilabschnitt` USING (`abschnitt_id`)
+                  JOIN `mvv_stgteilversion` USING (`version_id`)
+                  JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                  JOIN `mvv_studiengang` USING (`studiengang_id`)
+                  WHERE `mvv_studiengang`.`abschluss_id` = :abschluss_id
+
+                  UNION
+
+                  SELECT `mvv_contacts_ranges`.`contact_id`
+                  FROM `mvv_contacts_ranges`
+                  JOIN `mvv_studiengang`
+                    ON (
+                      `mvv_studiengang`.`studiengang_id` = `mvv_contacts_ranges`.`range_id`
+                      AND `mvv_contacts_ranges`.`range_type` = 'Studiengang'
+                    )
+                  WHERE `mvv_studiengang`.`abschluss_id` = :abschluss_id
+
+                  UNION
+
+                  SELECT `mvv_contacts_ranges`.`contact_id`
+                  FROM `mvv_contacts_ranges`
+                  JOIN `mvv_stgteil`
+                    ON (
+                      `mvv_contacts_ranges`.`range_id` = `mvv_stgteil`.`stgteil_id`
+                      AND `mvv_contacts_ranges`.`range_type` = 'StudiengangTeil'
+                    )
+                  JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                  JOIN `mvv_studiengang` USING (`studiengang_id`)
+                  WHERE `mvv_studiengang`.`abschluss_id` = :abschluss_id";
+
+        return DBManager::get()->fetchFirst($query, [':abschluss_id' => $abschluss_id]);
     }
 }

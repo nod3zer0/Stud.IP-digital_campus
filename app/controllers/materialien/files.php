@@ -38,11 +38,31 @@ class Materialien_FilesController extends MVVController
         $this->initSearchParams();
 
         $search_result = $this->getSearchResult('MvvFile');
-        if ($search_result) {
+
+        $file_ids = [];
+        if (count($search_result) > 0) {
+            $file_ids = $search_result;
+        } else {
+            if (!empty($_SESSION['mvv_filter_files_fach_id'])) {
+                $file_ids = $this->findFileIdsByFach($_SESSION['mvv_filter_contacts_fach_id']);
+            }
+            if (!empty($_SESSION['mvv_filter_files_abschluss_id'])) {
+                if (count($file_ids) > 0) {
+                    $file_ids = array_intersect(
+                        $file_ids,
+                        $this->findFileIdsByAbschluss($_SESSION['mvv_filter_contacts_abschluss_id'])
+                    );
+                } else {
+                    $file_ids = $this->findFileIdsByAbschluss($_SESSION['mvv_filter_contacts_abschluss_id']);
+                }
+            }
+        }
+
+        if ($file_ids) {
             $ranges = [];
             $refs = [];
             $this->filter = array_merge(
-                ['mvv_files.mvvfile_id' => $search_result],
+                ['mvv_files.mvvfile_id' => $file_ids],
                 (array) $this->filter
             );
         }
@@ -589,6 +609,13 @@ class Materialien_FilesController extends MVVController
         } else {
             $this->sessRemove('filter');
         }
+
+        // Fach
+        $_SESSION['mvv_filter_files_fach_id'] = Request::option('fach_filter', '');
+
+        // Abschluss
+        $_SESSION['mvv_filter_files_abschluss_id'] = Request::option('abschluss_filter', '');
+
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
@@ -597,6 +624,9 @@ class Materialien_FilesController extends MVVController
 
     public function reset_filter_action()
     {
+        $_SESSION['mvv_filter_files_fach_id'] = '';
+        $_SESSION['mvv_filter_files_abschluss_id'] = '';
+
         $this->filter = [];
         $this->reset_search();
         $this->sessRemove('filter');
@@ -652,7 +682,9 @@ class Materialien_FilesController extends MVVController
             $this->filter
         );
         unset($institute_filter['searchnames']);
-
+        $file_ids = MvvFile::getIdsFiltered($this->filter, true, false);
+        $count_faecher = $this->countFaecher($file_ids, $_SESSION['mvv_filter_files_fach_id'] ?? '');
+        $count_abschluesse = $this->countAbschluesse($file_ids, $_SESSION['mvv_filter_files_abschluss_id'] ?? '');
         $semesters = new SimpleCollection(array_reverse(Semester::getAll()));
         $filter_template = $template_factory->render('shared/filter', [
             'name_search'        => true,
@@ -666,6 +698,16 @@ class Materialien_FilesController extends MVVController
             'selected_institut'  => $this->filter['mvv_studiengang.institut_id'] ?? '',
             'zuordnungen'        => !empty($this->search_result['MvvFile']) ? MvvFile::getAllRelations($this->search_result['MvvFile']) : [],
             'selected_zuordnung' => $this->filter['mvv_files_ranges.range_type'] ?? '',
+            'faecher'            => SimpleORMapCollection::createFromArray(
+                Fach::findMany(array_keys($count_faecher))
+            )->orderBy('name'),
+            'count_faecher'      => $count_faecher,
+            'selected_fach'      => $_SESSION['mvv_filter_files_fach_id'] ?? '',
+            'abschluesse'        => SimpleORMapCollection::createFromArray(
+                Abschluss::findMany(array_keys($count_abschluesse))
+            )->orderBy('name'),
+            'count_abschluesse'  => $count_abschluesse,
+            'selected_abschluss' => $_SESSION['mvv_filter_files_abschluss_id'] ?? '',
             'action'             => $this->action_url('set_filter'),
             'action_reset'       => $this->action_url('reset_filter')]
         );
@@ -894,5 +936,228 @@ class Materialien_FilesController extends MVVController
         if (Request::submitted('store')) {
             $this->redirect($this->url_for('materialien/files/add_dokument', 'index', $range_type, implode(',', Request::getArray('range_id'))));
         }
+    }
+
+    /**
+     * Returns the number of files grouped by subjects for given file ids.
+     *
+     * @param array $module_ids The ids of the files.
+     * @param string $fach_id The id of the selected subject.
+     * @return array Number of files grouped by subjects.
+     */
+    private function countFaecher(array $file_ids, string $fach_id): array
+    {
+        if ($fach_id === '') {
+            $params = [':file_ids' => $file_ids];
+            $where = "`mvv_files_ranges`.`mvvfile_id` IN (:file_ids)";
+        } else {
+            $params = [
+                ':fach_id' => $fach_id,
+                ':file_ids' => $file_ids
+            ];
+            $where = "`fach`.`fach_id` = :fach_id
+                      AND `mvv_files_ranges`.`mvvfile_id` IN (:file_ids)";
+        }
+        $query = "SELECT `counting`.`fach_id`, COUNT(DISTINCT `counting`.`mvvfile_id`)
+                  FROM (
+                      SELECT `fach_id`, `mvvfile_id`
+                      FROM `fach`
+                      JOIN `mvv_stgteil` USING (`fach_id`)
+                      JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                      JOIN `mvv_studiengang` USING (`studiengang_id`)
+                      JOIN `mvv_abschl_zuord` USING (`abschluss_id`)
+                      JOIN `mvv_files_ranges`
+                        ON (
+                          `mvv_files_ranges`.`range_id` = `mvv_abschl_zuord`.`kategorie_id`
+                          AND `mvv_files_ranges`.`range_type` = 'AbschlussKategorie'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `fach_id`, `mvvfile_id`
+                      FROM `fach`
+                      JOIN `mvv_stgteil` USING (`fach_id`)
+                      JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                      JOIN `mvv_studiengang` USING (`studiengang_id`)
+                      JOIN `mvv_files_ranges`
+                        ON (
+                          `mvv_files_ranges`.`range_id` = `mvv_studiengang`.`studiengang_id`
+                          AND `mvv_files_ranges`.`range_type` = 'Studiengang'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `fach_id`, `mvvfile_id`
+                      FROM `fach`
+                      JOIN `mvv_stgteil` USING (`fach_id`)
+                      JOIN `mvv_stgteilversion` USING(`stgteil_id`)
+                      JOIN `mvv_files_ranges`
+                        ON (
+                          `mvv_files_ranges`.`range_id` = `mvv_stgteilversion`.`version_id`
+                          AND `mvv_files_ranges`.`range_type` = 'StgteilVersion'
+                        )
+                      WHERE {$where}
+                  ) AS `counting`
+                  GROUP BY `counting`.`fach_id`";
+        return DBManager::get()->fetchPairs($query, $params);
+    }
+
+    /**
+     * Returns the ids of the files related to the given subject id.
+     *
+     * @param string $fach_id The id of the selected subject.
+     * @return array The ids of the files related to the subject.
+     */
+    private function findFileIdsByFach(string $fach_id): array
+    {
+        $query = "SELECT `mvv_files_ranges`.`mvvfile_id`
+                  FROM `mvv_files_ranges`
+                  JOIN `mvv_stgteilversion`
+                    ON (
+                      `mvv_stgteilversion`.`version_id` = `mvv_files_ranges`.`range_id`
+                      AND `mvv_files_ranges`.`range_type` = 'StgteilVersion'
+                    )
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = :fach_id
+
+                  UNION
+
+                  SELECT `mvv_files_ranges`.`mvvfile_id`
+                  FROM `mvv_files_ranges`
+                  JOIN `mvv_studiengang`
+                    ON (
+                      `mvv_studiengang`.`studiengang_id` = `mvv_files_ranges`.`range_id`
+                      AND `mvv_files_ranges`.`range_type` = 'Studiengang'
+                    )
+                  JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = :fach_id
+
+                  UNION
+
+                  SELECT `mvv_files_ranges`.`mvvfile_id`
+                  FROM `mvv_files_ranges`
+                  JOIN `mvv_abschl_zuord`
+                    ON (
+                      `mvv_files_ranges`.`range_id` = `mvv_abschl_zuord`.`kategorie_id`
+                      AND `mvv_files_ranges`.`range_type` = 'AbschlussKategorie'
+                    )
+                  JOIN `mvv_studiengang` USING (`abschluss_id`)
+                  JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = :fach_id";
+
+        return DBManager::get()->fetchFirst($query, [':fach_id' => $fach_id]);
+    }
+
+    /**
+     * Returns the number of files grouped by degrees for given file ids.
+     *
+     * @param array $module_ids The ids of the files.
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array Number of files grouped by degrees.
+     */
+    private function countAbschluesse(array $file_ids, string $abschluss_id): array
+    {
+        if ($abschluss_id === '') {
+            $params = [':file_ids' => $file_ids];
+            $where = "`mvv_files_ranges`.`mvvfile_id` IN (:file_ids)";
+        } else {
+            $params = [
+                ':abschluss_id' => $abschluss_id,
+                ':file_ids'  => $file_ids
+            ];
+            $where = "`abschluss`.`abschluss_id` = :abschluss_id
+                      AND `mvv_files_ranges`.`mvvfile_id` IN (:file_ids)";
+        }
+        $query = "SELECT `counting`.`abschluss_id`, COUNT(DISTINCT `counting`.`mvvfile_id`)
+                  FROM (
+                      SELECT `abschluss_id`, `mvvfile_id`
+                      FROM `abschluss`
+                      JOIN `mvv_studiengang` USING (`abschluss_id`)
+                      JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                      JOIN `mvv_stgteilversion` USING (`stgteil_id`)
+                      JOIN `mvv_files_ranges`
+                        ON (
+                          `mvv_files_ranges`.`range_id` = `mvv_stgteilversion`.`version_id`
+                          AND `mvv_files_ranges`.`range_type` = 'StgteilVersion'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `abschluss_id`, `mvvfile_id`
+                      FROM `abschluss`
+                      JOIN `mvv_studiengang` USING (`abschluss_id`)
+                      JOIN `mvv_files_ranges`
+                        ON (
+                          `mvv_files_ranges`.`range_id` = `mvv_studiengang`.`studiengang_id`
+                          AND `mvv_files_ranges`.`range_type` = 'Studiengang'
+                        )
+                      WHERE {$where}
+
+                      UNION ALL
+
+                      SELECT `abschluss_id`, `mvvfile_id`
+                      FROM `abschluss`
+                      JOIN `mvv_studiengang` USING (`abschluss_id`)
+                      JOIN `mvv_abschl_zuord` USING (`abschluss_id`)
+                      JOIN `mvv_files_ranges`
+                        ON (
+                          `mvv_files_ranges`.`range_id` = `mvv_abschl_zuord`.`kategorie_id`
+                          AND `mvv_files_ranges`.`range_type` = 'AbschlussKategorie'
+                        )
+                      WHERE {$where}
+                  ) AS `counting`
+                  GROUP BY `counting`.`abschluss_id`";
+
+        return DBManager::get()->fetchPairs($query, $params);
+    }
+
+    /**
+     * Returns the ids of the files related to the given degree id.
+     *
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array The ids of the files related to the degree.
+     */
+    private function findFileIdsByAbschluss(string $abschluss_id): array
+    {
+        $query = "SELECT `mvv_files_ranges`.`mvvfile_id`
+                  FROM `mvv_files_ranges`
+                  JOIN `mvv_abschl_zuord`
+                    ON (
+                      `mvv_abschl_zuord`.`kategorie_id` = `mvv_files_ranges`.`range_id`
+                      AND `mvv_files_ranges`.`range_type` = 'AbschlussKategorie'
+                    )
+                  JOIN `mvv_studiengang` USING(`abschluss_id`)
+                  WHERE `mvv_studiengang`.`abschluss_id` = :abschluss_id
+
+                  UNION
+
+                  SELECT `mvv_files_ranges`.`mvvfile_id`
+                  FROM `mvv_files_ranges`
+                  JOIN `mvv_studiengang`
+                    ON (
+                      `mvv_studiengang`.`studiengang_id` = `mvv_files_ranges`.`range_id`
+                      AND `mvv_files_ranges`.`range_type` = 'Studiengang'
+                    )
+                  WHERE `mvv_studiengang`.`abschluss_id` = :abschluss_id
+
+                  UNION
+
+                  SELECT `mvv_files_ranges`.`mvvfile_id`
+                  FROM `mvv_files_ranges`
+                  JOIN `mvv_stgteilversion`
+                    ON (
+                      `mvv_files_ranges`.`range_id` = `mvv_stgteilversion`.`version_id`
+                      AND `mvv_files_ranges`.`range_type` = 'StgteilVersion'
+                    )
+                  JOIN `mvv_stg_stgteil` USING(`stgteil_id`)
+                  JOIN `mvv_studiengang` USING(`studiengang_id`)
+                  WHERE `mvv_studiengang`.`abschluss_id` = :abschluss_id";
+
+        return DBManager::get()->fetchFirst($query, [':abschluss_id' => $abschluss_id]);
     }
 }

@@ -50,9 +50,29 @@ class Module_ModuleController extends MVVController
         if (empty($this->filter['mvv_modul_inst.institut_id'])) {
             unset($this->filter['mvv_modul_inst.institut_id']);
         }
+
+        $module_ids = [];
+        if (count($search_result) > 0) {
+            $module_ids = $search_result;
+        } else {
+            if ($_SESSION['mvv_filter_module_fach_id']) {
+                $module_ids = $this->findModuleIdsByFach($_SESSION['mvv_filter_module_fach_id']);
+            }
+            if (!empty($_SESSION['mvv_filter_module_abschluss_id'])) {
+                if (count($module_ids) > 0) {
+                    $module_ids = array_intersect(
+                        $module_ids,
+                        $this->findModuleIdsByAbschluss($_SESSION['mvv_filter_module_abschluss_id'])
+                    );
+                } else {
+                    $module_ids = $this->findModuleIdsByAbschluss($_SESSION['mvv_filter_module_abschluss_id']);
+                }
+            }
+        }
+
         $this->filter = array_merge(
             [
-                'mvv_modul.modul_id'         => $search_result,
+                'mvv_modul.modul_id'         => $module_ids,
                 'mvv_modul_inst.gruppe'      => 'hauptverantwortlich',
                 'mvv_modul_inst.institut_id' => MvvPerm::getOwnInstitutes()
             ],
@@ -1286,6 +1306,12 @@ class Module_ModuleController extends MVVController
             $this->filter['mvv_modul_inst.institut_id'] = MvvPerm::getOwnInstitutes();
         }
 
+        // Fach
+        $_SESSION['mvv_filter_module_fach_id'] = Request::option('fach_filter', '');
+
+        // Abschluss
+        $_SESSION['mvv_filter_module_abschluss_id'] = Request::option('abschluss_filter', '');
+
         // store filter
         $this->reset_page();
         $this->sessSet('filter', $this->filter);
@@ -1295,6 +1321,9 @@ class Module_ModuleController extends MVVController
     public function reset_filter_action()
     {
         $this->reset_page();
+
+        $_SESSION['mvv_filter_module_fach_id'] = '';
+        $_SESSION['mvv_filter_module_abschluss_id'] = '';
 
         $this->sessSet('filter', []);
         $this->redirect($this->indexURL());
@@ -1380,6 +1409,21 @@ class Module_ModuleController extends MVVController
             $selected_semester = $semesters->findOneBy('beginn', $this->filter['start_sem.beginn']);
         }
 
+        // Fach
+        $count_faecher = $this->countFaecher($modul_ids, $_SESSION['mvv_filter_module_fach_id'] ?? '');
+        $template->set_attribute('faecher', SimpleORMapCollection::createFromArray(
+            Fach::findMany(array_keys($count_faecher))
+        )->orderBy('name'));
+        $template->set_attribute('count_faecher', $count_faecher);
+        $template->set_attribute('selected_fach', $_SESSION['mvv_filter_module_fach_id'] ?? '');
+
+        // Abschluss
+        $count_abschluesse = $this->countAbschluesse($modul_ids, $_SESSION['mvv_filter_module_abschluss_id'] ?? '');
+        $template->set_attribute('abschluesse', SimpleORMapCollection::createFromArray(
+             Abschluss::findMany(array_keys($count_abschluesse))
+        )->orderBy('name'));
+        $template->set_attribute('count_abschluesse', $count_abschluesse);
+        $template->set_attribute('selected_abschluss', $_SESSION['mvv_filter_module_abschluss_id'] ?? '');
 
         $template->set_attribute('semester', $semesters);
         $template->set_attribute('selected_semester', $selected_semester->id ?? '');
@@ -1431,5 +1475,103 @@ class Module_ModuleController extends MVVController
             $this->search_term
         );
         $sidebar->addWidget($widget, 'search');
+    }
+
+    /**
+     * Returns the number of modules grouped by subjects for given module ids.
+     *
+     * @param array $module_ids The ids of the modules.
+     * @param string $fach_id The id of the selected subject.
+     * @return array Number of modules grouped by subjects.
+     */
+    private function countFaecher(array $module_ids, string $fach_id): array
+    {
+        if ($fach_id === '') {
+            $params = [':module_ids' => $module_ids];
+            $where = "`mvv_stgteilabschnitt_modul`.`modul_id` IN (:module_ids)";
+        } else {
+            $params = [
+                ':fach_id' => $fach_id,
+                ':module_ids' => $module_ids
+            ];
+            $where = "`fach`.`fach_id` = :fach_id
+                      AND `mvv_stgteilabschnitt_modul`.`modul_id` IN (:module_ids)";
+        }
+        $query = "SELECT `fach`.`fach_id`, COUNT(DISTINCT `modul_id`) AS `count_faecher`
+                  FROM `fach`
+                  JOIN `mvv_stgteil` USING (`fach_id`)
+                  JOIN `mvv_stgteilversion` USING (`stgteil_id`)
+                  JOIN `mvv_stgteilabschnitt` USING (`version_id`)
+                  JOIN `mvv_stgteilabschnitt_modul` USING (`abschnitt_id`)
+                  WHERE {$where}
+                  GROUP BY `fach_id`";
+        return DBManager::get()->fetchPairs($query, $params);
+    }
+
+    /**
+     * Returns the ids of the modules related to the given subject id.
+     *
+     * @param string $fach_id The id of the selected subject.
+     * @return array The ids of the modules related to the subject.
+     */
+    private function findModuleIdsByFach(string $fach_id): array
+    {
+        $query = "SELECT `mvv_stgteilabschnitt_modul`.`modul_id`
+                  FROM `mvv_stgteilabschnitt_modul`
+                  JOIN `mvv_stgteilabschnitt` USING (`abschnitt_id`)
+                  JOIN `mvv_stgteilversion` USING (`version_id`)
+                  JOIN `mvv_stgteil` USING (`stgteil_id`)
+                  WHERE `mvv_stgteil`.`fach_id` = ?";
+        return DBManager::get()->fetchFirst($query, [$fach_id]);
+    }
+
+    /**
+     * Returns the number of modules grouped by degrees for given module ids.
+     *
+     * @param array $module_ids The ids of the modules.
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array Number of modules grouped by degrees.
+     */
+    private function countAbschluesse(array $module_ids, $abschluss_id): array
+    {
+        if ($abschluss_id === '') {
+            $params = [':module_ids' => $module_ids];
+            $where = "`mvv_stgteilabschnitt_modul`.`modul_id` IN (:module_ids)";
+        } else {
+            $params = [
+                ':abschluss_ids' => $abschluss_id,
+                ':module_ids' => $module_ids
+            ];
+            $where = "`abschluss`.`abschluss_id` = :abschluss_ids
+                      AND `mvv_stgteilabschnitt_modul`.`modul_id` IN (:module_ids)";
+        }
+        $query = "SELECT `abschluss`.`abschluss_id`, COUNT(DISTINCT `modul_id`) AS `count_abschluesse`
+                  FROM `abschluss`
+                  JOIN `mvv_studiengang` USING (`abschluss_id`)
+                  JOIN `mvv_stg_stgteil` USING (`studiengang_id`)
+                  JOIN `mvv_stgteilversion` USING (`stgteil_id`)
+                  JOIN `mvv_stgteilabschnitt` USING (`version_id`)
+                  JOIN `mvv_stgteilabschnitt_modul` USING (`abschnitt_id`)
+                  WHERE {$where}
+                  GROUP BY `abschluss_id`";
+        return DBManager::get()->fetchPairs($query, $params);
+    }
+
+    /**
+     * Returns the ids of the modules related to the given degree id.
+     *
+     * @param string $abschluss_id The id of the selected degree.
+     * @return array The ids of the modules related to the degree.
+     */
+    private function findModuleIdsByAbschluss(string $abschluss_id): array
+    {
+        $query = "SELECT `mvv_stgteilabschnitt_modul`.`modul_id`
+                  FROM `mvv_stgteilabschnitt_modul`
+                  JOIN `mvv_stgteilabschnitt` USING (`abschnitt_id`)
+                  JOIN `mvv_stgteilversion` USING (`version_id`)
+                  JOIN `mvv_stg_stgteil` USING (`stgteil_id`)
+                  JOIN `mvv_studiengang` USING (`studiengang_id`)
+                  WHERE `mvv_studiengang`.`abschluss_id` = ?";
+        return DBManager::get()->fetchFirst($query, [$abschluss_id]);
     }
 }
