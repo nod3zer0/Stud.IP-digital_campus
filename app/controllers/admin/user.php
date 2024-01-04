@@ -278,13 +278,13 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_action($user_id = null, $parent = '')
     {
-        $delete_documents           = Request::bool('documents');
-        $delete_courseware          = Request::bool('courseware');
-        $delete_content_from_course = Request::bool('coursecontent');
-        $delete_personal_documents  = Request::bool('personaldocuments');
-        $delete_personal_content    = Request::bool('personalcontent');
-        $delete_names               = Request::bool('personalnames');
-        $delete_memberships         = Request::bool('memberships');
+        $delete_documents           = Request::bool('documents', false);
+        $delete_courseware          = Request::bool('courseware', false);
+        $delete_content_from_course = Request::bool('coursecontent', false);
+        $delete_personal_documents  = Request::bool('personaldocuments', false);
+        $delete_personal_content    = Request::bool('personalcontent', false);
+        $delete_names               = Request::bool('personalnames', false);
+        $delete_memberships         = Request::bool('memberships', false);
 
         //deleting one user
         if (!is_null($user_id)) {
