@@ -69,7 +69,7 @@ class CSRFProtection
                 throw new SessionRequiredException();
             }
 
-            self::$storage = $_SESSION;
+            self::$storage =& $_SESSION;
         }
         return self::$storage;
     }
