@@ -11,9 +11,14 @@ class BlubberThreadsShowTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
+    protected $csrf_storage = [];
+
     protected function _before()
     {
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
+
+
+        CSRFProtection::setStorage($this->csrf_storage);
 
         // Create global template factory if neccessary
         $has_template_factory = isset($GLOBALS['template_factory']);

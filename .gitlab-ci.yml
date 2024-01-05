@@ -1,4 +1,4 @@
-image: studip/studip:tests-php7.2
+image: studip/studip:tests-php8.2
 
 variables:
   FF_NETWORK_PER_BUILD: 1
@@ -88,6 +88,36 @@ lint-php:
     CACHE_LOCATION: $CACHE_DIR/phplint-cache
     PHPLINT_JSON_REPORT: $REPORT_DIR/phplint-report.json
     PHPLINT_CODE_QUALITY_REPORT: $REPORT_DIR/phplint-codequality.json
+  interruptible: true
+  cache:
+    - *composer-cache
+    - key: "$CI_JOB_NAME_SLUG:$CI_COMMIT_REF_SLUG"
+      paths:
+        - $CACHE_LOCATION
+  before_script:
+    - *mkdir-caches
+    - *mkdir-reports
+    - *install-composer
+  script:
+    - COMPOSER_MEMORY_LIMIT=-1
+      composer exec phplint
+      --
+      --json $PHPLINT_JSON_REPORT
+      --cache=$CACHE_LOCATION
+  after_script:
+    - ./.gitlab/scripts/convert-phplint-report $PHPLINT_JSON_REPORT > $PHPLINT_CODE_QUALITY_REPORT
+  artifacts:
+    reports:
+      codequality: $PHPLINT_CODE_QUALITY_REPORT
+
+lint-php-7.4:
+  image: studip/studip:tests-php8.2
+  stage: checks
+  needs: [build-composer]
+  variables:
+    CACHE_LOCATION: $CACHE_DIR/phplint-cache
+    PHPLINT_JSON_REPORT: $REPORT_DIR/phplint-report-7.4.json
+    PHPLINT_CODE_QUALITY_REPORT: $REPORT_DIR/phplint-codequality-7.4.json
   interruptible: true
   cache:
     - *composer-cache
@@ -229,6 +259,7 @@ test-unit:
 test-jest:
   stage: test
   needs: [lint-js]
+  image: $NODE_IMAGE
   variables:
     JS_TEST_REPORT: $REPORT_DIR/jest.xml
   cache: *npm-cache

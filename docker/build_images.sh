@@ -9,8 +9,8 @@ build_image () {
   fi
 }
 
-build_image tests/php72 studip:tests-php7.2 &
-build_image tests/php74 studip:tests &
+build_image tests/php82 studip:tests-php8.2 &
+build_image tests/php74 studip:tests-php7.4 &
 build_image release-cli release-cli &
 wait
 

@@ -1,7 +1,7 @@
 <?php
 return [
     'php'   => [
-        'version' => '7.2',
+        'version' => '7.4',
         'modules' => [
             'PDO'       => true,
             'pdo_mysql' => true,

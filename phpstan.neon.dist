@@ -1,6 +1,6 @@
 parameters:
     level: 0
-    phpVersion: 70200 # PHP 7.2
+    phpVersion: 70400 # PHP 7.4
     paths:
         - app/controllers
         - app/routes

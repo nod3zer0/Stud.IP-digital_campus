@@ -1,5 +1,5 @@
 # Setup php, apache and stud.ip
-FROM php:7.2-cli
+FROM php:8.2-cli
 
 # Install system requirements
 RUN apt update && apt install -y  --no-install-recommends \
@@ -10,9 +10,8 @@ RUN apt update && apt install -y  --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install php extensions
-RUN docker-php-ext-configure gd --with-png-dir=/usr/include/ \
-                                --with-jpeg-dir=/usr/include/
-RUN docker-php-ext-install pdo gettext curl gd mbstring zip pdo pdo_mysql mysqli intl json
+RUN docker-php-ext-configure gd --with-jpeg=/usr/include/
+RUN docker-php-ext-install -j$(nproc) pdo gettext curl gd mbstring zip pdo pdo_mysql mysqli intl
 
 # Install npm using nvm
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
