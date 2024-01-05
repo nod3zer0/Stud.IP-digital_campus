@@ -97,27 +97,31 @@ $show_hidden_login = false;
                         </div>
                     <? endif ?>
 
+                <form method="POST" action="<?=URLHelper::getLink(Request::url(), ['cancel_login' => null])?>">
+                    <?=CSRFProtection::tokenTag()?>
+                    <input type="hidden" name="user_config_submitted" value="1">
                     <div id="languages">
                         <? foreach ($GLOBALS['INSTALLED_LANGUAGES'] as $temp_language_key => $temp_language): ?>
                             <?= Assets::img('languages/' . $temp_language['picture'], ['alt' => $temp_language['name'], 'size' => '24']) ?>
-                            <a href="<?= URLHelper::getLink('index.php', ['set_language' =>$temp_language_key ]) ?>">
+                            <button class="as-link" name="set_language_<?=$temp_language_key?>">
                                 <?= htmlReady($temp_language['name']) ?>
-                            </a>
-                        <? endforeach ?>
+                            </button>
+                        <? endforeach; ?>
                     </div>
-
                     <div id="contrast">
-                        <? if (isset($_SESSION['contrast'])) : ?>
+                        <?=CSRFProtection::tokenTag()?>
+                        <? if (!empty($_SESSION['contrast'])) : ?>
                             <?= Icon::create('accessibility')->asImg(24) ?>
-                            <a href="<?= URLHelper::getLink('index.php', ['unset_contrast' => 1, 'cancel_login' => 1]) ?>"><?= _('Normalen Kontrast aktivieren') ?></a>
+                            <button class="as-link" name="unset_contrast"><?= _('Normalen Kontrast aktivieren') ?></button>
                             <?= tooltipIcon(_('Aktiviert standardmäßige, nicht barrierefreie Kontraste.')); ?>
                         <? else : ?>
                             <?= Icon::create('accessibility')->asImg(24) ?>
-                            <a href="<?= URLHelper::getLink('index.php', ['set_contrast' => 1, 'cancel_login' => 1]) ?>" id="highcontrastlink"><?= _('Hohen Kontrast aktivieren')?></a>
-                            <?= tooltipIcon(_('Aktiviert einen hohen Kontrast gemäß WCAG 2.1. Diese Einstellung wird nach dem Login übernommen.'
-                                . 'Sie können sie in Ihren persönlichen Einstellungen ändern.')); ?>
+                            <button class="as-link" name="set_contrast"><?= _('Hohen Kontrast aktivieren') ?></button>
+                            <?= tooltipIcon(_('Aktiviert einen hohen Kontrast gemäß WCAG 2.1. Diese Einstellung wird nach dem Login übernommen.
+                        Sie können sie in Ihren persönlichen Einstellungen ändern.')); ?>
                         <? endif ?>
                     </div>
+                </form>
 
                 </footer>
             </div>

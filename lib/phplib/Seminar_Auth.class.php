@@ -301,24 +301,21 @@ class Seminar_Auth
             throw new AccessDeniedException();
         }
 
-        // if desired, switch to high contrast stylesheet and store when user logs in
-        if (Request::get('unset_contrast')) {
-            unset($_SESSION['contrast']);
-            PageLayout::removeStylesheet('accessibility.css');
+        if (Request::submitted('user_config_submitted')) {
+            CSRFProtection::verifyUnsafeRequest();
+            if (Request::submitted('unset_contrast')) {
+                $_SESSION['contrast'] = 0;
+            }
+            if (Request::submitted('set_contrast')) {
+                $_SESSION['contrast'] = 1;
+            }
 
-        }
-        if (Request::get('set_contrast') ) {
-            $_SESSION['contrast'] = true;
-            PageLayout::addStylesheet('accessibility.css');
 
-        }
-
-        // evaluate language clicks
-        // has to be done before seminar_open to get switching back to german (no init of i18n at all))
-        if (Request::get('set_language')) {
-            if (array_key_exists(Request::get('set_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
-                $_SESSION['forced_language'] = Request::get('set_language');
-                $_SESSION['_language'] = Request::get('set_language');
+            foreach (array_keys($GLOBALS['INSTALLED_LANGUAGES']) as $language_key) {
+                if (Request::submitted('set_language_' . $language_key)) {
+                    $_SESSION['forced_language'] = $language_key;
+                    $_SESSION['_language'] = $language_key;
+                }
             }
         }
 
