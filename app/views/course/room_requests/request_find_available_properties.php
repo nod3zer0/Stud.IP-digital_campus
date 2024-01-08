@@ -59,7 +59,7 @@
                 <? if ($available_properties) : ?>
                     <? foreach ($available_properties as $property) : ?>
                         <?= $property->toHtmlInput(
-                            $selected_properties[$property->name],
+                            $selected_properties[$property->name] ?? '',
                             'selected_properties[' . htmlReady($property->name) . ']',
                             true,
                             false
@@ -80,42 +80,40 @@
                 <label>
                     <?= _('Raumname') ?>
                     <span class="flex-row">
-                    <input type="text" name="room_name" value="<?= htmlReady($room_name) ?>" >
-                    <?= Icon::create('search')->asInput(
-                        [
+                        <input type="text" name="room_name" value="<?= htmlReady($room_name) ?>" >
+                        <?= Icon::create('search')->asInput([
                             'title' => _('Räume suchen'),
                             'name'  => 'search_by_name',
                             'class' => 'text-bottom',
-                            'style' => 'margin-left: 0.2em; margin-top: 0.6em;'
-                        ]
-                    ) ?>
-                </span>
+                            'style' => 'margin-left: 0.2em; margin-top: 0.6em;',
+                        ]) ?>
+                    </span>
                 </label>
-                    <? if ($available_rooms) : ?>
-                        <label><strong><?= _('Passende Räume') ?></strong>
-                            <section class="selectbox" id="room_select">
-                                <? foreach ($available_rooms as $room): ?>
-                                    <div class="flex-row">
-                                        <label class="horizontal">
-                                            <?= $available_room_icons[$room->id] ?>
-                                            <input type="radio" name="selected_room_id"
-                                                   data-activates="button[type='submit'][name='select_room']"
-                                                   value="<?= htmlReady($room->id) ?>"
-                                                <? if ($_SESSION[$request_id]['room_id'] === $room->id) echo 'checked' ?>>
-                                            <?= htmlReady(mila($room->name, 50)) . ' (' . $room['category']->name . ')'?>
-                                            <? if ($room->properties): ?>
-                                                <? $property_names = $room->getInfolabelProperties()
-                                                    ->pluck('fullname') ?>
-                                                <?= tooltipIcon(implode("\n", $property_names)) ?>
-                                            <? endif ?>
-                                        </label>
-                                    </div>
-                                <? endforeach ?>
-                            </section>
-                        </label>
-                        <?= \Studip\Button::create(_('Raum auswählen'), 'select_room') ?>
-                    <? else : ?>
-                    <? endif ?>
+            <? if (!empty($available_rooms)) : ?>
+                <label>
+                    <strong><?= _('Passende Räume') ?></strong>
+                    <section class="selectbox" id="room_select">
+                        <? foreach ($available_rooms as $room): ?>
+                            <div class="flex-row">
+                                <label class="horizontal">
+                                    <?= $available_room_icons[$room->id] ?>
+                                    <input type="radio" name="selected_room_id"
+                                           data-activates="button[type='submit'][name='select_room']"
+                                           value="<?= htmlReady($room->id) ?>"
+                                        <? if ($_SESSION[$request_id]['room_id'] === $room->id) echo 'checked' ?>>
+                                    <?= htmlReady(mila($room->name, 50)) . ' (' . $room['category']->name . ')'?>
+                                    <? if ($room->properties): ?>
+                                        <? $property_names = $room->getInfolabelProperties()
+                                            ->pluck('fullname') ?>
+                                        <?= tooltipIcon(implode("\n", $property_names)) ?>
+                                    <? endif ?>
+                                </label>
+                            </div>
+                        <? endforeach ?>
+                    </section>
+                </label>
+                <?= \Studip\Button::create(_('Raum auswählen'), 'select_room') ?>
+            <? endif ?>
             </fieldset>
 
         </div>

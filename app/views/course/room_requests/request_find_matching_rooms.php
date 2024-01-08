@@ -61,7 +61,7 @@
                     <? if ($available_properties) : ?>
                         <? foreach ($available_properties as $property) : ?>
                             <?= $property->toHtmlInput(
-                                $selected_properties[$property->name],
+                                $selected_properties[$property->name] ?? '',
                                 'selected_properties[' . htmlReady($property->name) . ']',
                                 true,
                                 false,
@@ -74,11 +74,11 @@
 
                 <? endif ?>
 
-                <? if (!$embedded) : ?>
             </fieldset>
 
         </div>
 
+    <? if (empty($embedded)) : ?>
         <div>
             <fieldset class="request-fieldset">
                 <legend><?= _('Raumsuche') ?></legend>
@@ -124,11 +124,11 @@
                 <? else : ?>
                     <?= MessageBox::info(_('Es wurden keine passenden Räume gefunden!')) ?>
                 <? endif ?>
-
             </fieldset>
-
         </div>
+    <? endif; ?>
     </section>
 
+<? if (empty($embedded)) : ?>
     <?= $this->render_partial('course/room_requests/_new_request_form_footer', ['step' => $step, 'search_by' => 'roomname']) ?>
 <? endif ?>

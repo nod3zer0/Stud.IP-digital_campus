@@ -107,7 +107,7 @@
                     </td>
                 </tr>
             <? endforeach ?>
-            <? if ($request_id === $rr->id) : ?>
+            <? if (isset($request_id) && $request_id === $rr->id) : ?>
                 <tr>
                     <td colspan="4">
                         <?= $this->render_partial('course/room_requests/_request.php', ['request' => $rr]); ?>

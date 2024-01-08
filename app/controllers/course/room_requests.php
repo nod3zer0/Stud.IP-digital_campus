@@ -265,9 +265,9 @@ class Course_RoomRequestsController extends AuthenticatedController
         // selected room and its category
         $this->selected_room = Resource::find($_SESSION[$request_id]['room_id'] ?: $this->request->resource_id);
 
-        $this->selected_room_category_id = $this->selected_room->category_id ?: $_SESSION[$request_id]['room_category_id'];
+        $this->selected_room_category_id = $this->selected_room->category_id ?? $_SESSION[$request_id]['room_category_id'] ?? null;
 
-        $_SESSION[$request_id]['room_category_id'] = $_SESSION[$request_id]['room_category_id'] ?: $this->selected_room->category_id;
+        $_SESSION[$request_id]['room_category_id'] = $_SESSION[$request_id]['room_category_id'] ?? $this->selected_room->category_id ?? null;
 
         // after selecting a room, go to next step or stay here if no room was selected at all
         if (Request::submitted('select_room')) {
@@ -367,9 +367,9 @@ class Course_RoomRequestsController extends AuthenticatedController
             $this->available_properties = $this->category->getRequestableProperties();
 
             // properties, like 'Sitzplätze', 'behindertengerecht' etc
-            $this->selected_properties = $_SESSION[$request_id]['selected_properties'];
-            $this->preparation_time = $_SESSION[$request_id]['preparation_time'];
-            $this->comment = $_SESSION[$request_id]['comment'];
+            $this->selected_properties = $_SESSION[$request_id]['selected_properties'] ?? null;
+            $this->preparation_time = $_SESSION[$request_id]['preparation_time'] ?? null;
+            $this->comment = $_SESSION[$request_id]['comment'] ?? null;
             $this->request->category_id = $_SESSION[$request_id]['room_category_id'];
 
             // finally we want to show a summary
@@ -412,11 +412,11 @@ class Course_RoomRequestsController extends AuthenticatedController
 
         $this->course = Course::find($this->course_id);
         $this->selected_properties['seats'] = $_SESSION[$request_id]['selected_properties']['seats']
-            ?: $this->course->admission_turnout
+            ?? $this->course->admission_turnout
             ?: Config::get()->RESOURCES_ROOM_REQUEST_DEFAULT_SEATS;
 
-        $this->preparation_time = $_SESSION[$request_id]['preparation_time'];
-        $this->comment = $_SESSION[$request_id]['comment'];
+        $this->preparation_time = $_SESSION[$request_id]['preparation_time'] ?? null;
+        $this->comment = $_SESSION[$request_id]['comment'] ?? null;
 
         // when searching for a room name, list found room
         if ($_SESSION[$request_id]['room_name'] !== '') {
@@ -562,20 +562,23 @@ class Course_RoomRequestsController extends AuthenticatedController
         }
 
         $this->request = new RoomRequest($this->request_id);
-        $this->request->setRangeFields($_SESSION[$this->request_id]['range'], $_SESSION[$this->request_id]['range_ids']);
+        $this->request->setRangeFields(
+            $_SESSION[$this->request_id]['range'] ?? '',
+            $_SESSION[$this->request_id]['range_ids'] ?? []
+        );
 
-        $this->selected_room_category = ResourceCategory::find($_SESSION[$request_id]['room_category_id'] ?: $this->request->category_id);
+        $this->selected_room_category = ResourceCategory::find($_SESSION[$request_id]['room_category_id'] ?? $this->request->category_id);
 
-        $this->selected_room = Resource::find($_SESSION[$request_id]['room_id'] ?: $this->request->resource_id);
+        $this->selected_room = Resource::find($_SESSION[$request_id]['room_id'] ?? $this->request->resource_id);
 
-        $this->room_id = $_SESSION[$request_id]['room_id'] ?: $this->request->resource_id;
+        $this->room_id = $_SESSION[$request_id]['room_id'] ?? $this->request->resource_id;
         $this->available_properties = $this->selected_room_category->getRequestableProperties();
 
-        $this->selected_properties = $_SESSION[$request_id]['selected_properties'] ?: [];
+        $this->selected_properties = $_SESSION[$request_id]['selected_properties'] ?? [];
         $this->request_properties = $this->request->properties;
 
         // either properties from stored request or those from session
-        if ($this->request_properties && !$_SESSION[$request_id]['selected_properties']) {
+        if ($this->request_properties && empty($_SESSION[$request_id]['selected_properties'])) {
             foreach ($this->request_properties as $property) {
                 $this->selected_properties[$property->name] = $property->state;
             }

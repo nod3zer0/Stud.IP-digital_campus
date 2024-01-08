@@ -13,7 +13,7 @@
             }
 
             // Remove required attribute if no text has been set
-            if (isset($attr['required']) && !$attr['value']) {
+            if (isset($attr['required']) && empty($attr['value'])) {
                 unset($attr['required']);
             }
         }
