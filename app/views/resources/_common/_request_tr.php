@@ -126,7 +126,7 @@
                 'course/room_requests/request_show_summary/' . $request->id,
                 ['cid' => $request->getRangeId()]
             );
-            $edit_url_attributes = ['target' => '_blank'];
+            $edit_url_attributes = ['data-dialog' => 'size=auto'];
         } elseif ($request->isSimpleRequest() && !$request->isReadOnlyForUser($current_user)) {
             $edit_url            = $controller->link_for('resources/room_request/edit/' . $request->id);
             $edit_url_attributes = ['data-dialog' => 'size=auto'];
