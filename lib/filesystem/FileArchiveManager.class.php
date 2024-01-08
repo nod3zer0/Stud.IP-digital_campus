@@ -104,7 +104,7 @@ class FileArchiveManager
                     //The URL has been fetched and we can put it
                     //in a file in the archive:
                     $archive->addFromString(
-                        $archive_fs_path . $file_type->getFilename() . '.url',
+                        $archive_fs_path . FileManager::cleanFileName($file_type->getFilename()) . '.url',
                         "[InternetShortcut]\nURL={$url}\n"
                     );
                     //Check the file size of the archive:
@@ -119,7 +119,7 @@ class FileArchiveManager
                     if (is_array($file_list)) {
                         $user = $file_type->getUser();
                         $file_list[] = [
-                            'name' => $file_type->getFilename(),
+                            'name' => FileManager::cleanFileName($file_type->getFilename()),
                             'size' => $file_type->getSize(),
                             'first_name' => ($user instanceof User) ? $user->vorname : '',
                             'last_name' => ($user instanceof User) ? $user->nachname : '',
@@ -144,7 +144,7 @@ class FileArchiveManager
                 if ($path) {
                     //It is a file in the file system:
                     if (file_exists($path)) {
-                        $archive->addFile($path, $archive_fs_path . $file_type->getFilename());
+                        $archive->addFile($path, $archive_fs_path . FileManager::cleanFileName($file_type->getFilename()));
                         //Check the file size of the archive:
                         if (file_exists($archive->filename) && filesize($archive->filename) > $archive_max_size) {
                             throw new FileArchiveManagerException(
@@ -160,13 +160,13 @@ class FileArchiveManager
                             $archive_max_size =  Config::get()->ZIP_DOWNLOAD_MAX_SIZE * 1024 * 1024; //1048576 bytes = 1 Mebibyte
                             $user = $file_type->getUser();
                             $file_list[] = [
-                                'name' => $file_type->getFilename(),
+                                'name' => FileManager::cleanFileName($file_type->getFilename()),
                                 'size' => $file_type->getSize(),
                                 'first_name' => ($user instanceof User) ? $user->vorname : '',
                                 'last_name' => ($user instanceof User) ? $user->nachname : '',
                                 'downloads' => $file_type->getDownloads(),
                                 'mkdate' => date('d.m.Y H:i', $file_type->getMakeDate()),
-                                'path' => ($archive_fs_path . $file_type->getFilename())
+                                'path' => ($archive_fs_path . FileManager::cleanFileName($file_type->getFilename()))
                             ];
                             if (count($file_list) > $archive_max_num_files) {
                                 $archive->unchangeAll();
@@ -283,7 +283,7 @@ class FileArchiveManager
 
         $folder_zip_path = $archive_fs_path;
         if ($keep_hierarchy) {
-            $folder_zip_path .= $folder->name;
+            $folder_zip_path .= FileManager::cleanFileName($folder->name);
             $archive->addEmptyDir($folder_zip_path);
         }
         foreach ($folder->getFiles() as $file) {
