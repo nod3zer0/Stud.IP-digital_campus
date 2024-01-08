@@ -2,6 +2,7 @@
     <div
         class="cw-companion-overlay"
         :class="[showCompanion ? 'cw-companion-overlay-in' : '', showCompanion ? '' : 'cw-companion-overlay-out', styleCompanion]"
+        :aria-hidden="!showCompanion"
     >
         <div class="cw-companion-overlay-content" v-html="msgCompanion"></div>
         <button class="cw-compantion-overlay-close" @click="hideCompanion"></button>
