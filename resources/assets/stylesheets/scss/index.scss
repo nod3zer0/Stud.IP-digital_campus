@@ -192,6 +192,12 @@ $gap-between-boxes: calc($login-page-margin / 2);
     overflow: hidden;
     transition: max-height var(--transition-duration-slow) linear;
 
+    // This prevents the focus border from being cut due to overflow: hidden
+    margin-left: -5px;
+    margin-right: -5px;
+    padding-left: 5px;
+    padding-right: 5px;
+
     &.hide {
         max-height: 0px;
     }
