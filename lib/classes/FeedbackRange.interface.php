@@ -12,6 +12,13 @@
 interface FeedbackRange
 {
     /**
+     * Returns the ID of this range.
+     *
+     * @return string|integer The ID of the range.
+     */
+    public function getId();
+
+    /**
      * Returns a human-friendly representation of the FeedbackRange object instance's name.
      *
      * @return string A human-friendly name for the FeedbackRange object instance.

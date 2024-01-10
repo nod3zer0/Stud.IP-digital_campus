@@ -24,6 +24,7 @@ class StructuralElement extends SchemaProvider
     const REL_USER = 'user';
     const REL_TASK = 'task';
     const REL_UNIT = 'unit';
+    const REL_FEEDBACKELEMENT = 'feedback-element';
 
     /**
      * {@inheritdoc}
@@ -138,6 +139,12 @@ class StructuralElement extends SchemaProvider
             $relationships,
             $resource,
             $this->shouldInclude($context, self::REL_UNIT)
+        );
+
+        $relationships = $this->addFeedbackElementRelationship(
+            $relationships,
+            $resource,
+            $this->shouldInclude($context, self::REL_FEEDBACKELEMENT)
         );
 
         return $relationships;
@@ -376,6 +383,22 @@ class StructuralElement extends SchemaProvider
         $relation[self::RELATIONSHIP_DATA] = $related;
 
         $relationships[self::REL_UNIT] = $relation;
+
+        return $relationships;
+    }
+
+    private function addFeedbackElementRelationship(array $relationships, $resource, $includeData): array
+    {
+        $relation = [
+            self::RELATIONSHIP_LINKS => [
+                Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FEEDBACKELEMENT),
+            ],
+        ];
+
+        $feedback = $resource->getFeedbackElement();
+        $relation[self::RELATIONSHIP_DATA] = $feedback;
+        $relationships[self::REL_FEEDBACKELEMENT] = $relation;
+
 
         return $relationships;
     }

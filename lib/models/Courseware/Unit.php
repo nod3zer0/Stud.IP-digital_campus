@@ -31,7 +31,7 @@ use User;
  * @property StructuralElement $structural_element has_one StructuralElement
  */
 
-class Unit extends \SimpleORMap implements \PrivacyObject
+class Unit extends \SimpleORMap implements \PrivacyObject, \FeedbackRange
 {
     protected static function configure($config = [])
     {
@@ -60,8 +60,14 @@ class Unit extends \SimpleORMap implements \PrivacyObject
         ];
 
         $config['registered_callbacks']['after_delete'][] = 'updatePositionsAfterDelete';
+        $config['registered_callbacks']['before_delete'][] = 'cbBeforeDelete';
 
         parent::configure($config);
+    }
+
+    public function cbBeforeDelete()
+    {
+        \FeedbackElement::deleteBySQL('range_id = ? AND range_type = ?', [$this->id, self::class]);
     }
 
     public static function findCoursesUnits(\Course $course): array
@@ -200,5 +206,47 @@ class Unit extends \SimpleORMap implements \PrivacyObject
 
 
         return $struct;
+    }
+
+    public function getRangeCourseId(): string
+    {
+        return $this->range_id;
+    }
+
+    public function getRangeName(): string
+    {
+        return $this->structural_element->title;
+    }
+
+    public function getRangeIcon($role): string
+    {
+        return \Icon::create('content2', $role);
+    }
+
+    public function getRangeUrl(): string
+    {
+        if ($this->structural_element->range_type === 'user') {
+            return 'contents/courseware/';   
+        }
+
+        return 'course/courseware/' . '?cid=' . $this->range_id;
+    }
+
+    public function isRangeAccessible(string $user_id = null): bool
+    {
+        $user =  \User::find($user_id);
+        if ($user) {
+            return $this->canRead($user);
+        }
+
+        return false;
+    }
+
+    public function getFeedbackElement()
+    {
+        return \FeedbackElement::findOneBySQL(
+            'range_id = ? AND range_type = ?',
+            [$this->id, self::class]
+        );
     }
 }

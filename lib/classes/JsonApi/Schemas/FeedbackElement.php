@@ -2,24 +2,28 @@
 
 namespace JsonApi\Schemas;
 
+use JsonApi\Errors\InternalServerError;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;
 
 class FeedbackElement extends SchemaProvider
 {
-    const TYPE = 'feedback-elements';
-    const REL_AUTHOR = 'author';
-    const REL_COURSE = 'course';
-    const REL_ENTRIES = 'entries';
-    const REL_RANGE = 'range';
+    public const TYPE = 'feedback-elements';
+    public const REL_AUTHOR = 'author';
+    public const REL_COURSE = 'course';
+    public const REL_ENTRIES = 'entries';
+    public const REL_RANGE = 'range';
 
 
 
     public function getId($resource): ?string
     {
-        return (int) $resource->id;
+        return (string) $resource->id;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         $attributes = [
@@ -28,6 +32,9 @@ class FeedbackElement extends SchemaProvider
             'mode' => (int) $resource['mode'],
             'results-visible' => (bool) $resource['results_visible'],
             'is-commentable' => (bool) $resource['commentable'],
+            'anonymous-entries' => (bool) $resource['anonymous_entries'],
+            'average-rating' => $resource->getAverageRating(),
+            'has-entries' => $resource->hasEntries(),
 
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate'])
@@ -76,7 +83,7 @@ class FeedbackElement extends SchemaProvider
         return $relationships;
     }
 
-    private function getAuthorRelationship(array $relationships, \FeedbackElement $resource, $includeData): array
+    private function getAuthorRelationship(array $relationships, \FeedbackElement $resource, bool $includeData): array
     {
         $userId = $resource['user_id'];
         $related = $includeData ? \User::find($userId) : \User::build(['id' => $userId], false);
@@ -90,7 +97,7 @@ class FeedbackElement extends SchemaProvider
         return $relationships;
     }
 
-    private function getCourseRelationship(array $relationships, \FeedbackElement $resource, $includeData): array
+    private function getCourseRelationship(array $relationships, \FeedbackElement $resource, bool $includeData): array
     {
         if ($courseId = $resource['course_id']) {
             $related = $includeData ? \Course::find($courseId) : \Course::build(['id' => $courseId], false);
@@ -119,23 +126,17 @@ class FeedbackElement extends SchemaProvider
 
     private function getRangeRelationship(array $relationships, \FeedbackElement $resource, bool $includeData): array
     {
-        $rangeType = $resource['range_type'];
-        $link = null;
-
+        $range = $resource->getRange();
         try {
-            $link = $this->createLinkToResource($rangeType);
-            if (
-                is_subclass_of($rangeType, \FeedbackRange::class) &&
-                is_subclass_of($rangeType, \SimpleORMap::class)
-            ) {
-                if ($range = $rangeType::find($resource['range_id'])) {
-                    $relationships[self::REL_RANGE] = [
-                        self::RELATIONSHIP_LINKS => [Link::RELATED => $link],
-                        self::RELATIONSHIP_DATA => $range
-                    ];
-                }
-            }
+            $link = $this->createLinkToResource($range);
+            $relationships[self::REL_RANGE] = [
+                self::RELATIONSHIP_LINKS => [Link::RELATED => $link],
+                self::RELATIONSHIP_DATA => $range
+            ];
         } catch (\InvalidArgumentException $e) {
+            // don't show this relation
+        } catch (InternalServerError $ise) {
+            // don't show this relation
         }
 
         return $relationships;

@@ -29,6 +29,12 @@
     <textarea name="comment"><?= htmlReady(isset($entry) ? $entry->comment : '') ?></textarea>
 </label>
 <? endif; ?>
+<? if ($feedback->anonymous_entries) : ?>
+<label>
+    <input type="checkbox" name="anonymous" value="1" <?= $entry->anonymous ? 'checked' : '' ?> >
+    <?= _('Kommentar anonym abgeben') ?>
+</label>
+<? endif; ?>
 <div>
     <?= Studip\Button::createAccept(_('Absenden'), 'add', ['class' => 'feedback-entry-submit']) ?>
     <?= Studip\Button::createCancel(_('Abbrechen'), 'cancel', ['class' => 'feedback-entry-cancel']) ?>

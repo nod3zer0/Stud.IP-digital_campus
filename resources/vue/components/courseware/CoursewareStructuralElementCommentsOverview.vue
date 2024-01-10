@@ -25,7 +25,7 @@
                         <a href="#">{{ $gettext('Kommentare') }}</a>
                     </th>
                     <th class="responsive-hidden" :class="getSortClass('feedback')" @click="sort('feedback')">
-                        <a href="#">{{ $gettext('Feedback') }}</a>
+                        <a href="#">{{ $gettext('Anmerkungen') }}</a>
                     </th>
                     <th class="actions">
                         {{ $gettext('Aktionen') }}
@@ -57,11 +57,11 @@
                         <a
                             v-if="element.attributes['can-edit'] && element.feedbacks.length > 0"
                             href="#"
-                            :title="$gettext('Feedback anzeigen')"
+                            :title="$gettext('Anmerkungen anzeigen')"
                             @click.prevent="enableFeedbackDialog(element)"
                         >
                             {{ $gettextInterpolate(
-                                $ngettext('%{length} Feedback', '%{length} Feedbacks', element.feedbacks.length),
+                                $ngettext('%{length} Anmerkung', '%{length} Anmerkungen', element.feedbacks.length),
                                 {length: element.feedbacks.length}
                             ) }}
                         </a>
@@ -82,7 +82,7 @@
             <tbody v-else>
                 <tr class="empty">
                     <td colspan="6">
-                        {{ $gettext('Es wurden keine Kommentare oder Feedback gefunden') }}
+                        {{ $gettext('Es wurden keine Kommentare oder Anmerkungen gefunden') }}
                     </td>
                 </tr>
             </tbody>
@@ -198,7 +198,7 @@ export default {
             let menuItems = [];
             menuItems.push({ id: 1, label: this.$gettext('Kommentare anzeigen'), icon: 'comment2', emit: 'showComments' });
             if (element.attributes['can-edit']) {
-                menuItems.push({ id: 2, label: this.$gettext('Feedback anzeigen'), icon: 'comment2', emit: 'showFeedback' });
+                menuItems.push({ id: 2, label: this.$gettext('Anmerkungen anzeigen'), icon: 'comment2', emit: 'showFeedback' });
             }
 
             return menuItems;

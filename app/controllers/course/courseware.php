@@ -36,6 +36,12 @@ class Course_CoursewareController extends CoursewareController
         $this->licenses = $this->getLicenses();
         $this->oer_enabled = Config::get()->OERCAMPUS_ENABLED && $GLOBALS['perm']->have_perm(Config::get()->OER_PUBLIC_STATUS);
         $this->unitsNotFound = Unit::countBySql('range_id = ?', [Context::getId()]) === 0;
+
+        $this->feedback_settings = json_encode([
+            'activated' => \Feedback::isActivated(),
+            'adminPerm' => \Feedback::hasAdminPerm(Context::getId()),
+            'createPerm' => \Feedback::hasCreatePerm(Context::getId()),
+        ]);
     }
 
     public function index_action(): void

@@ -24,7 +24,7 @@
                     </th>
                     <th>{{ $gettext('Abgabe') }}</th>
                     <th class="responsive-hidden renewal">{{ $gettext('Verlängerungsanfrage') }}</th>
-                    <th class="responsive-hidden feedback">{{ $gettext('Feedback') }}</th>
+                    <th class="responsive-hidden feedback">{{ $gettext('Anmerkungen') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -106,15 +106,15 @@
                         <span
                             v-if="feedback"
                             :title="
-                                $gettext('Feedback geschrieben am:') +
+                                $gettext('Anmerkung geschrieben am:') +
                                 ' ' +
                                 getReadableDate(feedback.attributes['chdate'])
                             "
                         >
                             <studip-icon shape="accept" role="status-green" />
-                            {{ $gettext('Feedback gegeben') }}
+                            {{ $gettext('Anmerkung gegeben') }}
                             <studip-icon
-                                :title="$gettext('Feedback bearbeiten')"
+                                :title="$gettext('Anmerkung bearbeiten')"
                                 class="edit"
                                 shape="edit"
                                 role="clickable"
@@ -127,7 +127,7 @@
                             class="button"
                             @click="addFeedback(task)"
                         >
-                            {{ $gettext('Feedback geben') }}
+                            {{ $gettext('Anmerkung geben') }}
                         </button>
                     </td>
                 </tr>
@@ -193,12 +193,12 @@
                     v-if="currentDialogFeedback.attributes.content === ''"
                     mood="pointing"
                     :msgCompanion="
-                        $gettext('Sie haben kein Feedback geschrieben, beim Speichern wird dieses Feedback gelöscht!')
+                        $gettext('Sie haben keine Anmerkungen geschrieben, beim Speichern wird diese Anmerkung gelöscht!')
                     "
                 />
                 <form class="default" @submit.prevent="">
                     <label>
-                        {{ $gettext('Feedback') }}
+                        {{ $gettext('Anmerkung') }}
                         <textarea v-model="currentDialogFeedback.attributes.content" />
                     </label>
                 </form>
@@ -220,7 +220,7 @@
             <template v-slot:dialogContent>
                 <form class="default" @submit.prevent="">
                     <label>
-                        {{ $gettext('Feedback') }}
+                        {{ $gettext('Anmerkung') }}
                         <textarea v-model="currentDialogFeedback.attributes.content" />
                     </label>
                 </form>
@@ -264,12 +264,12 @@ export default {
                     close: this.$gettext('Schließen'),
                 },
                 editFeedbackDialog: {
-                    title: this.$gettext('Feedback zur Aufgabe ändern'),
+                    title: this.$gettext('Anmerkung zur Aufgabe ändern'),
                     confirm: this.$gettext('Speichern'),
                     close: this.$gettext('Schließen'),
                 },
                 addFeedbackDialog: {
-                    title: this.$gettext('Feedback zur Aufgabe geben'),
+                    title: this.$gettext('Anmerkung zur Aufgabe erstellen'),
                     confirm: this.$gettext('Speichern'),
                     close: this.$gettext('Schließen'),
                 },
@@ -350,7 +350,7 @@ export default {
         createFeedback() {
             if (this.currentDialogFeedback.attributes.content === '') {
                 this.companionError({
-                    info: this.$gettext('Bitte schreiben Sie ein Feedback.'),
+                    info: this.$gettext('Bitte schreiben Sie eine Anmerkung.'),
                 });
                 return false;
             }
@@ -373,7 +373,7 @@ export default {
                     taskFeedbackId: this.currentDialogFeedback.id,
                 });
                 this.companionSuccess({
-                    info: this.$gettext('Feedback wurde gelöscht.'),
+                    info: this.$gettext('Anmerkung wurde gelöscht.'),
                 });
             } else {
                 await this.updateTaskFeedback({
@@ -381,7 +381,7 @@ export default {
                     taskFeedbackId: this.currentDialogFeedback.id,
                 });
                 this.companionSuccess({
-                    info: this.$gettext('Feedback wurde gespeichert.'),
+                    info: this.$gettext('Anmerkung wurde gespeichert.'),
                 });
             }
 

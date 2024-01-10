@@ -14,7 +14,17 @@
     </label>
     <label>
         <input type="checkbox" name="results_visible" value="1" <?= $feedback->results_visible == 1 ? 'checked' : '' ?>>
-        <?= _('Feedback Ergebnisse nach Antwort sichtbar') ?>
+        <?= _('Feedback-Ergebnisse nach Antwort sichtbar') ?>
+    </label>
+    <label>
+        <input
+            type="checkbox"
+            name="anonymous_entries"
+            value="1"
+            <?= $this->current_action === 'edit_form' ? 'disabled' : '' ?>
+            <?= $feedback->anonymous_entries ? 'checked' : '' ?>
+        > 
+        <?= _('Feedback kann anonym abgegeben werden')?>
     </label>
     <label>
         <input id="comment-activated" type="checkbox" name="commentable" value="1" <? if ($this->current_action ==

@@ -25,6 +25,8 @@ const getDefaultState = () => {
         importStructuresState: '',
         importStructuresProgress: 0,
         importErrors: [],
+
+        feedbackSettings: null,
     };
 };
 
@@ -103,6 +105,23 @@ const getters = {
     importErrors(state) {
         return state.importErrors;
     },
+    feedbackSettings(state) {
+        return state.feedbackSettings;
+    },
+    isFeedbackActivated(state, getters) {
+        return getters.feedbackSettings?.activated ?? false;
+    },
+    canCreateFeedbackElement(state, getters) {
+        return getters.feedbackSettings?.createPerm ?? false;
+    },
+    canEditFeedbackElement(state, getters) {
+        return getters.feedbackSettings?.adminPerm ?? false;
+    },
+
+    currentUser(state, getters, rootState, rootGetters) {
+        const id = getters.userId;
+        return rootGetters['users/byId']({ id });
+    },
 };
 
 export const state = { ...initialState };
@@ -158,11 +177,15 @@ export const actions = {
         context.commit('setUrlHelper', urlHelper);
     },
 
+    setFeedbackSettings(context, feedbackSettings) {
+        context.commit('setFeedbackSettings', feedbackSettings);
+    },
+
     // other actions
     loadCourseUnits({ dispatch }, cid) {
         const parent = { type: 'courses', id: cid };
         const relationship = 'courseware-units';
-        const options = { include: 'structural-element' }
+        const options = { include: 'structural-element, feedback-element' }
 
         return dispatch('loadRelatedPaginated', {
             type: 'courseware-units',
@@ -802,6 +825,10 @@ export const mutations = {
     setImportStructuresProgress(state, importStructuresProgress) {
         state.importStructuresProgress = importStructuresProgress;
     },
+
+    setFeedbackSettings(state, feedbackSettings) {
+        state.feedbackSettings = feedbackSettings;
+    }
 };
 
 export default {

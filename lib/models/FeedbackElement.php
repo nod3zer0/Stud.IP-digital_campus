@@ -3,6 +3,7 @@
 /**
  *
  * @author Nils Gehrke <nils.gehrke@uni-goettingen.de>
+ * @author Ron Lucke <lucke@elan-ev.de>
  *
  * The column "range_type" represents the name of a class that implements
  * FeedbackRange.
@@ -17,6 +18,7 @@
  * @property int $mode database column
  * @property int $results_visible database column
  * @property int $commentable database column
+ * @property int $anonymous_entries database column
  * @property int $mkdate database column
  * @property int $chdate database column
  * @property SimpleORMapCollection|FeedbackEntry[] $entries has_many FeedbackEntry
@@ -154,6 +156,22 @@ class FeedbackElement extends SimpleORMap
             default:
                 return 0;
         }
+    }
+
+    public function getAverageRating(): float
+    {
+        $ratings = $this->getRatings();
+
+        if (empty($ratings)) {
+            return 0;
+        }
+
+        return array_sum($ratings) / count($ratings);
+    }
+
+    public function hasEntries(): bool
+    {
+        return count($this->getRatings()) > 0;
     }
 
     public function getRange()

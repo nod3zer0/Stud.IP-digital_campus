@@ -1,6 +1,6 @@
 <template>
     <studip-dialog
-        :title="$gettext('Lernmaterial aus Ablaufplan Themen erstellen')"
+        :title="$gettext('Lernmaterial aus Ablaufplan-Themen erstellen')"
         :confirmText="$gettext('Erstellen')"
         confirmClass="accept"
         :closeText="$gettext('Abbrechen')"

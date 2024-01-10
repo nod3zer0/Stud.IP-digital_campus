@@ -41,6 +41,11 @@ export default {
         CoursewareSharedItems,
         CoursewareCompanionOverlay,
     },
+    data() {
+        return {
+            rate: 0
+        }
+    },
     computed: {
         ...mapGetters({
             showUnitAddDialog: 'showUnitAddDialog',

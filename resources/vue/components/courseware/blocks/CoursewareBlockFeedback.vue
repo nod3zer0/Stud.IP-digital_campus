@@ -16,7 +16,7 @@
             </div>
             <courseware-companion-box
                 v-if="!userIsTeacher && feedback.length === 0"
-                :msgCompanion="$gettext('Es wurde noch keine Anmerkungen abgegeben.')"
+                :msgCompanion="$gettext('Es wurde noch keine Anmerkung hinzugefügt.')"
                 mood="pointing"
             />
             <div v-if="userIsTeacher" class="cw-block-feedback-create">
@@ -105,7 +105,7 @@ export default {
             });
         },
         async postFeedback() {
-            this.updateSrMessage(this.$gettext('Feedback gesendet'));
+            this.updateSrMessage(this.$gettext('Anmerkung gesendet'));
             const data = {
                 attributes: {
                     feedback: this.feedbackText,

@@ -40,6 +40,8 @@ class Instance extends SchemaProvider
             'root-layout' => $resource->getRootLayout(),
             'sequential-progression' => $resource->getSequentialProgression(),
             'editing-permission-level' => $resource->getEditingPermissionLevel(),
+            'show-feedback-popup' => $resource->getShowFeedbackPopup(),
+            'show-feedback-in-contentbar' => $resource->getShowFeedbackInContentbar(),
             'certificate-settings' => $resource->getCertificateSettings(),
             'reminder-settings' => $resource->getReminderSettings(),
             'reset-progress-settings' => $resource->getResetProgressSettings(),

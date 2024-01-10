@@ -75,7 +75,7 @@ export default {
                 return this.$gettext('Kommentare');
             }
             if (this.isFeedback) {
-                return this.$gettext('Feedback');
+                return this.$gettext('Anmerkungen');
             }
 
             return '';

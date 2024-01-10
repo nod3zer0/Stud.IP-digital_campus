@@ -49,7 +49,7 @@ class Course_FeedbackController extends AuthenticatedController
                 $widget->addLink(
                     _('Neues Feedback-Element'),
                     $this->url_for('course/feedback/create_form'),
-                    Icon::create('star')
+                    Icon::create('add')
                 )->asDialog();
             }
         }
@@ -72,6 +72,8 @@ class Course_FeedbackController extends AuthenticatedController
             'results_visible'   => 1,
             'commentable'       => 1,
             'mode'              => FeedbackElement::MODE_5STAR_RATING,
+            'mode'              => 1,
+            'anonymous_entries' => 1,
         ]);
     }
 
@@ -99,6 +101,7 @@ class Course_FeedbackController extends AuthenticatedController
                 'description'       =>  Studip\Markup::purifyHtml(Request::get('description')),
                 'results_visible'   => intval(Request::get('results_visible')),
                 'commentable'       => $commentable,
+                'anonymous_entries' => intval(Request::get('anonymous_entries')),
                 'mode'              => $mode
             ]);
             $feedback->store();
@@ -232,11 +235,13 @@ class Course_FeedbackController extends AuthenticatedController
             if ($rating == 0) {
                 $rating = 1;
             }
+            $anonymous = intval(Request::get('anonymous'));
             $entry =  FeedbackEntry::build([
                 'feedback_id'   => $this->feedback->id,
                 'user_id'       => $GLOBALS['user']->id,
                 'rating'        => $rating,
-                'comment'       => trim(Request::get('comment'))
+                'comment'       => trim(Request::get('comment')),
+                'anonymous'     => $anonymous,
             ]);
             $entry->store();
             PageLayout::postSuccess(_('Feedback gespeichert'));
@@ -268,6 +273,7 @@ class Course_FeedbackController extends AuthenticatedController
             }
         $entry->comment = trim(Request::get('comment'));
         $entry->rating  = $rating;
+        $entry->anonymous = Request::int('anonymous', 0);
         $entry->store();
         PageLayout::postSuccess(_('Änderungen gespeichert'));
         $this->redirect($entry->feedback->getRange()->getRangeUrl());

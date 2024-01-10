@@ -53,7 +53,7 @@ use User;
  * @property Task $task has_one Task
  * @property mixed $image additional field
  */
-class StructuralElement extends \SimpleORMap implements \PrivacyObject
+class StructuralElement extends \SimpleORMap implements \PrivacyObject, \FeedbackRange
 {
     protected static function configure($config = [])
     {
@@ -151,6 +151,7 @@ class StructuralElement extends \SimpleORMap implements \PrivacyObject
         if (is_a($image, \FileRef::class)) {
             $image->delete();
         }
+        \FeedbackElement::deleteBySQL('range_id = ? AND range_type = ?', [$this->id, self::class]);
     }
 
     /**
@@ -1194,5 +1195,49 @@ SQL;
                 'position' => $key
             ]);
         }
+    }
+
+    public function getRangeCourseId(): string
+    {
+        return $this->range_id;
+    }
+
+    public function getRangeName(): string
+    {
+        return $this->title;
+    }
+
+    public function getRangeIcon($role): string
+    {
+        return \Icon::create('courseware', $role);
+    }
+
+    public function getRangeUrl(): string
+    {
+        $unit = $this->findUnit();
+
+        if ($this->range_type === 'user') {
+            return 'contents/courseware/courseware/' . $unit->id . '#/structural_element/' . $this->id;
+        }
+ 
+        return 'course/courseware/courseware/' . $unit->id . '?cid=' . $this->range_id . '#/structural_element/' . $this->id;
+    }
+
+    public function isRangeAccessible(string $user_id = null): bool
+    {
+        $user =  \User::find($user_id);
+        if ($user) {
+            return $this->canRead($user);
+        }
+
+        return false;
+    }
+
+    public function getFeedbackElement()
+    {
+        return \FeedbackElement::findOneBySQL(
+            'range_id = ? AND range_type = ?',
+            [$this->id, self::class]
+        );
     }
 }

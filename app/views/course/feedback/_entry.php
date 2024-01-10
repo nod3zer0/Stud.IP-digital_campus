@@ -1,10 +1,15 @@
 <article class="studip feedback-entry" data-id="<?= $entry->id ?>">
     <header>
         <h1>
+            <? if (!$entry->anonymous): ?>
             <a href="<?= URLHelper::getLink('dispatch.php/profile?username=' . $entry->user->username) ?>">
                 <?= Avatar::getAvatar($entry->user_id)->getImageTag(Avatar::SMALL) ?>
                 <?= htmlReady($entry->user->getFullName()) ?>
             </a>
+            <? else: ?>
+                <?= Avatar::getNobody()->getImageTag(Avatar::SMALL) ?>
+                <?= _('Anonym') ?>
+            <? endif; ?>
         </h1>
         <nav>
             <? if ($entry->isEditable()) : ?>

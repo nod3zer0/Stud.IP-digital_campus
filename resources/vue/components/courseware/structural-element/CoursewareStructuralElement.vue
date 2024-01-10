@@ -52,6 +52,20 @@
                                         ({{ elementProgress }} %)
                                     </span>
                                 </template>
+                                <studip-five-stars
+                                    v-if="showFeedbackInContentbar && hasFeedbackElement"
+                                    :amount="hasFeedbackAverage ? feedbackAverage : 5"
+                                    :size="16"
+                                    :role="hasFeedbackAverage ? 'status-yellow' : 'inactive'"
+                                    :title="
+                                    hasFeedbackAverage ?
+                                        $gettextInterpolate($gettext('Seite wurde mit %{avg} Sternen bewertet'), {
+                                            avg: feedbackAverage,
+                                        }) :
+                                        $gettext('Seite wurde noch nicht bewertet')
+                                    "
+                                    @click="menuAction('showFeedback')"
+                                />
                             </li>
                         </template>
                         <template #breadcrumbFallback>
@@ -80,6 +94,7 @@
                                 @activateComments="menuAction('activateComments')"
                                 @deactivateComments="menuAction('deactivateComments')"
                                 @showFeedback="menuAction('showFeedback')"
+                                @showFeedbackCreate="menuAction('showFeedbackCreate')"
                             />
                         </template>
                     </courseware-ribbon>
@@ -593,6 +608,27 @@
                 <courseware-structural-element-dialog-export v-if="showExportDialog" :structuralElement="currentElement" />
                 <courseware-structural-element-dialog-export-pdf v-if="showPdfExportDialog" :structuralElement="currentElement" />
                 <courseware-structural-element-dialog-add-chooser v-if="showAddChooserDialog" />
+                <feedback-dialog
+                    v-if="showFeedbackDialog"
+                    :feedbackElementId="parseInt(feedbackElementId)"
+                    :currentUser="currentUser"
+                    @deleted="loadStructuralElement(currentId)"
+                    @close="showStructuralElementFeedbackDialog(false)"
+                />
+                <feedback-create-dialog
+                    v-if="showFeedbackCreateDialog"
+                    :defaultQuestion="$gettext('Bewerten Sie die Seite')"
+                    rangeType="courseware-structural-elements"
+                    :rangeId="currentElement.id"
+                    @created="loadStructuralElement(currentElement.id)"
+                    @close="showStructuralElementFeedbackCreateDialog(false)"
+                />
+                <courseware-feedback-popup
+                    v-if="showRatingPopup"
+                    :feedbackElement="ratingPopupFeedbackElement"
+                    @close="showRatingPopup = false"
+                    @submit="submitFeedback"
+                />
             </div>
             <div v-else>
                 <courseware-companion-box
@@ -618,6 +654,7 @@ import CoursewareRootContent from './CoursewareRootContent.vue';
 
 import CoursewareStructuralElementComments from './CoursewareStructuralElementComments.vue';
 import CoursewareStructuralElementFeedback from './CoursewareStructuralElementFeedback.vue';
+import CoursewareFeedbackPopup from './CoursewareFeedbackPopup.vue';
 import CoursewareStructuralElementDialogAdd from './CoursewareStructuralElementDialogAdd.vue';
 import CoursewareStructuralElementDialogAddChooser from './CoursewareStructuralElementDialogAddChooser.vue';
 import CoursewareStructuralElementDialogCopy from './CoursewareStructuralElementDialogCopy.vue';
@@ -638,6 +675,11 @@ import CoursewareCallToActionBox from '../layouts/CoursewareCallToActionBox.vue'
 import CoursewareDateInput from '../layouts/CoursewareDateInput.vue';
 import StockImageSelector from '../../stock-images/SelectorDialog.vue';
 import StudipDialog from '../../StudipDialog.vue';
+import { FocusTrap } from 'focus-trap-vue';
+import IsoDate from '../layouts/IsoDate.vue';
+import FeedbackDialog from '../../feedback/FeedbackDialog.vue'
+import FeedbackCreateDialog from '../../feedback/FeedbackCreateDialog.vue';
+import StudipFiveStars from '../../feedback/StudipFiveStars.vue';
 import draggable from 'vuedraggable';
 import containerMixin from '@/vue/mixins/courseware/container.js';
 import { mapActions, mapGetters } from 'vuex';
@@ -662,6 +704,12 @@ export default {
         CoursewareWelcomeScreen,
         CoursewareCallToActionBox,
         CoursewareDateInput,
+        CoursewareFeedbackPopup,
+        FeedbackDialog,
+        FeedbackCreateDialog,
+        StudipFiveStars,
+        FocusTrap,
+        IsoDate,
         StockImageSelector,
         StudipDialog,
         draggable,
@@ -729,12 +777,16 @@ export default {
             showStockImageSelector: false,
             selectedStockImage: null,
             displayFeedback: false,
+
+            showRatingPopup: false,
+            ratingPopupFeedbackElement: null
         };
     },
 
     computed: {
         ...mapGetters({
             courseware: 'courseware',
+            rootId: 'rootId',
             context: 'context',
             consumeMode: 'consumeMode',
             containerById: 'courseware-containers/byId',
@@ -762,6 +814,8 @@ export default {
             showSuggestOerDialog: 'showSuggestOerDialog',
             showPublicLinkDialog: 'showStructuralElementPublicLinkDialog',
             showRemoveLockDialog: 'showStructuralElementRemoveLockDialog',
+            showFeedbackDialog: 'showStructuralElementFeedbackDialog',
+            showFeedbackCreateDialog: 'showStructuralElementFeedbackCreateDialog',
             oerCampusEnabled: 'oerCampusEnabled',
             oerEnableSuggestions: 'oerEnableSuggestions',
             licenses: 'licenses',
@@ -785,7 +839,13 @@ export default {
             childrenById: 'courseware-structure/children',
 
             rootLayout: 'rootLayout',
-            toolbarActive: 'toolbarActive'
+            toolbarActive: 'toolbarActive',
+            isFeedbackActivated: 'isFeedbackActivated',
+            canCreateFeedbackElement: 'canCreateFeedbackElement',
+            getFeedbackElementById: 'feedback-elements/byId',
+            feedbackEntries: 'feedback-entries/all',
+
+            currentUser: 'currentUser'
         }),
 
         currentId() {
@@ -1042,22 +1102,59 @@ export default {
             return this.editor?.attributes['formatted-name'] ?? '?';
         },
 
+        feedbackElementId() {
+            return this.currentElement?.relationships?.['feedback-element']?.data?.id;
+        },
+        hasFeedbackElement() {
+            return this.feedbackElementId !== undefined;
+        },
+        showFeedbackInContentbar() {
+            return this.courseware.attributes['show-feedback-in-contentbar'];
+        },
+        feedbackElement() {
+            return this.getFeedbackElementById({ id: this.feedbackElementId });
+        },
+        feedbackAverage() {
+            return this.feedbackElement?.attributes?.['average-rating'] ?? 0;
+        },
+        hasFeedbackAverage() {
+            return this.feedbackAverage > 0;
+        },
+
         menuItems() {
             let menu = [
                 { id: 4, label: this.$gettext('Informationen anzeigen'), icon: 'info', emit: 'showInfo' },
                 { id: 5, label: this.$gettext('Lesezeichen setzen'), icon: 'star', emit: 'setBookmark' },
             ];
+            if (this.isFeedbackActivated) {
+                if (this.canCreateFeedbackElement && !this.hasFeedbackElement) {
+                    menu.push({
+                        id: 6,
+                        label: this.$gettext('Feedback aktivieren'),
+                        icon: 'feedback',
+                        emit: 'showFeedbackCreate',
+                    });
+                }
+                if (this.hasFeedbackElement) {
+                    menu.push({
+                        id: 6,
+                        label: this.$gettext('Feedback anzeigen'),
+                        icon: 'feedback',
+                        emit: 'showFeedback',
+                    });
+                }
+            }
 
             if (this.oerEnableSuggestions && this.inCourse && this.userId !== this.structuralElement.relationships.owner.data.id) {
                 menu.push(
-                    { id: 6, label: this.$gettext('Seite für OER Campus vorschlagen'), icon: 'oer-campus',
+                    { id: 7, label: this.$gettext('Seite für OER Campus vorschlagen'), icon: 'oer-campus',
                         emit: 'showSuggest' }
                 );
             }
 
             if (!document.documentElement.classList.contains('responsive-display')) {
                 menu.push(
-                    { id: 7, label: this.$gettext('Als Vollbild anzeigen'), icon: 'screen-full',
+                    { id: 8, label: this.$gettext('Als Vollbild anzeigen'), icon: 'screen-full',
                         emit: 'activateFullscreen'},
                 );
             }
@@ -1100,11 +1197,11 @@ export default {
                 menu.push({ id: 3, label: this.$gettext('Seite hinzufügen'), icon: 'add', emit: 'addElement' });
             }
             if (this.context.type === 'users') {
-                menu.push({ id: 8, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
+                menu.push({ id: 9, label: this.$gettext('Öffentlichen Link erzeugen'), icon: 'group', emit: 'linkElement' });
             }
             if (this.deletable && this.canEdit && !this.isTask && !this.blocked) {
                 menu.push({
-                    id: 8,
+                    id: 10,
                     label: this.$gettext('Seite löschen'),
                     icon: 'trash',
                     emit: 'deleteCurrentElement',
@@ -1319,9 +1416,9 @@ export default {
             companionInfo: 'companionInfo',
             companionWarning: 'companionWarning',
             companionError: 'companionError',
+            companionSuccess: 'companionSuccess',
             uploadImageForStructuralElement: 'uploadImageForStructuralElement',
             deleteImageForStructuralElement: 'deleteImageForStructuralElement',
-            companionSuccess: 'companionSuccess',
             setStockImageForStructuralElement: 'setStockImageForStructuralElement',
             showElementEditDialog: 'showElementEditDialog',
             showElementAddDialog: 'showElementAddDialog',
@@ -1334,6 +1431,8 @@ export default {
             showElementPublicLinkDialog: 'showElementPublicLinkDialog',
             showElementRemoveLockDialog: 'showElementRemoveLockDialog',
             updateShowSuggestOerDialog: 'updateShowSuggestOerDialog',
+            showStructuralElementFeedbackDialog: 'showStructuralElementFeedbackDialog',
+            showStructuralElementFeedbackCreateDialog: 'showStructuralElementFeedbackCreateDialog',
             updateContainer: 'updateContainer',
             createContainer: 'createContainer',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
@@ -1345,6 +1444,8 @@ export default {
             activateStructuralElementComments: 'activateStructuralElementComments',
             deactivateStructuralElementComments: 'deactivateStructuralElementComments',
             loadRelatedFeedback: 'courseware-structural-element-feedback/loadRelated',
+            createFeedback: 'feedback-elements/create',
+            loadFeedbackElement: 'feedback-elements/loadById',
         }),
 
         initCurrent() {
@@ -1421,7 +1522,10 @@ export default {
                     this.deactivateStructuralElementComments({ element: this.currentElement });
                     break;
                 case 'showFeedback':
-                    this.displayFeedback = true;
+                    this.showStructuralElementFeedbackDialog(true);
+                    break;
+                case 'showFeedbackCreate':
+                    this.showStructuralElementFeedbackCreateDialog(true);
                     break;
             }
         },
@@ -1771,28 +1875,110 @@ export default {
             this.showStockImageSelector = false;
             this.deletingPreviewImage = false;
         },
+        activateFeedback() {
+            const data = {
+                attributes: {
+                    question: this.$gettext('Bewerten Sie das Lernmaterial'),
+                    description: '',
+                    mode: 1,
+                    'results-visible': true,
+                    'is-commentable': true,
+                    'anonymous-entries': true,
+                },
+                relationships: {
+                    range: {
+                        data: {
+                            type: 'courseware-structural-elements',
+                            id: this.currentElement.id,
+                        },
+                    },
+                },
+            };
+            this.createFeedback(data).then(() => {
+                this.loadStructuralElement(this.currentElement.id);
+            });
+        },
+        async showFeedbackPopup(to, from) {
+            let showRatingPopup = false;
+            let ratingPopupFeedbackElement = null;
+            const toId = to.params.id;
+            const toElem = this.structuralElementById({id: toId});
+            if (toId === this.nextElement?.id && toElem.relationships.parent.data.id === this.rootId) {
+                const firstLevelElement = await this.findFirstLevelParent(this.currentElement);
+                const feedbackElementId = firstLevelElement?.relationships?.['feedback-element']?.data?.id;
+                if (feedbackElementId) {
+                    await this.loadFeedbackElement({ id: feedbackElementId, options: { include: 'entries' }});
+                    ratingPopupFeedbackElement = this.getFeedbackElementById({ id: feedbackElementId });
+                    const hasUserEntry = this.feedbackEntries.filter(
+                        (entry) => 
+                            parseInt(entry.relationships?.['feedback-element']?.data?.id) == feedbackElementId &&
+                            this.currentUser.id === entry.relationships?.author?.data?.id
+                    ).length > 0;
+                    
+                    if (this.currentUser.id !== ratingPopupFeedbackElement?.relationships?.author?.data?.id && !hasUserEntry) {
+                        showRatingPopup = true;
+                    } else {
+                        ratingPopupFeedbackElement = null;
+                    }
+                }
+            }
+            this.showRatingPopup = showRatingPopup;
+            this.ratingPopupFeedbackElement = ratingPopupFeedbackElement;
+        },
+        async findFirstLevelParent(elem) {
+            const parentId = elem.relationships.parent.data.id;
+            if (!parentId) {
+                return null;
+            }
+            if (parentId == this.rootId) {
+                await this.loadStructuralElement(elem.id);
+                return this.structuralElementById({ id: elem.id });
+            }
+            const parent = this.structuralElementById({ id: parentId });
+            
+            return this.findFirstLevelParent(parent);
+        },
+        submitFeedback() {
+            this.showRatingPopup = false;
+            this.companionSuccess({ info: this.$gettext('Feedback wurde abgegeben.') });
+        }
     },
     created() {
         this.pluginManager.registerComponentsLocally(this);
     },
 
     watch: {
-        async structuralElement() {
-            this.setCurrentElementId(this.structuralElement.id);
-            this.initCurrent();
-            if (this.isTask) {
-                this.loadTask({
-                    taskId: this.structuralElement.relationships.task.data.id,
-                });
-            }
+        $route: {
+            handler(to, from) {
+                if (this.courseware.attributes['show-feedback-popup']) {
+                    this.showFeedbackPopup(to, from);
+                }
+            },
+            deep: true
+        },
+        structuralElement: {
+            async handler() {
+                this.setCurrentElementId(this.structuralElement.id);
+                this.initCurrent();
+                if (this.isTask) {
+                    this.loadTask({
+                        taskId: this.structuralElement.relationships.task.data.id,
+                    });
+                }
 
-            if (this.isLink) {
-                this.loadStructuralElement(this.structuralElement.attributes['target-id']);
-            }
+                if (this.isLink) {
+                    this.loadStructuralElement(this.structuralElement.attributes['target-id']);
+                }
 
-            if (this.inCourse && this.courseware.attributes['sequential-progression'] && !this.userIsTeacher) {
-               this.loadProgresses();
-            }
+                if (this.inCourse && this.courseware.attributes['sequential-progression'] && !this.userIsTeacher) {
+                    this.loadProgresses();
+                }
+
+                if (this.inCourse) {
+                    this.loadFeedbackElement({ id: this.feedbackElementId });
+                }
+            },
+            deep: true
         },
         containers() {
             this.containerList = this.containers;
@@ -1818,3 +2004,4 @@ export default {
     }),
 };
 </script>
+

@@ -27,6 +27,7 @@ const mountApp = async (STUDIP, createApp, element) => {
     let unit_id = null;
     let licenses = null;
     let elem;
+    let feedbackSettings = null;
 
     if ((elem = document.getElementById(element.substring(1))) !== undefined) {
         if (elem.attributes !== undefined) {
@@ -49,6 +50,10 @@ const mountApp = async (STUDIP, createApp, element) => {
             // we need a route for License SORM
             if (elem.attributes['licenses'] !== undefined) {
                 licenses = JSON.parse(elem.attributes['licenses'].value);
+            }
+
+            if (elem.attributes['feedback-settings'] !== undefined) {
+                feedbackSettings = JSON.parse(elem.attributes['feedback-settings'].value);
             }
         }
     }
@@ -105,6 +110,8 @@ const mountApp = async (STUDIP, createApp, element) => {
                     'courseware-user-data-fields',
                     'courseware-user-progresses',
                     'courseware-units',
+                    'feedback-elements',
+                    'feedback-entries',
                     'files',
                     'file-refs',
                     'folders',
@@ -147,6 +154,7 @@ const mountApp = async (STUDIP, createApp, element) => {
     if (entry_type === 'courses') {
         await store.dispatch('loadTeacherStatus', STUDIP.USER_ID);
         store.dispatch('loadProgresses');
+        await store.dispatch('setFeedbackSettings', feedbackSettings);
     }
 
     store.dispatch('coursewareCurrentElement', elem_id);

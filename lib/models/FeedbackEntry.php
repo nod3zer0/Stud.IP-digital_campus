@@ -3,12 +3,14 @@
 /**
  *
  * @author Nils Gehrke <nils.gehrke@uni-goettingen.de>
+ * @author Ron Lucke <lucke@elan-ev.de>
  *
  * @property int $id database column
  * @property int $feedback_id database column
  * @property string $user_id database column
  * @property string $comment database column
  * @property int $rating database column
+ * @property int $anonymous database column
  * @property int $mkdate database column
  * @property int $chdate database column
  * @property FeedbackElement $feedback belongs_to FeedbackElement

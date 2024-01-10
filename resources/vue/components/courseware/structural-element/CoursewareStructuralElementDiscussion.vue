@@ -47,7 +47,7 @@ export default {
             hasFeedback: false,
             text: {
                 comments: this.$gettext('Kommentare zur Seite'),
-                feedback: this.$gettext('Feedback zur Seite')
+                feedback: this.$gettext('Anmerkungen zur Seite')
             }
         }
     },

@@ -102,13 +102,13 @@
                         $actionMenu = ActionMenu::get()->setContext($feedback->question);
                         $actionMenu->addLink(
                             $controller->link_for('course/feedback/edit_form/' . $feedback->id),
-                            _('Feedback-Element bearbeiten'),
+                            _('Bearbeiten'),
                             Icon::create('edit', Icon::ROLE_CLICKABLE, ['size' => 20]),
                             ['data-dialog' => '']
                         );
                         $actionMenu->addLink(
                             $controller->link_for('course/feedback/delete/' . $feedback->id),
-                            _('Feedback-Element löschen'),
+                            _('Löschen'),
                             Icon::create('trash', Icon::ROLE_CLICKABLE, ['size' => 20]),
                             ['onclick' => "return STUDIP.Dialog.confirmAsPost('" . _('Feedback-Element und dazugehörige Einträge löschen?') . "', this.href);"]
                         );

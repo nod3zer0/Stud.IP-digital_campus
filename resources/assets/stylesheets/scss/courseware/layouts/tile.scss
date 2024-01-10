@@ -100,7 +100,7 @@
 
         .progress-wrapper {
             width: 100%;
-            padding: 1em 0;
+            padding: 8px 0;
             border: none;
             background: none;
 
@@ -126,10 +126,9 @@
 
         .description-text-wrapper {
             overflow: hidden;
-            height: 8em;
-            margin-top: 0.5em;
+            height: 10em;
+            margin-top: 4px;
             display: -webkit-box;
-            margin-bottom: 1em;
             -webkit-line-clamp: 7;
             -webkit-box-orient: vertical;
             p {
@@ -139,10 +138,14 @@
 
         footer {
             width: 242px;
+            margin-top: 8px;
             color: var(--white);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
 
             img {
                 vertical-align: text-bottom;

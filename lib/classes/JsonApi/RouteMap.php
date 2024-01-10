@@ -239,12 +239,20 @@ class RouteMap
     private function addAuthenticatedFeedbackRoutes(RouteCollectorProxy $group): void
     {
         $group->get('/feedback-elements/{id}', Routes\Feedback\FeedbackElementsShow::class);
-        $group->get('/feedback-elements/{id}/entries', Routes\Feedback\FeedbackEntriesIndex::class);
         $group->get('/courses/{id}/feedback-elements', Routes\Feedback\FeedbackElementsByCourseIndex::class);
         $group->get('/file-refs/{id}/feedback-elements', Routes\Feedback\FeedbackElementsByFileRefIndex::class);
         $group->get('/folders/{id}/feedback-elements', Routes\Feedback\FeedbackElementsByFolderIndex::class);
 
+        $group->post('/feedback-elements', Routes\Feedback\FeedbackElementsCreate::class);
+        $group->patch('/feedback-elements/{id}', Routes\Feedback\FeedbackElementsUpdate::class);
+        $group->delete('/feedback-elements/{id}', Routes\Feedback\FeedbackElementsDelete::class);
+
+        $group->get('/feedback-elements/{id}/entries', Routes\Feedback\FeedbackEntriesIndex::class);
+        $group->post('/feedback-entries', Routes\Feedback\FeedbackEntriesCreate::class);
+
         $group->get('/feedback-entries/{id}', Routes\Feedback\FeedbackEntriesShow::class);
+        $group->patch('/feedback-entries/{id}', Routes\Feedback\FeedbackEntriesUpdate::class);
+        $group->delete('/feedback-entries/{id}', Routes\Feedback\FeedbackEntriesDelete::class);
     }
 
     private function addAuthenticatedInstitutesRoutes(RouteCollectorProxy $group): void

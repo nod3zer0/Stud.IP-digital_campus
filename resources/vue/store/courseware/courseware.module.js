@@ -39,6 +39,8 @@ const getDefaultState = () => {
         showStructuralElementOerDialog: false,
         showStructuralElementPublicLinkDialog: false,
         showStructuralElementRemoveLockDialog: false,
+        showStructuralElementFeedbackDialog: false,
+        showStructuralElementFeedbackCreateDialog: false,
 
         showSuggestOerDialog: false,
 
@@ -65,6 +67,7 @@ const getDefaultState = () => {
         progresses: null,
 
         toolbarActive: true,
+        feedbackSettings: null,
     };
 };
 
@@ -73,6 +76,10 @@ const initialState = getDefaultState();
 const getters = {
     msg(state) {
         return state.msg;
+    },
+    currentUser(state, getters, rootState, rootGetters) {
+        const id = getters.userId;
+        return rootGetters['users/byId']({ id });
     },
     lastElement(state) {
         return state.lastElement;
@@ -85,6 +92,9 @@ const getters = {
     },
     showRootElement(state, getters) {
         return getters.rootLayout !== 'none';
+    },
+    rootId(state, getters) {
+        return getters.courseware?.relationships?.root?.data?.id;
     },
     currentElement(state) {
         return state.currentElement;
@@ -220,6 +230,12 @@ const getters = {
     showStructuralElementRemoveLockDialog(state) {
         return state.showStructuralElementRemoveLockDialog;
     },
+    showStructuralElementFeedbackDialog(state) {
+        return state.showStructuralElementFeedbackDialog;
+    },
+    showStructuralElementFeedbackCreateDialog(state) {
+        return state.showStructuralElementFeedbackCreateDialog;
+    },
     showOverviewElementAddDialog(state) {
         return state.showOverviewElementAddDialog;
     },
@@ -281,7 +297,19 @@ const getters = {
 
     toolbarActive(state) {
         return state.toolbarActive;
-    }
+    },
+    feedbackSettings(state) {
+        return state.feedbackSettings;
+    },
+    isFeedbackActivated(state, getters) {
+        return getters.feedbackSettings?.activated ?? false;
+    },
+    canCreateFeedbackElement(state, getters) {
+        return getters.feedbackSettings?.createPerm ?? false;
+    },
+    canEditFeedbackElement(state, getters) {
+        return getters.feedbackSettings?.adminPerm ?? false;
+    },
 };
 
 export const state = { ...initialState };
@@ -1015,6 +1043,13 @@ export const actions = {
         context.commit('setShowStructuralElementRemoveLockDialog', bool);
     },
 
+    showStructuralElementFeedbackDialog(context, bool) {
+        context.commit('setShowStructuralElementFeedbackDialog', bool);
+    },
+    showStructuralElementFeedbackCreateDialog(context, bool) {
+        context.commit('setShowStructuralElementFeedbackCreateDialog', bool);
+    },
+
     setShowOverviewElementAddDialog(context, bool) {
         context.commit('setShowOverviewElementAddDialog', bool);
     },
@@ -1502,7 +1537,10 @@ export const actions = {
 
     toggleToolbarActive({ commit, rootGetters }) {
         commit('setToolbarActive', !rootGetters['toolbarActive']);
-    }
+    },
+    setFeedbackSettings(context, feedbackSettings) {
+        context.commit('setFeedbackSettings', feedbackSettings);
+    },
 };
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
@@ -1649,6 +1687,13 @@ export const mutations = {
         state.showStructuralElementRemoveLockDialog = showRemoveLock;
     },
 
+    setShowStructuralElementFeedbackDialog(state, showFeedback) {
+        state.showStructuralElementFeedbackDialog = showFeedback;
+    },
+    setShowStructuralElementFeedbackCreateDialog(state, showFeedbackCreate) {
+        state.showStructuralElementFeedbackCreateDialog = showFeedbackCreate;
+    },
+
     setImportFilesState(state, importFilesState) {
         state.importFilesState = importFilesState;
     },
@@ -1700,6 +1745,9 @@ export const mutations = {
     },
     setToolbarActive(state, active) {
         state.toolbarActive = active;
+    },
+    setFeedbackSettings(state, feedbackSettings) {
+        state.feedbackSettings = feedbackSettings;
     }
 };
 

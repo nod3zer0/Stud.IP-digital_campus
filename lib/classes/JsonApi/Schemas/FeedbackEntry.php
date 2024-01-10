@@ -21,6 +21,7 @@ class FeedbackEntry extends SchemaProvider
         $attributes = [
             'comment' => (string) $resource['comment'],
             'rating' => 0 === $resource->feedback->mode ? null : $resource['rating'],
+            'anonymous' => (bool) $resource['anonymous'],
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),
         ];

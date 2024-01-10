@@ -129,6 +129,10 @@ $consum_ribbon_width: calc(100% - 58px);
                         vertical-align: text-top;
                     }
 
+                    .studip-five-stars {
+                        display: inline-block;
+                    }
+
                     &.cw-ribbon-breadcrumb-item-current {
                         flex-shrink: 1;
                     }

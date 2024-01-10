@@ -13,6 +13,7 @@ class Unit extends SchemaProvider
     const REL_CREATOR= 'creator';
     const REL_RANGE = 'range';
     const REL_STRUCTURAL_ELEMENT = 'structural-element';
+    const REL_FEEDBACK_ELEMENT = 'feedback-element';
 
     /**
      * {@inheritdoc}
@@ -72,6 +73,16 @@ class Unit extends SchemaProvider
                     Link::RELATED => $this->createLinkToResource($range),
                 ],
                 self::RELATIONSHIP_DATA => $range,
+            ]
+            : [self::RELATIONSHIP_DATA => null];
+
+        $feedback = $resource->getFeedbackElement();
+        $relationships[self::REL_FEEDBACK_ELEMENT] = $feedback
+            ? [
+                self::RELATIONSHIP_LINKS => [
+                    Link::RELATED => $this->createLinkToResource($feedback),
+                ],
+                self::RELATIONSHIP_DATA => $feedback,
             ]
             : [self::RELATIONSHIP_DATA => null];
 

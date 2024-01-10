@@ -67,10 +67,12 @@ class CoursewareInstancesUpdate extends JsonApiController
                     return 'Attribute `favorite-block-types` contains an invalid block type.';
                 }
             }
-        } elseif (self::arrayHas($json, 'data.attributes.sequential-progression')) {
+        } 
+        
+        if (self::arrayHas($json, 'data.attributes.sequential-progression')) {
             $sequentialProgression = self::arrayGet($json, 'data.attributes.sequential-progression');
-            if (!is_bool($sequentialProgression)) {
-                return 'Attribute `sequential-progression` must be a bool.';
+            if (!in_array($sequentialProgression, [0, 1])) {
+                return 'Attribute `sequential-progression` must be 0 or 1.';
             }
         }
 
@@ -91,6 +93,20 @@ class CoursewareInstancesUpdate extends JsonApiController
             }
             if (!$data->isValidEditingPermissionLevel($editingPermissionLevel)) {
                 return 'Attribute `editing-permission-level` contains an invalid value.';
+            }
+        }
+
+        if (self::arrayHas($json, 'data.attributes.show-feedback-popup')) {
+            $showFeedbackPopup = self::arrayGet($json, 'data.attributes.show-feedback-popup');
+            if (!in_array($showFeedbackPopup, [0,1])) {
+                return 'Attribute `show-feedback-popup` must be 0 or 1.';
+            }
+        }
+
+        if (self::arrayHas($json, 'data.attributes.show-feedback-in-contentbar')) {
+            $showFeedbackInContentbar = self::arrayGet($json, 'data.attributes.show-feedback-in-contentbar');
+            if (!in_array($showFeedbackInContentbar, [0,1])) {
+                return 'Attribute `show-feedback-in-contentbar` must be 0 or 1.';
             }
         }
 
@@ -136,6 +152,12 @@ class CoursewareInstancesUpdate extends JsonApiController
 
         $editingPermissionLevel = $get('data.attributes.editing-permission-level');
         $instance->setEditingPermissionLevel($editingPermissionLevel);
+
+        $showFeedbackPopup = $get('data.attributes.show-feedback-popup');
+        $instance->setShowFeedbackPopup($showFeedbackPopup);
+
+        $showFeedbackInContentbar = $get('data.attributes.show-feedback-in-contentbar');
+        $instance->setShowFeedbackInContentbar($showFeedbackInContentbar);
 
         $certificateSettings = $get('data.attributes.certificate-settings');
         $instance->setCertificateSettings($certificateSettings);

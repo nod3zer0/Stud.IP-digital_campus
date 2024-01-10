@@ -29,6 +29,23 @@
                         </select>
                     </label>
                 </fieldset>
+                <fieldset>
+                    <legend>{{ $gettext('Feedback') }}</legend>
+                    <label>
+                        {{ $gettext('Am Ende eines Kapitels einen Dialog für die Bewertung anzeigen') }}
+                        <select class="size-s" v-model="currentShowFeedbackPopup">
+                            <option value="0">{{ $gettext('Nein') }}</option>
+                            <option value="1">{{ $gettext('Ja') }}</option>
+                        </select>
+                        <label>
+                        {{ $gettext('Bewertung auf der Seite anzeigen') }}
+                        <select class="size-s" v-model="currentShowFeedbackInContentbar">
+                            <option value="0">{{ $gettext('Nein') }}</option>
+                            <option value="1">{{ $gettext('Ja') }}</option>
+                        </select>
+                    </label>
+                    </label>
+                </fieldset>
                 <fieldset v-if="certificatesRemindersEnabled">
                     <legend>{{ $gettext('Zertifikate') }}</legend>
                     <label>
@@ -211,6 +228,8 @@ export default {
             currentRootLayout: 'default',
             currentPermissionLevel: '',
             currentProgression: 0,
+            currentShowFeedbackPopup: 0,
+            currentShowFeedbackInContentbar: 1,
             makeCert: false,
             certThreshold: 0,
             certImage: '',
@@ -263,6 +282,8 @@ export default {
             this.currentRootLayout = this.currentInstance.attributes['root-layout'];
             this.currentPermissionLevel = this.currentInstance.attributes['editing-permission-level'];
             this.currentProgression = this.currentInstance.attributes['sequential-progression'] ? '1' : '0';
+            this.currentShowFeedbackPopup = this.currentInstance.attributes['show-feedback-popup'] ? '1' : '0';
+            this.currentShowFeedbackInContentbar = this.currentInstance.attributes['show-feedback-in-contentbar'] ? '1' : '0';
             this.certSettings = this.currentInstance.attributes['certificate-settings'];
             this.makeCert = typeof(this.certSettings) === 'object' &&
                 Object.keys(this.certSettings).length > 0;
@@ -290,6 +311,8 @@ export default {
             this.currentInstance.attributes['root-layout'] = this.currentRootLayout;
             this.currentInstance.attributes['editing-permission-level'] = this.currentPermissionLevel;
             this.currentInstance.attributes['sequential-progression'] = this.currentProgression;
+            this.currentInstance.attributes['show-feedback-popup'] = this.currentShowFeedbackPopup;
+            this.currentInstance.attributes['show-feedback-in-contentbar'] = this.currentShowFeedbackInContentbar;
             this.currentInstance.attributes['certificate-settings'] = this.generateCertificateSettings();
             this.currentInstance.attributes['reminder-settings'] = this.generateReminderSettings();
             this.currentInstance.attributes['reset-progress-settings'] = this.generateResetProgressSettings();

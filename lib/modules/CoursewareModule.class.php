@@ -73,7 +73,7 @@ class CoursewareModule extends CorePlugin implements SystemPlugin, StudipModule
         );
         $navigation->addSubNavigation(
             'comments',
-            new Navigation(_('Kommentare und Feedback'), 'dispatch.php/course/courseware/comments_overview?cid=' . $courseId)
+            new Navigation(_('Kommentare und Anmerkungen'), 'dispatch.php/course/courseware/comments_overview?cid=' . $courseId)
         );
 
         return ['courseware' => $navigation];

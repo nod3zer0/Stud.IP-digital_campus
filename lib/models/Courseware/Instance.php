@@ -174,6 +174,14 @@ class Instance
         \UserConfig::get($user->id)->store('COURSEWARE_FAVORITE_BLOCK_TYPES', $favorites);
     }
 
+
+
+    /* 
+     *
+     *  GENERAL SETTINGS
+     *
+     */
+
     /**
      * Returns which layout is set for root node of this coursware instance
      *
@@ -285,6 +293,43 @@ class Instance
             throw new \InvalidArgumentException('Invalid editing permission of courseware.');
         }
     }
+
+
+    /* 
+     *
+     *  FEEDBACK
+     *
+     */
+
+    public function getShowFeedbackPopup(): bool
+    {
+        $showFeedbackPopup = $this->unit->config['show_feedback_popup'] ?? false;
+
+        return (bool) $showFeedbackPopup;
+    }
+
+    public function setShowFeedbackPopup(bool $showFeedbackPopup): void
+    {
+        $this->unit->config['show_feedback_popup'] = $showFeedbackPopup ? 1 : 0;
+    }
+    
+    public function getShowFeedbackInContentbar(): bool
+    {
+        $showFeedbackInContentbar = $this->unit->config['show_feedback__in_contentbar'] ?? false;
+
+        return (bool) $showFeedbackInContentbar;
+    }
+
+    public function setShowFeedbackInContentbar(bool $showFeedbackInContentbar): void
+    {
+        $this->unit->config['show_feedback__in_contentbar'] = $showFeedbackInContentbar ? 1 : 0;
+    }
+
+    /* 
+     *
+     *  CERTIFICATE
+     *
+     */
 
 
     /**

@@ -12,7 +12,7 @@
                     <th>{{ $gettext('Abgabefrist') }}</th>
                     <th>{{ $gettext('Abgabe') }}</th>
                     <th class="responsive-hidden">{{ $gettext('Verlängerungsanfrage') }}</th>
-                    <th class="responsive-hidden">{{ $gettext('Feedback') }}</th>
+                    <th class="responsive-hidden">{{ $gettext('Anmerkung') }}</th>
                     <th class="actions">{{ $gettext('Aktionen') }}</th>
                 </tr>
             </thead>
@@ -57,7 +57,7 @@
                     <td class="responsive-hidden">
                         <studip-icon
                             v-if="feedback"
-                            :title="$gettext('Feedback anzeigen')"
+                            :title="$gettext('Anmerkung anzeigen')"
                             class="display-feedback"
                             shape="consultation"
                             role="clickable"
@@ -126,7 +126,7 @@ export default {
             currentTaskFeedback: '',
             text: {
                 feedbackDialog: {
-                    title: this.$gettext('Feedback'),
+                    title: this.$gettext('Anmerkung'),
                 },
                 submitDialog: {
                     title: this.$gettext('Aufgabe abgeben'),

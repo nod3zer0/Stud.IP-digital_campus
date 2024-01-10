@@ -14,7 +14,7 @@
                             {{ $gettext('Erstellt') }}
                         </option>
                         <option value="answered">
-                            {{ $gettext('Feedback') }}
+                            {{ $gettext('Angemerkt') }}
                         </option>
                         <option value="interacted">
                             {{ $gettext('Kommentiert') }}

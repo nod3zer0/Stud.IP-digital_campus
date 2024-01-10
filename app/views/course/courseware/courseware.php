@@ -6,6 +6,7 @@
         entry-id="<?= htmlReady(Context::getId()) ?>"
         unit-id="<?= htmlReady($unit_id) ?>"
         licenses='<?= htmlReady($licenses) ?>'
+        feedback-settings='<?= htmlReady($feedback_settings) ?>'
         >
     </div>
 <? endif; ?>

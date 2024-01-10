@@ -14,10 +14,10 @@
             />
         </div>
         <courseware-companion-box
-            v-if="!userIsTeacher && feedback.length === 0"
-            :msgCompanion="$gettext('Es wurde noch keine Anmerkungen abgegeben.')"
-            mood="pointing"
-        />
+                v-if="!userIsTeacher && feedback.length === 0"
+                :msgCompanion="$gettext('Es wurde noch keine Anmerkung hinzugefügt.')"
+                mood="pointing"
+            />
         <div v-if="userIsTeacher" class="cw-structural-element-feedback-create">
             <textarea v-model="feedbackText" :placeholder="placeHolder" spellcheck="true"></textarea>
             <button class="button" @click="postFeedback">
@@ -106,7 +106,7 @@ export default {
             });
         },
         async postFeedback() {
-            this.updateSrMessage(this.$gettext('Anmerkung gesendet'));
+            this.updateSrMessage(this.$gettext('Anmerkung hinzugefügt'));
             const data = {
                 attributes: {
                     feedback: this.feedbackText,
@@ -135,5 +135,12 @@ export default {
     updated() {
         this.$refs.feedbacks.scrollTop = this.$refs.feedbacks.scrollHeight;
     },
+    watch: {
+        feedback() {
+            if (this.feedback && this.feedback.length > 0) {
+                this.$emit('hasFeedback');
+            }
+        }
+    }
 };
 </script>
