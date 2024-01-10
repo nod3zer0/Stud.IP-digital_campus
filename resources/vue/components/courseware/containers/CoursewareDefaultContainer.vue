@@ -4,7 +4,7 @@
         :class="['cw-container-colspan-' + colSpan, showEditMode && canEdit ? 'cw-container-active' : '', containerClass]"
     >
         <div class="cw-container-content">
-            <header v-if="showEditMode && canEdit" class="cw-container-header" :class="{ 'cw-container-header-open': isOpen }">
+            <header v-if="showEditMode" class="cw-container-header" :class="{ 'cw-container-header-open': isOpen }">
                 <a href="#" class="cw-container-header-toggle" :aria-expanded="isOpen" @click.prevent="isOpen = !isOpen">
                     <studip-icon :shape="isOpen ? 'arr_1down' : 'arr_1right'" />
                     <span>{{ container.attributes.title }} ({{container.attributes.width}})</span>
@@ -182,7 +182,7 @@ export default {
             containerTypes: 'containerTypes',
         }),
         showEditMode() {
-            return this.viewMode === 'edit' && !this.currentElementisLink;
+            return this.canEdit && !this.currentElementisLink;
         },
         colSpan() {
             return this.container.attributes.payload.colspan ? this.container.attributes.payload.colspan : 'full';

@@ -1,11 +1,8 @@
 <template>
-    <li v-if="showItem"
-        :draggable="editMode ? true : null"
-        :aria-selected="editMode ? keyboardSelected : null"
-    >
+    <li v-if="showItem" :draggable="canEdit ? true : null" :aria-selected="canEdit ? keyboardSelected : null">
         <div class="cw-tree-item-wrapper" v-if="showRootElement || depth > 0">
             <span
-                v-if="editMode && depth > 0 && canEdit"
+                v-if="canEdit && depth > 0 && canEdit"
                 class="cw-sortable-handle"
                 :tabindex="0"
                 aria-describedby="operation"
@@ -15,7 +12,7 @@
             >
             </span>
             <courseware-tree-item-updater
-                v-if="editMode && editingItem"
+                v-if="canEdit && editingItem"
                 :structuralElement="element"
                 @close="editingItem = false"
                 @childrenUpdated="$emit('childrenUpdated')"
@@ -26,12 +23,12 @@
                 class="cw-tree-item-link"
                 :class="{
                     'cw-tree-item-link-current': isCurrent,
-                    'cw-tree-item-link-edit': editMode,
+                    'cw-tree-item-link-edit': canEdit,
                     'cw-tree-item-link-selected': keyboardSelected,
                 }"
             >
                 {{ element.attributes?.title || '–' }}
-                <button v-if="editMode && canEdit" class="cw-tree-item-edit-button" @click.prevent="editingItem = true">
+                <button v-if="canEdit" class="cw-tree-item-edit-button" @click.prevent="editingItem = true">
                     <studip-icon shape="edit" />
                 </button>
 
@@ -69,7 +66,7 @@
             </router-link>
         </div>
         <ol
-            v-if="hasChildren && !editMode"
+            v-if="hasChildren && !canEdit"
             :class="{
                 'cw-tree-chapter-list': isRoot,
                 'cw-tree-subchapter-list': isFirstLevel,
@@ -85,7 +82,7 @@
             />
         </ol>
         <draggable
-            v-if="editMode"
+            v-if="canEdit"
             :class="{ 'cw-tree-chapter-list-empty': nestedChildren.length === 0 }"
             tag="ol"
             :component-data="draggableData"
@@ -117,7 +114,7 @@
             />
         </draggable>
         <ol
-            v-if="editMode && canEdit && isFirstLevel"
+            v-if="canEdit && isFirstLevel"
             class="cw-tree-adder-list"
         >
             <courseware-tree-item-adder :parentId="element.id" />
@@ -306,9 +303,6 @@ export default {
             }
 
             return true;
-        },
-        editMode() {
-            return this.viewMode === 'edit';
         },
         dragOptions() {
             return {

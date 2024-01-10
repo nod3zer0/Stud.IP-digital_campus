@@ -7,7 +7,7 @@
         @storeContainer="storeContainer"
     >
         <template v-slot:containerContent>
-            <ul v-if="!showEditMode || currentElementisLink"  class="cw-container-list-block-list">
+            <ul v-if="!canEdit || currentElementisLink"  class="cw-container-list-block-list">
                 <li v-for="block in blocks" :key="block.id" class="cw-block-item">
                     <component :is="component(block)" :block="block" :canEdit="canEdit" :isTeacher="isTeacher" />
                 </li>
@@ -24,7 +24,7 @@
                         :msgCompanion="$gettext('Dieser Abschnitt enthält keine Blöcke.')">
                     </courseware-companion-box>
                     <draggable
-                        v-if="showEditMode && canEdit"
+                        v-if="canEdit"
                         class="cw-container-list-block-list cw-container-list-sort-mode"
                         tag="ol"
                         role="listbox"
@@ -123,9 +123,6 @@ export default {
         },
         blockedByAnotherUser() {
             return this.blocked && this.userId !== this.blockerId;
-        },
-        showEditMode() {
-            return this.viewMode === 'edit';
         },
         blocks() {
             if (!this.container || this.container.newContainer) {

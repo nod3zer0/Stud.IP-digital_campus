@@ -62,7 +62,9 @@ const getDefaultState = () => {
         searchResults: [],
 
         assistiveLiveContents: '',
-        progresses: null
+        progresses: null,
+
+        toolbarActive: true,
     };
 };
 
@@ -275,6 +277,10 @@ const getters = {
     },
     oerEnableSuggestions(state, getters, rootState, rootGetters) {
         return getters.oerCampusEnabled && rootGetters['studip-properties/byId']({ id: 'oer-enable-suggestions'}).attributes?.value;
+    },
+
+    toolbarActive(state) {
+        return state.toolbarActive;
     }
 };
 
@@ -1492,6 +1498,10 @@ export const actions = {
     async deleteUserClipboards({ dispatch, rootGetters }, { uid, type }) {
         await state.httpClient.delete(`users/${uid}/courseware-clipboards/${type}`);
         dispatch('loadUserClipboards', uid);
+    },
+
+    toggleToolbarActive({ commit, rootGetters }) {
+        commit('setToolbarActive', !rootGetters['toolbarActive']);
     }
 };
 
@@ -1687,6 +1697,9 @@ export const mutations = {
     },
     setProgresses(state, data) {
         state.progresses = data;
+    },
+    setToolbarActive(state, active) {
+        state.toolbarActive = active;
     }
 };
 

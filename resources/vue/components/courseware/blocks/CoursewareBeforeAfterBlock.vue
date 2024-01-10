@@ -12,7 +12,7 @@
             <template #content>
                 <TwentyTwenty v-if="!isEmpty" :before="currentBeforeUrl" :after="currentAfterUrl" />
                 <courseware-companion-box
-                    v-if="isEmpty && editMode"
+                    v-if="isEmpty && canEdit"
                     :msgCompanion="$gettext('Bitte wählen Sie ein Vorher- und ein Nachher-Bild aus.')"
                     mood="pointing"
                 />
@@ -69,7 +69,7 @@ import BlockComponents from './block-components.js';
 import blockMixin from '@/vue/mixins/courseware/block.js';
 import TwentyTwenty from 'vue-twentytwenty';
 import 'vue-twentytwenty/dist/vue-twentytwenty.css';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
     name: 'courseware-before-after-block',
@@ -99,7 +99,6 @@ export default {
     computed: {
         ...mapGetters({
             fileRefById: 'file-refs/byId',
-            viewMode: 'viewMode',
         }),
         beforeSource() {
             return this.block?.attributes?.payload?.before_source;
@@ -139,9 +138,6 @@ export default {
         },
         isEmpty() {
             return this.currentBeforeUrl === '' || this.currentAfterUrl === '';
-        },
-        editMode() {
-            return this.viewMode === 'edit';
         },
     },
     mounted() {

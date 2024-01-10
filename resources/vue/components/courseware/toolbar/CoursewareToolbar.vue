@@ -30,7 +30,7 @@
                     <button
                         class="cw-toolbar-button cw-toolbar-button-toggle cw-toolbar-button-toggle-out"
                         :title="$gettext('Werkzeugleiste einklappen')"
-                        @click="toggleToolbar"
+                        @click="toggleToolbarActive"
                     ></button>
                 </div>
                 <courseware-toolbar-blocks v-if="activeTool === 'blockAdder'" />
@@ -41,7 +41,7 @@
                 v-else
                 class="cw-toolbar-button cw-toolbar-button-toggle cw-toolbar-button-toggle-in"
                 :title="$gettext('Werkzeugleiste ausklappen')"
-                @click="toggleToolbar"
+                @click="toggleToolbarActive"
             ></button>
             <div class="cw-toolbar-spacer-right"></div>
         </div>
@@ -65,7 +65,6 @@ export default {
     },
     data() {
         return {
-            toolsActive: true,
             unfold: true,
             showTools: true,
             toolbarTop: 0,
@@ -79,13 +78,13 @@ export default {
         ...mapGetters({
             relatedContainers: 'courseware-containers/related',
             structuralElementById: 'courseware-structural-elements/byId',
+            toolbarActive: 'toolbarActive',
         }),
         toolbarStyle() {
-            const footerHeight = document.getElementById('main-footer').getBoundingClientRect().height;
             const scrollTopStyles = window.getComputedStyle(document.getElementById('scroll-to-top'));
-            const scrollTopHeight = parseInt(scrollTopStyles['height']) + parseInt(scrollTopStyles['padding-top']) + parseInt(scrollTopStyles['padding-bottom']);
+            const scrollTopHeight = parseInt(scrollTopStyles['height'], 10) + parseInt(scrollTopStyles['padding-top'], 10) + parseInt(scrollTopStyles['padding-bottom'], 10) + parseInt(scrollTopStyles['margin-bottom'], 10);
             let height = parseInt(
-                Math.min(this.windowInnerHeight * 0.9, this.windowInnerHeight - this.toolbarTop - scrollTopHeight - footerHeight)
+                Math.min(this.windowInnerHeight * 0.9, this.windowInnerHeight - this.toolbarTop - scrollTopHeight)
             );
 
             return {
@@ -119,17 +118,17 @@ export default {
         },
     },
     methods: {
-        toggleToolbar() {
-            this.toolsActive = !this.toolsActive;
-        },
+        ...mapActions({
+            toggleToolbarActive: 'toggleToolbarActive',
+        }),
         activateTool(tool) {
             this.activeTool = tool;
         },
         updateToolbarTop() {
             const responsiveContentbar = document.getElementById('responsive-contentbar');
             if (responsiveContentbar) {
-                const contentbarRect = this.responsiveContentbar.getBoundingClientRect();
-                this.toolbarTop = contentbarRect.bottom + 35;
+                const contentbarRect = responsiveContentbar.getBoundingClientRect();
+                this.toolbarTop = contentbarRect.bottom + 25;
                 return;
             }
 
@@ -168,7 +167,7 @@ export default {
                 this.resetAdderStorage();
             }
         },
-        toolsActive(newState, oldState) {
+        toolbarActive(newState, oldState) {
             let view = this;
             if (newState) {
                 this.showTools = true;
@@ -178,7 +177,7 @@ export default {
             } else {
                 this.unfold = false;
                 setTimeout(() => {
-                    if (!view.toolsActive) {
+                    if (!view.toolbarActive) {
                         view.showTools = false;
                     }
                 }, 600);

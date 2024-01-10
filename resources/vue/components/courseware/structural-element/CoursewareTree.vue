@@ -1,6 +1,6 @@
 <template>
     <div class="cw-tree" ref="tree">
-        <template v-if="editMode">
+        <template>
                 <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                 <span id="operation" class="assistive-text">
                     {{$gettext('Drücken Sie die Leertaste, um neu anzuordnen.')}}
@@ -18,7 +18,7 @@
                 @moveItemNextLevel="moveItemNextLevel"
                 @childrenUpdated="updateNestedChildren"
             ></courseware-tree-item>
-            <courseware-tree-item-adder v-if="editMode && canEditRoot" :parentId="rootElement.id"/>
+            <courseware-tree-item-adder v-if="canEditRoot" :parentId="rootElement.id"/>
         </ol>
         <studip-progress-indicator
             v-else 
@@ -83,9 +83,6 @@ export default {
         },
         canEditRoot() {
             return this.rootElement.attributes['can-edit'];
-        },
-        editMode() {
-            return this.viewMode === 'edit';
         },
     },
     methods: {

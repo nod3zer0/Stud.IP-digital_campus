@@ -10,7 +10,7 @@
         @closeEdit="initCurrentData"
     >
         <template v-slot:containerContent>
-            <template v-if="showEditMode && canEdit && !currentElementisLink">
+            <template v-if="canEdit && !currentElementisLink">
                 <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                 <span id="operation" class="assistive-text">
                     {{ $gettext('Drücken Sie die Leertaste, um neu anzuordnen.') }}
@@ -23,7 +23,7 @@
                 :icon="section.icon"
                 :open="index === 0 || sortInSlots.includes(index)"
             >
-                <ul v-if="!showEditMode || currentElementisLink" class="cw-container-accordion-block-list">
+                <ul v-if="!canEdit || currentElementisLink" class="cw-container-accordion-block-list">
                     <li v-for="block in section.blocks" :key="block.id" class="cw-block-item">
                         <component
                             :is="component(block)"
@@ -181,9 +181,6 @@ export default {
             viewMode: 'viewMode',
             currentElementisLink: 'currentElementisLink'
         }),
-        showEditMode() {
-            return this.viewMode === 'edit';
-        },
         blocks() {
             if (!this.container || this.container.newContainer) {
                 return [];

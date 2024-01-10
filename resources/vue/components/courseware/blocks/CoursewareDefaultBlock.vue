@@ -155,7 +155,7 @@ export default {
             currentElementisLink: 'currentElementisLink',
         }),
         showEditMode() {
-            let show = (this.viewMode === 'edit' || this.blockedByThisUser) && !this.currentElementisLink;
+            let show = this.canEdit && !this.currentElementisLink;
             if (!show) {
                 this.displayFeature(false);
             }

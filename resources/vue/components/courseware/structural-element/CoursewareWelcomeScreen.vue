@@ -41,7 +41,6 @@ export default {
             unlockObject: 'unlockObject',
 
             coursewareConsumeMode: 'coursewareConsumeMode',
-            coursewareViewMode: 'coursewareViewMode',
             coursewareContainerAdder: 'coursewareContainerAdder',
             coursewareShowToolbar: 'coursewareShowToolbar'
 
@@ -49,7 +48,6 @@ export default {
         addContainer() {
             this.coursewareConsumeMode(false);
             this.coursewareShowToolbar(true);
-            this.coursewareViewMode('edit');
             this.$nextTick(() => {
                 this.coursewareContainerAdder(true);
             });
@@ -69,7 +67,6 @@ export default {
                 section: 0,
                 blockType: 'text',
             });
-            this.coursewareViewMode('edit');
             this.coursewareConsumeMode(false);
             this.companionSuccess({
                 info: this.$gettext('Das Elemente für Ihren ersten Inhalt wurde angelegt.'),

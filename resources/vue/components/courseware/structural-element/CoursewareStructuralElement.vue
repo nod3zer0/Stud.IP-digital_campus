@@ -128,7 +128,7 @@
                             <courseware-root-content v-if="showRootLayout" :structuralElement="currentElement" :canEdit="canEdit" />
 
                             <div
-                                v-if="canVisit && !editView && !isLink && !hideRootContent"
+                                v-if="canVisit && (!canEdit || !toolbarActive ) && !isLink && !hideRootContent"
                                 class="cw-container-wrapper"
                                 :class="{
                                     'cw-container-wrapper-consume': consumeMode,
@@ -139,7 +139,7 @@
                                     :key="container.id"
                                     :is="containerComponent(container)"
                                     :container="container"
-                                    :canEdit="canEdit"
+                                    :canEdit="canEdit && toolbarActive"
                                     :canAddElements="canAddElements"
                                     :isTeacher="userIsTeacher"
                                     class="cw-container-item"
@@ -153,7 +153,7 @@
                                     'cw-container-wrapper-consume': consumeMode,
                                 }"
                             >
-                                <div v-if="editView" class="cw-companion-box-wrapper">
+                                <div v-if="canEdit" class="cw-companion-box-wrapper">
                                     <courseware-companion-box
                                         :msgCompanion="$gettextInterpolate($gettext('Dieser Inhalt ist aus den persönlichen Lernmaterialien von %{ ownerName } verlinkt und kann nur dort bearbeitet werden.'), { ownerName: ownerName })"
                                         mood="pointing"
@@ -170,7 +170,7 @@
                                     class="cw-container-item"
                                 />
                             </div>
-                            <div v-if="canVisit && canEdit && editView && !isLink && !hideRootContent" class="cw-container-wrapper cw-container-wrapper-edit">
+                            <div v-if="canVisit && canEdit && toolbarActive && !isLink && !hideRootContent" class="cw-container-wrapper cw-container-wrapper-edit">
                                 <template v-if="!processing">
                                     <span aria-live="assertive" class="assistive-text">{{ assistiveLive }}</span>
                                     <span id="operation" class="assistive-text">
@@ -216,7 +216,7 @@
                                 <studip-progress-indicator v-if="processing" :description="$gettext('Vorgang wird bearbeitet...')" />
                             </div>
                         </div>
-                        <courseware-toolbar v-if="canVisit && canEdit && editView && !isLink" /> 
+                        <courseware-toolbar v-if="canVisit && canEdit && !isLink" /> 
                     </div>
                     <courseware-call-to-action-box
                         v-if="commentable"
@@ -784,7 +784,8 @@ export default {
             showRootElement: 'showRootElement',
             childrenById: 'courseware-structure/children',
 
-            rootLayout: 'rootLayout'
+            rootLayout: 'rootLayout',
+            toolbarActive: 'toolbarActive'
         }),
 
         currentId() {
@@ -1134,9 +1135,6 @@ export default {
         },
         blockingUserName() {
             return this.blockingUser ? this.blockingUser.attributes['formatted-name'] : '';
-        },
-        editView() {
-            return this.viewMode === 'edit';
         },
         pdfExportURL() {
             if (this.context.type === 'users') {

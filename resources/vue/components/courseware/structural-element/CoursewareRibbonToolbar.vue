@@ -85,9 +85,6 @@ export default {
             selectedToolbarItem: 'selectedToolbarItem',
             currentElementisLink: 'currentElementisLink',
         }),
-        showEditMode() {
-            return this.viewMode === 'edit';
-        },
         isTeacher() {
             return this.userIsTeacher;
         },
@@ -127,11 +124,6 @@ export default {
         containerAdder(newValue) {
             if (newValue === true) {
                 this.selectTool('blockadder');
-            }
-        },
-        showEditMode(newValue) {
-            if (!newValue) {
-                this.selectTool('contents');
             }
         },
         toolsActive(newValue) {
