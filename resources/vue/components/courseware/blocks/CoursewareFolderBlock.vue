@@ -140,7 +140,7 @@
                     </label>
                     <label>
                         {{ $gettext('Ordner') }}
-                        <courseware-folder-chooser v-model="currentFolderId" allowUserFolders allowHomeworkFolders />
+                        <studip-file-chooser v-model="currentFolderId" selectable="folder" :courseId="context.id" :userId="userId" />
                     </label>
                 </form>
             </template>

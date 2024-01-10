@@ -5,6 +5,8 @@ import CoursewareTabs from '../layouts/CoursewareTabs.vue';
 import CoursewareTab from '../layouts/CoursewareTab.vue';
 import CoursewareCompanionBox from '../layouts/CoursewareCompanionBox.vue'
 
+import StudipFileChooser from './../../StudipFileChooser.vue';
+
 const BlockComponents = {
     CoursewareDefaultBlock,
     CoursewareFileChooser,
@@ -13,6 +15,8 @@ const BlockComponents = {
     CoursewareTabs,
     CoursewareTab,
     CoursewareCompanionBox,
+
+    StudipFileChooser,
 }
 
 export default BlockComponents;

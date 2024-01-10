@@ -70,29 +70,35 @@
                     >
                         <form class="default" @submit.prevent="">
                             <label>
-                                {{ $gettext('Bild Vorderseite') }}:
-                                <courseware-file-chooser
+                                {{ $gettext('Bild Vorderseite') }}
+                                <studip-file-chooser
                                     v-model="card.front_file_id"
+                                    selectable="file"
+                                    :courseId="context.id"
+                                    :userId="userId"
                                     :isImage="true"
-                                    :canBeEmpty="true"
-                                    @selectFile="updateFile(index, 'front', $event)"
+                                    :excludedCourseFolderTypes="excludedCourseFolderTypes"
+                                    @select="updateFile(index, 'front', $event)"
                                 />
-                            </label>
+                             </label>
                             <label>
-                                {{ $gettext('Text Vorderseite') }}:
+                                {{ $gettext('Text Vorderseite') }}
                                 <input type="text" v-model="card.front_text" />
                             </label>
                             <label>
-                                {{ $gettext('Bild Rückseite') }}:
-                                <courseware-file-chooser
+                                {{ $gettext('Bild Rückseite') }}
+                                <studip-file-chooser
                                     v-model="card.back_file_id"
+                                    selectable="file"
+                                    :courseId="context.id"
+                                    :userId="userId"
                                     :isImage="true"
-                                    :canBeEmpty="true"
-                                    @selectFile="updateFile(index, 'back', $event)"
+                                    :excludedCourseFolderTypes="excludedCourseFolderTypes"
+                                    @select="updateFile(index, 'back', $event)"
                                 />
                             </label>
                             <label>
-                                {{ $gettext('Text Rückseite') }}:
+                                {{ $gettext('Text Rückseite') }}
                                 <input type="text" v-model="card.back_text" />
                             </label>
                             <label v-if="!onlyCard">
@@ -114,7 +120,7 @@
 <script>
 import BlockComponents from './block-components.js';
 import blockMixin from '@/vue/mixins/courseware/block.js';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-dialog-cards-block',
@@ -132,6 +138,9 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            fileRefById: 'file-refs/byId',
+        }),
         cards() {
             return this.block?.attributes?.payload?.cards;
         },
@@ -191,20 +200,22 @@ export default {
                 containerId: this.block.relationships.container.data.id,
             });
         },
-        updateFile(cardIndex, side, file) {
+        updateFile(cardIndex, side, fileId) {
             if (side === 'front') {
-                if (file) {
-                    this.currentCards[cardIndex].front_file_id = file.id;
-                    this.currentCards[cardIndex].front_file = file;
+                if (fileId) {
+                    this.currentCards[cardIndex].front_file_id = fileId;
+                    this.currentCards[cardIndex].front_file = this.fileRefById({ id: fileId });
+                    this.currentCards[cardIndex].front_file.download_url = this.currentCards[cardIndex].front_file.meta['download-url'];
                 } else {
                     this.currentCards[cardIndex].front_file_id = '';
                     this.currentCards[cardIndex].front_file = [];
                 }
             }
             if (side === 'back') {
-                if (file) {
-                    this.currentCards[cardIndex].back_file_id = file.id;
-                    this.currentCards[cardIndex].back_file = file;
+                if (fileId) {
+                    this.currentCards[cardIndex].back_file_id = fileId;
+                    this.currentCards[cardIndex].back_file = this.fileRefById({ id: fileId });
+                    this.currentCards[cardIndex].back_file.download_url = this.currentCards[cardIndex].back_file.meta['download-url'];
                 } else {
                     this.currentCards[cardIndex].back_file_id = '';
                     this.currentCards[cardIndex].back_file = [];

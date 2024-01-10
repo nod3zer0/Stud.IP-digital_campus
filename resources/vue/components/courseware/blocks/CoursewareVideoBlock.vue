@@ -45,10 +45,13 @@
                             </label>
                             <label v-show="currentSource === 'studip'">
                                 {{ $gettext('Datei') }}
-                                <courseware-file-chooser
+                                <studip-file-chooser
                                     v-model="currentFileId"
+                                    selectable="file"
+                                    :courseId="context.id"
+                                    :userId="userId"
                                     :isVideo="true"
-                                    @selectFile="updateCurrentFile"
+                                    :excludedCourseFolderTypes="excludedCourseFolderTypes"
                                 />
                             </label>
 
@@ -230,6 +233,13 @@ export default {
             }
         },
     },
+    watch: {
+        currentFileId(newId) {
+            if (newId) {
+                this.currentFile = this.fileRefById({ id: newId });
+            }
+        }
+    }
 };
 </script>
 <style scoped lang="scss">

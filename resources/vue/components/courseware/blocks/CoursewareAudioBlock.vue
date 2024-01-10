@@ -288,18 +288,14 @@
                     </label>
                     <label v-show="currentSource === 'studip_file'">
                         {{ $gettext('Datei') }}
-                        <courseware-file-chooser
-                            v-model="currentFileId"
-                            :isAudio="true"
-                            @selectFile="updateCurrentFile"
-                        />
+                        <studip-file-chooser v-model="currentFileId" selectable="file" :courseId="context.id" :userId="userId" :isAudio="true" :excludedCourseFolderTypes="excludedCourseFolderTypes" />
                     </label>
                     <label v-show="currentSource === 'studip_folder'">
                         {{ $gettext('Ordner') }}
-                        <courseware-folder-chooser v-model="currentFolderId" allowUserFolders />
+                        <studip-file-chooser v-model="currentFolderId" selectable="folder" :courseId="context.id" :userId="userId" :excludedCourseFolderTypes="excludedCourseFolderTypes" />
                     </label>
                     <label v-show="currentSource === 'studip_folder'">
-                        {{ $gettext('Audio Aufnahmen zulassen') }}
+                        {{ $gettext('Audio-Aufnahmen zulassen') }}
                         <span
                             class="tooltip tooltip-icon"
                             :data-tooltip="$gettext('Um Aufnahmen zu ermöglichen, muss ein Ordner ausgewählt werden.')"
@@ -377,7 +373,6 @@ export default {
             fileRefById: 'file-refs/byId',
             relatedFileRefs: 'file-refs/related',
             urlHelper: 'urlHelper',
-            userId: 'userId',
             usersById: 'users/byId',
             relatedTermOfUse: 'terms-of-use/related',
         }),

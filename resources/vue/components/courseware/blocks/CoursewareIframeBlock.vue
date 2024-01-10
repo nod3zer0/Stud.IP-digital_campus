@@ -123,7 +123,7 @@
 <script>
 import BlockComponents from './block-components.js';
 import blockMixin from '@/vue/mixins/courseware/block.js';
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 import md5 from 'md5';
 
 export default {
@@ -150,7 +150,6 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['userId']),
         url() {
             return this.block?.attributes?.payload?.url;
         },

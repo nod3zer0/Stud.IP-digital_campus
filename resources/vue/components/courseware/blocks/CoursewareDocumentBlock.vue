@@ -221,10 +221,13 @@
                     </label>
                     <label>
                         {{ $gettext('Datei') }}
-                        <courseware-file-chooser
+                        <studip-file-chooser
                             v-model="currentFileId"
+                            selectable="file"
+                            :courseId="context.id"
+                            :userId="userId"
                             :isDocument="true"
-                            @selectFile="updateCurrentFile"
+                            :excludedCourseFolderTypes="excludedCourseFolderTypes"
                         />
                     </label>
                     <label>
@@ -269,7 +272,7 @@ import {
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import { dragscroll } from 'vue-dragscroll';
 
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import 'pdfjs-dist/web/pdf_viewer.css';
 
 export default {
@@ -327,6 +330,9 @@ export default {
         };
     },
     computed: {
+        ...mapGetters({
+            fileRefById: 'file-refs/byId',
+        }),
         title() {
             return this.block?.attributes?.payload?.title;
         },
@@ -369,6 +375,11 @@ export default {
         showPdfSearchBox() {
             this.resetPdfSearch();
         },
+        currentFileId(newId) {
+            if (newId) {
+                this.currentFile = this.fileRefById({ id: newId });
+            }
+        }
     },
     mounted() {
         if (this.block.id) {
@@ -391,10 +402,6 @@ export default {
             this.currentDownloadable = this.downloadable;
             this.currentFileId = this.fileId;
             this.currentDocType = this.docType;
-        },
-        updateCurrentFile(file) {
-            this.currentFile = file;
-            this.currentFileId = file.id;
         },
         initPdfTask() {
             if (this.currentUrl) {

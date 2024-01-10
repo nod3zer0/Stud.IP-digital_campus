@@ -56,7 +56,6 @@ export default {
     },
     computed: {
         ...mapGetters({
-            userId: 'userId',
             getUserDataById: 'courseware-user-data-fields/byId',
         }),
         text() {

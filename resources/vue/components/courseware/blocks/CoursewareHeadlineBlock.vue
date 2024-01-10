@@ -242,11 +242,15 @@
                                 </template>
 
                                 <template v-if="!currentBackgroundImageId">
-                                    <courseware-file-chooser
+                                    <studip-file-chooser
                                         v-model="currentBackgroundImageId"
+                                        selectable="file"
+                                        :courseId="context.id"
+                                        :userId="userId"
                                         :isImage="true"
-                                        @selectFile="onSelectFile"
-                                        />
+                                        :excludedCourseFolderTypes="excludedCourseFolderTypes"
+                                        @select="onSelectFile"
+                                    />
                                     <div style="margin-block-start: 1em">{{ $gettext('oder') }}</div>
                                     <button class="button" type="button" @click="showStockImageSelector = true">
                                         {{ $gettext('Aus dem Bilderpool auswählen') }}
@@ -340,11 +344,11 @@ export default {
     },
     computed: {
         ...mapGetters({
+            currentStructuralElementImageURL: 'currentStructuralElementImageURL',
             fileRefById: 'file-refs/byId',
+            relatedTermOfUse: 'terms-of-use/related',
             stockImageById: 'stock-images/byId',
             urlHelper: 'urlHelper',
-            relatedTermOfUse: 'terms-of-use/related',
-            currentStructuralElementImageURL: 'currentStructuralElementImageURL'
         }),
         title() {
             return this.block?.attributes?.payload?.title;
@@ -531,8 +535,10 @@ export default {
             this.currentBackgroundImageType = file.type;
             this.currentBackgroundURL = file.download_url;
         },
-        onSelectFile(file) {
-            this.updateCurrentBackgroundImage({ ...file, type: 'file-refs' });
+        onSelectFile(fileId) {
+            let file = this.fileRefById({ id: fileId });
+            file.download_url = file.meta['download-url'];
+            this.updateCurrentBackgroundImage(file);
         },
         storeText() {
             let attributes = {};

@@ -100,7 +100,6 @@ export default {
         ...mapGetters({
             childrenById: 'courseware-structure/children',
             structuralElementById: 'courseware-structural-elements/byId',
-            context: 'context',
             taskById: 'courseware-tasks/byId',
             userById: 'users/byId',
             groupById: 'status-groups/byId',

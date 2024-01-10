@@ -51,7 +51,7 @@
                             </label>
                             <label>
                                 {{ $gettext('Datei') }}
-                                <courseware-file-chooser v-model="currentFileId" @selectFile="updateCurrentFile" />
+                                <studip-file-chooser v-model="currentFileId" selectable="file" :courseId="context.id" :userId="userId" :excludedCourseFolderTypes="excludedCourseFolderTypes" />
                             </label>
                         </form>
                     </courseware-tab>

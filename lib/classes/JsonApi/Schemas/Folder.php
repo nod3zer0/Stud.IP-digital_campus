@@ -32,10 +32,11 @@ class Folder extends SchemaProvider
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
 
-            'is-visible' => (bool) $resource->isVisible($user->id),
+            'is-visible'  => (bool) $resource->isVisible($user->id),
             'is-readable' => (bool) $resource->isReadable($user->id),
             'is-writable' => (bool) $resource->isWritable($user->id),
             'is-editable' => (bool) $resource->isEditable($user->id),
+            'is-empty'    => (bool) $resource->is_empty,
             'is-subfolder-allowed' => (bool) $resource->isSubfolderAllowed($user->id),
         ];
 
@@ -76,6 +77,9 @@ class Folder extends SchemaProvider
                 self::RELATIONSHIP_LINKS => [
                     Link::RELATED => $this->createLinkToResource($resource->owner),
                 ],
+                self::RELATIONSHIP_META => [
+                    'name' => $resource->owner->getFullName('no_title_rev'),
+                ]
             ];
         }
 
@@ -157,6 +161,9 @@ class Folder extends SchemaProvider
             self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FOLDERS),
             ],
+            self::RELATIONSHIP_META => [
+                'count' => count($resource->subfolders)
+            ],
         ];
 
         return $relationships;
@@ -167,6 +174,9 @@ class Folder extends SchemaProvider
         $relationships[self::REL_FILE_REFS] = [
             self::RELATIONSHIP_LINKS => [
                 Link::RELATED => $this->getRelationshipRelatedLink($resource, self::REL_FILE_REFS),
+            ],
+            self::RELATIONSHIP_META => [
+                'count' => count($resource->file_refs)
             ],
         ];
 

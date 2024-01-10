@@ -34,11 +34,7 @@
                             </label>
                             <label v-if="currentBeforeSource === 'studip'">
                                 {{ $gettext('Bilddatei') }}
-                                <courseware-file-chooser
-                                    v-model="currentBeforeFileId"
-                                    :isImage="true"
-                                    @selectFile="updateCurrentBeforeFile"
-                                />
+                                <studip-file-chooser v-model="currentBeforeFileId" selectable="file" :courseId="context.id" :userId="userId" :isImage="true" :excludedCourseFolderTypes="excludedCourseFolderTypes"/>
                             </label>
                         </form>
                     </courseware-tab>
@@ -57,11 +53,7 @@
                             </label>
                             <label v-if="currentAfterSource === 'studip'">
                                 {{ $gettext('Bilddatei') }}
-                                <courseware-file-chooser
-                                    v-model="currentAfterFileId"
-                                    :isImage="true"
-                                    @selectFile="updateCurrentAfterFile"
-                                />
+                                <studip-file-chooser v-model="currentAfterFileId" selectable="file" :courseId="context.id" :userId="userId" :isImage="true"/>
                             </label>
                         </form>
                     </courseware-tab>
@@ -106,6 +98,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            fileRefById: 'file-refs/byId',
             viewMode: 'viewMode',
         }),
         beforeSource() {
@@ -204,14 +197,6 @@ export default {
             this.currentAfterFileId = this.afterFileId;
             this.currentAfterWebUrl = this.afterWebUrl;
         },
-        updateCurrentBeforeFile(file) {
-            this.currentBeforeFile = file;
-            this.currentBeforeFileId = file.id;
-        },
-        updateCurrentAfterFile(file) {
-            this.currentAfterFile = file;
-            this.currentAfterFileId = file.id;
-        },
         storeBlock() {
             let cmpInfo = false;
             let cmpInfoBefore = this.$gettext('Bitte wählen Sie ein Vorherbild aus.');
@@ -269,6 +254,18 @@ export default {
             }
         },
     },
+    watch: {
+        currentBeforeFileId(newId) {
+            if (newId) {
+                this.currentBeforeFile = this.fileRefById({ id: newId });
+            }
+        },
+        currentAfterFileId(newId) {
+            if (newId) {
+                this.currentAfterFile = this.fileRefById({ id: newId });
+            }
+        }
+    }
 };
 </script>
 <style scoped lang="scss">

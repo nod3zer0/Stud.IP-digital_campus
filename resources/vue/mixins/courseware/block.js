@@ -4,6 +4,8 @@ const blockMixin = {
     computed: {
         ...mapGetters({
             getUserProgress: 'courseware-user-progresses/related',
+            context: 'context',
+            userId: 'userId',
         }),
         userProgress: {
             get: function () {
@@ -15,6 +17,9 @@ const blockMixin = {
                 return this.updateUserProgress(this.userProgress);
             },
         },
+        excludedCourseFolderTypes() {
+            return ['HomeworkFolder'];
+        }
     },
     methods: {
         ...mapActions({

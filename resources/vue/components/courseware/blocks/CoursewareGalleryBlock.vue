@@ -86,7 +86,7 @@
                             </label>
                             <label>
                                 {{ $gettext('Ordner') }}
-                                <courseware-folder-chooser v-model="currentFolderId" allowUserFolders />
+                                <studip-file-chooser v-model="currentFolderId" selectable="folder" :courseId="context.id" :userId="userId" :excludedCourseFolderTypes="excludedCourseFolderTypes" />
                             </label>
                             <label v-if="currentLayout === 'carousel'">
                                 {{ $gettext('Höhe') }}

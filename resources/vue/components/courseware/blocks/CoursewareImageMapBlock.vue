@@ -78,10 +78,13 @@
                 <form class="default" @submit.prevent="">
                     <label>
                         {{ $gettext('Bilddatei') }}
-                        <courseware-file-chooser
+                        <studip-file-chooser
                             v-model="currentFileId"
+                            selectable="file"
+                            :courseId="studipContext.id"
+                            :userId="userId"
                             :isImage="true"
-                            @selectFile="updateCurrentFile"
+                            :excludedCourseFolderTypes="excludedCourseFolderTypes"
                         />
                     </label>
                     <label>
@@ -307,6 +310,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            studipContext: 'context',
             courseware: 'courseware-structural-elements/all',
             fileRefById: 'file-refs/byId',
             urlHelper: 'urlHelper',
@@ -343,6 +347,9 @@ export default {
         },
         async loadFile() {
             const id = this.currentFileId;
+            if (id === '') {
+                return;
+            }
             await this.loadFileRef({ id });
             const fileRef = this.fileRefById({ id });
 
@@ -797,6 +804,13 @@ export default {
             }
         },
     },
+    watch: {
+        currentFileId(newId) {
+            if (newId) {
+                this.loadFile();
+            }
+        }
+    }
 };
 </script>
 <style scoped lang="scss">

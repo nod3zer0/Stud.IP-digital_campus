@@ -1,5 +1,6 @@
 import CoursewareModule from './store/courseware/courseware.module';
 import CoursewareStructureModule from './store/courseware/structure.module';
+import FileChooserStore from './store/file-chooser.js';
 import CoursewareStructuralElement from './components/courseware/structural-element/CoursewareStructuralElement.vue';
 import IndexApp from './components/courseware/IndexApp.vue';
 import PluginManager from './components/courseware/plugin-manager.js';
@@ -82,6 +83,7 @@ const mountApp = async (STUDIP, createApp, element) => {
         modules: {
             courseware: CoursewareModule,
             'courseware-structure': CoursewareStructureModule,
+            'file-chooser': FileChooserStore,
             ...mapResourceModules({
                 names: [
                     'courses',

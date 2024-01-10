@@ -124,10 +124,13 @@
                             </label>
                             <label v-if="currentImage === 'true'">
                                 {{ $gettext('Bilddatei') }}
-                                <courseware-file-chooser
+                                <studip-file-chooser
                                     v-model="currentFileId"
+                                    selectable="file"
+                                    :courseId="studipContext.id"
+                                    :userId="userId"
                                     :isImage="true"
-                                    @selectFile="updateCurrentFile"
+                                    :excludedCourseFolderTypes="excludedCourseFolderTypes"
                                 />
                             </label>
                         </form>
@@ -218,10 +221,11 @@ export default {
     },
     computed: {
         ...mapGetters({
-            userId: 'userId',
+            studipContext: 'context',
+            fileRefById: 'file-refs/byId',
             getUserDataById: 'courseware-user-data-fields/byId',
+            relatedUserData: 'user-data-field/related',
             usersById: 'users/byId',
-            relatedUserData: 'user-data-field/related'
         }),
         userData() {
             return this.getUserDataById({ id: this.block.relationships['user-data-field'].data.id });
@@ -365,11 +369,6 @@ export default {
                 this.initCurrentData();
                 this.buildCanvas();
             });
-        },
-        updateCurrentFile(file) {
-            this.currentFile = file;
-            this.currentFileId = file.id;
-            this.buildCanvas();
         },
         setColor(color) {
             if (this.write) {
@@ -700,6 +699,12 @@ export default {
     watch: {
         currentUserView() {
             this.redraw();
+        },
+        currentFileId(newId) {
+            if (newId) {
+                this.currentFile = this.fileRefById({ id: newId });
+                this.buildCanvas();
+            }
         }
     },
 };
