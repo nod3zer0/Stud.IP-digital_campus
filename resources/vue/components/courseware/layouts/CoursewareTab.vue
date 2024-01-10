@@ -1,9 +1,9 @@
 <template>
     <div
+        v-if="isActive"
         role="tabpanel"
         class="cw-tab"
         :id="id"
-        :class="{ 'cw-tab-active': isActive }"
         :aria-labelledby="selectorId"
     >
         <slot></slot>

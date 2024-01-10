@@ -101,14 +101,7 @@
 }
 
 .cw-tabs {
-    .cw-tab {
-        display: none;
-        height: 0;
-
-        &.cw-tab-active {
-            display: block;
-            height: unset;
-            padding: 4px 8px;
-        }
+    .cw-tab .cw-tab-active {
+        padding: 4px 8px;
     }
 }

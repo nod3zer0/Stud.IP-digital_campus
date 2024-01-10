@@ -5,7 +5,7 @@
                 <studip-icon v-if="icon" :shape="icon" /> {{ title }}
             </header>
         </a>
-        <div class="cw-collapsible-content" :class="{ 'cw-collapsible-content-open': isOpen }">
+        <div v-if="isOpen" class="cw-collapsible-content" :class="{ 'cw-collapsible-content-open': isOpen }">
             <slot></slot>
         </div>
     </div>
