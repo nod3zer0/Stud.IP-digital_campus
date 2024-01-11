@@ -69,7 +69,7 @@ import BlockComponents from './block-components.js';
 import blockMixin from '@/vue/mixins/courseware/block.js';
 import TwentyTwenty from 'vue-twentytwenty';
 import 'vue-twentytwenty/dist/vue-twentytwenty.css';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'courseware-before-after-block',
