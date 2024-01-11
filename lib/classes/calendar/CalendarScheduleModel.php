@@ -219,7 +219,7 @@ class CalendarScheduleModel
                 $details = $stmt->fetch();
 
                 if ($entry['type'] === 'virtual') {
-                    $entry['color'] = $details['color'] ?: DEFAULT_COLOR_VIRTUAL;
+                    $entry['color'] = $details ? ($details['color'] ?: DEFAULT_COLOR_VIRTUAL) : DEFAULT_COLOR_VIRTUAL;
                     $entry['icons'][] = [
                         'image' => Icon::create('tag', Icon::ROLE_INFO_ALT)->asImagePath(),
                         'title' => _("Dies ist eine vorgemerkte Veranstaltung")
@@ -319,9 +319,9 @@ class CalendarScheduleModel
                 AND s.start_time <= :begin
                 AND (semester_courses.semester_id IS NULL OR semester_courses.semester_id = :semester_id)
                ");
-        $stmt->bindParam(':begin', $semester['beginn']);
-        $stmt->bindParam(':semester_id', $semester['semester_id']);
-        $stmt->bindParam(':userid', $user_id);
+        $stmt->bindValue(':begin', $semester['beginn']);
+        $stmt->bindValue(':semester_id', $semester['semester_id']);
+        $stmt->bindValue(':userid', $user_id);
         $stmt->execute();
 
         while ($entry = $stmt->fetch(PDO::FETCH_ASSOC)) {
