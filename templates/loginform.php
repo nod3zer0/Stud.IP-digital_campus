@@ -68,7 +68,7 @@ $show_hidden_login = false;
                                 <? $name_and_title = explode(' - ', $nav->getTitle()) ?>
                                 <li class="login_link">
                                     <? if (is_internal_url($url = $nav->getURL())) : ?>
-                                    <? SkipLinks::addLink($name_and_title[0], $url) ?>
+                                    <? SkipLinks::addLink($name_and_title[0], URLHelper::getLink($url, ['cancel_login' => 1])) ?>
                                     <a href="<?= URLHelper::getLink($url, ['cancel_login' => 1]) ?>" <?= arrayToHtmlAttributes($nav->getLinkAttributes()) ?>>
                                         <? else : ?>
                                         <a href="<?= htmlReady($url) ?>" target="_blank" rel="noopener noreferrer">
@@ -83,7 +83,6 @@ $show_hidden_login = false;
                         <? endforeach ?>
                     </ul>
                 </nav>
-
                 <? if ($show_hidden_login) : ?>
                     <?= $this->render_partial('_standard_loginform', [
                         'hidden' => empty($loginerror),

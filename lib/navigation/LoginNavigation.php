@@ -31,7 +31,7 @@ class LoginNavigation extends Navigation
                 $navigation->setLinkAttributes([
                     'id' => 'toggle-login'
                 ]);
-                $navigation->setURL('#login-form');
+                $navigation->setURL('#toggle-login');
                 $this->addSubNavigation('standard_login', $navigation);
                 $standard_login_active = true;
             }
