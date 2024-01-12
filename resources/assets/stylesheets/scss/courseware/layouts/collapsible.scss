@@ -28,8 +28,12 @@
         }
     }
 
-    .cw-collapsible-content .cw-collapsible-content-open {
+    .cw-collapsible-content.cw-collapsible-content-open {
         padding: 10px;
+
+        .cw-companion-box {
+            border: none;
+        }
     }
 }
 

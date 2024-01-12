@@ -193,6 +193,7 @@
 
 .cw-containeradder-item-wrapper {
     border: solid thin var(--content-color-40);
+    margin-bottom: 5px;
     .cw-sortable-handle {
         opacity: 0;
     }
@@ -206,7 +207,7 @@
     }
 
     .cw-containeradder-item {
-        margin-bottom: 4px;
+        min-height: 5em;
         padding: 1em 1em 1em 6em;
         @include background-icon(unit-test, clickable, 48);
         background-position: 16px center;

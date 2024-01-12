@@ -14,10 +14,15 @@
         .cw-container-tabs-block-list:empty {
             height: 4em;
             border: dashed 2px var(--content-color-40);
+            margin: 5px;
         }
 
         .cw-tabs-content {
             padding: 8px 0 0 0;
+
+            .cw-companion-box {
+                border: none;
+            }
         }
     }
 }
