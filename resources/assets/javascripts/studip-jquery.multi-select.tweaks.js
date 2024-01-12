@@ -47,6 +47,10 @@ import { $gettext } from './lib/gettext.js';
         if (chunks.length > 1) {
             $option.text(chunks.join("\n"));
 
+            if ($option.is('[data-avatar]')) {
+                $option.attr('style', `background-image: url('${$option.data('avatar')}`);
+            }
+
             if ($option.is(':disabled')) {
                 $option.attr('title', $gettext('Die Person ist bereits eingetragen.'));
             }
