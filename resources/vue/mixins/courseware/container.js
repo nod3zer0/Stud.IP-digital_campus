@@ -21,6 +21,7 @@ const containerMixin = {
             updateBlock: 'updateBlock',
             updateContainer: 'updateContainer',
             loadContainer: 'courseware-containers/loadById',
+            loadBlock: 'courseware-blocks/loadById',
             loadStructuralElement: 'loadStructuralElement',
             lockObject: 'lockObject',
             unlockObject: 'unlockObject',
@@ -31,6 +32,8 @@ const containerMixin = {
             companionWarning: 'companionWarning',
             sortContainersInStructualElements: 'sortContainersInStructualElements',
             setAdderStorage: 'coursewareBlockAdder',
+            setProcessing: 'setProcessing',
+            containerUpdate: 'courseware-containers/update'
         }),
         dropBlock(e) {
             this.isDragging = false; // implemented bei echt container type
@@ -52,41 +55,41 @@ const containerMixin = {
             }
         },
         async storeInAnotherContainer(data) {
+            this.setProcessing(true);
+            // update origin container
+            if (data.originContainerId) {
+                await this.lockObject({ id: data.originContainerId, type: 'courseware-containers' });
+                await this.loadContainer({ id : data.originContainerId });
+                let originContainer = this.containerById({ id: data.originContainerId});
+                originContainer.attributes.payload.sections[data.originSectionId].blocks = data.originSectionBlockList;
+                await this.containerUpdate(
+                    originContainer,
+                );
+                await this.unlockObject({ id: data.originContainerId, type: 'courseware-containers' });
+            }
+            // update target container
+            await this.lockObject({ id: data.targetContainerId, type: 'courseware-containers' });
+            await this.loadContainer({ id : data.targetContainerId });
+            let targetContainer = this.containerById({ id: data.targetContainerId});
+            targetContainer.attributes.payload.sections[data.targetSectionId].blocks = data.targetSectionBlockList;
+            await this.containerUpdate(
+                targetContainer,
+            );
+            await this.unlockObject({ id: data.targetContainerId, type: 'courseware-containers' });
+         
             // update block container id
             let block = this.blockById({id: data.blockId });
             block.relationships.container.data.id = data.targetContainerId;
             block.attributes.position = data.newPos;
-            await this.lockObject({ id: data.blockId, type: 'courseware-blocks' });
+            await this.lockObject({ id: block.id, type: 'courseware-blocks' });
             await this.updateBlock({
                 block: block,
                 containerId: data.targetContainerId,
             });
-            await this.unlockObject({ id: data.blockId, type: 'courseware-blocks' });
-
-            // update origin container
-            if (data.originContainerId) {
-                let originContainer = this.containerById({ id: data.originContainerId});
-                originContainer.attributes.payload.sections[data.originSectionId].blocks = data.originSectionBlockList;
-                await this.lockObject({ id: data.originContainerId, type: 'courseware-containers' });
-                await this.updateContainer({
-                    container: originContainer,
-                    structuralElementId: originContainer.relationships['structural-element'].data.id,
-                });
-                await this.unlockObject({ id: data.originContainerId, type: 'courseware-containers' });
-            }
-
-            // update target container
-            let targetContainer = this.containerById({ id: data.targetContainerId});
-            targetContainer.attributes.payload.sections[data.targetSectionId].blocks = data.targetSectionBlockList;
-            await this.lockObject({ id: data.targetContainerId, type: 'courseware-containers' });
-            await this.updateContainer({
-                container: targetContainer,
-                structuralElementId: targetContainer.relationships['structural-element'].data.id,
-            });
-            await this.unlockObject({ id: data.targetContainerId, type: 'courseware-containers' });
-
-            this.loadContainer({id : data.originContainerId });
-            this.loadContainer({id : data.targetContainerId });
+            await this.unlockObject({ id: block.id, type: 'courseware-blocks' });
+            await this.loadBlock({ id: block.id });
+            await this.loadContainer({ id : data.originContainerId });
+            this.setProcessing(false);
         },
         checkSimpleArrayEquality(firstSet, secondSet) {
             return Array.isArray(firstSet) && Array.isArray(secondSet) &&

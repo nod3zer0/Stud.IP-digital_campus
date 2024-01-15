@@ -680,6 +680,7 @@ import IsoDate from '../layouts/IsoDate.vue';
 import FeedbackDialog from '../../feedback/FeedbackDialog.vue'
 import FeedbackCreateDialog from '../../feedback/FeedbackCreateDialog.vue';
 import StudipFiveStars from '../../feedback/StudipFiveStars.vue';
+import StudipProgressIndicator from '../../StudipProgressIndicator.vue';
 import draggable from 'vuedraggable';
 import containerMixin from '@/vue/mixins/courseware/container.js';
 import { mapActions, mapGetters } from 'vuex';
@@ -712,6 +713,7 @@ export default {
         IsoDate,
         StockImageSelector,
         StudipDialog,
+        StudipProgressIndicator,
         draggable,
     }),
     props: ['canVisit', 'orderedStructuralElements', 'structuralElement'],
@@ -770,7 +772,6 @@ export default {
                 'expire-date': ''
             },
             deletingPreviewImage: false,
-            processing: false,
             keyboardSelected: null,
             assistiveLive: '',
             uploadImageURL: null,
@@ -845,7 +846,8 @@ export default {
             getFeedbackElementById: 'feedback-elements/byId',
             feedbackEntries: 'feedback-entries/all',
 
-            currentUser: 'currentUser'
+            currentUser: 'currentUser',
+            processing: 'processing',
         }),
 
         currentId() {
@@ -1446,6 +1448,7 @@ export default {
             loadRelatedFeedback: 'courseware-structural-element-feedback/loadRelated',
             createFeedback: 'feedback-elements/create',
             loadFeedbackElement: 'feedback-elements/loadById',
+            setProcessing: 'setProcessing',
         }),
 
         initCurrent() {
@@ -1624,7 +1627,7 @@ export default {
         },
 
         async storeSort() {
-            const timeout = setTimeout(() => this.processing = true, 800);
+            const timeout = setTimeout(() => this.setProcessing(true), 800);
             if (this.blockedByAnotherUser) {
                 this.companionInfo({ info: this.$gettext('Diese Seite wird bereits bearbeitet.') });
                 clearTimeout(timeout);
@@ -1641,7 +1644,7 @@ export default {
                 }
 
                 clearTimeout(timeout);
-                this.processing = false;
+                this.setProcessing(false);
                 return false;
             }
 
@@ -1652,7 +1655,7 @@ export default {
             this.$emit('select', this.currentId);
 
             clearTimeout(timeout);
-            this.processing = false;
+            this.setProcessing(false);
         },
 
 

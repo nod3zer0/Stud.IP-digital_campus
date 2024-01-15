@@ -51,6 +51,7 @@
                             handle=".cw-sortable-handle"
                             group="blocks"
                             @start="isDragging = true"
+                            @end="dropBlock"
                             :containerId="container.id"
                             :sectionId="index"
                         >

@@ -68,6 +68,7 @@ const getDefaultState = () => {
 
         toolbarActive: true,
         feedbackSettings: null,
+        processing: false,
     };
 };
 
@@ -286,6 +287,9 @@ const getters = {
     },
     progresses(state) {
         return state.progresses;
+    },
+    processing(state) {
+        return state.processing;
     },
 
     oerCampusEnabled(state, getters, rootState, rootGetters) {
@@ -1457,6 +1461,10 @@ export const actions = {
         commit('setBookmarkFilter', course);
     },
 
+    setProcessing({ commit }, processing) {
+        commit('setProcessing', processing);
+    },
+
     createLink({ dispatch, rootGetters }, { publicLink }) {
         dispatch('courseware-public-links/create', publicLink, { root: true });
     },
@@ -1748,6 +1756,9 @@ export const mutations = {
     },
     setFeedbackSettings(state, feedbackSettings) {
         state.feedbackSettings = feedbackSettings;
+    },
+    setProcessing(state, processing) {
+        state.processing = processing;
     }
 };
 
