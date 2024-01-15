@@ -643,7 +643,9 @@ class Admin_CoursesController extends AuthenticatedController
             $d['contents'] .= '</ul></div>';
         }
         if (in_array('last_activity', $activated_fields)) {
-            $d['last_activity'] = strftime('%x', lastActivity($course->id));
+            $last_activity = lastActivity($course->id);
+            $d['last_activity'] = strftime('%x', $last_activity);
+            $d['last_activity_raw'] = $last_activity;
         }
 
         foreach (PluginManager::getInstance()->getPlugins('AdminCourseContents') as $plugin) {

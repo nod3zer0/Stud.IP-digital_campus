@@ -246,18 +246,22 @@ export default {
                 return collator.compare(striptags(a[sortby]), striptags(b[sortby]));
             };
 
-            let is_numeric = true;
-            for (let i in array) {
-                if (striptags(array[i][sortby]) && isNaN(striptags(array[i][sortby]))) {
-                    is_numeric = false;
-                    break;
+            if (sortby === 'last_activity') {
+                sortFunction = (a, b) => a.last_activity_raw - b.last_activity_raw;
+            } else {
+                let is_numeric = true;
+                for (let i in array) {
+                    if (striptags(array[i][sortby]) && isNaN(striptags(array[i][sortby]))) {
+                        is_numeric = false;
+                        break;
+                    }
                 }
-            }
-            if (is_numeric) {
-                sortFunction = function (a, b) {
-                    return (striptags(a[sortby]) ? parseInt(striptags(a[sortby]), 10) : 0)
-                        - (striptags(b[sortby]) ? parseInt(striptags(b[sortby]), 10) : 0);
-                };
+                if (is_numeric) {
+                    sortFunction = function (a, b) {
+                        return (striptags(a[sortby]) ? parseInt(striptags(a[sortby]), 10) : 0)
+                            - (striptags(b[sortby]) ? parseInt(striptags(b[sortby]), 10) : 0);
+                    };
+                }
             }
 
             // Actual sort on copy of array
