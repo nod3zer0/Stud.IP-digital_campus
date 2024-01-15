@@ -230,12 +230,16 @@ class Seminar_Session
         );
         session_cache_limiter("nocache");
         //check for illegal cookiename
-        if (isset($_COOKIE[$this->name])) {
-            if (mb_strlen($_COOKIE[$this->name]) != 32 || preg_match('/[^0-9a-f]+/', $_COOKIE[$this->name])) {
-                session_id(md5(uniqid($this->name, 1)));
-            }
-        } else {
-            session_id(md5(uniqid($this->name, 1)));
+        if (
+            !isset($_COOKIE[$this->name])
+            || mb_strlen($_COOKIE[$this->name]) !== 32
+            || preg_match('/[^0-9a-f]+/', $_COOKIE[$this->name])
+        ) {
+            do {
+                $new_id = md5(bin2hex(random_bytes(128)));
+            } while (!$this->that->ac_newid($new_id));
+
+            session_id($new_id);
         }
 
         $ok = session_start();
