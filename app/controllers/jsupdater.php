@@ -118,6 +118,8 @@ class JsupdaterController extends AuthenticatedController
             'messages' => $this->getMessagesUpdates($pageInfo),
             'personalnotifications' => $this->getPersonalNotificationUpdates($pageInfo),
             'questionnaire' => $this->getQuestionnaireUpdates($pageInfo),
+            'wiki_page_content' => $this->getWikiPageContents($pageInfo),
+            'wiki_editor_status' => $this->getWikiEditorStatus($pageInfo),
         ];
 
         return array_filter($data);
@@ -257,6 +259,104 @@ class JsupdaterController extends AuthenticatedController
             $pageInfo['questionnaire']['questionnaire_ids']
         );
 
+        return $data;
+    }
+
+    private function getWikiPageContents($pageInfo): array
+    {
+        $data = [];
+        if (!empty($pageInfo['wiki_page_content'])) {
+            foreach ($pageInfo['wiki_page_content'] as $page_id) {
+                $page = WikiPage::find($page_id);
+                if ($page && $page->isReadable() && ($page->chdate >= Request::int('server_timestamp'))) {
+                    $data['contents'][$page_id] = wikiReady($page->content, true, $page->range_id, $page->id);
+                }
+            }
+        }
+        return $data;
+    }
+
+    private function getWikiEditorStatus($pageInfo): array
+    {
+        $data = [];
+        if (!empty($pageInfo['wiki_editor_status'])) {
+            $user = User::findCurrent();
+            foreach ((array) $pageInfo['wiki_editor_status']['page_ids'] as $page_id) {
+                WikiOnlineEditingUser::deleteBySQL(
+                    "`page_id` = :page_id AND `chdate` < UNIX_TIMESTAMP() - :threshold",
+                    [
+                        'page_id' => $page_id,
+                        'threshold' => WikiOnlineEditingUser::$threshold
+                    ]
+                );
+                $page = WikiPage::find($page_id);
+                if ($page && $page->isEditable()) {
+                    if (
+                        $pageInfo['wiki_editor_status']['focussed'] == $page_id
+                        && !empty($pageInfo['wiki_editor_status']['page_content'])
+                    ) {
+                        $page->content = \Studip\Markup::markAsHtml(
+                            $pageInfo['wiki_editor_status']['page_content']
+                        );
+                        $page->store();
+                    }
+                    $onlineData = [
+                        'user_id' => $user->id,
+                        'page_id' => $page_id
+                    ];
+                    $online = WikiOnlineEditingUser::findOneBySQL(
+                        "`user_id` = :user_id AND `page_id` = :page_id",
+                        $onlineData
+                    );
+                    if (!$online) {
+                        $online = WikiOnlineEditingUser::build($onlineData);
+                    }
+                    $editingUsers = WikiOnlineEditingUser::countBySQL(
+                        "`page_id` = ? AND `editing` = 1 AND `user_id` != ?",
+                        [$page->id, $user->id]
+                    );
+                    if ($editingUsers > 0) {
+                        $online->editing = 0;
+                    } elseif ($online->editing && $online->editing_request) {
+                        // this is the mode that this user requested the editing mode and was granted to get it:
+                        $online->editing_request = 0;
+                    } elseif ($online->editing_request) {
+                        $other_requests = WikiOnlineEditingUser::countBySql("`page_id` = ? AND `editing_request` = 1 AND `user_id` != ?", [
+                            $page->id,
+                            $user->id,
+                        ]);
+                        if ($other_requests === 0) {
+                            $online->editing_request = 0;
+                            $online->editing = 1;
+                        }
+                    } else {
+                        if ($pageInfo['wiki_editor_status']['focussed'] == $page_id) {
+                            $online->editing = 1;
+                        } else {
+                            $other_users = WikiOnlineEditingUser::countBySql("`page_id` = ? AND `user_id` != ?", [
+                                $page->id,
+                                $user->id,
+                            ]);
+                            if ($other_users === 0) {
+                                // if I'm the only user I don't need to lose the edit mode
+                                $online->editing = 1;
+                            } else {
+                                $online->editing = 0;
+                            }
+                        }
+                    }
+                    $online->chdate = time();
+                    $online->store();
+                    $data['contents'][$page_id] = wikiReady($page->content, true, $page->range_id, $page_id);
+                    $data['wysiwyg_contents'][$page_id] = $page->content;
+                    $data['pages'][$page_id]['editing'] = $online->editing;
+                } else {
+                    $data['pages'][$page_id]['editing'] = 0;
+                }
+                $data['pages'][$page_id]['chdate'] = $page->chdate;
+                $data['users'][$page_id] = $page->getOnlineUsers();
+            }
+        }
         return $data;
     }
 

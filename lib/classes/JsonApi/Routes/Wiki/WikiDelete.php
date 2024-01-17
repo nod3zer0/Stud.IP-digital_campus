@@ -7,8 +7,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use JsonApi\Errors\AuthorizationFailedException;
 use JsonApi\JsonApiController;
 
-require_once 'lib/wiki.inc.php';
-
 class WikiDelete extends JsonApiController
 {
     use HelperTrait;
@@ -24,10 +22,7 @@ class WikiDelete extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-        \WikiPage::deleteBySQL(
-            'keyword = ? AND range_id = ?',
-            [$wikiPage->keyword, $wikiPage->range_id]
-        );
+        $wikiPage->delete();
 
         return $this->getCodeResponse(204);
     }

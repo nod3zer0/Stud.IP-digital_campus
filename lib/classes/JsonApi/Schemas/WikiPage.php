@@ -68,20 +68,16 @@ class WikiPage extends SchemaProvider
 
     public function getId($wiki): ?string
     {
-        return sprintf(
-            '%s_%s',
-            $wiki->range_id,
-            $wiki->keyword
-        );
+        return $wiki->id;
     }
 
     public function getAttributes($wiki, ContextInterface $context): iterable
     {
         return [
-            'keyword' => $wiki->keyword,
-            'content' => $wiki->body,
+            'name' => $wiki->name,
+            'content' => $wiki->content,
             'chdate' => date('c', $wiki->chdate),
-            'version' => (int) $wiki->version,
+            'version' => count($wiki->versions) + 1,
         ];
     }
 
@@ -156,12 +152,12 @@ class WikiPage extends SchemaProvider
      */
     private function addAuthorRelationship($relationships, $wiki, $includeList)
     {
-        if ($wiki->author) {
+        if ($wiki->user_id) {
             $relationships[self::REL_AUTHOR] = [
                 self::RELATIONSHIP_LINKS => [
-                    Link::RELATED => $this->createLinkToResource($wiki->author),
+                    Link::RELATED => $this->createLinkToResource($wiki->user),
                 ],
-                self::RELATIONSHIP_DATA => $wiki->author,
+                self::RELATIONSHIP_DATA => $wiki->user,
             ];
         }
 

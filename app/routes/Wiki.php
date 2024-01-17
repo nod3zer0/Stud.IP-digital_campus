@@ -6,29 +6,25 @@ namespace RESTAPI\Routes;
  * @license    GPL 2 or later
  * @deprecated Since Stud.IP 5.0. Will be removed in Stud.IP 6.0.
  *
- * @condition course_id ^[0-9a-f]{1,32}$
+ * @condition range_id ^[0-9a-f]{1,32}$
  */
 class Wiki extends \RESTAPI\RouteMap
 {
     public function before()
     {
         require_once 'User.php';
-        require_once 'lib/wiki.inc.php';
     }
 
     /**
      * Wikiseitenindex einer Veranstaltung
      *
-     * @get /course/:course_id/wiki
+     * @get /course/:range_id/wiki
      */
-    public function getCourseWiki($course_id)
+    public function getCourseWiki($range_id)
     {
-        $pages = \WikiPage::findLatestPages($course_id);
-        if (!sizeof($pages->findBy('keyword', 'WikiWikWeb'))) {
-            $pages[] = \WikiPage::getStartPage($course_id);
-        }
+        $pages = \WikiPage::findBySQL("`range_id` = ? ORDER BY `name` ASC", [$range_id]);
 
-        if (!$pages->first()->isVisibleTo($GLOBALS['user']->id)) {
+        if (!$pages[0]->isReadable()) {
             $this->error(401);
         }
 
@@ -37,24 +33,24 @@ class Wiki extends \RESTAPI\RouteMap
 
         $linked_pages = [];
         foreach ($pages as $page) {
-            $url = $this->urlf('/course/%s/wiki/%s', [$course_id, htmlReady($page['keyword'])]);
+            $url = $this->urlf('/course/%s/wiki/%s', [$range_id, htmlReady($page['keyword'])]);
             $linked_pages[$url] = $this->wikiPageToJson($page, ["content"]);
         }
 
         $this->etag(md5(serialize($linked_pages)));
 
-        return $this->paginated($linked_pages, $total, compact('course_id'));
+        return $this->paginated($linked_pages, $total, compact('range_id'));
     }
 
     /**
      * Wikiseite auslesen
      *
-     * @get /course/:course_id/wiki/:keyword
-     * @get /course/:course_id/wiki/:keyword/:version
+     * @get /course/:range_id/wiki/:keyword
+     * @get /course/:range_id/wiki/:keyword/:version
      */
-    public function getCourseWikiKeyword($course_id, $keyword, $version = null)
+    public function getCourseWikiKeyword($range_id, $keyword, $version = null)
     {
-        $page = $this->requirePage($course_id, $keyword, $version);
+        $page = $this->requirePage($range_id, $keyword, $version);
         $wiki_json = $this->wikiPageToJson($page);
         $this->etag(md5(serialize($wiki_json)));
         $this->lastmodified($page->chdate);
@@ -64,33 +60,29 @@ class Wiki extends \RESTAPI\RouteMap
     /**
      * Wikiseite ändern/hinzufügen
      *
-     * @put /course/:course_id/wiki/:keyword
+     * @put /course/:range_id/wiki/:keyword
      */
-    public function putCourseWikiKeyword($course_id, $keyword)
+    public function putCourseWikiKeyword($range_id, $keyword)
     {
         if (!isset($this->data['content'])) {
             $this->error(400, 'No content provided');
         }
 
-        $last_version = \WikiPage::findLatestPage($course_id, $keyword);
-        if (!$last_version) {
-            $last_version = new \WikiPage([$course_id, $keyword, 0]);
+        $page =\WikiPage::findOneBySQL("`range_id` = ? AND `name` = ?", [$range_id, $keyword]);
+        if (!$page) {
+            $page = new \WikiPage();
+            $page->range_id = $range_id;
+            $page->name = $keyword;
         }
 
-        if (!$last_version->isEditableBy($user_id = $GLOBALS['user']->id)) {
+        if (!$page->isEditable()) {
             $this->error(401);
         }
 
-        // TODO: rewrite this code and put #submitWikiPage into
-        // class \WikiPage
-        if (!\Context::get()) {
-            \Context::set($course_id);
-        }
-        submitWikiPage($keyword, $last_version->version, $this->data['content'], $user_id, $course_id, $last_version->ancestor);
+        $page->content = $this->data['content'];
+        $page->store();
 
-        $new_version = \WikiPage::findLatestPage($course_id, $keyword);
-
-        $url = sprintf('course/%s/wiki/%s/%d', htmlReady($course_id), htmlReady($keyword), $new_version->version);
+        $url = sprintf('course/%s/wiki/%s/%d', htmlReady($range_id), htmlReady($keyword), count($page->versions) + 1);
         $this->redirect($url, 201, 'ok');
     }
 
@@ -98,37 +90,41 @@ class Wiki extends \RESTAPI\RouteMap
     /* PRIVATE HELPER METHODS                         */
     /**************************************************/
 
-    private function requirePage($course_id, $keyword, $version)
+    private function requirePage($range_id, $keyword, $version = null)
     {
-        if ($version) {
-            $page = \WikiPage::find([$course_id, $keyword, $version]);
-        } else {
-            $page = \WikiPage::findLatestPage($course_id, $keyword);
-        }
+        $page = \WikiPage::findOneBySQL("`range_id` = ? AND `name` = ?", [$range_id, $keyword]);
 
         if (!$page) {
             $this->notFound();
         }
 
-        if (!$page->isVisibleTo($GLOBALS['user']->id)) {
+        if (!$page->isReadable($GLOBALS['user']->id)) {
             $this->error(401);
         }
-
-        return $page;
+        if ($version !== null && $version !== count($page->versions) + 1) {
+            return $page->versions[count($page->versions) - 1 - $version];
+        } else {
+            return $page;
+        }
     }
 
     private function wikiPageToJson($page, $without = [])
     {
-        $json = $page->toArray(words("range_id keyword chdate version"));
+        $json = [
+            'range_id' => $page->range_id,
+            'keyword'  => $page->name,
+            'chdate'   => $page->chdate,
+            'version'  => 1
+        ];
 
         // (pre-rendered) content
         if (!in_array('content', $without)) {
-            $json['content']      = $page->body;
-            $json['content_html'] = wikiReady($page->body);
+            $json['content']      = $page->content;
+            $json['content_html'] = wikiReady($page->content, true, $page->range_id, $page->id);
         }
         if (!in_array('user', $without)) {
             if ($page->author) {
-                $json['user'] = User::getMiniUser($this, $page->author);
+                $json['user'] = User::getMiniUser($this, $page->user_id);
             }
         }
 

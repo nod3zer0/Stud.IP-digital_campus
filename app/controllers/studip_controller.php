@@ -585,6 +585,11 @@ abstract class StudipController extends Trails_Controller
         );
     }
 
+    public function render_form(\Studip\Forms\Form $form)
+    {
+        $this->render_text($form->render());
+    }
+
     /**
      * relays current request to another controller and returns the response
      * the other controller is given all assigned properties, additional parameters are passed

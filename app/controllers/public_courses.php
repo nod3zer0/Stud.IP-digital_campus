@@ -170,15 +170,19 @@ class PublicCoursesController extends AuthenticatedController
 
         // Wiki
         if (Config::get()->WIKI_ENABLE) {
-            $query = "SELECT range_id, COUNT(DISTINCT keyword) AS count
-                      FROM wiki
-                      WHERE range_id IN (?)
-                      GROUP BY range_id";
+            $query = "SELECT `range_id`, COUNT(`wiki_versions`.`version_id`) + 1 AS count
+                      FROM `wiki_pages`
+                      LEFT JOIN `wiki_versions` USING (`page_id`)
+                      WHERE `range_id` IN (?)
+                      GROUP BY `range_id`";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([$seminar_ids]);
             while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                 if (isset($seminars[$row['range_id']]['navigations']['CoreWiki'])) {
-                    $nav = new Navigation('wiki', 'wiki.php');
+                    $nav = new Navigation(
+                        'wiki',
+                        URLHelper::getURL('dispatch.php/course/wiki/page', ['cid' => $row['range_id']])
+                    );
                     $nav->setImage(Icon::create('wiki', Icon::ROLE_CLICKABLE, ["title" => sprintf(_('%s WikiSeiten'), $row['count'])]));
                     $seminars[$row['range_id']]['navigations']['CoreWiki'] = $nav;
                 }

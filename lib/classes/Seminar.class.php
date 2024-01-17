@@ -1615,9 +1615,6 @@ class Seminar
         $statement = DBManager::get()->prepare($query);
         $statement->execute([$s_id]);
 
-        // remove wiki page config
-        WikiPageConfig::deleteBySQL('range_id = ?', [$s_id]);
-
         // delete course config values
         ConfigValue::deleteBySQL('range_id = ?', [$s_id]);
 

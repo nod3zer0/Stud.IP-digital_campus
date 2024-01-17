@@ -12,6 +12,7 @@ class WikiUpdateTest extends \Codeception\Test\Unit
     protected function _before()
     {
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
+        \WikiPage::deleteBySQL('1');
     }
 
     protected function _after()
@@ -26,11 +27,11 @@ class WikiUpdateTest extends \Codeception\Test\Unit
 
         $keyword = 'KaineusKalais';
         $content = 'This is just fake wiki.';
-        $this->createWikiPage($rangeId, $keyword, $content);
+        $createdpage = $this->createWikiPage($rangeId, $keyword, $content);
 
         $newContent = 'Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessenihren Profi was sie sind. Ich lese nicht sehr viele Zeitungen, aberich habe gehört viele Situationen. Erstens: Wir haben nicht offensivgespielt. Es gibt keine deutsche Mannschaft spielt offensiv und dieNamen offensiv wie Bayern. Letzte Spiel hatten wir in Platz dreiSpitzen: Elber, Jancker und dann Zickler. Wir mussen nicht vergessenZickler. Zickler ist eine Spitzen mehr, Mehmet mehr Basler. Ist klardiese Wörter, ist möglich verstehen, was ich hab’ gesagt? Danke.';
 
-        $response = $this->updateWiki($credentials, $rangeId, $keyword, $newContent);
+        $response = $this->updateWiki($credentials, $rangeId, $createdpage->id, $newContent);
         $this->tester->assertSame(200, $response->getStatusCode());
         $page = $response->document()->primaryResource();
 
@@ -38,12 +39,12 @@ class WikiUpdateTest extends \Codeception\Test\Unit
     }
 
     //helpers:
-    private function updateWiki($credentials, $rangeId, $keyword, $content)
+    private function updateWiki($credentials, $rangeId, $page_id, $content)
     {
         $json = [
             'data' => [
                 'type' => 'wiki',
-                'id' => $rangeId.'_'.$keyword,
+                'id' => $page_id,
                 'attributes' => compact('content')
             ],
         ];
@@ -53,7 +54,7 @@ class WikiUpdateTest extends \Codeception\Test\Unit
         return $this->tester->sendMockRequest(
                 $app,
                 $this->tester->createRequestBuilder($credentials)
-                ->setUri('/wiki-pages/'.$rangeId.'_'.$keyword)
+                ->setUri('/wiki-pages/'.$page_id)
                 ->setJsonApiBody($json)
                 ->update()
                 ->getRequest()
@@ -62,10 +63,22 @@ class WikiUpdateTest extends \Codeception\Test\Unit
 
     private function createWikiPage($rangeId, $keyword, $body)
     {
-        $wikiPage = new \WikiPage([$rangeId, $keyword, 0]);
-        $wikiPage->body = $body;
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        // EVIL HACK
+        $oldPerm = $GLOBALS['perm'] ?? null;
+        $oldUser = $GLOBALS['user'] ?? null;
+        $GLOBALS['perm'] = new \Seminar_Perm();
+        $GLOBALS['user'] = new \Seminar_User(\User::find($credentials['id']));
+
+        $wikiPage = new \WikiPage();
+        $wikiPage->range_id = $rangeId;
+        $wikiPage->name = $keyword;
+        $wikiPage->content = $body;
         $wikiPage->user_id = 'nobody';
         $wikiPage->store();
+
+        $GLOBALS['perm'] = $oldPerm;
+        $GLOBALS['user'] = $oldUser;
 
         return $wikiPage;
     }

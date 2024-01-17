@@ -5,8 +5,6 @@
 # Lifter010: TODO
 
 
-require_once 'lib/wiki.inc.php';
-
 // Wrapper for formatted content (defined as a constant since it is used
 // in the unit test defined in tests/unit/lib/VisualTest.php as well).
 define('FORMATTED_CONTENT_WRAPPER', '<div class="formatted-content ck-content">%s</div>');
@@ -133,10 +131,12 @@ function formatLinks($text, $nl2br = true) {
  * @access public
  * @param  string $what  Marked-up text.
  * @param  string $trim  Trim leading and trailing whitespace, if TRUE.
+ * @param  string $range_id the id of the course or institute
+ * @param  string $page_id the id of the page
  * @return string        HTML code computed by applying markup-rules.
  */
-function wikiReady($text, $trim=TRUE) {
-    $formatted = Markup::apply(new WikiFormat(), $text, $trim);
+function wikiReady($text, $trim=TRUE, $range_id = null, $page_id = null) {
+    $formatted = Markup::apply(new WikiFormat($range_id, $page_id), $text, $trim);
 
     return $formatted !== '' ? sprintf(FORMATTED_CONTENT_WRAPPER, $formatted) : '';
 }

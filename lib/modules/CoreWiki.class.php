@@ -14,73 +14,88 @@ class CoreWiki extends CorePlugin implements StudipModule
     /**
      * {@inheritdoc}
      */
-    public function getIconNavigation($course_id, $last_visit, $user_id)
+    public function getIconNavigation($range_id, $last_visit, $user_id)
     {
         if (!Config::get()->WIKI_ENABLE) {
             return null;
         }
-
-        $priviledged = $GLOBALS['perm']->have_studip_perm('tutor', $course_id, $user_id);
-
-        if ($priviledged) {
-            $sql = "SELECT COUNT(DISTINCT keyword) AS count_d,
-                           COUNT(IF((wiki.chdate > IFNULL(ouv.visitdate, :threshold) AND wiki.user_id != :user_id), keyword, NULL)) AS neue
-                    FROM wiki
-                    LEFT JOIN object_user_visits AS ouv
-                      ON (ouv.object_id = wiki.range_id AND ouv.user_id = :user_id and ouv.plugin_id = :plugin_id)
-                    WHERE wiki.range_id = :course_id
-                    GROUP BY wiki.range_id";
-        } else {
-            $sql = "SELECT COUNT(DISTINCT keyword) AS count_d,
-                           COUNT(IF((wiki.chdate > IFNULL(ouv.visitdate, :threshold) AND wiki.user_id != :user_id), keyword, NULL)) AS neue
-                    FROM wiki
-                    LEFT JOIN wiki_page_config USING (range_id, keyword)
-                    LEFT JOIN object_user_visits AS ouv
-                      ON (ouv.object_id = wiki.range_id AND ouv.user_id = :user_id and ouv.plugin_id = :plugin_id)
-                    WHERE wiki.range_id = :course_id
-                      AND (
-                          wiki_page_config.range_id IS NULL
-                          OR wiki_page_config.read_restricted = 0
-                      )
-                    GROUP BY wiki.range_id";
+        $perm = $GLOBALS['perm']->get_perm($user_id);
+        if (in_array($perm, ['admin', 'root'])) {
+            $perm = 'dozent';
         }
-        $statement = DBManager::get()->prepare($sql);
-        $statement->bindValue(':user_id', $user_id);
-        $statement->bindValue(':course_id', $course_id);
-        $statement->bindValue(':threshold', $last_visit);
-        $statement->bindValue(':plugin_id', $this->getPluginId());
-        $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result || (!$result['neue'] && !$result['count_d'])) {
+        $statement = DBManager::get()->prepare("
+            SELECT `wiki_pages`.`page_id`
+            FROM `wiki_pages`
+                LEFT JOIN `statusgruppe_user` ON (`statusgruppe_user`.`statusgruppe_id` = `wiki_pages`.`read_permission`)
+            WHERE `wiki_pages`.`range_id` = :range_id
+                AND (
+                    `wiki_pages`.`read_permission` = 'all'
+                    OR `statusgruppe_user`.`user_id` = :user_id
+                    OR `wiki_pages`.`read_permission` = :perm
+                    OR (`wiki_pages`.`read_permission` = 'tutor' AND :perm = 'dozent')
+                )
+        ");
+
+        $statement->execute([
+            'range_id' => $range_id,
+            'user_id' => $user_id,
+            'perm' => $perm
+        ]);
+        $wiki_page_ids = $statement->fetchAll(PDO::FETCH_COLUMN);
+        if (count($wiki_page_ids) === 0) {
             return null;
         }
 
+        $visit_date = object_get_visit($range_id, $this->getPluginId(), 'visitdate') ?? $last_visit;
+
+        $statement = DBManager::get()->prepare("
+            SELECT COUNT(*) AS `neue`
+            FROM `wiki_pages`
+            WHERE `wiki_pages`.`page_id` IN (:page_ids)
+                AND `wiki_pages`.`chdate` > :threshold
+                AND `wiki_pages`.`user_id` != :user_id
+        ");
+        $statement->execute([
+            'page_ids' => $wiki_page_ids,
+            'threshold' => $visit_date,
+            'user_id' => $user_id,
+        ]);
+        $new_pages = $statement->fetch(PDO::FETCH_COLUMN, 0);
+
         $nav = new Navigation(_('Wiki'));
-        if ($result['neue']) {
-            $nav->setURL('wiki.php', ['view' => 'listnew']);
+        if ($new_pages > 0) {
+            $nav->setURL('dispatch.php/course/wiki/newpages');
             $nav->setImage(Icon::create('wiki', Icon::ROLE_ATTENTION, [
                 'title' => sprintf(
                     ngettext(
-                        '%1$d Wiki-Seite, %2$d Änderung(en)',
-                        '%1$d Wiki-Seiten, %2$d Änderung(en)',
-                        $result['count_d']
+                        '%d Wiki-Seite',
+                        '%d Wiki-Seiten',
+                        count($wiki_page_ids)
                     ),
-                    $result['count_d'],
-                    $result['neue']
+                    count($wiki_page_ids)
                 )
+                . ', '
+                . sprintf(
+                    ngettext(
+                        '%d Änderung',
+                        '%d Änderungen',
+                        $new_pages
+                     ),
+                        $new_pages
+                 )
             ]));
-            $nav->setBadgeNumber($result['neue']);
+            $nav->setBadgeNumber($new_pages);
         } else {
-            $nav->setURL('wiki.php');
+            $nav->setURL('dispatch.php/course/wiki/page');
             $nav->setImage(Icon::create('wiki', Icon::ROLE_CLICKABLE, [
                 'title' => sprintf(
                     ngettext(
                         '%d Wiki-Seite',
                         '%d Wiki-Seiten',
-                        $result['count_d']
+                        count($wiki_page_ids)
                     ),
-                    $result['count_d']
+                    count($wiki_page_ids)
                 )
             ]));
         }
@@ -90,7 +105,7 @@ class CoreWiki extends CorePlugin implements StudipModule
     /**
      * {@inheritdoc}
      */
-    public function getTabNavigation($course_id)
+    public function getTabNavigation($range_id)
     {
         if (!Config::get()->WIKI_ENABLE) {
             return null;
@@ -100,16 +115,11 @@ class CoreWiki extends CorePlugin implements StudipModule
         $navigation->setImage(Icon::create('wiki', Icon::ROLE_INFO_ALT));
         $navigation->setActiveImage(Icon::create('wiki', Icon::ROLE_INFO));
 
-        $keyword = Request::get('keyword');
-        if ($keyword !== 'WikiWikiWeb') {
-            $navigation->addSubNavigation('start', new Navigation(_('Wiki-Startseite'), 'wiki.php?view=show'));
+        $navigation->addSubNavigation('start', new Navigation(_('Wiki-Startseite'), 'dispatch.php/course/wiki/page'));
+        if (WikiPage::countBySQL('`range_id` = ?', [$range_id]) > 0) {
+            $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'dispatch.php/course/wiki/newpages'));
+            $navigation->addSubNavigation('allpages', new Navigation(_('Alle Seiten'), 'dispatch.php/course/wiki/allpages'));
         }
-        if ($keyword) {
-            $display_name = $keyword === 'WikiWikiWeb' ? _('Wiki-Startseite') : $keyword;
-            $navigation->addSubNavigation('show', new Navigation($display_name, 'wiki.php?view=show', compact('keyword')));
-        }
-        $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'wiki.php?view=listnew'));
-        $navigation->addSubNavigation('listall', new Navigation(_('Alle Seiten'), 'wiki.php?view=listall'));
         return ['wiki' => $navigation];
     }
 
@@ -120,7 +130,7 @@ class CoreWiki extends CorePlugin implements StudipModule
     {
         return [
             'summary' => _('Gemeinsames Erstellen und Bearbeiten von Texten'),
-            'description' => _('Im Wiki-Web oder kurz "Wiki" können '.
+            'description' => _('Im Wiki können '.
                 'verschiedene Autor/-innen gemeinsam Texte, Konzepte und andere '.
                 'schriftliche Arbeiten erstellen und gestalten, dies '.
                 'allerdings nicht gleichzeitig. Texte können individuell '.
@@ -140,7 +150,7 @@ class CoreWiki extends CorePlugin implements StudipModule
                             Löschfunktion für die aktuellste Seiten-Version;
                             Keine gleichzeitige Bearbeitung desselben Textes möglich, nur nacheinander'),
             'descriptionshort' => _('Gemeinsames asynchrones Erstellen und Bearbeiten von Texten'),
-            'descriptionlong' => _('Im Wiki-Web oder kurz "Wiki" können verschiedene Autor/-innen gemeinsam Texte, '.
+            'descriptionlong' => _('Im Wiki können verschiedene Autor/-innen gemeinsam Texte, '.
                                     'Konzepte und andere schriftliche Arbeiten erstellen und gestalten. Dies '.
                                     'allerdings nicht gleichzeitig. Texte können individuell bearbeitet und '.
                                     'gespeichert werden. Das Besondere im Wiki ist, dass Studierende und Lehrende '.
@@ -163,7 +173,6 @@ class CoreWiki extends CorePlugin implements StudipModule
 
     public function getInfoTemplate($course_id)
     {
-        // TODO: Implement getInfoTemplate() method.
         return null;
     }
 
@@ -172,19 +181,21 @@ class CoreWiki extends CorePlugin implements StudipModule
      * Generates a page hierarchy for table of contents/breadcrumbs.
      * @return TOCItem
      */
-    public static function getTOC($startPage): TOCItem
+    public static function getTOC($startPage, $active_title = null): TOCItem
     {
-        $root = new TOCItem($startPage->keyword === 'WikiWikiWeb' ? _('Wiki-Startseite') : $startPage->keyword);
-        $root->setURL(URLHelper::getURL('wiki.php', ['keyword' => $startPage->keyword]))
-            ->setActive($startPage->keyword == Request::get('keyword') ||
-                $startPage->keyword == 'WikiWikiWeb' && !Request::get('keyword'));
-        if ($startPage->keyword == 'WikiWikiWeb') {
+        $root = new TOCItem($startPage->isNew() || $startPage->name === 'WikiWikiWeb'
+            ? _('Wiki-Startseite')
+            : $startPage->name
+        );
+        $root->setURL(URLHelper::getURL('dispatch.php/course/wiki/page/'.$startPage->id));
+        if ($startPage->name == 'WikiWikiWeb' || $startPage->id == CourseConfig::get($startPage->range_id)->WIKI_STARTPAGE_ID) {
             $root->setIcon(Icon::create('wiki'));
         }
-
+        $root->setActive($root->getTitle() === $active_title);
 
         foreach ($startPage->children as $child) {
-            $item = self::getTOC($child);
+            $item = self::getTOC($child, $active_title);
+            $item->setActive($item->getTitle() === $active_title);
             $root->addChild($item);
         }
 

@@ -254,6 +254,8 @@ STUDIP.ready(function () {
                         params.STUDIPFORM_DISPLAYVALIDATION = false;
                         params.STUDIPFORM_VALIDATIONNOTES = [];
                         params.STUDIPFORM_AUTOSAVEURL = f.dataset.autosave;
+                        params.STUDIPFORM_VALIDATION_URL = f.dataset.validation_url;
+                        params.STUDIPFORM_VALIDATED = false;
                         params.STUDIPFORM_REDIRECTURL = f.dataset.url;
                         params.STUDIPFORM_INPUTS_ORDER = [];
                         for (let i in JSON.parse(f.dataset.inputs)) {
@@ -263,6 +265,9 @@ STUDIP.ready(function () {
                     },
                     methods: {
                         submit: function (e) {
+                            if (this.STUDIPFORM_VALIDATED) {
+                                return;
+                            }
                             let v = this;
                             v.STUDIPFORM_VALIDATIONNOTES = [];
                             this.STUDIPFORM_DISPLAYVALIDATION = true;
@@ -290,6 +295,9 @@ STUDIP.ready(function () {
                                             }
                                         }
                                     });
+                                } else {
+                                    v.STUDIPFORM_VALIDATED = true;
+                                    v.$el.submit();
                                 }
                             });
                             e.preventDefault();
@@ -359,7 +367,7 @@ STUDIP.ready(function () {
                                     params.STUDIPFORM_SERVERVALIDATION = 1;
 
                                     $.ajax({
-                                        url: v.STUDIPFORM_AUTOSAVEURL,
+                                        url: v.STUDIPFORM_VALIDATION_URL,
                                         data: params,
                                         type: 'post',
                                         dataType: 'json',

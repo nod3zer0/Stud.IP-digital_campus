@@ -29,7 +29,7 @@ CKEDITOR.plugins.add('studip-wiki', {
             },
             data: function () {
                 var text = this.data.text ? ('|' + this.data.text) : '';
-                this.element.setText('[[' + this.data.link + text + ']]');
+                this.element.setText('<a href="' + this.data.link + '" class="wiki-link">' + text + '</a>');
             }
         });
         CKEDITOR.dialog.add('wikiDialog', this.path + 'dialogs/wikilink.js');

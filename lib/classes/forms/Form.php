@@ -11,11 +11,12 @@ class Form extends Part
     //internals
     protected $inputs = [];
     protected $parts = [];
+    protected $buttons = [];
 
     //appearance in html-form
     protected $url = null;
     protected $save_button_text = '';
-    protected $save_button_name = '';
+    protected $save_button_name = 'STUDIPFORM_STORE_BUTTON';
 
     protected $cancel_button_text = '';
     protected $cancel_button_name = '';
@@ -68,6 +69,7 @@ class Form extends Part
         parent::__construct(...$parts);
         //Set a default for the success message:
         $this->success_message = _('Daten wurden gespeichert.');
+        \NotificationCenter::addObserver($this, 'validationStep', 'ActionDidPerform');
     }
 
     /**
@@ -276,27 +278,14 @@ class Form extends Part
     public function autoStore()
     {
         $this->autoStore = true;
-        if (\Request::isPost() && \Request::isAjax() && !\Request::isDialog()) {
+        if (
+             \Request::isPost()
+             && \Request::isAjax()
+             && !\Request::isDialog()
+             && \Request::submitted($this->getSaveButtonName())
+        ) {
             if (\Request::submitted('STUDIPFORM_SERVERVALIDATION')) {
-                //verify the user input:
-                $output = [];
-                foreach ($this->getAllInputs() as $input) {
-                    if ($input->validate) {
-                        $callback = $input->getValidationCallback();
-                        $value = $this->getStorableValueFromRequest($input);
-                        $valid = $callback($value, $input);
-                        if ($valid !== true) {
-                            $output[$input->getName()] = [
-                                'name' => $input->getName(),
-                                'label' => $input->getTitle(),
-                                'error' => $callback($value, $input)
-                            ];
-                        }
-                    }
-                }
-                echo json_encode($output);
-                page_close();
-                die();
+                $this->validate();
             } else {
                 //storing the input
                 $this->store();
@@ -306,6 +295,32 @@ class Form extends Part
                 page_close();
                 die();
             }
+        }
+        return $this;
+    }
+
+    public function validate()
+    {
+        if (\Request::isPost() && \Request::submitted('STUDIPFORM_SERVERVALIDATION')) {
+            //verify the user input:
+            $output = [];
+            foreach ($this->getAllInputs() as $input) {
+                if ($input->validate) {
+                    $callback = $input->getValidationCallback();
+                    $value = $this->getStorableValueFromRequest($input);
+                    $valid = $callback($value, $input);
+                    if ($valid !== true) {
+                        $output[$input->getName()] = [
+                            'name' => $input->getName(),
+                            'label' => $input->getTitle(),
+                            'error' => $callback($value, $input)
+                        ];
+                    }
+                }
+            }
+            echo json_encode($output);
+            page_close();
+            die();
         }
         return $this;
     }
@@ -451,6 +466,26 @@ class Form extends Part
     }
 
     /**
+     * Adds a Studip-Button object to the footer of the dialog.
+     * @param \Studip\Button $button
+     * @return Form
+     */
+    public function addButton(\Studip\Button $button) : Form
+    {
+        $this->buttons[] = $button;
+        return $this;
+    }
+
+    /**
+     * Returns the additional buttons (except the save-button) as an array of \Studip\Button objects
+     * @return array
+     */
+    public function getButtons() : array
+    {
+        return $this->buttons;
+    }
+
+    /**
      * Renders the whole form as a string.
      * @return string
      * @throws \Flexi_TemplateNotFoundException
@@ -481,6 +516,13 @@ class Form extends Part
             && ($context->isField($input->getName()) || $context->isRelation($input->getName()))
         ) {
             return function ($value) use ($context, $input) {
+                if ($context && !$value && $value !== null) {
+                    $metadata = $context->getTableMetadata();
+                    if ($metadata['fields'][$input->getName()]['null'] === 'YES') {
+                        //sets the value to null if this is a feasible db value for this field:
+                        $value = null;
+                    }
+                }
                 $context[$input->getName()] = $value;
             };
         }

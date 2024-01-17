@@ -58,6 +58,7 @@ a.wiki-restricted {
 }
 
 .wiki-empty-background {
+    display: block;
     @include empty-placeholder-image('wiki', false);
 }
 
@@ -93,42 +94,83 @@ a.wiki-restricted {
     }
 }
 
-$authors: (
-     0: var(--dark-gray-color-20),
-     1: var(--red-20),
-     2: var(--green-20),
-     3: var(--brown-20),
-     4: var(--dark-violet-20),
-     5: var(--orange-20),
-     6: var(--dark-green-20),
-     7: var(--violet-20),
-     8: var(--yellow-20),
-     9: var(--petrol-20),
-    10: var(--dark-gray-color-40),
-    11: var(--red-40),
-    12: var(--green-40),
-    13: var(--brown-40),
-    14: var(--dark-violet-40),
-    15: var(--orange-40),
-    16: var(--dark-green-40),
-    17: var(--violet-40),
-    18: var(--yellow-40),
-    19: var(--petrol-40),
-    20: var(--dark-gray-color-60),
-    21: var(--red-60),
-    22: var(--green-60),
-    23: var(--brown-60),
-    24: var(--dark-violet-60),
-    25: var(--orange-60),
-    26: var(--dark-green-60),
-    27: var(--violet-60),
-    28: var(--yellow-60),
-    29: var(--petrol-60)
-);
+.blame_diff {
+    > .wiki_line {
+        display: flex;
+        > .author {
+            text-align: center;
+            width: 100px;
+            max-width: 100px;
+            overflow: hidden;
+            background: var(--content-color-20);
+            border-bottom: 1px solid var(--content-color-40);
+            border-left: 1px solid var(--content-color-40);
+            padding-top: 5px;
+            padding-left: 5px;
+            padding-right: 5px;
+            .author_name {
+                font-size: 0.8em;
+            }
+        }
+        > .difflink {
+            background: var(--content-color-20);
+            border-bottom: 1px solid var(--content-color-40);
+            padding-top: 21px;
+            padding-left: 5px;
+            padding-right: 10px;
+        }
+        > .content {
+            border-bottom: 1px solid var(--content-color-40);
+            border-right: 1px solid var(--content-color-40);
+            border-left: 1px solid var(--content-color-40);
+            padding-left: 5px;
+            width: 100%;
+        }
 
-@each $index, $bgcolor in $authors {
-    .wiki-author#{$index} {
-        background-color: $bgcolor;
+        &:first-child {
+            > .author {
+                border-top: 1px solid var(--content-color-40);
+            }
+            > .difflink {
+                border-top: 1px solid var(--content-color-40);
+            }
+            > .content {
+                border-top: 1px solid var(--content-color-40);
+            }
+        }
+    }
+
+}
+
+.wiki_diffs {
+    > .wiki_diff {
+        display: flex;
+        align-items: stretch;
+        .wiki_added,
+        .wiki_erased {
+            width: 30px;
+            background-repeat: no-repeat;
+            background-position: center center;
+            min-height: 22px;
+        }
+        .wiki_added {
+            background-color: var(--content-color-20);
+            border: 1px solid var(--content-color-40);
+            @include background-icon('add', 'inactive', 20);
+
+        }
+        .wiki_erased {
+            background-color: var(--white);
+            border: 1px solid var(--light-gray-color-40);
+            @include background-icon('remove', 'inactive', 20);
+        }
+        .wiki_added + div,
+        .wiki_erased + div {
+            margin-left: 10px;
+        }
+        .wiki_erased + div {
+            opacity: 0.5;
+        }
     }
 }
 
@@ -138,4 +180,8 @@ article.studip.wiki {
     > footer {
         margin: 0;
     }
+}
+
+.wiki_highlight {
+    background-color: var(--yellow);
 }

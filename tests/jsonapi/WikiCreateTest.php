@@ -12,6 +12,7 @@ class WikiCreateTest extends \Codeception\Test\Unit
     protected function _before()
     {
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
+        \WikiPage::deleteBySQL('1');
     }
 
     protected function _after()
@@ -24,22 +25,22 @@ class WikiCreateTest extends \Codeception\Test\Unit
         $credentials = $this->tester->getCredentialsForTestAutor();
         $rangeId = 'a07535cf2f8a72df33c12ddfa4b53dde';
 
-        $keyword = 'IphiklosIphitos';
+        $name = 'IphiklosIphitos';
         $content = 'This is just fake wiki.';
 
         $json = [
             'data' => [
                 'type' => 'wiki',
-                'attributes' => compact('keyword', 'content'),
+                'attributes' => compact('name', 'content'),
             ],
         ];
 
-        $this->tester->assertCount(0, \WikiPage::findLatestPages($rangeId));
+        $this->tester->assertCount(0, \WikiPage::findBySQL('`range_id` = ?', [$rangeId]));
 
         $response = $this->createWikiPage($credentials, $rangeId, $json);
         $this->tester->assertSame(201, $response->getStatusCode());
 
-        $this->tester->assertCount(1, \WikiPage::findLatestPages($rangeId));
+        $this->tester->assertCount(1, \WikiPage::findBySQL('`range_id` = ?', [$rangeId]));
 
         $page = $response->document()->primaryResource();
 

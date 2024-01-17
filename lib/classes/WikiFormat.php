@@ -29,6 +29,9 @@ class WikiFormat extends StudipFormat
         ],
     ];
 
+    private $range_id = null;
+    private $page_id = null;
+
     /**
      * Adds a new markup rule to the wiki markup set. This can
      * also be used to replace an existing markup rule. The end regular
@@ -89,10 +92,13 @@ class WikiFormat extends StudipFormat
 
     /**
      * Initializes a new WikiFormat instance.
+     * @param string|null $range_id ID of the course or institute.
      */
-    public function __construct()
+    public function __construct($range_id = null, $page_id = null)
     {
         parent::__construct();
+        $this->range_id = $range_id;
+        $this->page_id  = $page_id;
         foreach (self::$wiki_rules as $name => $rule) {
             $this->addMarkup(
                 $name,
@@ -102,6 +108,24 @@ class WikiFormat extends StudipFormat
                 $rule['before'] ?? null
             );
         }
+    }
+
+    /**
+     * Returns the range_id of the wiki-page for which the markup is desired.
+     * @return string|null
+     */
+    public function getRangeId()
+    {
+        return $this->range_id;
+    }
+
+    /**
+     * Returns the page_id of the wiki-page for which the markup is desired.
+     * @return string|null
+     */
+    public function getPageId()
+    {
+        return $this->page_id;
     }
 
     /**
@@ -148,25 +172,25 @@ class WikiFormat extends StudipFormat
         $keyword = decodeHTML($matches[1]);
         $display_page = !empty($matches[2]) ? $markup->format($matches[2]) : htmlReady($keyword);
 
-        $page = WikiPage::findLatestPage(Context::getId(), $keyword);
+        $range_id = $markup->getRangeId() ?? Context::getId();
+        $page = WikiPage::findByName($range_id, trim($keyword));
 
         // Page does not exist
         if (!$page) {
             return sprintf('<a href="%s">%s(?)</a>',
-                URLHelper::getLink('wiki.php', [
-                    'keyword' => $keyword,
-                    'origin' => Request::get('keyword') ?: 'WikiWikiWeb',
-                    'view' => 'editnew'
+                URLHelper::getLink('dispatch.php/course/wiki/edit', [
+                    'keyword' => trim($keyword),
+                    'parent_id' => $markup->getPageId()
                 ]),
                 $display_page
             );
         }
 
         // Page is visible to current user
-        if ($page->isVisibleTo($GLOBALS['user'])) {
+        if ($page->isReadable()) {
             return sprintf(
                 '<a href="%s">%s</a>',
-                URLHelper::getLink('wiki.php', compact('keyword')),
+                URLHelper::getLink('dispatch.php/course/wiki/page/' . $page->id, ['cid' => $range_id]),
                 $display_page
             );
         }
@@ -174,7 +198,7 @@ class WikiFormat extends StudipFormat
         // Page is not visible to current user and show be displayed accordingly
         return sprintf(
             '<a href="%s" class="wiki-restricted" title="%s">%s</a>',
-            URLHelper::getLink('wiki.php', compact('keyword')),
+            URLHelper::getLink('dispatch.php/course/wiki/page/' . $page->id, ['cid' => $range_id]),
             sprintf(
                 _('Sie haben keine Berechtigung, die Seite %s zu lesen!'),
                 htmlReady($keyword)

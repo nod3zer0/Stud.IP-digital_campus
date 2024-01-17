@@ -107,7 +107,10 @@ class StudipKing {
 
     private static function wiki_kings()
     {
-        return self::select_kings("SELECT user_id AS id, COUNT(*) AS num FROM wiki GROUP BY user_id");
+        return self::select_kings("
+            SELECT user_id AS id, COUNT(*) AS num
+            FROM (SELECT user_id FROM wiki_pages UNION SELECT user_id FROM wiki_versions) AS `all_wiki_pages`
+            GROUP BY user_id");
     }
 
     private static function forum_kings()

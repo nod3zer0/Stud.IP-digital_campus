@@ -32,6 +32,7 @@ $form_id = md5(uniqid());
       data-debugmode="<?= htmlReady(json_encode($form->getDebugMode())) ?>"
       data-required="<?= htmlReady(json_encode($required_inputs)) ?>"
       data-server_validation="<?= $server_validation ? 1 : 0?>"
+      data-validation_url="<?= htmlReady($_SERVER['REQUEST_URI']) ?>"
       class="default studipform<?= $form->isCollapsable() ? ' collapsable' : '' ?>">
 
     <?= CSRFProtection::tokenTag(['ref' => 'securityToken']) ?>
@@ -77,5 +78,11 @@ $form_id = md5(uniqid());
 <? if (Request::isDialog()) : ?>
     <footer data-dialog-button>
         <?= \Studip\Button::create($form->getSaveButtonText(), $form->getSaveButtonName(), ['form' => $form_id]) ?>
+        <? foreach ($form->getButtons() as $button) : ?>
+            <?
+            $button->attributes['form'] = $form_id;
+            echo $button;
+            ?>
+        <? endforeach ?>
     </footer>
 <? endif ?>

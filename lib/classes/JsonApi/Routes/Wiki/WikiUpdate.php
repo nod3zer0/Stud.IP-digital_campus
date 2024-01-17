@@ -9,8 +9,6 @@ use JsonApi\Errors\InternalServerError;
 use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
 
-require_once 'lib/wiki.inc.php';
-
 /**
  * Create a news where the range is the user himself.
  */
@@ -26,7 +24,8 @@ class WikiUpdate extends JsonApiController
         $json = $this->validate($request);
         $wikiPage = self::findWikiPage($args['id']);
 
-        if (!Authority::canUpdateWiki($user = $this->getUser($request), $wikiPage)) {
+        $user = $this->getUser($request);
+        if (!Authority::canUpdateWiki($user, $wikiPage)) {
             throw new AuthorizationFailedException();
         }
 
@@ -42,14 +41,14 @@ class WikiUpdate extends JsonApiController
         $content = self::arrayGet($json, 'data.attributes.content');
         $content = \Studip\Markup::purifyHtml($content);
 
-        if ($wikiPage->body === $content) {
+        if ($wikiPage->content === $content) {
             return $wikiPage;
         }
 
         $checkTime = ceil((time() - $wikiPage->chdate) / 60);
         if ($checkTime <= 30 && $wikiPage->user_id == $user->id) {
             $wikiPage->chdate = time();
-            $wikiPage->body = $content;
+            $wikiPage->content = $content;
             $wikiPage->store();
 
             return $wikiPage;
@@ -59,12 +58,12 @@ class WikiUpdate extends JsonApiController
         // minutes ago or if the editing user differs
         return \WikiPage::create(
             array_merge(
-                $wikiPage->toArray('keyword range_id'),
+                $wikiPage->toArray('name range_id'),
                 [
-                    'body' => $content,
+                    'content' => $content,
                     'chdate' => time(),
                     'user_id' => $user->id,
-                    'version' => $wikiPage->version + 1,
+                    'version' => count($wikiPage->versions) + 1,
                 ]
             )
         );

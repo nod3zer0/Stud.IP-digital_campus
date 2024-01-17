@@ -102,7 +102,7 @@ class Activity extends SchemaProvider
             $objectMapping = $mapping[$activity->object_type];
 
             if ($activity->object_type === 'wiki') {
-                $data = \WikiPage::findLatestPage($activity->context_id, $activity->object_id);
+                $data = \WikiPage::findOneBySQL('`course_id` = ? AND `name` = ?', [$activity->context_id, $activity->object_id]);
             } else {
                 $data = $include
                       ? call_user_func([$objectMapping, 'find'], $activity->object_id)

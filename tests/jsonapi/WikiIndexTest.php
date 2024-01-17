@@ -27,7 +27,7 @@ class WikiIndexTest extends \Codeception\Test\Unit
 
         $this->createWikiPage($credentials['id'], $rangeId, 'yxilo', $body);
         $this->createWikiPage($credentials['id'], $rangeId, 'ulyq', $body);
-        $countPages = \WikiPage::findLatestPages($rangeId);
+        $countPages = \WikiPage::findBySQL('`range_id` = ?', [$rangeId]);
         $this->tester->assertCount(2, $countPages);
 
         $response = $this->getWikiIndex($credentials, $rangeId);
@@ -63,22 +63,21 @@ class WikiIndexTest extends \Codeception\Test\Unit
 
     }
 
-    private function createWikiPage($userId, $courseId, $keyword, $body)
+    private function createWikiPage($userId, $courseId, $keyword, $content)
     {
         // EVIL HACK
         $oldPerm = $GLOBALS['perm'] ?? null;
         $oldUser = $GLOBALS['user'] ?? null;
         $GLOBALS['perm'] = new \Seminar_Perm();
-        $GLOBALS['user'] = \User::find($userId);
+        $GLOBALS['user'] = new \Seminar_User(\User::find($userId));
 
-        $latest = \WikiPage::findLatestPage($courseId, $keyword);
+        $latest = \WikiPage::findOneBySQL('`range_id` = ? AND `name` = ?', [$courseId, $keyword]);
         $result = \WikiPage::create(
             [
                 'user_id' => $userId,
                 'range_id' => $courseId,
-                'keyword' => $keyword,
-                'version' => $latest ? $latest->version + 1 : 1,
-                'body' => $body
+                'name' => $keyword,
+                'content' => $content
             ]
         );
 

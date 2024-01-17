@@ -12,6 +12,7 @@ class WikiShowTest extends \Codeception\Test\Unit
     protected function _before()
     {
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
+        \WikiPage::deleteBySQL('1');
     }
 
     protected function _after()
@@ -28,7 +29,7 @@ class WikiShowTest extends \Codeception\Test\Unit
         $content = 'Es gibt im Moment in diese Mannschaft, oh, einige Spieler vergessenihren Profi was sie sind. Ich lese nicht sehr viele Zeitungen, aberich habe gehört viele Situationen. Erstens: Wir haben nicht offensivgespielt. Es gibt keine deutsche Mannschaft spielt offensiv und dieNamen offensiv wie Bayern. Letzte Spiel hatten wir in Platz dreiSpitzen: Elber, Jancker und dann Zickler. Wir mussen nicht vergessenZickler. Zickler ist eine Spitzen mehr, Mehmet mehr Basler. Ist klardiese Wörter, ist möglich verstehen, was ich hab’ gesagt? Danke.';
         $this->createWikiPage($rangeId, $keyword, $content);
 
-        $this->tester->assertCount(1, \WikiPage::findLatestPages($rangeId));
+        $this->tester->assertCount(1, \WikiPage::findBySQL('`range_id` = ?', [$rangeId]));
 
         $response = $this->getWikiPage($credentials, $rangeId, $keyword);
         $this->tester->assertTrue($response->isSuccessfulDocument([200]));
@@ -52,12 +53,24 @@ class WikiShowTest extends \Codeception\Test\Unit
         );
     }
 
-    private function createWikiPage($rangeId, $keyword, $body)
+    private function createWikiPage($rangeId, $keyword, $content)
     {
-        $wikiPage = new \WikiPage([$rangeId, $keyword, 0]);
-        $wikiPage->body = $body;
+        $credentials = $this->tester->getCredentialsForTestDozent();
+        // EVIL HACK
+        $oldPerm = $GLOBALS['perm'] ?? null;
+        $oldUser = $GLOBALS['user'] ?? null;
+        $GLOBALS['perm'] = new \Seminar_Perm();
+        $GLOBALS['user'] = new \Seminar_User(\User::find($credentials['id']));
+
+        $wikiPage = new \WikiPage();
+        $wikiPage->name = $keyword;
+        $wikiPage->range_id = $rangeId;
+        $wikiPage->content = $content;
         $wikiPage->user_id = 'nobody';
         $wikiPage->store();
+
+        $GLOBALS['perm'] = $oldPerm;
+        $GLOBALS['user'] = $oldUser;
 
         return $wikiPage;
     }

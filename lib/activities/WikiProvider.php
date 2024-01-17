@@ -18,15 +18,15 @@ class WikiProvider implements ActivityProvider
     public function getActivityDetails($activity)
     {
         // Check visibility of wiki page
-        $page = \WikiPage::findLatestPage($activity->context_id, $activity->object_id);
-        if ($page && !$page->isVisibleTo($GLOBALS['user'])) {
+        $page = \WikiPage::findOneBySQL('`range_id` = ? AND `name` = ?', [$activity->context_id, $activity->object_id]);
+        if ($page && !$page->isReadable()) {
             return false;
         }
 
         $activity->content = \htmlReady($activity->content);
 
         if ($activity->context === 'course') {
-            $url = \URLHelper::getURL('wiki.php', ['cid' => $activity->context_id, 'keyword' => $activity->object_id]);
+            $url = \URLHelper::getURL('dispatch.php/course/wiki/page/' . $page->id, ['cid' => $activity->context_id]);
             $route = \URLHelper::getURL("api.php/course/{$activity->context_id}/wiki/{$activity->object_id}", null, true);
 
             $activity->object_url = [
@@ -36,7 +36,7 @@ class WikiProvider implements ActivityProvider
             $activity->object_route = $route;
 
         } elseif ($activity->context === 'institute') {
-            $url = \URLHelper::getURL('wiki.php', ['cid' => $activity->context_id, 'keyword' => $activity->object_id]);
+            $url = \URLHelper::getURL('dispatch.php/course/wiki/page/' . $page->id, ['cid' => $activity->context_id]);
             $route= null;
 
             $activity->object_url = [
@@ -58,7 +58,8 @@ class WikiProvider implements ActivityProvider
     public static function postActivity($event, $info)
     {
         $range_id = $info['range_id'];
-        $keyword = $info['keyword'];
+        $id = $info->id;
+        $name = $info['name'];
 
         $type = get_object_type($range_id);
         if ($type === 'sem') {
@@ -69,11 +70,6 @@ class WikiProvider implements ActivityProvider
 
         $user_id = $GLOBALS['user']->id;
         $mkdate = time();
-
-
-        if ($event === 'WikiPageDidCreate' && $info['version'] > 1) {
-            $event = 'WikiPageDidUpdate';
-        }
 
         if ($event === 'WikiPageDidCreate') {
             $verb = 'created';
@@ -98,7 +94,7 @@ class WikiProvider implements ActivityProvider
             }
         }
 
-        $summary = sprintf($summary, $keyword, get_fullname($user_id), $course->name);
+        $summary = sprintf($summary, $name, get_fullname($user_id), $course->name);
 
         $activity = Activity::create([
             'provider'     => __CLASS__,
@@ -108,7 +104,7 @@ class WikiProvider implements ActivityProvider
             'actor_type'   => 'user',   // who initiated the activity?
             'actor_id'     => $user_id, // id of initiator
             'verb'         => $verb,    // the activity type
-            'object_id'    => $keyword, // the id of the referenced object
+            'object_id'    => $id, // the id of the referenced object
             'object_type'  => 'wiki',   // type of activity object
             'mkdate'       =>  $mkdate,
         ]);

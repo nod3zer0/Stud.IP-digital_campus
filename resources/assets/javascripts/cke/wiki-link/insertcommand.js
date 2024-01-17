@@ -11,7 +11,7 @@ export default class InsertCommand extends Command {
     execute({ keyword, label }) {
         this.editor.model.change((writer) => {
             this.editor.model.insertContent(
-                writer.createText(label !== '' ? `[[${keyword}|${label}]]` : `[[${keyword}]]`)
+                writer.createText(label !== '' ? `[[ ${keyword} | ${label} ]]` : `[[ ${keyword} ]]`)
             );
         });
     }

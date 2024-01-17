@@ -33,6 +33,7 @@ StudipAutoloader::addAutoloadPath('lib/classes/searchtypes');
 StudipAutoloader::addAutoloadPath('lib/classes/sidebar');
 StudipAutoloader::addAutoloadPath('lib/classes/visibility');
 StudipAutoloader::addAutoloadPath('lib/classes/coursewizardsteps');
+StudipAutoloader::addAutoloadPath('lib/classes/wiki');
 
 StudipAutoloader::addAutoloadPath('lib/calendar');
 StudipAutoloader::addAutoloadPath('lib/calendar', 'Studip\\Calendar');

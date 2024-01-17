@@ -12,15 +12,15 @@
  * @copyright (c) Authors
  *
  * @property array $id alias for pk
- * @property string $range_id database column
+ * @property string $course_id database column
  * @property string|null $user_id database column
- * @property string $keyword database column
- * @property string $body database column
+ * @property string $name database column
+ * @property string $content database column
  * @property string|null $ancestor database column
  * @property int|null $chdate database column
  * @property int $version database column
  * @property int|null $mkdate database column
- * @property User|null $author belongs_to User
+ * @property User|null $user belongs_to User
  * @property Course $course belongs_to Course
  * @property-read mixed $parent additional field
  * @property-read mixed $children additional field
@@ -34,9 +34,9 @@ class WikiPage extends SimpleORMap implements PrivacyObject
      */
     protected static function configure($config = [])
     {
-        $config['db_table'] = 'wiki';
+        $config['db_table'] = 'wiki_pages';
 
-        $config['belongs_to']['author'] = [
+        $config['belongs_to']['user'] = [
             'class_name'  => User::class,
             'foreign_key' => 'user_id'
         ];
@@ -44,176 +44,180 @@ class WikiPage extends SimpleORMap implements PrivacyObject
             'class_name'  => Course::class,
             'foreign_key' => 'range_id',
         ];
+        $config['has_many']['versions'] = [
+            'class_name'  => WikiVersion::class,
+            'foreign_key' => 'page_id',
+            'order_by'    => 'ORDER BY mkdate DESC',
+            'on_delete'   => 'delete',
+        ];
+        $config['has_many']['onlineeditingusers'] = [
+            'class_name' => WikiOnlineEditingUser::class,
+            'foreign_key' => 'page_id',
+            'on_delete'   => 'delete',
+        ];
 
         $config['additional_fields']['parent'] = [
             'get' => function ($page) {
-                return \WikiPage::findLatestPage($page->range_id, $page->ancestor);
+                return \WikiPage::find($page->parent_id);
             }
         ];
 
         $config['additional_fields']['children'] = [
             'get' => function ($page) {
-                $query = "SELECT range_id, keyword, MAX(version) as version FROM wiki
-                          WHERE range_id = ? AND ancestor = ? GROUP BY keyword ORDER BY keyword ASC";
-
-                $stmt = \DBManager::get()->prepare($query);
-                $stmt->execute([$page->range_id, $page->keyword]);
-                $pageIds = $stmt->fetchAll(\PDO::FETCH_NUM);
-                return array_map(
-                    function ($pageId) {
-                        return self::find($pageId);
-                    },
-                    $pageIds
-                );
+                return self::findBySQL('parent_id = ?', [
+                    $page->id
+                ]);
+            }
+        ];
+        $config['additional_fields']['predecessor'] = [
+            'get' => function ($page) {
+                return $page->versions ? $page->versions[0] : null;
+            }
+        ];
+        $config['additional_fields']['versionnumber'] = [
+            'get' => function ($page) {
+                return count($page->versions) + 1;
             }
         ];
 
-        $config['additional_fields']['config']['get'] = function ($page) {
-            return new WikiPageConfig([$page->range_id, $page->keyword]);
-        };
-
-        $config['registered_callbacks']['before_delete'][] = function ($page) {
-            if ($page->version == 1 && $page->config) {
-                $page->config->delete();
-            }
-        };
-
-        $config['default_values']['user_id'] = 'nobody';
+        $config['registered_callbacks']['before_store'][] = 'createVersion';
+        $config['default_values']['last_author'] = 'nobody';
 
         parent::configure($config);
     }
 
-    /**
-     * Finds all latest versions of all pages for the given course.
-     * @param  string $course_id Course id
-     * @return SimpleCollection of all pages
-     */
-    public static function findLatestPages($course_id)
+
+    protected function createVersion()
     {
-        $query = "SELECT
-                    range_id,
-                    keyword,
-                    MAX(version) as version
-                  FROM wiki
-                  WHERE range_id = ?
-                  GROUP BY keyword
-                  ORDER BY keyword ASC";
-
-        $st = DBManager::get()->prepare($query);
-        $st->execute([$course_id]);
-        $ids = $st->fetchAll(PDO::FETCH_NUM);
-
-        $pages = new SimpleORMapCollection();
-        $pages->setClassName(__CLASS__);
-
-        foreach ($ids as $id) {
-            $pages[] = self::find($id);
-
+        $this->user_id = User::findCurrent()->id;
+        if (
+            !$this->isNew()
+            &&  $this->content['content'] !== $this->content_db['content']
+            && (
+                $this->content_db['user_id'] !== $this->content['user_id']
+                || $this->content_db['chdate'] < time() - 60 * 30
+            )
+        ) {
+            //Neue Version anlegen:
+            WikiVersion::create([
+                'page_id' => $this->id,
+                'name'    => $this->content_db['name'],
+                'content' => $this->content_db['content'],
+                'user_id' => $this->content_db['user_id'],
+                'mkdate'  => $this->content_db['chdate'],
+            ]);
         }
-
-        return $pages;
+        return true;
     }
 
-    /**
-     * Finds the latest version for the given course and keyword
-     * @param  string $course_id Course id
-     * @param  string $keyword   Keyword
-     * @return WikiPage or null
-     */
-    public static function findLatestPage($course_id, $keyword)
+    public static function findByName($range_id, $name)
     {
-        $results = self::findBySQL(
-            "range_id = ? AND keyword = ? ORDER BY version DESC LIMIT 1",
-            [$course_id, $keyword]
-        );
-
-        if (count($results) === 0) {
-            return null;
-        }
-
-        return $results[0];
+        return self::findOneBySQL('name = :name AND range_id = :range_id', [
+            'range_id' => $range_id,
+            'name' => $name
+        ]);
     }
+
 
     /**
      * Returns whether this page is visible to the given user.
      * @param  mixed  $user User object or id
      * @return boolean indicating whether the page is visible
      */
-    public function isVisibleTo($user)
+    public function isReadable(?string $user_id = null): bool
     {
+        if ($this->isNew()) {
+            return true;
+        }
         // anyone can see this page if it belongs to a free course
-        if (!$this->config->read_restricted
+        if (
+            $this->read_permission === 'all'
             && Config::get()->ENABLE_FREE_ACCESS
-            && $this->course && $this->course->lesezugriff == 0)
-        {
+            && $this->course
+            && !$this->course->lesezugriff
+        ) {
+            return true;
+        }
+        if ($user_id === null) {
+            $user_id = User::findCurrent()->id;
+        }
+
+        if (
+            $this->read_permission === 'all'
+            && $GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user_id)
+        ) {
             return true;
         }
 
-        return $GLOBALS['perm']->have_studip_perm(
-            $this->config->read_restricted ? 'tutor' : 'user',
+        if ($GLOBALS['perm']->have_studip_perm(
+            'dozent',
             $this->range_id,
-            is_object($user) ? $user->id : $user
-        );
+            $user_id
+        )) {
+            return true;
+        }
+
+        if (in_array($this->read_permission, ['tutor', 'dozent'])) {
+            return $GLOBALS['perm']->have_studip_perm($this->read_permission, $this->range_id, $user_id);
+        } else {
+            return StatusgruppeUser::exists([$this->read_permission, $user_id]);
+        }
     }
 
     /**
      * Returns whether this page is editable to the given user.
-     * @param  mixed  $user User object or id
+     * @param  string  $user_id the ID of the user
      * @return boolean indicating whether the page is editable
      */
-    public function isEditableBy($user)
+    public function isEditable(?string $user_id = null): bool
     {
-        return $GLOBALS['perm']->have_studip_perm(
-            $this->config->edit_restricted ? 'tutor' : 'autor',
+        if ($user_id === null) {
+            $user_id = User::findCurrent()->id;
+        }
+        if ($GLOBALS['perm']->have_studip_perm(
+            'dozent',
             $this->range_id,
-            is_object($user) ? $user->id : $user
-        );
+            $user_id
+        )) {
+            return true;
+        }
+        if ($this->write_permission === 'all') {
+            return true;
+        }
+        if (in_array($this->write_permission, ['tutor', 'dozent'])) {
+            return $GLOBALS['perm']->have_studip_perm(
+                $this->write_permission,
+                $this->range_id,
+                $user_id
+            );
+        } else {
+            return StatusgruppeUser::exists([$this->write_permission, $user_id]);
+        }
     }
 
-    /**
-     * Returns whether this page is creatable to the given user.
-     * @param  mixed  $user User object or id
-     * @return boolean indicating whether the page is creatable
-     * @todo this method is kinda bogus as an instance method
-     */
-    public function isCreatableBy($user)
-    {
-        return $this->isEditableBy($user);
-    }
-
-    /**
-     * Returns whether this version of this page is the latest version availabe.
-     * @return boolean
-     */
-    public function isLatestVersion()
-    {
-        return self::countBySQL(
-            'range_id = ? AND keyword = ? AND version > ?',
-            [$this->range_id, $this->keyword, $this->version]
-        ) === 0;
-    }
 
     /**
      * Returns the start page of a wiki for a given course. The start page has
      * the keyword 'WikiWikiWeb'.
      *
-     * @param  string $course_id Course id
+     * @param  string $range_id Course id
      * @return WikiPage
      */
-    public static function getStartPage($course_id)
+    public static function getStartPage($range_id)
     {
-        $start = self::findLatestPage($course_id, '');
+        $page_id = CourseConfig::get($range_id)->WIKI_STARTPAGE_ID;
 
-        if (!$start) {
-            $start = new self([$course_id, 'WikiWikiWeb', 0]);
-            $start->body = _('Dieses Wiki ist noch leer.');
-
-            if ($start->isEditableBy($GLOBALS['user'])) {
-                $start->body .=  ' ' . _("Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von [nop][[Wikinamen]][/nop] in doppelten eckigen Klammern angelegt.");
-            }
+        if ($page_id) {
+            return self::find($page_id);
         }
 
-        return $start;
+        $page = new WikiPage();
+        $pagename = _('Startseite');
+        $page->content = _('Dieses Wiki ist noch leer.');
+        if ($page->isEditable()) {
+            $page->content .=  ' ' . _("Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von [nop][[Wikinamen]][/nop] in doppelten eckigen Klammern angelegt.");
+        }
+        return $page;
     }
 
     /**
@@ -236,23 +240,6 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         }
     }
 
-    /**
-     * Sets the parent page for all versions of a Wikipage.
-     *
-     * @param string ancestor Wikipage name to be set as the parent
-     */
-    public function setAncestorForAllVersions($ancestor) {
-        $query = "UPDATE
-                    wiki
-                  SET
-                    ancestor = ?
-                  WHERE
-                    range_id = ? AND
-                    keyword = ?";
-
-        $st = DBManager::get()->prepare($query);
-        $st->execute([$ancestor, $this->range_id, $this->keyword]);
-    }
 
     /**
      * Tests if a given Wikipage name (keyword) is a valid ancestor for this page.
@@ -263,13 +250,13 @@ class WikiPage extends SimpleORMap implements PrivacyObject
      */
     public function isValidAncestor($ancestor)
     {
-        if ($this->keyword === 'WikiWikiWeb' || $this->keyword === $ancestor) {
+        if ($this->name === 'WikiWikiWeb' || $this->name === $ancestor) {
             return false;
         }
 
         $keywords = array_map(
             function ($descendant) {
-                return $descendant['keyword'];
+                return $descendant->name;
             },
             $this->getDescendants()
         );
@@ -294,23 +281,25 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         return $descendants;
     }
 
-    /**
-     * @param string $other_keyword
-     * @return bool
-     */
-    public function isDescendantOf(string $other_keyword): bool
+    public function getOnlineUsers(): array
     {
-        if ($other_keyword === $this->keyword) {
-            return false;
-        }
-        $other_page = WikiPage::findLatestPage($this->range_id, $other_keyword);
-        if ($other_page) {
-            foreach ($other_page->getDescendants() as $descendant) {
-                if ($descendant->keyword === $this->keyword) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        $users = [];
+        WikiOnlineEditingUser::deleteBySQL(
+            "`page_id` = :page_id AND `chdate` < UNIX_TIMESTAMP() - :threshold",
+            [
+                'page_id' => $this->id,
+                'threshold' => WikiOnlineEditingUser::$threshold
+            ]
+        );
+        return $this->onlineeditingusers->map(function (WikiOnlineEditingUser $editing_user) {
+            return [
+                'user_id' => $editing_user->user_id,
+                'username' => $editing_user->user->username,
+                'fullname' => $editing_user->user->getFullName(),
+                'avatar' => Avatar::getAvatar($editing_user->user_id)->getURL(Avatar::SMALL),
+                'editing' => (bool) $editing_user->editing,
+                'editing_request' => (bool) $editing_user->editing_request,
+            ];
+        });
     }
 }

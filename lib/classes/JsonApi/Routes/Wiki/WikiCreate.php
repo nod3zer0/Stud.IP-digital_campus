@@ -12,7 +12,6 @@ use JsonApi\JsonApiController;
 use JsonApi\Routes\ValidationTrait;
 use JsonApi\Schemas\WikiPage;
 
-require_once 'lib/wiki.inc.php';
 
 /**
  * Create a news where the range is the user himself.
@@ -29,17 +28,19 @@ class WikiCreate extends JsonApiController
         $json = $this->validate($request);
 
         // TODO: has to be Course or Institute
-        if (!$range = \Course::find($args['id'])) {
+        $range = \RangeFactory::find($args['id']);
+        if (!$range || $range instanceof \User) {
             throw new RecordNotFoundException();
         }
 
-        if (!Authority::canCreateWiki($user = $this->getUser($request), $range)) {
+        $user = $this->getUser($request);
+        if (!Authority::canCreateWiki($user, $range)) {
             throw new AuthorizationFailedException();
         }
 
-        $keyword = self::arrayGet($json, 'data.attributes.keyword');
+        $name = self::arrayGet($json, 'data.attributes.name') ?? self::arrayGet($json, 'data.attributes.keyword');
 
-        if (\WikiPage::findLatestPage($range->id, $keyword)) {
+        if (\WikiPage::findOneBySQL('`range_id` = ? AND `name` = ?', [$range->id, $name])) {
             throw new ConflictException('Wiki page already exists.');
         }
 
@@ -52,14 +53,13 @@ class WikiCreate extends JsonApiController
 
     protected function createWikiFromJSON(\User $user, $range, $json)
     {
-        $keyword = self::arrayGet($json, 'data.attributes.keyword');
+        $name    = self::arrayGet($json, 'data.attributes.name') ?? self::arrayGet($json, 'data.attributes.keyword');
         $content = self::arrayGet($json, 'data.attributes.content');
         $content = \Studip\Markup::purifyHtml($content);
 
         $wiki = new \WikiPage();
-        $wiki->keyword = $keyword;
-        $wiki->body = $content;
-        $wiki->version = 1;
+        $wiki->name = $name;
+        $wiki->content = $content;
         $wiki->chdate = time();
         $wiki->user_id = $user->id;
         $wiki->range_id = $range->id;
@@ -70,12 +70,12 @@ class WikiCreate extends JsonApiController
 
     protected function validateResourceDocument($json, $data)
     {
-        $keyword = self::arrayGet($json, 'data.attributes.keyword', '');
-        if (empty($keyword)) {
+        $name = self::arrayGet($json, 'data.attributes.name', '');
+        if (empty($name)) {
             return 'Wikis must have a title (keyword)';
         }
 
-        if (!preg_match(WikiPage::REGEXP_KEYWORD, $keyword)) {
+        if (!preg_match(WikiPage::REGEXP_KEYWORD, $name)) {
             return 'Malformed wiki keyword.';
         }
     }

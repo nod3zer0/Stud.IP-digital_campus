@@ -207,7 +207,7 @@ class Score
         ];
         $tables[] = ['table' => 'questionnaire_anonymous_answers'];
         $tables[] = [
-            'table'       => 'wiki',
+            'table'       => 'wiki_pages',
             'date_column' => 'chdate'
         ];
 

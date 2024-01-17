@@ -9,122 +9,47 @@
  * @since     Stud.IP 3.3
  */
 
-$(document).on('click', '#wiki button[name="submit-and-edit"]', function(event) {
-    var form = $(this).closest('form'),
-        data = {},
-        form_data,
-        i,
-        wysiwyg_editor = false;
 
-    const textarea = $('textarea[name="body"]', form).get(0);
-    if (textarea) {
-        wysiwyg_editor = STUDIP.wysiwyg.getEditor(textarea);
-        wysiwyg_editor.sourceElement.value = STUDIP.wysiwyg.markAsHtml(wysiwyg_editor.getData());
-    }
 
-    form_data = form.serializeArray();
-
-    // Show ajax overlay to indicate activity (and prevent buttons to be
-    // clicked again)
-    STUDIP.Overlay.show(true, form.css('position', 'relative'));
-
-    // Include this button into form's data
-    form_data.push({
-        name: $(this).attr('name'),
-        value: true
+STUDIP.domReady(() => {
+    STUDIP.JSUpdater.register('wiki_page_content', STUDIP.Wiki.updatePageContent, function () {
+        //update the wiki page for readers:
+        return Array.from(document.getElementsByClassName('wiki_page_content')).map(node => {
+            return node.data.set.page_id;
+        });
     });
 
-    // Transform data into an easier accessible format
-    for (i = 0; i < form_data.length; i += 1) {
-        data[form_data[i].name] = form_data[i].value;
+    if (document.querySelector('.wiki-editor-container') !== null) {
+        STUDIP.Wiki.initEditor();
     }
 
-    // Check version
-    $.getJSON(
-        STUDIP.URLHelper.getURL('dispatch.php/wiki/version_check/' + data.version, {
-            keyword: data.wiki
-        })
-    )
-        .then(function(response, status, jqxhr) {
-            var error = jqxhr.getResponseHeader('X-Studip-Error'),
-                to_confirm = jqxhr.getResponseHeader('X-Studip-Confirm'),
-                confirmed = false;
-            // Unrecoverable error
-            if (response === false) {
-                window.alert(error);
-                return;
+    STUDIP.JSUpdater.register('wiki_editor_status', STUDIP.Wiki.updateEditorStatus, function () {
+        let info = {
+            page_ids: [],
+            focussed: null
+        };
+        for (let page_id in STUDIP.Wiki.Editors) {
+            info.page_ids.push(page_id);
+            let editor = STUDIP.Wiki.Editors[page_id].editor;
+            if (STUDIP.Wiki.Editors[page_id].isChanged && STUDIP.Wiki.Editors[page_id].autosave) {
+                //if either the textarea or the wysiwyg has focus:
+                info.page_content = editor.getData();
+                STUDIP.Wiki.Editors[page_id].isChanged = false;
+                STUDIP.Wiki.Editors[page_id].lastSaveDate = new Date();
             }
-            // Saving needs confirmation (newer version available?)
-            if (response === null) {
-                confirmed = window.confirm(error + '\n\n' + to_confirm);
+            if (editor.editing.view.document.isFocused) {
+                STUDIP.Wiki.Editors[page_id].lastFocussedDate = new Date();
+            }
+            if (new Date() - STUDIP.Wiki.Editors[page_id].lastFocussedDate < 1000 * 60) { //time after inactivity
+                info.focussed = page_id;
             } else {
-                confirmed = true;
+                if (STUDIP.Wiki.Editors[page_id].users.length !== 1) {
+                    //then I will likely lose my edit mode so others can obtain it
+                    STUDIP.Wiki.Editors[page_id].editing = false;
+                }
             }
-            // Ready to save
-            if (confirmed) {
-                $.ajax({
-                    type: (form.attr('method') || 'GET').toUpperCase(),
-                    url: STUDIP.URLHelper.getURL('dispatch.php/wiki/store/' + data.version),
-                    data: {
-                        keyword: data.wiki,
-                        body: data.body
-                    },
-                    dataType: 'json'
-                }).then(function(response) {
-                    var textarea = $('textarea[name=body]', form);
-
-                    // Update header info containing version and author
-                    $(form)
-                        .closest('table')
-                        .prev('table')
-                        .find('td:last-child')
-                        .html(response.zusatz);
-
-                    // Update version field
-                    $('input[type=hidden][name=version]', form).val(response.version);
-
-                    if (wysiwyg_editor) {
-                        wysiwyg_editor.setData(response.body);
-                    } else {
-                        // Store current selection/caret position
-                        textarea.storeSelection();
-
-                        // Update textarea, restore selection/caret position
-                        textarea.val(response.body);
-                        textarea.prop('defaultValue', textarea.val());
-                        textarea.restoreSelection();
-                        textarea.change();
-                        textarea.focus();
-                    }
-
-                    // Remove messages (and display new messages, if any)
-                    $('#content .messagebox').remove();
-                    if (response.messages !== false) {
-                        $(response.messages).prependTo('#content');
-                    }
-                });
-            }
-        })
-        .always(function() {
-            // Always hide overlay when ajax request is complete
-            STUDIP.Overlay.hide();
-        });
-
-    event.preventDefault();
+        }
+        return info;
+    });
 });
 
-$(document).on('change', '#wiki-config .global-permissions :checkbox', function () {
-    if ($(this).is(':checked')) {
-        return;
-    }
-
-    $('#wiki-config .read-permissions [data-activates],[data-deactivates]').filter(':checked').change();
-}).on('change', '#wiki-config .read-permissions :radio', function () {
-    $('#wiki-config .edit-permissions:has(:radio[disabled]:checked) :radio:not([disabled]):first').prop('checked', true);
-});
-
-$(document).on('click', '.wiki-index-more', function (ev) {
-    ev.preventDefault();
-    $(this).parent().toggle();
-    $(this).parent().nextAll('li').toggle();
-});

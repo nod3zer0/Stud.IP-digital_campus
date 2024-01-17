@@ -29,9 +29,10 @@ class WikiIndex extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-        if (!$wiki = \WikiPage::findLatestPages($course->id)) {
+        if (!$wiki = \WikiPage::findBySQL('`range_id` = ? ORDER BY name ASC ', [$course->id])) {
             throw new RecordNotFoundException();
         }
+        $wiki = \SimpleORMapCollection::createFromArray($wiki);
 
         list($offset, $limit) = $this->getOffsetAndLimit();
 

@@ -59,7 +59,9 @@ function lastActivity ($sem_id)
 
         // Wiki
         if (Config::get()->WIKI_ENABLE) {
-            $queries[] = "SELECT MAX(chdate) AS chdate FROM wiki WHERE range_id = :id";
+            $queries[] = "SELECT MAX(`chdate`) AS chdate
+                          FROM `wiki_pages`
+                          WHERE `range_id` = :id";
         }
 
         foreach (PluginEngine::getPlugins('ForumModule') as $plugin) {

@@ -21,7 +21,7 @@ class Authority
      */
     public static function canShowWiki(\User $user, \WikiPage $wikiPage)
     {
-        return $wikiPage->isVisibleTo($user);
+        return $wikiPage->isReadable($user->id);
     }
 
     /**
@@ -29,7 +29,9 @@ class Authority
      */
     public static function canCreateWiki(\User $user, $range)
     {
-        return \WikiPage::build(['range_id' => $range->id])->isCreatableBy($user);
+        $config = \CourseConfig::get($range->id);
+        return $config->WIKI_CREATE_PERMISSION === 'all'
+            || $GLOBALS['perm']->have_studip_perm($config->WIKI_CREATE_PERMISSION, $range->id);
     }
 
     /**
@@ -37,7 +39,7 @@ class Authority
      */
     public static function canUpdateWiki(\User $user, \WikiPage $wikiPage)
     {
-        return $wikiPage->isEditableBy($user);
+        return $wikiPage->isEditable($user->id);
     }
 
     /**
@@ -45,7 +47,7 @@ class Authority
      */
     public static function canDeleteWiki(\User $user, \WikiPage $wikiPage)
     {
-        return $GLOBALS['perm']->have_studip_perm('tutor', $wikiPage->range_id, $user->id);
+        return $wikiPage->isEditable($user->id);
     }
 
     /**
