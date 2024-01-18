@@ -11,9 +11,9 @@ class RangeInput extends Input
         $template->name = $this->name;
         $template->value = $this->value;
         $template->id = md5(uniqid());
-        $template->min = $this->attributes['min'];
-        $template->max = $this->attributes['max'];
-        $template->step = $this->attributes['step'];
+        $template->min = $this->attributes['min'] ?? null;
+        $template->max = $this->attributes['max'] ?? null;
+        $template->step = $this->attributes['step'] ?? null;
         $template->required = $this->required;
         $template->attributes = arrayToHtmlAttributes($this->attributes);
         return $template->render();

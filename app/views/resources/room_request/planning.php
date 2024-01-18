@@ -134,7 +134,7 @@
     <?= MessageBox::info(_('Es wurde kein Raum ausgewählt!')) ?>
 <? endif ?>
 
-<? if ($requests && $resource): ?>
+<? if (isset($requests, $resource)): ?>
     <form class="default" method="post"
           action="<?= $controller->link_for('room_request/assign') ?>">
         <table id="external-events" class="default request-list">
