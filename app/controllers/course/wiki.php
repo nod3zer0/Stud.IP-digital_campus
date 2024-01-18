@@ -605,6 +605,9 @@ class Course_WikiController extends AuthenticatedController
             "`page_id` = ? ORDER BY `mkdate` LIMIT 1",
             [$page->id]
         );
+        if (!$version) {
+            $version = $page;
+        }
         $lines = Studip\Markup::removeHtml($version->content);
         $lines = explode("\n", str_replace("\r", '', $lines));
         $this->line_versions = array_fill(0, count($lines), $version);
