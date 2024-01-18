@@ -175,7 +175,7 @@ export default {
             }
 
             if (ids.length > 0) {
-                this.getNodeCourses(this.node, 'all', 0, '', false, ids)
+                this.getNodeCourses(this.node, 0, 'all', 0, '', false, ids)
                     .then(response => {
                         // None of the given courses are assigned here.
                         if (response.data.data.length === 0) {

@@ -1,33 +1,20 @@
 <template>
     <div class="studip-tree-child-description">
-        <template v-if="showingAllCourses">
-            <div v-translate="{ count: courseCount }" :translate-n="courseCount"
-                  translate-plural="<strong>%{count}</strong> Veranstaltungen auf dieser Ebene.">
-                <strong>Eine</strong> Veranstaltung auf dieser Ebene.
-            </div>
-        </template>
+        <studip-loading-skeleton v-if="isLoading" />
         <div v-else v-translate="{ count: courseCount }" :translate-n="courseCount"
-              translate-plural="<strong>%{count}</strong> Veranstaltungen auf dieser Ebene.">
-            <strong>Eine</strong> Veranstaltung auf dieser Ebene.
-        </div>
-        <template v-if="!showingAllCourses">
-            <div v-translate="{ count: allCourseCount }" :translate-n="allCourseCount"
-                  translate-plural="<strong>%{count}</strong> Veranstaltungen auf allen Unterebenen.">
-                <strong>Eine</strong> Veranstaltung auf allen Unterebenen.
-            </div>
-        </template>
-        <div v-else v-translate="{ count: allCourseCount }" :translate-n="allCourseCount"
-              translate-plural="<strong>%{count}</strong> Veranstaltungen auf allen Unterebenen.">
-            <strong>Eine</strong> Veranstaltung auf allen Unterebenen.
+             translate-plural="<strong>%{count}</strong> Veranstaltungen">
+            <strong>Eine</strong> Veranstaltung
         </div>
     </div>
 </template>
 
 <script>
 import { TreeMixin } from '../../mixins/TreeMixin';
+import StudipLoadingSkeleton from '../StudipLoadingSkeleton.vue';
 
 export default {
     name: 'TreeNodeCourseInfo',
+    components: { StudipLoadingSkeleton },
     mixins: [ TreeMixin ],
     props: {
         node: {
@@ -45,8 +32,8 @@ export default {
     },
     data() {
         return {
+            isLoading: false,
             courseCount: 0,
-            allCourseCount: 0,
             showingAllCourses: false
         }
     },
@@ -54,22 +41,22 @@ export default {
         showAllCourses(state) {
             this.showingAllCourses = state;
             this.$emit('showAllCourses', state);
+        },
+        loadNodeInfo(node) {
+            this.isLoading = true;
+            this.getNodeCourseInfo(node, this.semester, this.semClass)
+                .then(info => {
+                    this.courseCount = info?.data.courses;
+                    this.isLoading = false;
+                });
         }
     },
     mounted() {
-        this.getNodeCourseInfo(this.node, this.semester, this.semClass)
-            .then(info => {
-                this.courseCount = info?.data.courses;
-                this.allCourseCount = info?.data.allCourses;
-            });
+        this.loadNodeInfo(this.node);
     },
     watch: {
         node(newNode) {
-            this.getNodeCourseInfo(newNode, this.semester, this.semClass)
-                .then(info => {
-                    this.courseCount = info?.data.courses;
-                    this.allCourseCount = info?.data.allCourses;
-                });
+            this.loadNodeInfo(newNode);
         }
     }
 }

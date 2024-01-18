@@ -271,8 +271,8 @@ $tree-outline: 1px solid var(--light-gray-color-40);
                 background: var(--dark-gray-color-5);
                 border: solid thin var(--light-gray-color-40);
                 display: flex;
-                height: 130px;
-                padding: 10px;
+                min-height: 130px;
+                padding: 5px 10px;
 
                 /* Handle for drag&drop */
                 .drag-handle {
@@ -284,10 +284,16 @@ $tree-outline: 1px solid var(--light-gray-color-40);
                     flex-direction: column;
                     padding: 10px;
                     text-align: left;
+                    width: 100%;
 
                     .studip-tree-child-title {
                         font-size: 1.1em;
                         font-weight: bold;
+                    }
+
+                    .studip-tree-child-description {
+                        color: var(--black);
+                        font-size: 0.9em;
                     }
                 }
 

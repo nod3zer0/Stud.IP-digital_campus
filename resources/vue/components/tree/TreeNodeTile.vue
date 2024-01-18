@@ -5,8 +5,11 @@
             {{ node.attributes.name }}
         </p>
 
-        <tree-node-course-info :node="node" :semester="semester"
-                               :sem-class="semClass"></tree-node-course-info>
+        <tree-node-course-info v-if="node.attributes.ancestors.length > 2" 
+                               :node="node"
+                               :semester="semester"
+                               :sem-class="semClass"
+        ></tree-node-course-info>
     </a>
 </template>
 

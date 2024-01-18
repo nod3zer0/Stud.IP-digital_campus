@@ -35,8 +35,8 @@
             </template>
             <span v-if="withCourses && subLevelsCourses > 0 && !showingAllCourses">
                 <button type="button" @click="showAllCourses(true)"
-                        :title="$gettext('Veranstaltungen auf allen Unterebenen anzeigen')">
-                    {{ $gettext('Veranstaltungen auf allen Unterebenen anzeigen') }}
+                        :title="$gettext('Veranstaltungen auf Unterebenen anzeigen')">
+                    {{ $gettext('Veranstaltungen auf Unterebenen anzeigen') }}
                 </button>
             </span>
         </section>
@@ -57,6 +57,15 @@
                 <col style="width: 40%">
             </colgroup>
             <thead>
+                <tr v-if="totalCourseCount > limit">
+                    <td colspan="4">
+                        <studip-pagination :items-per-page="limit"
+                                           :total-items="totalCourseCount"
+                                           :current-offset="offset"
+                                           @updateOffset="updateOffset"
+                        />
+                    </td>
+                </tr>
                 <tr>
                     <th></th>
                     <th>{{ $gettext('Typ') }}</th>
@@ -89,8 +98,11 @@
                         </a>
                     </td>
                     <td>
-                        <tree-node-course-info :node="child" :semester="semester"
-                                               :sem-class="semClass"></tree-node-course-info>
+                        <tree-node-course-info v-if="node.attributes.ancestors.length > 2"
+                                               :node="child"
+                                               :semester="semester"
+                                               :sem-class="semClass"
+                        ></tree-node-course-info>
                     </td>
                 </tr>
                 <tr v-for="(course) in courses" :key="course.id" class="studip-tree-child studip-tree-course">
@@ -114,6 +126,17 @@
                     </td>
                 </tr>
             </draggable>
+            <tfoot v-if="totalCourseCount > limit">
+                <tr>
+                    <td colspan="4">
+                        <studip-pagination :items-per-page="limit"
+                                           :total-items="totalCourseCount"
+                                           :current-offset="offset"
+                                           @updateOffset="updateOffset"
+                        />
+                    </td>
+                </tr>
+            </tfoot>
         </table>
         <MountingPortal v-if="showExport" mountTo="#export-widget" name="sidebar-export">
             <tree-export-widget v-if="courses.length > 0" :title="$gettext('Download des Ergebnisses')" :url="exportUrl()"
@@ -242,8 +265,10 @@ export default {
 
             if (this.withCourses) {
 
-                this.getNodeCourses(node, this.semester, this.semClass, '', false)
+                this.getNodeCourses(node, this.offset, this.semester, this.semClass, '', false)
                     .then(response => {
+                        this.totalCourseCount = response.data.meta.page.total;
+                        this.offset = Math.ceil(response.data.meta.page.offset / this.limit);
                         this.courses = response.data.data;
                     });
             }
@@ -305,8 +330,10 @@ export default {
             }
         },
         showAllCourses(state) {
-            this.getNodeCourses(this.currentNode, this.semester, this.semClass, '', state)
+            this.getNodeCourses(this.currentNode, this.offset, this.semester, this.semClass, '', state)
                 .then(courses => {
+                    this.totalCourseCount = courses.data.meta.page.total;
+                    this.offset = Math.ceil(courses.data.meta.page.offset / this.limit);
                     this.courses = courses.data.data;
                     this.showingAllCourses = state;
                 });
@@ -326,8 +353,10 @@ export default {
             });
 
         if (this.withCourses) {
-            this.getNodeCourses(this.currentNode, this.semester, this.semClass)
+            this.getNodeCourses(this.currentNode, 0, this.semester, this.semClass)
                 .then(courses => {
+                    this.totalCourseCount = courses.data.meta.page.total;
+                    this.offset = 0;
                     this.courses = courses.data.data;
                 });
         }

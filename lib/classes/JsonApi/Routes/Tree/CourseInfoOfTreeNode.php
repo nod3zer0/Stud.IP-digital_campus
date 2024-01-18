@@ -32,8 +32,7 @@ class CourseinfoOfTreeNode extends NonJsonApiController
         $filters = $this->getContextFilters($request);
 
         $info = [
-            'courses' => (int) $node->countCourses($filters['semester'], $filters['semclass']),
-            'allCourses' => (int) $node->countCourses($filters['semester'], $filters['semclass'], true)
+            'courses' => (int) $node->countCourses($filters['semester'], $filters['semclass'], true)
         ];
 
         $response->getBody()->write(json_encode($info));

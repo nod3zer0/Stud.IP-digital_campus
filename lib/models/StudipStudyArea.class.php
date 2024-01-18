@@ -494,7 +494,7 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
                           OR sc.`semester_id` IS NULL
                         )";
             $parameters = [
-                'ids' => $with_children ? $this->getDescendantIds() : [$this->id],
+                'ids' => $with_children ? array_merge([$this->id], $this->getDescendantIds()) : [$this->id],
                 'semester' => $semester_id
             ];
         } else {
@@ -502,7 +502,7 @@ class StudipStudyArea extends SimpleORMap implements StudipTreeNode
                       FROM `seminar_sem_tree` t
                       JOIN `seminare` s ON (s.`Seminar_id` = t.`seminar_id`)
                       WHERE `sem_tree_id` IN (:ids)";
-            $parameters = ['ids' => $with_children ? $this->getDescendantIds() : [$this->id]];
+            $parameters = ['ids' => $with_children ? array_merge([$this->id], $this->getDescendantIds()) : [$this->id]];
         }
 
         if (!$GLOBALS['perm']->have_perm(Config::get()->SEM_VISIBILITY_PERM)) {

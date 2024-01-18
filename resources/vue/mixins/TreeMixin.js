@@ -3,7 +3,10 @@ import axios from 'axios';
 export const TreeMixin = {
     data() {
         return {
-            showProgressIndicatorTimeout: 500
+            showProgressIndicatorTimeout: 500,
+            totalCourseCount: 0,
+            offset: 0,
+            limit: 50
         };
     },
     methods: {
@@ -22,8 +25,11 @@ export const TreeMixin = {
                 { params: parameters }
             );
         },
-        async getNodeCourses(node, semesterId = 'all', semClass = 0, searchterm = '', recursive = false, ids = []) {
+        async getNodeCourses(node, offset, semesterId = 'all', semClass = 0, searchterm = '', recursive = false, ids = []) {
             let parameters = {};
+
+            parameters['page[offset]'] = offset * this.limit;
+            parameters['page[limit]'] = this.limit;
 
             if (semesterId !== 'all' && semesterId !== '0') {
                 parameters['filter[semester]'] = semesterId;
@@ -103,6 +109,15 @@ export const TreeMixin = {
                 { headers: { 'Content-Type': 'multipart/form-data' }}
             );
             STUDIP.Vue.emit('sort-tree-children', { parent: parentId, children: children });
+        },
+        updateOffset(newOffset) {
+            this.getNodeCourses(this.currentNode, newOffset, this.semester, this.semClass, '', this.showingAllCourses)
+                .then(courses => {
+                    this.courseCount = courses.data.meta.page.total;
+                    this.currentOffset = courses.data.meta.page.offset;
+                    this.offset = newOffset;
+                    this.courses = courses.data.data;
+                });
         }
     }
 }
