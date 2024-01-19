@@ -18,11 +18,11 @@
             $oldcontent = substr($oldcontent, 0, -1);
         }
         if ($content) {
-            echo nl2br(htmlReady($content));
+            echo nl2br(htmlReady(mila($content, 300)));
         } elseif ($oldcontent) {
             echo _('Gelöscht') . ': ' . nl2br(htmlReady($oldcontent));
         } else {
-            echo nl2br(strip_tags(wikiReady($version->content)));
+            echo nl2br(strip_tags(wikiReady(mila($version->content, 300))));
         }
 
         ?></td>

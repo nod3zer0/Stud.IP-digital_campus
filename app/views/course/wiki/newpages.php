@@ -1,4 +1,4 @@
-<table class="default sortable-table" data-sortlist="[[3, 0]]">
+<table class="default sortable-table" data-sortlist="[[3, 1]]">
     <caption>
         <?= _('Letzte Änderungen') ?>
     </caption>
@@ -15,4 +15,13 @@
             <?= $this->render_partial('course/wiki/versioncompare', ['version' => $version]) ?>
         <? endforeach ?>
     </tbody>
+    <? if ($num_entries > $limit) : ?>
+        <tfoot>
+            <tr>
+                <td colspan="4" class="actions">
+                    <?= Pagination::create($num_entries, $page, $limit)->asLinks() ?>
+                </td>
+            </tr>
+        </tfoot>
+    <? endif ?>
 </table>

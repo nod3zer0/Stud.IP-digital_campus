@@ -545,6 +545,32 @@ class Course_WikiController extends AuthenticatedController
     public function newpages_action()
     {
         Navigation::activateItem('/course/wiki/listnew');
+
+        $this->limit = Config::get()->ENTRIES_PER_PAGE;
+        $statement = DBManager::get()->prepare("
+            SELECT COUNT(*) FROM (
+                SELECT `wiki_pages`.`page_id` AS `id`,
+                       0 AS `is_version`,
+                       `wiki_pages`.`chdate` AS `timestamp`
+                FROM `wiki_pages`
+                WHERE `wiki_pages`.`range_id` = :range_id
+
+                UNION
+
+                SELECT `wiki_versions`.`version_id` AS `id`,
+                       1 AS `is_version`,
+                       `wiki_versions`.`mkdate` AS `timestamp`
+                FROM `wiki_versions`
+                JOIN `wiki_pages` USING (`page_id`)
+                WHERE `wiki_pages`.`range_id` = :range_id
+            ) AS `all_entries`
+        ");
+        $statement->execute([
+            'range_id' => $this->range->id
+        ]);
+        $this->num_entries = $statement->fetch(PDO::FETCH_COLUMN);
+        $this->page = Request::int('page', 0);
+
         $statement = DBManager::get()->prepare("
             SELECT `wiki_pages`.`page_id` AS `id`,
                    0 AS `is_version`,
@@ -560,10 +586,13 @@ class Course_WikiController extends AuthenticatedController
             FROM `wiki_versions`
             JOIN `wiki_pages` USING (`page_id`)
             WHERE `wiki_pages`.`range_id` = :range_id
-            ORDER BY `timestamp`
+            ORDER BY `timestamp` DESC
+            LIMIT :offset, :limit
         ");
         $statement->execute([
-            'range_id' => $this->range->id
+            'range_id' => $this->range->id,
+            'offset' => Request::int('page', 0) * $this->limit,
+            'limit' => $this->limit
         ]);
         $this->versions = [];
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
