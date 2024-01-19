@@ -44,9 +44,7 @@ class AddLoginFaqConfig extends Migration
                         AND `object_id` = MD5(`config`.`field`)
                   WHERE `field` IN (
                        'LOGIN_FAQ_TITLE',
-                       'LOGIN_FAQ_VISIBILITY',
-                       'USERNAME_TOOLTIP_ACTIVATED',
-                       'PASSWORD_TOOLTIP_ACTIVATED'
+                       'LOGIN_FAQ_VISIBILITY'
                   )";
         DBManager::get()->exec($query);
     }

@@ -6,6 +6,8 @@ use Studip\Button;
  * @var bool $hidden
  * @var string $uname;
  */
+$username_tooltip_text = (string)Config::get()->USERNAME_TOOLTIP_TEXT;
+$password_tooltip_text = (string)Config::get()->PASSWORD_TOOLTIP_TEXT;
 ?>
 
 <form class="default <?= $hidden ? 'hide' : '' ?>"
@@ -18,8 +20,8 @@ use Studip\Button;
     <section>
         <label>
             <span class="required"><?= _('Benutzername') ?></span>
-            <? if (Config::get()->USERNAME_TOOLTIP_ACTIVATED) : ?>
-                <?= tooltipIcon(htmlReady((string)Config::get()->USERNAME_TOOLTIP_TEXT)) ?>
+            <? if ($username_tooltip_text) : ?>
+                <?= tooltipIcon($username_tooltip_text) ?>
             <? endif ?>
             <input type="text" <?= (mb_strlen($uname) || $hidden) ? '' : 'autofocus' ?>
                    id="loginname"
@@ -28,17 +30,18 @@ use Studip\Button;
                    size="20"
                    spellcheck="false"
                    autocapitalize="off"
-                   title="<?= _('Der Benutzername entspricht nicht den Anforderungen') ?>"
+                   autocomplete="username"
                    required>
         </label>
         <label for="password" style="position: relative">
             <span class="required"><?= _('Passwort') ?></span>
-            <? if (Config::get()->PASSWORD_TOOLTIP_ACTIVATED) : ?>
-                <?= tooltipIcon(htmlReady((string)Config::get()->PASSWORD_TOOLTIP_TEXT)) ?>
+            <? if ($password_tooltip_text) : ?>
+                <?= tooltipIcon($password_tooltip_text) ?>
             <? endif ?>
             <input type="password" <?= mb_strlen($uname) && !$hidden ? 'autofocus' : '' ?>
                    id="password"
                    name="password"
+                   autocomplete="current-password"
                    size="20"
                    required>
 

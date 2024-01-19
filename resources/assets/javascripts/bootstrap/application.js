@@ -370,7 +370,7 @@ STUDIP.domReady(function () {
 
     [usernameInput, passwordInput].forEach((input) => {
         input.addEventListener('keydown', (event) => {
-            if (event.getModifierState('CapsLock')) {
+            if (typeof event.getModifierState === 'function' && event.getModifierState('CapsLock')) {
                 passwordCapsText.style.display = 'block';
             } else {
                 passwordCapsText.style.display = 'none';
