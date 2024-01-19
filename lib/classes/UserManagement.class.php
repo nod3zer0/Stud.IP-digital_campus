@@ -1043,7 +1043,7 @@ class UserManagement
                       WHERE user_id = ?";
             $statement = DBManager::get()->prepare($query);
             $statement->execute([
-                md5($this->user_data['auth_user_md5.username']),
+                md5($this->user_data['auth_user_md5.username'].uniqid('delete_user')),
                 $this->user_data['auth_user_md5.user_id']
             ]);
             if ($statement->rowCount() > 0) {
