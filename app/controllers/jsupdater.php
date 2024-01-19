@@ -279,7 +279,7 @@ class JsupdaterController extends AuthenticatedController
     private function getWikiEditorStatus($pageInfo): array
     {
         $data = [];
-        if (!empty($pageInfo['wiki_editor_status'])) {
+        if (!empty($pageInfo['wiki_editor_status']['page_ids'])) {
             $user = User::findCurrent();
             foreach ((array) $pageInfo['wiki_editor_status']['page_ids'] as $page_id) {
                 WikiOnlineEditingUser::deleteBySQL(
