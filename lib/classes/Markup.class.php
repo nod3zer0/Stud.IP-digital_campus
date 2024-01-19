@@ -298,13 +298,13 @@ class Markup
             i
             img[alt|src|height|width|class|style]
             li
-            ol
+            ol[reversed|start|style]
             p[style]
             pre[class]
             span[style|class]
             strong
             u
-            ul
+            ul[style]
             s
             small
             sub
@@ -401,6 +401,10 @@ class Markup
 
         $def->addElement('figcaption', 'Inline', 'Flow', 'Common');
         $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
+
+        $def->addAttribute('ol', 'reversed', 'Bool');
+        $def->addAttribute('ol', 'style', 'Text');
+        $def->addAttribute('ul', 'style', 'Text');
 
         return new \HTMLPurifier($config);
     }
