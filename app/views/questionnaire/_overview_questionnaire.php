@@ -69,6 +69,9 @@
     <td>
         <?= htmlReady($countedAnswers ?: '0') ?>
     </td>
+    <td data-text="<?= (int) $questionnaire['chdate'] ?>">
+        <?= date('d.m.Y H:i', $questionnaire['chdate']) ?>
+    </td>
     <td class="actions">
     <? if ($questionnaire->isRunning() && $countedAnswers) : ?>
         <?= Icon::create('edit', Icon::ROLE_INACTIVE)->asImg(['title' => _('Der Fragebogen wurde gestartet und kann nicht mehr bearbeitet werden.')]) ?>

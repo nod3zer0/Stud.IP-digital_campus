@@ -34,7 +34,7 @@ class QuestionnaireController extends AuthenticatedController
         if (!$GLOBALS['perm']->have_perm('autor')) {
             throw new AccessDeniedException('Only for logged in users.');
         }
-        $this->questionnaires = Questionnaire::findBySQL("user_id = ? ORDER BY title ASC", [$GLOBALS['user']->id]);
+        $this->questionnaires = Questionnaire::findBySQL("user_id = ? ORDER BY chdate DESC", [$GLOBALS['user']->id]);
         foreach ($this->questionnaires as $questionnaire) {
             if (!$questionnaire['visible'] && $questionnaire->isRunning()) {
                 $questionnaire->start();
@@ -55,7 +55,7 @@ class QuestionnaireController extends AuthenticatedController
         Navigation::activateItem("/course/admin/questionnaires");
         $this->statusgruppen = Statusgruppen::findByRange_id($this->range_id);
         $this->questionnaires = Questionnaire::findBySQL(
-            "INNER JOIN questionnaire_assignments USING (questionnaire_id) WHERE (questionnaire_assignments.range_id = ? AND questionnaire_assignments.range_type = ?) OR (questionnaire_assignments.range_id IN (?) AND questionnaire_assignments.range_type = 'statusgruppe') ORDER BY questionnaires.title ASC",
+            "INNER JOIN questionnaire_assignments USING (questionnaire_id) WHERE (questionnaire_assignments.range_id = ? AND questionnaire_assignments.range_type = ?) OR (questionnaire_assignments.range_id IN (?) AND questionnaire_assignments.range_type = 'statusgruppe') ORDER BY questionnaires.chdate DESC",
             [$this->range_id, $this->range_type, array_map(function ($g) { return $g->getId(); }, $this->statusgruppen)]
         );
         foreach ($this->questionnaires as $questionnaire) {
