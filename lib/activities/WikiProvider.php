@@ -18,8 +18,8 @@ class WikiProvider implements ActivityProvider
     public function getActivityDetails($activity)
     {
         // Check visibility of wiki page
-        $page = \WikiPage::findOneBySQL('`range_id` = ? AND `name` = ?', [$activity->context_id, $activity->object_id]);
-        if ($page && !$page->isReadable()) {
+        $page = \WikiPage::findOneBySQL('`range_id` = ? AND `page_id` = ?', [$activity->context_id, $activity->object_id]);
+        if (!$page || !$page->isReadable()) {
             return false;
         }
 
