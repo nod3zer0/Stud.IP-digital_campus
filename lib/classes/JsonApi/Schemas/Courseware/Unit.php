@@ -34,6 +34,7 @@ class Unit extends SchemaProvider
             'public' => (int) $resource['public'],
             'release-date' => $resource['release_date'] ? date('c', $resource['release_date']) : null,
             'withdraw-date' => $resource['withdraw_date'] ? date('c', $resource['withdraw_date']) : null,
+            'config' => json_decode($resource['config']),
             'mkdate'    => date('c', $resource['mkdate']),
             'chdate'    => date('c', $resource['chdate']),
         ];

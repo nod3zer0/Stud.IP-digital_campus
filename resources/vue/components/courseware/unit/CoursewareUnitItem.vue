@@ -286,13 +286,14 @@ export default {
             createFeedback: 'feedback-elements/create',
             loadFeedbackElement: 'feedback-elements/loadById',
         }),
-        async checkCertificate() {
-            if (this.getStudipConfig('COURSEWARE_CERTIFICATES_ENABLE')) {
-                const response = await axios.get(STUDIP.URLHelper.getURL('jsonapi.php/v1/courseware-units/' +
-                    this.unit.id + '/certificate/' + STUDIP.USER_ID));
-                if (response.status === 200) {
-                    this.certificate = response.data;
-                }
+        checkCertificate() {
+            if (this.getStudipConfig('COURSEWARE_CERTIFICATES_ENABLE') && this.unit.attributes.config.certificate) {
+                axios.get(STUDIP.URLHelper.getURL('jsonapi.php/v1/courseware-units/' +
+                    this.unit.id + '/certificate/' + STUDIP.USER_ID))
+                    .then(response => {
+                        this.certificate = response.data;
+                    })
+                    .catch(error => {});
             }
         },
         executeDelete() {
