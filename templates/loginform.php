@@ -23,7 +23,8 @@ if (!match_route('web_migrate.php')) {
     $bg_desktop = URLHelper::getURL('pictures/loginbackgrounds/1.jpg');
     $bg_mobile = URLHelper::getURL('pictures/loginbackgrounds/2.jpg');
 }
-$show_hidden_login = false;
+$show_login = !(current(StudipAuthAbstract::getInstance()) instanceOf StudipAuthSSO) && StudipAuthAbstract::isLoginEnabled();
+$show_hidden_login = !$show_login && StudipAuthAbstract::isLoginEnabled();
 ?>
 <main id="content" class="loginpage">
     <div id="background-desktop" style="background: url(<?= $bg_desktop ?>) no-repeat top left/cover;"></div>
@@ -48,7 +49,7 @@ $show_hidden_login = false;
                     <h1><?= htmlReady(Config::get()->UNI_NAME_CLEAN) ?></h1>
                 </header>
 
-                <? if (count($GLOBALS['STUDIP_AUTH_PLUGIN']) === 1 && StudipAuthAbstract::isLoginEnabled()) : ?>
+                <? if ($show_login) : ?>
                     <?= $this->render_partial('_standard_loginform', [
                         'hidden' => false,
                     ]) ?>
@@ -57,14 +58,7 @@ $show_hidden_login = false;
                     <ul>
                         <? foreach (Navigation::getItem('/login') as $key => $nav) : ?>
                             <? if ($nav->isVisible()) : ?>
-                                <? if ($key === 'standard_login') {
-                                    if (count($GLOBALS['STUDIP_AUTH_PLUGIN']) === 1 && StudipAuthAbstract::isLoginEnabled()) {
-                                        continue;
-                                    } else {
-                                        $show_hidden_login = true;
-                                    }
-                                }
-                                ?>
+                                <? if ($key === 'standard_login' && $show_login) continue; ?>
                                 <? $name_and_title = explode(' - ', $nav->getTitle()) ?>
                                 <li class="login_link">
                                     <? if (is_internal_url($url = $nav->getURL())) : ?>
