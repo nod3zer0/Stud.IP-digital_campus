@@ -34,7 +34,7 @@
         </form>
 
         <div class="filterpanel">
-            <span class="sr-only">{{ $gettext('Kategorien Filter') }}</span>
+            <span class="sr-only">{{ $gettext('Kategorien-Filter') }}</span>
             <button
                 v-for="category in blockCategories"
                 :key="category.type"

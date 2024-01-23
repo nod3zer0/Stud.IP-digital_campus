@@ -124,7 +124,7 @@
                                 />
                                 <courseware-companion-box
                                     v-if="blockedByAnotherUser"
-                                    :msgCompanion="$gettextInterpolate($gettext('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet'), {blockingUserName: blockingUserName})"
+                                    :msgCompanion="$gettextInterpolate($gettext('Die Einstellungen dieser Seite werden im Moment von %{blockingUserName} bearbeitet.'), {blockingUserName: blockingUserName})"
                                     mood="pointing"
                                 >
                                     <template #companionActions>
