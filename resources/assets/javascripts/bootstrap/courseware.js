@@ -106,4 +106,10 @@ STUDIP.domReady(() => {
             return mountApp(STUDIP, createApp, '#courseware-comments-app');
         });
     }
+
+    if (document.getElementById('contents-courseware-courses_overview')) {
+        Promise.all([
+            STUDIP.loadChunk('courseware')
+        ]);
+    }
 });
