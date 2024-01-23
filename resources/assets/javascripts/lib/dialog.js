@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 import parseOptions from './parse_options.js';
 import extractCallback from './extract_callback.js';
 import Overlay from './overlay.js';

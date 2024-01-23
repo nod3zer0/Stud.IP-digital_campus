@@ -1,7 +1,7 @@
 /* ------------------------------------------------------------------------
  * Bedingungen zur Auswahl von Stud.IP-Nutzern
  * ------------------------------------------------------------------------ */
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 import Dialog from './dialog.js';
 
 const UserFilter = {

@@ -1,6 +1,25 @@
 import { translate } from 'vue-gettext';
-import defaultTranslations from '../../../../locale/de/LC_MESSAGES/js-resources.json';
-import eventBus from './event-bus.ts';
+import * as defaultTranslations from '../../../../locale/de/LC_MESSAGES/js-resources.json';
+import eventBus from './event-bus';
+
+interface StringDict {
+    [key: string]: string;
+}
+
+interface InstalledLanguage {
+    name: string;
+    selected: boolean;
+}
+
+interface InstalledLanguages {
+    [key: string]: InstalledLanguage;
+}
+
+type TranslationDict = StringDict;
+
+interface TranslationDicts {
+    [key: string]: TranslationDict | null;
+}
 
 const DEFAULT_LANG = 'de_DE';
 const DEFAULT_LANG_NAME = 'Deutsch';
@@ -24,7 +43,7 @@ async function setLocale(locale = getInitialLocale()) {
 
     state.locale = locale;
     if (state.translations[state.locale] === null) {
-        const translations = await getTranslations(state.locale);
+        const translations: TranslationDict = await getTranslations(state.locale);
         state.translations[state.locale] = translations;
     }
 
@@ -43,7 +62,7 @@ function getVueConfig() {
         memo[lang] = name;
 
         return memo;
-    }, {});
+    }, {} as StringDict);
 
     return {
         availableLanguages,
@@ -55,11 +74,11 @@ function getVueConfig() {
 }
 
 function getInitialState() {
-    const translations = Object.entries(getInstalledLanguages()).reduce((memo, [lang]) => {
+    const translations: TranslationDicts = Object.entries(getInstalledLanguages()).reduce((memo, [lang]) => {
         memo[lang] = lang === DEFAULT_LANG ? defaultTranslations : null;
 
         return memo;
-    }, {});
+    }, {} as TranslationDicts);
 
     return {
         locale: DEFAULT_LANG,
@@ -77,11 +96,11 @@ function getInitialLocale() {
     return DEFAULT_LANG;
 }
 
-function getInstalledLanguages() {
+function getInstalledLanguages(): InstalledLanguages {
     return window?.STUDIP?.INSTALLED_LANGUAGES ?? { [DEFAULT_LANG]: { name: DEFAULT_LANG_NAME, selected: true } };
 }
 
-async function getTranslations(locale) {
+async function getTranslations(locale: string): Promise<TranslationDict> {
     try {
         const language = locale.split(/[_-]/)[0];
         const translation = await import(`../../../../locale/${language}/LC_MESSAGES/js-resources.json`);

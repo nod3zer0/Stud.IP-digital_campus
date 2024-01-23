@@ -1,4 +1,4 @@
-import { $gettext } from "./gettext.js";
+import { $gettext } from "./gettext";
 import eventBus from "./event-bus.ts";
 
 eventBus.on('studip:set-locale', () => {

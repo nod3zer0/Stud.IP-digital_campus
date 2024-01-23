@@ -172,6 +172,7 @@ module.exports = {
             'jquery-ui/widgets/resizable': 'jquery-ui/ui/widgets/resizable',
             '@': path.resolve(__dirname, 'resources')
         },
+        extensions: ['.ts', '.vue', '.js'],
         fallback: {
             'stream': require.resolve("stream-browserify"),
             'buffer': require.resolve("buffer/")

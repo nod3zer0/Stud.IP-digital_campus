@@ -1,4 +1,4 @@
-import { $gettext } from './lib/gettext.js';
+import { $gettext } from './lib/gettext';
 
 jQuery(function ($) {
     $(document).on('click', 'a.mvv-load-in-new-row', function () {

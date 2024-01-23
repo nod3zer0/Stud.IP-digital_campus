@@ -10,7 +10,7 @@
  *
  * Refer to the according function definitions for further info.
  * ------------------------------------------------------------------------ */
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 import Dialog from './dialog.js';
 
 let active = false;

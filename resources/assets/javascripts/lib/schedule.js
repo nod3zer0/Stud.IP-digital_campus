@@ -1,4 +1,4 @@
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 import Calendar from './calendar.js';
 import Dialog from './dialog.js';
 

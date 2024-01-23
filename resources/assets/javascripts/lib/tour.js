@@ -1,4 +1,4 @@
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 
 /* ------------------------------------------------------------------------
  * Stud.IP Tour

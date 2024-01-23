@@ -1,6 +1,6 @@
 import 'expose-loader?exposes[]=$&exposes[]=jQuery!jquery';
 
-import { setLocale } from './lib/gettext.js';
+import { setLocale } from './lib/gettext';
 
 import 'jquery-ui/ui/widget.js';
 import 'jquery-ui/ui/position.js';
@@ -76,7 +76,7 @@ import 'blueimp-file-upload/js/jquery.iframe-transport.js';
 
 import './jquery/autoresize.jquery.min.js';
 
-import { $gettext } from './lib/gettext.js';
+import { $gettext } from './lib/gettext';
 
 // Create jQuery "plugin" that just reverses the elements' order. This is
 // neccessary since the navigation is built and afterwards, we need to

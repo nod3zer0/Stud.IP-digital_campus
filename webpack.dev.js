@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const { merge } = require('webpack-merge');
 const common = require('./webpack.common.js');
 const WebpackNotifierPlugin = require('webpack-notifier');
@@ -10,8 +11,13 @@ const statusesPaths = {
 
 module.exports = merge(common, {
     mode: 'development',
-    devtool: 'eval',
+    devtool: 'eval-cheap-module-source-map',
     plugins: [
+        new webpack.WatchIgnorePlugin({
+            paths:[
+                /\.d\.[cm]ts$/
+            ]
+        }),
         new WebpackNotifierPlugin({
             appID: 'Stud.IP Webpack',
             title: function (params) {

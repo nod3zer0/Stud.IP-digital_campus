@@ -77,9 +77,10 @@ class TasksIndex extends JsonApiController
         }
     }
 
-    private function findTasksByCourse(\Course $course): \SimpleCollection
+    private function findTasksByCourse(\Course $course, bool $showNotYetActive = true): \SimpleCollection
     {
-        $taskGroups = TaskGroup::findBySQL('seminar_id = ?', [$course->getId()]);
+        $whereClause = $showNotYetActive ? 'seminar_id = ?' : 'start_date <= UNIX_TIMESTAMP() AND seminar_id = ?';
+        $taskGroups = TaskGroup::findBySQL($whereClause, [$course->getId()]);
 
         $tasks = [];
         foreach ($taskGroups as $taskGroup) {
@@ -98,7 +99,7 @@ class TasksIndex extends JsonApiController
             })
             ->pluck('id');
 
-        return $this->findTasksByCourse($course)->filter(function ($task) use ($user, $groupIds) {
+        return $this->findTasksByCourse($course, false)->filter(function ($task) use ($user, $groupIds) {
             return ('autor' === $task['solver_type'] && $task['solver_id'] === $user->getId()) ||
                 ('group' === $task['solver_type'] && in_array($task['solver_id'], $groupIds));
         });

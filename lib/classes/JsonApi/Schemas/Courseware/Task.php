@@ -2,6 +2,8 @@
 
 namespace JsonApi\Schemas\Courseware;
 
+use Courseware\Task as TaskModel;
+use JsonApi\Routes\Courseware\Authority as CoursewareAuthority;
 use JsonApi\Schemas\SchemaProvider;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Link;

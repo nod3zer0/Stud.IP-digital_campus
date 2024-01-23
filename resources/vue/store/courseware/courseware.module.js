@@ -575,7 +575,7 @@ export const actions = {
         element.attributes.commentable = true;
 
         const updatedElement =  await dispatch('setStructuralElementComments', { element: element });
-        
+
         return updatedElement;
 
     },
@@ -584,7 +584,7 @@ export const actions = {
         element.attributes.commentable = false;
 
         const updatedElement =  await dispatch('setStructuralElementComments', { element: element });
-        
+
         return updatedElement;
     },
 
@@ -678,7 +678,7 @@ export const actions = {
         block.attributes.commentable = true;
 
         const updatedBlock =  await dispatch('setBlockComments', { block: block });
-        
+
         return updatedBlock;
 
     },
@@ -687,7 +687,7 @@ export const actions = {
         block.attributes.commentable = false;
 
         const updatedBlock =  await dispatch('setBlockComments', { block: block });
-        
+
         return updatedBlock;
     },
 

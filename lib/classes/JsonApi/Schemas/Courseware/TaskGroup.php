@@ -3,6 +3,7 @@
 namespace JsonApi\Schemas\Courseware;
 
 use Courseware\StructuralElement;
+use Courseware\TaskGroup as TaskGroupModel;
 use JsonApi\Schemas\SchemaProvider;
 use Neomerx\JsonApi\Contracts\Schema\ContextInterface;
 use Neomerx\JsonApi\Schema\Identifier;
@@ -35,6 +36,8 @@ class TaskGroup extends SchemaProvider
         return [
             'solver-may-add-blocks' => (bool) $resource['solver_may_add_blocks'],
             'title' => (string) $resource->title,
+            'start-date' => date('c', $resource['start_date']),
+            'end-date' => date('c', $resource['end_date']),
             'mkdate' => date('c', $resource['mkdate']),
             'chdate' => date('c', $resource['chdate']),
         ];

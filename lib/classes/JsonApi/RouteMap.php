@@ -501,6 +501,13 @@ class RouteMap
 
         $group->get('/courseware-task-groups/{id}', Routes\Courseware\TaskGroupsShow::class);
         $group->post('/courseware-task-groups', Routes\Courseware\TaskGroupsCreate::class);
+        $group->patch('/courseware-task-groups/{id}', Routes\Courseware\TaskGroupsUpdate::class);
+        $group->delete('/courseware-task-groups/{id}', Routes\Courseware\TaskGroupsDelete::class);
+        $this->addRelationship(
+            $group,
+            '/courseware-task-groups/{id}/relationships/solvers',
+            Routes\Courseware\Rel\SolversOfTaskGroup::class
+        );
 
         $group->get('/courseware-task-feedback/{id}', Routes\Courseware\TaskFeedbackShow::class);
         $group->post('/courseware-task-feedback', Routes\Courseware\TaskFeedbackCreate::class);

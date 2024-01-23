@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 
 $(document).on('click', 'a.copyable-link', function (event) {
     event.preventDefault();

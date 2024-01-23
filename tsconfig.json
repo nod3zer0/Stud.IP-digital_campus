@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
-        "target": "es2015",
+        "allowJs": true,
+        "module": "es2020",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
         "strict": true,
-        "module": "es2015",
-        "moduleResolution": "node"
+        "target": "es2020"
     },
     "include": ["resources/**/*.ts", "resources/**/*.vue"],
     "exclude": ["node_modules"]

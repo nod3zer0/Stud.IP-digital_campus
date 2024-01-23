@@ -1,4 +1,4 @@
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 
 const MultiPersonSearch = {
     init: function() {

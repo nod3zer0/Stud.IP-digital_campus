@@ -740,4 +740,17 @@ class Statusgruppen extends SimpleORMap implements PrivacyObject
             }
         }
     }
+
+    /**
+     * Checks if a user is a member of a group.
+     *
+     * @param string $user_id The user id
+     * @return boolean <b>true</b> if user is a member of this group
+     *
+     * @SuppressWarnings(PHPMD.StaticAccess)
+     */
+    public static function isMemberOf(string $gruppenId, string $userId): bool
+    {
+        return StatusgruppeUser::countBySql('statusgruppe_id = ? AND user_id = ?', [$gruppenId, $userId]) !== 0;
+    }
 }

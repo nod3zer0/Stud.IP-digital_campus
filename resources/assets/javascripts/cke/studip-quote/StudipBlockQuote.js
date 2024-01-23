@@ -1,6 +1,6 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import { $gettext } from '../../lib/gettext.js';
+import { $gettext } from '../../lib/gettext';
 import { Command, icons } from '@ckeditor/ckeditor5-core';
 
 const divideIcon =

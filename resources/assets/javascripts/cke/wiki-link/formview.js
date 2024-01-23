@@ -12,7 +12,7 @@ import {
     addListToDropdown,
 } from '@ckeditor/ckeditor5-ui';
 import { FocusTracker, KeystrokeHandler, Collection, Rect, isVisible } from '@ckeditor/ckeditor5-utils';
-import { $gettext } from '../../lib/gettext.js';
+import { $gettext } from '../../lib/gettext';
 
 export default class WikiLinkFormView extends View {
     constructor(locale) {

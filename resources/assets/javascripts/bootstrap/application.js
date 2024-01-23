@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 import eventBus from "../lib/event-bus.ts";
 
 /* ------------------------------------------------------------------------

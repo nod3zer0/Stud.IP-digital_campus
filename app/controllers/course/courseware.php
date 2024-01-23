@@ -79,11 +79,16 @@ class Course_CoursewareController extends CoursewareController
         }
     }
 
-    public function tasks_action(): void
+    public function tasks_action($route = null): void
     {
-        global $perm, $user;
-        $this->is_teacher = $perm->have_studip_perm('tutor', Context::getId(), $user->id);
+        $this->is_teacher = $GLOBALS['perm']->have_studip_perm(
+            'tutor',
+            Context::getId(),
+            $GLOBALS['user']->id
+        );
+
         Navigation::activateItem('course/courseware/tasks');
+        PageLayout::setTitle(_('Courseware: Aufgaben'));
         $this->setTasksSidebar();
     }
 

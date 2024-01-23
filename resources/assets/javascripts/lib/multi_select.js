@@ -1,4 +1,4 @@
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 
 /**
  * Turns a select-box into an easy to use multiple select-box

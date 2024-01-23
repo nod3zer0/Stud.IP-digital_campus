@@ -8,7 +8,7 @@ export default {
             limit.setDate(now.getDate() + 3);
             status.canSubmit = true;
 
-            if (now < submissionDate) {
+            if (now <= submissionDate) {
                 status.shape = 'span-empty';
                 status.role = 'status-green';
                 status.description = this.$gettext('Aufgabe bereit');
@@ -20,7 +20,7 @@ export default {
                     status.description = this.$gettext('Aufgabe muss bald abgegeben werden');
                 }
 
-                if (now >= submissionDate) {
+                if (now > submissionDate) {
                     status.canSubmit = false;
                     status.shape = 'span-full';
                     status.role = 'status-red';
@@ -34,7 +34,7 @@ export default {
                     status.description = this.$gettext('Aufgabe muss bald abgegeben werden');
                 }
 
-                if (now >= renewalDate) {
+                if (now > renewalDate) {
                     status.canSubmit = false;
                     status.shape = 'span-full';
                     status.role = 'status-red';

@@ -1,4 +1,4 @@
-import { $gettext, $gettextInterpolate } from '../lib/gettext.js';
+import { $gettext, $gettextInterpolate } from '../lib/gettext';
 
 // Allow fieldsets to collapse
 $(document).on(

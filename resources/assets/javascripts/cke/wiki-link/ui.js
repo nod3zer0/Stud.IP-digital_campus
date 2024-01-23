@@ -1,7 +1,7 @@
 import { Plugin } from '@ckeditor/ckeditor5-core';
 import { createDropdown } from '@ckeditor/ckeditor5-ui';
 import WikiLinkFormView from './formview.js';
-import { $gettext } from '../../lib/gettext.js';
+import { $gettext } from '../../lib/gettext';
 
 const wikiIcon =
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54"><path class="cls-1" d="M49.83,15a15.17,15.17,0,0,1-10.17,7.9,31.41,31.41,0,0,1,3.45,11.38C46.63,32.05,53.82,25.94,49.83,15ZM4.17,15c-4,10.94,3.2,17,6.72,19.28A31.41,31.41,0,0,1,14.34,22.9,15.17,15.17,0,0,1,4.17,15ZM27,16c-7.1,0-12.85,10.31-12.85,23h25.7C39.85,26.29,34.1,16,27,16Z"/></svg>';

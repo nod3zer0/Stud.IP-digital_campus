@@ -1,4 +1,4 @@
-import {$gettext} from '../lib/gettext.js';
+import {$gettext} from '../lib/gettext';
 
 STUDIP.ready(function () {
     //Event definitions:

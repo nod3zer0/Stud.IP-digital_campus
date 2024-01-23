@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js'
+import { $gettext } from '../lib/gettext'
 
 import "tablesorter/dist/js/jquery.tablesorter"
 import "tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js"

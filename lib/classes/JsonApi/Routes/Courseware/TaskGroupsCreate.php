@@ -65,14 +65,20 @@ class TaskGroupsCreate extends JsonApiController
         if (!self::arrayHas($json, 'data.attributes.title')) {
             return 'Missing `title` attribute.';
         }
-        if (!self::arrayHas($json, 'data.attributes.submission-date')) {
-            return 'Missing `submission-date` attribute.';
+        if (!self::arrayHas($json, 'data.attributes.start-date')) {
+            return 'Missing `start-date` attribute.';
         }
-        $submissionDate = self::arrayGet($json, 'data.attributes.submission-date');
-        if (!self::isValidTimestamp($submissionDate)) {
-            return '`submission-date` is not an ISO 8601 timestamp.';
+        $startDate = self::arrayGet($json, 'data.attributes.start-date');
+        if (!self::isValidTimestamp($startDate)) {
+            return '`start-date` is not an ISO 8601 timestamp.';
         }
-
+        if (!self::arrayHas($json, 'data.attributes.end-date')) {
+            return 'Missing `end-date` attribute.';
+        }
+        $endDate = self::arrayGet($json, 'data.attributes.end-date');
+        if (!self::isValidTimestamp($endDate)) {
+            return '`end-date` is not an ISO 8601 timestamp.';
+        }
         if (!self::arrayHas($json, 'data.relationships.target')) {
             return 'Missing `target` relationship.';
         }
@@ -165,8 +171,8 @@ class TaskGroupsCreate extends JsonApiController
         $target = $this->getTargetFromJson($json);
 
         $solverMayAddBlocks = self::arrayGet($json, 'data.attributes.solver-may-add-blocks', '');
-        $submissionDate = self::arrayGet($json, 'data.attributes.submission-date', '');
-        $submissionDate = self::fromISO8601($submissionDate);
+        $startDate = self::fromISO8601(self::arrayGet($json, 'data.attributes.start-date', ''));
+        $endDate = self::fromISO8601(self::arrayGet($json, 'data.attributes.end-date', ''));
         $title = self::arrayGet($json, 'data.attributes.title', '');
 
         /** @var TaskGroup $taskGroup */
@@ -177,6 +183,8 @@ class TaskGroupsCreate extends JsonApiController
             'task_template_id' => $taskTemplate->getId(),
             'solver_may_add_blocks' => $solverMayAddBlocks,
             'title' => $title,
+            'start_date' => $startDate->getTimestamp(),
+            'end_date' => $endDate->getTimestamp(),
         ]);
 
         foreach ($solvers as $solver) {
@@ -184,7 +192,6 @@ class TaskGroupsCreate extends JsonApiController
                 'task_group_id' => $taskGroup->getId(),
                 'solver_id' => $solver->getId(),
                 'solver_type' => $this->getSolverType($solver),
-                'submission_date' => $submissionDate->getTimestamp(),
             ]);
 
             // copy task template

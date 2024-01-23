@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 
 $(document).on('click', '.consultation-delete-check:not(.ignore)', event => {
     const form       = $(event.target).closest('form');

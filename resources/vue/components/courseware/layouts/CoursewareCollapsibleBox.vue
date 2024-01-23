@@ -2,7 +2,8 @@
     <div class="cw-collapsible" :class="{ 'cw-collapsible-open': isOpen }">
         <a href="#" :aria-expanded="isOpen" @click.prevent="isOpen = !isOpen">
             <header :class="{ 'cw-collapsible-open': isOpen }" class="cw-collapsible-title">
-                <studip-icon v-if="icon" :shape="icon" /> {{ title }}
+                <studip-icon v-if="icon" :shape="icon" />
+                <slot name="title" :is-open="isOpen">{{ title }}</slot>
             </header>
         </a>
         <div v-if="isOpen" class="cw-collapsible-content" :class="{ 'cw-collapsible-content-open': isOpen }">

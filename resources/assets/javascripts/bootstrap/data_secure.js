@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 
 /**
  * Secure forms or form elements by displaying a warning on page unload if

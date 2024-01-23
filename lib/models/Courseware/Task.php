@@ -31,7 +31,9 @@ use User;
  * @property \Statusgruppen $group belongs_to \Statusgruppen
  * @property \Course $course belongs_to \Course
  * @property TaskFeedback|null $task_feedback belongs_to TaskFeedback
- * @property mixed $solver additional field
+ * @property-read \User|\Statusgruppen|null $solver additional field
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class Task extends \SimpleORMap
 {
@@ -78,6 +80,10 @@ class Task extends \SimpleORMap
 
         $config['additional_fields']['solver'] = [
             'get' => 'getSolver',
+            'set' => false,
+        ];
+        $config['additional_fields']['submission_date'] = [
+            'get' => 'getSubmissionDate',
             'set' => false,
         ];
 
@@ -171,6 +177,11 @@ class Task extends \SimpleORMap
         return null;
     }
 
+    public function getSubmissionDate(): int
+    {
+        return $this->task_group['end_date'];
+    }
+
     public function getTaskProgress(): float
     {
         $children = $this->structural_element->findDescendants();
@@ -183,6 +194,45 @@ class Task extends \SimpleORMap
         }
 
         return $progress * 100;
+    }
+
+    public function canSubmit(): bool
+    {
+        return !$this->submitted
+            && time() <= ('granted' === $this->renewal ? $this->renewal_date : $this->submission_date);
+    }
+
+    public function submitTask(): void
+    {
+        $this->submitted = 1;
+        if ('pending' === $this->renewal) {
+            $this->renewal = '';
+        }
+        $this->store();
+    }
+
+    public function isRenewed(): bool
+    {
+        return $this->renewal === 'granted';
+    }
+
+    public function requestRenewal(): void
+    {
+        $this->renewal = 'pending';
+        $this->store();
+    }
+
+    public function declineRenewalRequest(): void
+    {
+        $this->renewal = 'declined';
+        $this->store();
+    }
+
+    public function grantRenewalRequest(\DateTime $renewalDate): void
+    {
+        $this->renewal = 'granted';
+        $this->renewal_date = $renewalDate->getTimestamp();
+        $this->store();
     }
 
     private function getStructuralElementProgress(StructuralElement $structural_element): float

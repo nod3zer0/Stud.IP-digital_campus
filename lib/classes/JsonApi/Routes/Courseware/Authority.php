@@ -23,7 +23,13 @@ use User;
 use Course;
 
 /**
+ * @SuppressWarnings(PHPMD.CamelCaseParameterName)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.Superglobals)
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
@@ -306,6 +312,16 @@ class Authority
         return $resource['lecturer_id'] === $user->id;
     }
 
+    public static function canUpdateTaskGroup(User $user, TaskGroup $resource): bool
+    {
+        return self::canCreateTasks($user, $resource->target);
+    }
+
+    public static function canDeleteTaskGroup(User $user, TaskGroup $resource): bool
+    {
+        return self::canUpdateTaskGroup($user, $resource);
+    }
+
     public static function canShowTask(User $user, Task $resource): bool
     {
         return self::canUpdateTask($user, $resource);
@@ -332,6 +348,11 @@ class Authority
         return self::canCreateTasks($user, $resource->structural_element) && !$resource->userIsASolver($user);
     }
 
+    public static function canRenewTask(User $user, Task $resource): bool
+    {
+        return self::canDeleteTask($user, $resource);
+    }
+
     public static function canCreateTaskFeedback(User $user, Task $resource): bool
     {
         return self::canCreateTasks($user, $resource->structural_element);
@@ -351,7 +372,6 @@ class Authority
     {
         return self::canCreateTaskFeedback($user, $resource);
     }
-
 
     public static function canIndexStructuralElementComments(User $user, StructuralElement $resource)
     {
@@ -407,14 +427,14 @@ class Authority
 
     public static function canShowStructuralElementFeedback(User $user, StructuralElementFeedback $resource)
     {
-        return $resource->user_id === $user->id || self::canUpdateStructuralElement($user, $resource->structural_element);
+        return $resource->user_id === $user->id ||
+            self::canUpdateStructuralElement($user, $resource->structural_element);
     }
 
     public static function canDeleteStructuralElementFeedback(User $user, StructuralElementFeedback $resource)
     {
         return self::canUpdateStructuralElementFeedback($user, $resource);
     }
-
 
     public static function canShowTemplate(User $user, Template $resource)
     {
@@ -430,7 +450,7 @@ class Authority
 
     public static function canCreateTemplate(User $user)
     {
-        return $GLOBALS['perm']->have_perm('admin');
+        return $GLOBALS['perm']->have_perm('admin', $user->id);
     }
 
     public static function canUpdateTemplate(User $user, Template $resource)
@@ -490,7 +510,7 @@ class Authority
         if ($user->id === $range->id) {
             return true;
         }
-        return $GLOBALS['perm']->have_studip_perm('tutor', $range->id ,$user->id);
+        return $GLOBALS['perm']->have_studip_perm('tutor', $range->id, $user->id);
     }
 
     public static function canSortUnit(User $user, \Range $range): bool
@@ -518,7 +538,6 @@ class Authority
         return $request_user->id === $user->id;
     }
 
-
     public static function canShowClipboard(User $user, Clipboard $resource): bool
     {
         return $resource->user_id === $user->id;
@@ -541,7 +560,7 @@ class Authority
         } else {
             $structural_element = $resource->getStructuralElement();
         }
-        
+
         return $structural_element->canEdit($user);
     }
 

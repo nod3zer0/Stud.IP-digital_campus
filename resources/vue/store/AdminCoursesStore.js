@@ -1,5 +1,5 @@
 import Screenreader from '../../assets/javascripts/lib/screenreader.js';
-import { $gettext } from '../../assets/javascripts/lib/gettext.js';
+import { $gettext } from '../../assets/javascripts/lib/gettext';
 
 export default {
     namespaced: true,

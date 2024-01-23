@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 
 STUDIP.Dialog.handlers.header['X-Raumzeit-Update-Times'] = function(json) {
     var info = $.parseJSON(json);

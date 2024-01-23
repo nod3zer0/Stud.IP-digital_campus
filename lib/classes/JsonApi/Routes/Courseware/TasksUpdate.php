@@ -13,6 +13,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Update one Task.
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class TasksUpdate extends JsonApiController
 {
@@ -32,7 +34,8 @@ class TasksUpdate extends JsonApiController
             throw new RecordNotFoundException();
         }
         $json = $this->validate($request, $resource);
-        if (!Authority::canUpdateTask($user = $this->getUser($request), $resource)) {
+        $user = $this->getUser($request);
+        if (!Authority::canUpdateTask($user, $resource)) {
             throw new AuthorizationFailedException();
         }
         $resource = $this->updateTask($user, $resource, $json);
@@ -66,53 +69,35 @@ class TasksUpdate extends JsonApiController
 
     private function updateTask(\User $user, Task $resource, array $json): Task
     {
-        if (Authority::canDeleteTask($user, $resource)) {
-            if (self::arrayHas($json, 'data.attributes.renewal')) {
-                $newRenewalState = self::arrayGet($json, 'data.attributes.renewal');
-                if ('declined' === $newRenewalState) {
-                    $resource->renewal = $newRenewalState;
-                }
-                if ('granted' === $newRenewalState && self::arrayHas($json, 'data.attributes.renewal-date')) {
-                    $renewalDate = self::arrayGet($json, 'data.attributes.renewal-date', '');
-                    $renewalDate = self::fromISO8601($renewalDate);
-
-                    $resource->renewal = $newRenewalState;
-                    $resource->renewal_date = $renewalDate->getTimestamp();
-                }
-            }
-        } else {
-            if (self::arrayHas($json, 'data.attributes.submitted')) {
-                $newSubmittedState = self::arrayGet($json, 'data.attributes.submitted');
-                if ($this->canSubmit($resource, $newSubmittedState)) {
-                    $resource->submitted = $newSubmittedState;
-                    if ('pending' === $resource->renewal) {
-                        $resource->renewal = '';
-                    }
-                }
-            }
-            if (self::arrayHas($json, 'data.attributes.renewal')) {
-                $newRenewalState = self::arrayGet($json, 'data.attributes.renewal');
-                if ('pending' === $newRenewalState) {
-                    $resource->renewal = $newRenewalState;
-                }
-            }
+        if (Authority::canRenewTask($user, $resource)) {
+            return $this->renewTask($resource, $json);
         }
 
-        $resource->store();
+        if (self::arrayGet($json, 'data.attributes.submitted') === true && $resource->canSubmit()) {
+            $resource->submitTask();
+        }
+
+        if (self::arrayGet($json, 'data.attributes.renewal') === 'pending') {
+            $resource->requestRenewal();
+        }
 
         return $resource;
     }
 
-    private function canSubmit(Task $resource, string $newSubmittedState): bool
+    private function renewTask(Task $resource, array $json): Task
     {
-        $now = time();
-        if (1 === (int) $resource->submitted || !$newSubmittedState) {
-            return false;
+        switch (self::arrayGet($json, 'data.attributes.renewal')) {
+            case 'declined':
+                $resource->declineRenewalRequest();
+                break;
+
+            case 'granted':
+                $resource->grantRenewalRequest(
+                    self::fromISO8601(self::arrayGet($json, 'data.attributes.renewal-date'))
+                );
+                break;
         }
-        if ('granted' === $resource->renewal) {
-            return $now <= $resource->renewal_date;
-        } else {
-            return $now <= $resource->submission_date;
-        }
+
+        return $resource;
     }
 }

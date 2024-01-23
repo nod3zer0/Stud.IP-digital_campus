@@ -18,7 +18,7 @@
  * @license GPL2 or any later version
  * @since   Stud.IP 3.4
  */
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 
 var pixelRatio = window.devicePixelRatio || 1,
     dataAttribute = 'big-image-handled';

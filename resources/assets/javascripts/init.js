@@ -77,7 +77,7 @@ import Table from './lib/table.js';
 import TableOfContents from './lib/table-of-contents.js';
 import Tooltip from './lib/tooltip.js';
 import Tour from './lib/tour.js';
-import * as Gettext from './lib/gettext.js';
+import * as Gettext from './lib/gettext';
 import UserFilter from './lib/user_filter.js';
 import wysiwyg from './lib/wysiwyg.js';
 import ScrollToTop from './lib/scroll_to_top.js';

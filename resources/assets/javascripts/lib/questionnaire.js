@@ -1,4 +1,4 @@
-import { $gettext } from '../lib/gettext.js';
+import { $gettext } from '../lib/gettext';
 import md5 from 'md5';
 //import html2canvas from "html2canvas";
 //import {jsPDF} from "jspdf";

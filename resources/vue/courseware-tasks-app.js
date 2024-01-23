@@ -1,5 +1,7 @@
-import TasksApp from './components/courseware/TasksApp.vue';
+import TaskGroupsIndex from './components/courseware/tasks/PagesTaskGroupsIndex.vue';
+import TaskGroupsShow from './components/courseware/tasks/PagesTaskGroupsShow.vue';
 import { mapResourceModules } from '@elan-ev/reststate-vuex';
+import VueRouter, { RouterView } from 'vue-router';
 import Vuex from 'vuex';
 import CoursewareModule from './store/courseware/courseware.module';
 import CoursewareTasksModule from './store/courseware/courseware-tasks.module';
@@ -16,6 +18,40 @@ const mountApp = async (STUDIP, createApp, element) => {
         });
 
     const httpClient = getHttpClient();
+
+    const routes = [
+        {
+            path: '/',
+            name: 'task-groups-index',
+            component: TaskGroupsIndex,
+        },
+        {
+            path: '/task-groups/:id',
+            name: 'task-groups-show',
+            component: TaskGroupsShow,
+            props: true,
+        },
+    ];
+
+    const base = new URL(
+        window.STUDIP.URLHelper.getURL(
+            'dispatch.php/course/courseware/tasks',
+            { cid: STUDIP.URLHelper.parameters.cid },
+            true
+        )
+    );
+    const router = new VueRouter({
+        base: base.pathname,
+        mode: 'history',
+        routes,
+    });
+    router.beforeEach((to, from, next) => {
+        if ('cid' in to?.query) {
+            next();
+        } else {
+            next({ ...to, query: { ...to.query, cid: window.STUDIP.URLHelper.parameters.cid } });
+        }
+    });
 
     const store = new Vuex.Store({
         modules: {
@@ -71,22 +107,18 @@ const mountApp = async (STUDIP, createApp, element) => {
     }
 
     store.dispatch('setUserId', STUDIP.USER_ID);
-    await store.dispatch('users/loadById', {id: STUDIP.USER_ID});
+    await store.dispatch('users/loadById', { id: STUDIP.USER_ID });
     store.dispatch('setHttpClient', httpClient);
     store.dispatch('coursewareContext', {
         id: entry_id,
         type: entry_type,
     });
     await store.dispatch('loadTeacherStatus', STUDIP.USER_ID);
-    store.dispatch('courseware-tasks/loadAll', {
-        options: {
-            'filter[cid]': entry_id,
-            include: 'solver, structural-element, task-feedback, task-group, task-group.lecturer',
-        },
-    });
+    await store.dispatch('tasks/loadTasksOfCourse', { cid: entry_id });
 
     const app = createApp({
-        render: (h) => h(TasksApp),
+        render: (h) => h(RouterView),
+        router,
         store,
     });
 

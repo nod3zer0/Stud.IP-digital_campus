@@ -1,21 +1,21 @@
 <template>
     <div class="cw-tasks-wrapper">
         <div class="cw-tasks-list">
-            <courseware-dashboard-students v-if="userIsTeacher" />
-            <courseware-dashboard-tasks v-else />
+            <CoursewareDashboardStudents v-if="userIsTeacher" />
+            <CoursewareDashboardTasks v-else />
         </div>
         <MountingPortal mountTo="#courseware-action-widget" name="sidebar-actions" v-if="userIsTeacher">
-            <courseware-tasks-action-widget />
+            <CoursewareTasksActionWidget />
         </MountingPortal>
         <courseware-companion-overlay />
     </div>
 </template>
 
 <script>
-import CoursewareTasksActionWidget from './widgets/CoursewareTasksActionWidget.vue';
+import CoursewareTasksActionWidget from '../widgets/CoursewareTasksActionWidget.vue';
 import CoursewareDashboardTasks from './CoursewareDashboardTasks.vue';
 import CoursewareDashboardStudents from './CoursewareDashboardStudents.vue';
-import CoursewareCompanionOverlay from './layouts/CoursewareCompanionOverlay.vue';
+import CoursewareCompanionOverlay from '../layouts/CoursewareCompanionOverlay.vue';
 import { mapGetters } from 'vuex';
 
 export default {

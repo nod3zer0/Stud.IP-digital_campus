@@ -1,4 +1,4 @@
-import { $gettext, $gettextInterpolate } from  '../lib/gettext.js';
+import { $gettext, $gettextInterpolate } from  '../lib/gettext';
 
 STUDIP.domReady(() => {
     $('del.diffdel').each(function() {

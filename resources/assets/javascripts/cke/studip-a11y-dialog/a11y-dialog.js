@@ -1,6 +1,6 @@
 import { Plugin } from '@ckeditor/ckeditor5-core';
 import { add } from '@ckeditor/ckeditor5-utils/src/translation-service';
-import { $gettext } from '../../lib/gettext.js';
+import { $gettext } from '../../lib/gettext';
 import A11YDialogEditing from './editing.js';
 import A11YDialogUI from './ui.js';
 

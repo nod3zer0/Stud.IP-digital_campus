@@ -1,4 +1,4 @@
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 
 const register = {
     re_username: null,

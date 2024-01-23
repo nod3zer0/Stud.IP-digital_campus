@@ -27,10 +27,10 @@
                             :key="'label-' + unit.id"
                             :for="'cw-task-dist-source-unit' + unit.id"
                         >
-                            <div class="icon"><studip-icon shape="courseware" size="32" /></div>
+                            <div class="icon"><studip-icon shape="courseware" :size="32" /></div>
                             <div class="text">{{ unit.element.attributes.title }}</div>
-                            <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                            <studip-icon shape="check-circle" size="24" class="check" />
+                            <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                            <studip-icon shape="check-circle" :size="24" class="check" />
                         </label>
                     </template>
                 </fieldset>
@@ -63,9 +63,14 @@
                     <input type="text" v-model="taskTitle" required />
                 </label>
                 <label>
+                    <span>{{ $gettext('Startdatum') }}</span>
+                    <span aria-hidden="true" class="wizard-required">*</span>
+                    <input type="date" v-model="startDate" required />
+                </label>
+                <label>
                     <span>{{ $gettext('Abgabefrist') }}</span>
                     <span aria-hidden="true" class="wizard-required">*</span>
-                    <input type="date" v-model="submissionDate" />
+                    <input type="date" v-model="endDate" :min="startDate" required />
                 </label>
                 <label>
                     {{ $gettext('Inhalte ergänzen') }}
@@ -99,10 +104,10 @@
                             :key="'label-' + unit.id"
                             :for="'cw-task-dist-target-unit' + unit.id"
                         >
-                            <div class="icon"><studip-icon shape="courseware" size="32" /></div>
+                            <div class="icon"><studip-icon shape="courseware" :size="32" /></div>
                             <div class="text">{{ unit.element.attributes.title }}</div>
-                            <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                            <studip-icon shape="check-circle" size="24" class="check" />
+                            <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                            <studip-icon shape="check-circle" :size="24" class="check" />
                         </label>
                     </template>
                 </fieldset>
@@ -237,11 +242,14 @@
 </template>
 
 <script>
-import CoursewareCompanionBox from './layouts/CoursewareCompanionBox.vue';
-import CoursewareStructuralElementSelector from './structural-element/CoursewareStructuralElementSelector.vue';
-import StudipWizardDialog from '../StudipWizardDialog.vue';
+import CoursewareCompanionBox from '../layouts/CoursewareCompanionBox.vue';
+import CoursewareStructuralElementSelector from '../structural-element/CoursewareStructuralElementSelector.vue';
+import StudipWizardDialog from '../../StudipWizardDialog.vue';
 
 import { mapActions, mapGetters } from 'vuex';
+
+const dateString = (date) =>
+    `${date.getFullYear()}-${('' + (date.getMonth() + 1)).padStart(2, '0')}-${('' + date.getDate()).padStart(2, '0')}`;
 
 export default {
     name: 'courseware-tasks-dialog-distribute',
@@ -316,7 +324,8 @@ export default {
             ],
             selectedSourceUnit: null,
             taskTitle: '',
-            submissionDate: '',
+            startDate: dateString(new Date()),
+            endDate: '',
             solverMayAddBlocks: true,
             selectedTask: null,
             selectedTargetUnit: null,
@@ -488,7 +497,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            setShowTasksDistributeDialog: 'setShowTasksDistributeDialog',
+            setShowTasksDistributeDialog: 'tasks/setShowTasksDistributeDialog',
             loadCourseUnits: 'loadCourseUnits',
             loadUserUnits: 'loadUserUnits',
             loadStructuralElement: 'courseware-structural-elements/loadById',
@@ -522,10 +531,21 @@ export default {
                 return;
             }
             this.distributing = true;
+            const startDate = new Date(this.startDate);
+            startDate.setHours(0);
+            startDate.setMinutes(0);
+            startDate.setSeconds(0);
+            startDate.setMilliseconds(0);
+            const endDate = new Date(this.endDate);
+            endDate.setHours(23);
+            endDate.setMinutes(59);
+            endDate.setSeconds(59);
+            endDate.setMilliseconds(999);
             const taskGroup = {
                 attributes: {
                     title: this.taskTitle,
-                    'submission-date': new Date(this.submissionDate).toISOString(),
+                    'start-date': startDate.toISOString(),
+                    'end-date': endDate.toISOString(),
                     'solver-may-add-blocks': this.solverMayAddBlocks,
                 },
                 relationships: {
@@ -560,7 +580,7 @@ export default {
             this.$emit('newtask');
             this.distributing = false;
             this.setShowTasksDistributeDialog(false);
-            
+
         },
         validateSolvers() {
             if (
@@ -575,7 +595,7 @@ export default {
             return this.wizardSlots[5].valid;
         },
         validateTaskSettings() {
-            if (this.taskTitle !== '' && this.submissionDate !== '') {
+            if (this.taskTitle !== '' && this.endDate !== '') {
                 this.wizardSlots[2].valid = true;
             } else {
                 this.wizardSlots[2].valid = false;
@@ -651,7 +671,14 @@ export default {
         taskTitle() {
             this.validate();
         },
-        submissionDate() {
+        startDate() {
+            if (new Date(this.startDate) > new Date(this.endDate)) {
+                const endDate = new Date(this.startDate);
+                endDate.setDate(endDate.getDate() + 1);
+                this.endDate = dateString(endDate);
+            }
+        },
+        endDate() {
             this.validate();
         },
         selectedAutors() {

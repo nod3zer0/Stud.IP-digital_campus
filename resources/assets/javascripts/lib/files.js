@@ -1,4 +1,4 @@
-import { $gettext } from './gettext.js';
+import { $gettext } from './gettext';
 import Dialog from './dialog.js';
 import FilesTable from '../../../vue/components/FilesTable.vue';
 
