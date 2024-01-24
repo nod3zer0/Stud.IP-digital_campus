@@ -65,7 +65,7 @@ $password_tooltip_text = (string)Config::get()->PASSWORD_TOOLTIP_TEXT;
     <input type="hidden" name="login_ticket" value="<?= Seminar_Session::get_ticket() ?>">
     <input type="hidden" name="resolution"  value="">
 
-    <div style="display: flex; align-items: flex-start; justify-content: space-between; height: 70px;">
+    <div id="<?=$login_footer_id?>">
         <?= Button::createAccept(_('Anmelden'), _('Login'), ['id' => 'submit_login']); ?>
 
         <? if (Config::get()->ENABLE_REQUEST_NEW_PASSWORD_BY_USER && in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN'])): ?>

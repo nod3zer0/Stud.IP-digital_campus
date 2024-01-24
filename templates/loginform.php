@@ -52,6 +52,7 @@ $show_hidden_login = !$show_login && StudipAuthAbstract::isLoginEnabled();
                 <? if ($show_login) : ?>
                     <?= $this->render_partial('_standard_loginform', [
                         'hidden' => false,
+                        'login_footer_id' => 'login-footer-top'
                     ]) ?>
                 <? endif ?>
                 <nav>
@@ -80,6 +81,7 @@ $show_hidden_login = !$show_login && StudipAuthAbstract::isLoginEnabled();
                 <? if ($show_hidden_login) : ?>
                     <?= $this->render_partial('_standard_loginform', [
                         'hidden' => empty($loginerror),
+                        'login_footer_id' => 'login-footer-bottom'
                     ]) ?>
                 <? endif ?>
 

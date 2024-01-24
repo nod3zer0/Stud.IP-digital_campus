@@ -207,4 +207,17 @@ $gap-between-boxes: calc($login-page-margin / 2);
         float: left !important;
 
     }
+
+    #login-footer-bottom {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 1.5ex;
+    }
+
+    #login-footer-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
 }
