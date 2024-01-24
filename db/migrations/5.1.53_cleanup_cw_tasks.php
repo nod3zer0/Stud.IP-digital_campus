@@ -11,7 +11,7 @@ final class CleanupCwTasks extends Migration
     {
         DBManager::get()->exec('
             DELETE FROM `cw_tasks`
-            WHERE `solver_type` = "user"
+            WHERE `solver_type` = "autor"
               AND `solver_id` NOT IN (SELECT `user_id` FROM `auth_user_md5`)'
         );
         DBManager::get()->exec('

@@ -990,7 +990,7 @@ class UserManagement
         \Courseware\UserProgress::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
         \Courseware\Bookmark::deleteBySQL('user_id = ?', [$this->user_data['auth_user_md5.user_id']]);
         \Courseware\Task::deleteBySQL(
-            '`solver_id` = ? AND `solver_type`= "user"',
+            '`solver_id` = ? AND `solver_type`= "autor"',
             [$this->user_data['auth_user_md5.user_id']]
         );
         // delete courseware elements in courses of this user
