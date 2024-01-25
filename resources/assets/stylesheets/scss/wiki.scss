@@ -148,7 +148,7 @@ a.wiki-restricted {
         align-items: stretch;
         .wiki_added,
         .wiki_erased {
-            width: 30px;
+            min-width: 30px;
             background-repeat: no-repeat;
             background-position: center center;
             min-height: 22px;
