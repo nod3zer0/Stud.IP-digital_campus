@@ -163,7 +163,7 @@ export default {
         },
         onAnswerComment(comment) {
             const quoteContent = comment.content.replace(/\[quote[^\]]*\].*\[\/quote\]/g, '').trim();
-            const quote = `[quote=${comment.author['formatted-name']}]${quoteContent}[/quote]\n`;
+            const quote = `[quote=${comment.author['formatted-name']}]${quoteContent} [/quote]\n`;
             this.composerText = quote;
         },
         onChangeComment(comment) {
