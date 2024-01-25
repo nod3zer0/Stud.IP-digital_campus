@@ -393,14 +393,27 @@ class Admin_CoursesController extends AuthenticatedController
         $activated_fields = $this->getFilterConfig();
 
         $GLOBALS['user']->cfg->store('MY_COURSES_ACTION_AREA', Request::option('action'));
+        $course_ids = [];
         foreach ($courses as $course) {
             if ($course->parent && !Request::option('course_id')) {
-                $data['data'][] = $this->getCourseData($course->parent, $activated_fields);
-                $data['data'][] = $this->getCourseData($course, $activated_fields);
+                if (!in_array($course->parent->id, $course_ids)) {
+                    $data['data'][] = $this->getCourseData($course->parent, $activated_fields);
+                    $course_ids[] = $course->parent->id;
+                }
+                if (!in_array($course->id, $course_ids)) {
+                    $data['data'][] = $this->getCourseData($course, $activated_fields);
+                    $course_ids[] = $course->id;
+                }
             } else {
-                $data['data'][] = $this->getCourseData($course, $activated_fields);
+                if (!in_array($course->id, $course_ids)) {
+                    $data['data'][] = $this->getCourseData($course, $activated_fields);
+                    $course_ids[] = $course->id;
+                }
                 foreach ($course->children as $childcourse) {
-                    $data['data'][] = $this->getCourseData($childcourse, $activated_fields);
+                    if (!in_array($childcourse->id, $course_ids)) {
+                        $data['data'][] = $this->getCourseData($childcourse, $activated_fields);
+                        $course_ids[] = $childcourse->id;
+                    }
                 }
             }
         }
