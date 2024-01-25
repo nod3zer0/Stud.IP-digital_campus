@@ -22,9 +22,12 @@
  * @property int|null $mkdate database column
  * @property User|null $user belongs_to User
  * @property Course $course belongs_to Course
- * @property-read mixed $parent additional field
- * @property-read mixed $children additional field
- * @property-read mixed $config additional field
+ * @property WikiVersion[]|SimpleORMapCollection $versions
+ * @property WikiOnlineEditingUser[]|SimpleORMapCollection $onlineeditingusers
+ * @property-read WikiPage $parent additional field
+ * @property-read WikiPage[] $children additional field
+ * @property-read WikiVersion|null $predecessor additional field
+ * @property-read int $versionnumber additional field
  */
 class WikiPage extends SimpleORMap implements PrivacyObject
 {
@@ -57,25 +60,25 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         ];
 
         $config['additional_fields']['parent'] = [
-            'get' => function ($page) {
-                return \WikiPage::find($page->parent_id);
+            'get' => function (WikiPage $page): ?WikiPage {
+                return self::find($page->parent_id);
             }
         ];
 
         $config['additional_fields']['children'] = [
-            'get' => function ($page) {
+            'get' => function (WikiPage $page): array {
                 return self::findBySQL('parent_id = ?', [
                     $page->id
                 ]);
             }
         ];
         $config['additional_fields']['predecessor'] = [
-            'get' => function ($page) {
+            'get' => function (WikiPage $page): ?WikiVersion {
                 return $page->versions ? $page->versions[0] : null;
             }
         ];
         $config['additional_fields']['versionnumber'] = [
-            'get' => function ($page) {
+            'get' => function (WikiPage $page): int {
                 return count($page->versions) + 1;
             }
         ];
@@ -92,7 +95,7 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         $this->user_id = User::findCurrent()->id;
         if (
             !$this->isNew()
-            &&  $this->content['content'] !== $this->content_db['content']
+            && $this->content['content'] !== $this->content_db['content']
             && (
                 $this->content_db['user_id'] !== $this->content['user_id']
                 || $this->content_db['chdate'] < time() - 60 * 30
@@ -121,7 +124,7 @@ class WikiPage extends SimpleORMap implements PrivacyObject
 
     /**
      * Returns whether this page is visible to the given user.
-     * @param  mixed  $user User object or id
+     * @param  string|null $user_id User id
      * @return boolean indicating whether the page is visible
      */
     public function isReadable(?string $user_id = null): bool
@@ -166,7 +169,7 @@ class WikiPage extends SimpleORMap implements PrivacyObject
 
     /**
      * Returns whether this page is editable to the given user.
-     * @param  string  $user_id the ID of the user
+     * @param  string|null  $user_id the ID of the user
      * @return boolean indicating whether the page is editable
      */
     public function isEditable(?string $user_id = null): bool
@@ -203,7 +206,7 @@ class WikiPage extends SimpleORMap implements PrivacyObject
      * @param  string $range_id Course id
      * @return WikiPage
      */
-    public static function getStartPage($range_id)
+    public static function getStartPage($range_id): WikiPage
     {
         $page_id = CourseConfig::get($range_id)->WIKI_STARTPAGE_ID;
 
@@ -212,7 +215,6 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         }
 
         $page = new WikiPage();
-        $pagename = _('Startseite');
         $page->content = _('Dieses Wiki ist noch leer.');
         if ($page->isEditable()) {
             $page->content .=  ' ' . _("Bearbeiten Sie es!\nNeue Seiten oder Links werden einfach durch Eingeben von [nop][[Wikinamen]][/nop] in doppelten eckigen Klammern angelegt.");
@@ -244,11 +246,11 @@ class WikiPage extends SimpleORMap implements PrivacyObject
     /**
      * Tests if a given Wikipage name (keyword) is a valid ancestor for this page.
      *
-     * @param   string   ancestor Wikipage name to be tested to be an ancestor
+     * @param   string   $ancestor Wikipage name to be tested to be an ancestor
      * @return  boolean  true if ok, false if not
      *
      */
-    public function isValidAncestor($ancestor)
+    public function isValidAncestor($ancestor): bool
     {
         if ($this->name === 'WikiWikiWeb' || $this->name === $ancestor) {
             return false;
@@ -267,10 +269,10 @@ class WikiPage extends SimpleORMap implements PrivacyObject
     /**
      * Retrieve an array of all descending WikiPages (recursive).
      *
-     * @return   array   Array of all descendant WikiPages
+     * @return WikiPage[] Array of all descendant WikiPages
      *
      */
-    public function getDescendants()
+    public function getDescendants(): array
     {
         $descendants = [];
 
@@ -281,6 +283,9 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         return $descendants;
     }
 
+    /**
+     * @return array
+     */
     public function getOnlineUsers(): array
     {
         $users = [];

@@ -18,6 +18,9 @@ class Course_WikiController extends AuthenticatedController
         parent::before_filter($action, $args);
         object_set_visit_module('wiki');
         $this->range = Context::get();
+        $this->plugin = PluginManager::getInstance()->getPlugin('CoreWiki');
+
+        PageLayout::setTitle(Navigation::getItem('/course/wiki')->getTitle());
     }
 
     public function page_action($page_id = null)
@@ -26,7 +29,6 @@ class Course_WikiController extends AuthenticatedController
             $page_id = $this->range->getConfiguration()->WIKI_STARTPAGE_ID;
         }
         Navigation::activateItem('/course/wiki/start');
-        PageLayout::setTitle(Navigation::getItem('/course/wiki')->getTitle());
 
         $this->page = new WikiPage($page_id);
 
@@ -547,60 +549,51 @@ class Course_WikiController extends AuthenticatedController
         Navigation::activateItem('/course/wiki/listnew');
 
         $this->limit = Config::get()->ENTRIES_PER_PAGE;
+        $this->last_visit = object_get_visit($this->range->id, $this->plugin->getPluginId());
         $statement = DBManager::get()->prepare("
-            SELECT COUNT(*) FROM (
-                SELECT `wiki_pages`.`page_id` AS `id`,
-                       0 AS `is_version`,
-                       `wiki_pages`.`chdate` AS `timestamp`
-                FROM `wiki_pages`
-                WHERE `wiki_pages`.`range_id` = :range_id
-
-                UNION
-
-                SELECT `wiki_versions`.`version_id` AS `id`,
-                       1 AS `is_version`,
-                       `wiki_versions`.`mkdate` AS `timestamp`
-                FROM `wiki_versions`
-                JOIN `wiki_pages` USING (`page_id`)
-                WHERE `wiki_pages`.`range_id` = :range_id
-            ) AS `all_entries`
-        ");
-        $statement->execute([
-            'range_id' => $this->range->id
-        ]);
-        $this->num_entries = $statement->fetch(PDO::FETCH_COLUMN);
-        $this->page = Request::int('page', 0);
-
-        $statement = DBManager::get()->prepare("
-            SELECT `wiki_pages`.`page_id` AS `id`,
-                   0 AS `is_version`,
-                   `wiki_pages`.`chdate` AS `timestamp`
+            SELECT COUNT(*)
             FROM `wiki_pages`
             WHERE `wiki_pages`.`range_id` = :range_id
-
-            UNION
-
-            SELECT `wiki_versions`.`version_id` AS `id`,
-                   1 AS `is_version`,
-                   `wiki_versions`.`mkdate` AS `timestamp`
-            FROM `wiki_versions`
-            JOIN `wiki_pages` USING (`page_id`)
-            WHERE `wiki_pages`.`range_id` = :range_id
-            ORDER BY `timestamp` DESC
-            LIMIT :offset, :limit
+                AND `wiki_pages`.`chdate` > :threshold
+                AND `wiki_pages`.`user_id` != :me
         ");
         $statement->execute([
             'range_id' => $this->range->id,
-            'offset' => Request::int('page', 0) * $this->limit,
-            'limit' => $this->limit
+            'threshold' => $this->last_visit,
+            'me' => User::findCurrent()->id
         ]);
-        $this->versions = [];
-        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            if ($row['is_version']) {
-                $this->versions[] = WikiVersion::find($row['id']);
-            } else {
-                $this->versions[] = WikiPage::find($row['id']);
-            }
+        $this->num_entries = $statement->fetch(PDO::FETCH_COLUMN);
+        $this->pagenumber = Request::int('page', 0);
+        $this->sort = Request::option('sort', 'chdate');
+        if (!in_array($this->sort, ['name', 'chdate'])) {
+            $this->sort = 'chdate';
+        }
+        $this->sort_asc = Request::bool('sort_asc', $this->sort === 'name');
+
+
+        if ($this->num_entries > 0) {
+            $statement = DBManager::get()->prepare("
+                SELECT `wiki_pages`.*
+                FROM `wiki_pages`
+                WHERE `wiki_pages`.`range_id` = :range_id
+                    AND `wiki_pages`.`chdate` > :threshold
+                    AND `wiki_pages`.`user_id` != :me
+                ORDER BY `wiki_pages`.`{$this->sort}` " . ($this->sort_asc ? 'ASC' : 'DESC') . "
+                LIMIT :offset, :limit
+            ");
+            $statement->execute([
+                'range_id' => $this->range->id,
+                'threshold' => $this->last_visit,
+                'offset' => $this->pagenumber * $this->limit,
+                'limit' => $this->limit,
+                'me' => User::findCurrent()->id
+            ]);
+            $this->pages = array_map(
+                fn($p) => WikiPage::buildExisting($p),
+                $statement->fetchAll(PDO::FETCH_ASSOC)
+            );
+        } else {
+            $this->pages = [];
         }
     }
 
@@ -1112,5 +1105,25 @@ class Course_WikiController extends AuthenticatedController
                 );
             }
         }
+    }
+
+    /**
+     * @see https://stackoverflow.com/a/7475502/982902
+     */
+    public function findLongestCommonSubstring(string $str0, string $str1, bool $from_end = false): int
+    {
+        if ($from_end) {
+            $str0 = implode('', array_reverse(mb_str_split($str0, 1)));
+            $str1 = implode('', array_reverse(mb_str_split($str1, 1)));
+        }
+        $length = mb_strlen(
+            mb_strcut(
+                $str0,
+                0,
+                strspn($str0 ^ $str1, "\0")
+            )
+        );
+
+        return $from_end ? mb_strlen($str0) - $length : $length;
     }
 }

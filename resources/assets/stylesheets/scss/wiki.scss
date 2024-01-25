@@ -185,3 +185,18 @@ article.studip.wiki {
 .wiki_highlight {
     background-color: var(--yellow);
 }
+ ul.wiki_authors {
+     list-style-type: none;
+     padding: 0;
+     li {
+         margin-bottom: 5px;
+     }
+     a {
+         background-position: left top;
+         background-repeat: no-repeat;
+         background-size: var(--avatar-small);
+         display: block;
+         min-height: var(--avatar-small);
+         padding-left: calc(var(--avatar-small) + 1ex);
+     }
+ }
