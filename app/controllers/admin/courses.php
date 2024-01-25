@@ -394,12 +394,14 @@ class Admin_CoursesController extends AuthenticatedController
 
         $GLOBALS['user']->cfg->store('MY_COURSES_ACTION_AREA', Request::option('action'));
         foreach ($courses as $course) {
-            if ($course->parent_course && !Request::option('course_id')) {
-                continue;
-            }
-            $data['data'][] = $this->getCourseData($course, $activated_fields);
-            foreach ($course->children as $childcourse) {
-                $data['data'][] = $this->getCourseData($childcourse, $activated_fields);
+            if ($course->parent && !Request::option('course_id')) {
+                $data['data'][] = $this->getCourseData($course->parent, $activated_fields);
+                $data['data'][] = $this->getCourseData($course, $activated_fields);
+            } else {
+                $data['data'][] = $this->getCourseData($course, $activated_fields);
+                foreach ($course->children as $childcourse) {
+                    $data['data'][] = $this->getCourseData($childcourse, $activated_fields);
+                }
             }
         }
         $tf = new Flexi_TemplateFactory($GLOBALS['STUDIP_BASE_PATH'] . '/app/views');
