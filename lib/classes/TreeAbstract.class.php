@@ -358,7 +358,7 @@ class TreeAbstract {
     */
     public function getParents($item_id)
     {
-        if (!$this->tree_data[$item_id]) {
+        if (empty($this->tree_data[$item_id])) {
             return [];
         }
 

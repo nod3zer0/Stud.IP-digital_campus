@@ -80,7 +80,7 @@ endforeach;
 
 
 <? if (count($output) === 0) : ?>
-    <?= htmlReady($ort) ?: _('Keine Raumangabe') ?>
+    <?= empty($ort) ? _('Keine Raumangabe') : htmlReady($ort) ?>
 <? else: ?>
     <dl>
         <? foreach ($output as $room_html => $dates) : ?>
@@ -91,5 +91,5 @@ endforeach;
                 </dd>
             <? endforeach ?>
         <? endforeach ?>
-    </table>
+    </dl>
 <? endif ?>

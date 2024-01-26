@@ -1,6 +1,6 @@
 <?php
 if (!$dates['regular']['turnus_data'] && empty($dates['irregular'])) {
-    if ($dates['ort'] && $show_room) {
+    if ($dates['ort'] && !empty($show_room)) {
         echo htmlReady($dates['ort']);
     } else {
         echo _('Die Zeiten der Veranstaltung stehen nicht fest.');
