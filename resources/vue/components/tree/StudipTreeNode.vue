@@ -230,7 +230,9 @@ export default {
     },
     computed: {
         isAssignable() {
-            return this.assignable && !this.notAssignableNodes?.includes(this.node.id);
+            return this.assignable
+                && this.node.attributes.assignable
+                && !this.notAssignableNodes?.includes(this.node.id);
         }
     },
     mounted() {
