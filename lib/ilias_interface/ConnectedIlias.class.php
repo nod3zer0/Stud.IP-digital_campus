@@ -325,7 +325,6 @@ class ConnectedIlias
         }
         $user_data = $this->user->getUserArray();
         $user_data["login"] = $this->ilias_config['user_prefix'].$user_data["login"];
-        $user_data['auth_mode'] = 'default';
 
         $user_exists = $this->soap_client->lookupUser($user_data["login"]);
         //automatische Zuordnung von bestehenden Ilias Accounts
@@ -351,10 +350,18 @@ class ConnectedIlias
             ($this->user->auth_plugin != 'standard') &&
             ($this->user->auth_plugin == $this->ilias_config['ldap_enable'])) {
             $user_data['external_account'] = $this->user->studip_login;
+            $auth_plugin = StudipAuthAbstract::getInstance($this->user->auth_plugin);
+            if ($auth_plugin instanceof StudipAuthLdap) {
+                $user_data['auth_mode'] = 'ldap';
+            } elseif ($auth_plugin instanceof StudipAuthCAS) {
+                $user_data['auth_mode'] = 'cas';
+            } elseif ($auth_plugin instanceof StudipAuthShib) {
+                $user_data['auth_mode'] = 'shibboleth';
+            }
         }
 
         // set role according to Stud.IP perm
-        if ($GLOBALS['auth']->auth['perm'] === 'root') {
+        if (User::findCurrent()->perms === 'root') {
             $role_id = 2;
         } else {
             $role_id = 4;
@@ -405,7 +412,6 @@ class ConnectedIlias
         if ($update_user->isConnected() && $update_user->id && $this->soap_client->lookupUser($update_user->login)) {
             $user_data = $update_user->getUserArray();
             $user_data["login"] = $this->ilias_config['user_prefix'].$user_data["login"];
-            $user_data['auth_mode'] = 'default';
 
             // set role according to Stud.IP perm
             if ($user->perms == "root") {

@@ -169,22 +169,24 @@ class IliasUser
     function getUserArray()
     {
         // data for user-account in ILIAS
-        $user_data["id"] = $this->id;
-        $user_data["login"] = $this->studip_login;
-        $user_data["passwd"] = $this->external_password;
-        $user_data["firstname"] = $this->firstname;
-        $user_data["lastname"] = $this->lastname;
-        $user_data["title"] = $this->title;
-        $user_data["gender"] = $this->gender;
-        $user_data["email"] = $this->email;
-        $user_data["street"] = $this->street;
-        $user_data["phone_home"] = $this->phone_home;
-        $user_data["matriculation"] = $this->matriculation;
-        $user_data["time_limit_unlimited"] = 1;
-        $user_data["active"] = 1;
-        $user_data["approve_date"] = date('Y-m-d H:i:s');
-        $user_data["accepted_agreement"] = true;
-        $user_data["agree_date"] = date('Y-m-d H:i:s');
+        $user_data['id'] = $this->id;
+        $user_data['login'] = $this->studip_login;
+        $user_data['passwd'] = $this->external_password;
+        $user_data['firstname'] = $this->firstname;
+        $user_data['lastname'] = $this->lastname;
+        $user_data['title'] = $this->title;
+        $user_data['gender'] = $this->gender;
+        $user_data['email'] = $this->email;
+        $user_data['street'] = $this->street;
+        $user_data['phone_home'] = $this->phone_home;
+        $user_data['matriculation'] = $this->matriculation;
+        $user_data['time_limit_unlimited'] = 1;
+        $user_data['active'] = 1;
+        $user_data['approve_date'] = date('Y-m-d H:i:s');
+        $user_data['accepted_agreement'] = true;
+        $user_data['agree_date'] = date('Y-m-d H:i:s');
+        $user_data['auth_mode'] = 'default';
+        $user_data['external_account'] = '';
         return $user_data;
     }
 
