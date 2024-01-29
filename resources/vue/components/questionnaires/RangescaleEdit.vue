@@ -67,11 +67,11 @@
         </table>
 
         <label>
-            <input type="checkbox" v-model="val_clone.mandatory">
+            <input type="checkbox" v-model.number="val_clone.mandatory" true-value="1" false-value="0">
             {{ $gettext('Pflichtfrage') }}
         </label>
         <label>
-            <input type="checkbox" v-model="val_clone.randomize">
+            <input type="checkbox" v-model.number="val_clone.randomize" true-value="1" false-value="0">
             {{ $gettext('Antworten den Teilnehmenden zufällig präsentieren') }}
         </label>
 
@@ -98,8 +98,8 @@ import draggable from 'vuedraggable';
 const default_value = () => ({
     description: '',
     statements: ['', '', '', ''],
-    mandatory: false,
-    randomize: false,
+    mandatory: 0,
+    randomize: 0,
     minimum: 1,
     maximum: 5,
     alternative_answer: ''
