@@ -44,4 +44,5 @@ STUDIP.ready(function () {
         });
     }
 
+    jQuery(document).on('change', '#date_select[data-calendar-control]', STUDIP.Fullcalendar.submitDatePicker);
 });

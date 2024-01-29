@@ -144,10 +144,6 @@ class Institute_OverviewController extends AuthenticatedController
             $response = $this->relay('questionnaire/widget/' . $this->institute_id . '/institute');
             $this->questionnaires = $response->body;
         }
-
-        // Fetch dates
-        $response = $this->relay("calendar/contentbox/display/$this->institute_id/1210000");
-        $this->dates = $response->body;
     }
 
 }

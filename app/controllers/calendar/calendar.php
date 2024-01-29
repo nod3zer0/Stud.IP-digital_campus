@@ -1,636 +1,896 @@
 <?php
-/*
- * The controller for the personal calendar.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * @author      Peter Thienel <thienel@data-quest.de>
- * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
- * @category    Stud.IP
- * @since
- */
 
 class Calendar_CalendarController extends AuthenticatedController
 {
     public function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
-        PageLayout::setHelpKeyword('Basis.Terminkalender');
-        $this->settings = $GLOBALS['user']->cfg->CALENDAR_SETTINGS;
-        if ($this->settings['start'] < 0 || $this->settings['start'] > 23) {
-            $this->settings['start'] = 0;
-        }
-        if ($this->settings['end'] < 0 || $this->settings['end'] > 23) {
-            $this->settings['end'] = 23;
-        }
-        if (!in_array($this->settings['view'], ['day','week','month','year'])) {
-            $this->settings['view'] = 'week';
-        }
-        if (!is_array($this->settings)) {
-            $this->settings = Calendar::getDefaultUserSettings();
-        }
-        URLHelper::bindLinkParam('atime', $this->atime);
-        $this->atime = Request::int('atime', time());
-        $this->category = Request::int('category');
-        $this->last_view = Request::option('last_view',
-                $this->settings['view']);
-        $this->action = $action;
-        $this->restrictions = [
-            'STUDIP_CATEGORY'     => $this->category ?: null,
-            // hide events with status 3 (CalendarEvent::PARTSTAT_DECLINED)
-            'STUDIP_GROUP_STATUS' => !empty($this->settings['show_declined']) ? null : [0,1,2,5]
-        ];
-        if ($this->category) {
-            URLHelper::bindLinkParam('category', $this->category);
-        }
 
-        $this->range_id = '';
-
-        if (Config::get()->COURSE_CALENDAR_ENABLE
-            && !Request::get('self')
-            && Course::findCurrent()) {
-            $current_seminar = new Seminar(Course::findCurrent());
-            if ($current_seminar->getSlotModule('calendar') instanceOf CoreCalendar) {
-                $this->range_id = $current_seminar->id;
-                Navigation::activateItem('/course/calendar');
-            }
+        if (!Context::isCourse() && Navigation::hasItem('/calendar')) {
+            Navigation::activateItem('/calendar');
         }
-        if (!$this->range_id) {
-            $this->range_id = Request::option('range_id', $GLOBALS['user']->id);
-            Navigation::activateItem('/calendar/calendar');
-            URLHelper::bindLinkParam('range_id', $this->range_id);
-        }
-
-        URLHelper::bindLinkParam('last_view', $this->last_view);
     }
 
-    protected function createSidebar($active = null, $calendar = null)
+
+    protected function buildSidebar($schedule = false)
     {
-        $active = $active ?: $this->last_view;
-        $sidebar = Sidebar::Get();
+        $sidebar = Sidebar::get();
 
-        $views = new ViewsWidget();
-        $views->addLink(_('Tag'), $this->url_for($this->base . 'day'))
-                ->setActive($active == 'day');
-        $views->addLink(_('Woche'), $this->url_for($this->base . 'week'))
-                ->setActive($active == 'week');
-        $views->addLink(_('Monat'), $this->url_for($this->base . 'month'))
-                ->setActive($active == 'month');
-        $views->addLink(_('Jahr'), $this->url_for($this->base . 'year'))
-                ->setActive($active == 'year');
-        $sidebar->addWidget($views);
-    }
-
-    protected function createSidebarFilter()
-    {
-        $tmpl_factory = $this->get_template_factory();
-
-        $filters = new SidebarWidget();
-        $filters->setTitle('Auswahl');
-
-        $tmpl = $tmpl_factory->open('calendar/single/_jump_to');
-        $tmpl->atime = $this->atime;
-        $tmpl->action = $this->action;
-        $tmpl->action_url = $this->url_for('calendar/single/jump_to');
-        $filters->addElement(new WidgetElement($tmpl->render()));
-
-        $tmpl = $tmpl_factory->open('calendar/single/_select_category');
-        $tmpl->action_url = $this->url_for();
-        $tmpl->category = $this->category;
-        $filters->addElement(new WidgetElement($tmpl->render()));
-        Sidebar::get()->addWidget($filters);
-
-        if (Config::get()->CALENDAR_GROUP_ENABLE
-                || Config::get()->COURSE_CALENDAR_ENABLE) {
-            $tmpl = $tmpl_factory->open('calendar/single/_select_calendar');
-            $tmpl->range_id = $this->range_id;
-            $tmpl->action_url = $this->url_for('calendar/group/switch');
-            $tmpl->view = $this->action;
-            $filters->addElement(new WidgetElement($tmpl->render()));
-
-            $settings = new OptionsWidget();
-            $settings->addCheckbox(
-                _('Abgelehnte Termine anzeigen'),
-                $this->settings['show_declined'] ?? false,
-                $this->url_for($this->base . 'show_declined', ['show_declined' => 1]),
-                $this->url_for($this->base . 'show_declined', ['show_declined' => 0])
+        $actions = new ActionsWidget();
+        if ($schedule) {
+            $actions->addLink(
+                _('Neuer Eintrag'),
+                $this->url_for('calendar/calendar/add_schedule_entry'),
+                Icon::create('add'),
+                ['data-dialog' => 'size=default']
             );
-            Sidebar::get()->addWidget($settings);
+        } else {
+            $actions->addLink(
+                _('Termin anlegen'),
+                $this->url_for('calendar/date/add'),
+                Icon::create('add'),
+                ['data-dialog' => 'size=auto']
+            );
         }
+
+        if (!$GLOBALS['perm']->have_perm('admin')) {
+            $actions->addLink(
+                _('Veranstaltung auswählen'),
+                $this->url_for('calendar/calendar/add_courses'),
+                Icon::create('add'),
+                ['data-dialog' => 'size=medium']
+            );
+        }
+        if (!$schedule) {
+            $actions->addLink(
+                _('Termine exportieren'),
+                $this->url_for('calendar/calendar/export'),
+                Icon::create('export'),
+                ['data-dialog' => 'size=auto']
+            );
+            $actions->addLink(
+                _('Termine importieren'),
+                $this->url_for('calendar/calendar/import'),
+                Icon::create('import'),
+                ['data-dialog' => 'size=auto']
+            );
+            $actions->addLink(
+                _('Kalender veröffentlichen'),
+                $this->url_for('calendar/calendar/publish'),
+                Icon::create('export'),
+                ['data-dialog' => 'size=auto']
+            );
+        }
+        if (!$schedule && Config::get()->CALENDAR_GROUP_ENABLE) {
+            $actions->addLink(
+                _('Kalender teilen'),
+                $this->url_for('calendar/calendar/share'),
+                Icon::create('share'),
+                ['data-dialog' => 'size=default']
+            );
+        }
+        $actions->addLink(
+            _('Drucken'),
+            'javascript:void(window.print());',
+            Icon::create('print')
+        );
+        $actions->addLink(
+            _('Einstellungen'),
+            $this->url_for('settings/calendar'),
+            Icon::create('settings'),
+            ['data-dialog' => 'size=auto;reload-on-close']
+        );
+        $sidebar->addWidget($actions);
+
+        if (!$schedule) {
+            $date = new DateSelectWidget();
+            $date->setDate(\Studip\Calendar\Helper::getDefaultCalendarDate());
+            $date->setCalendarControl(true);
+            $sidebar->addWidget($date);
+        }
+    }
+
+    protected function getUserCalendarSlotSettings() : array
+    {
+        return [
+            'day'        => \Studip\Calendar\Helper::getCalendarSlotDuration('day'),
+            'week'       => \Studip\Calendar\Helper::getCalendarSlotDuration('week'),
+            'day_group'  => \Studip\Calendar\Helper::getCalendarSlotDuration('day_group'),
+            'week_group' => \Studip\Calendar\Helper::getCalendarSlotDuration('week_group')
+        ];
     }
 
     public function index_action()
     {
-        // switch to the view the user has selected in his personal settings
-        $default_view = $this->settings['view'] ?: 'week';
+        PageLayout::setTitle(_('Kalender'));
 
-        // Remove cid
-        if (Request::option('self')) {
-            Context::close();
-
-            $this->redirect(URLHelper::getURL('dispatch.php/' . $this->base
-                . $default_view . '/' . $GLOBALS['user']->id, [], true));
-        } else {
-            $this->redirect(URLHelper::getURL('dispatch.php/' . $this->base
-                . $default_view));
-        }
-    }
-
-    public function edit_action($range_id = null, $event_id = null)
-    {
-        $this->range_id = $range_id ?: $this->range_id;
-        $this->calendar = new SingleCalendar($this->range_id);
-        $this->event = $this->calendar->getEvent($event_id);
-
-        if ($this->event->isNew()) {
-         //   $this->event = $this->calendar->getNewEvent();
-            if (Request::get('isdayevent')) {
-                $this->event->setStart(mktime(0, 0, 0, date('n', $this->atime),
-                        date('j', $this->atime), date('Y', $this->atime)));
-                $this->event->setEnd(mktime(23, 59, 59, date('n', $this->atime),
-                        date('j', $this->atime), date('Y', $this->atime)));
+        if (Request::isPost()) {
+            //In case the checkbox of the options widget is clicked, the resulting
+            //POST request must be catched here and result in a redirect.
+            CSRFProtection::verifyUnsafeRequest();
+            if (Request::bool('show_declined')) {
+                $this->redirect('calendar/calendar', ['show_declined' => '1']);
             } else {
-                $this->event->setStart($this->atime);
-                $this->event->setEnd($this->atime + 3600);
+                $this->redirect('calendar/calendar');
             }
-            $this->event->setAuthorId($GLOBALS['user']->id);
-            $this->event->setEditorId($GLOBALS['user']->id);
-            $this->event->setAccessibility('PRIVATE');
-            if (!Request::isXhr()) {
-                PageLayout::setTitle($this->getTitle($this->calendar, _('Neuer Termin')));
+            return;
+        }
+
+        if (!Context::isCourse() && Navigation::hasItem('/calendar/calendar')) {
+            Navigation::activateItem('/calendar/calendar');
+        }
+
+        $view = Request::get('view', 'single');
+        $group_view = false;
+        $timeline_view = false;
+        if (Config::get()->CALENDAR_GROUP_ENABLE) {
+            $group_view = in_array($view, ['group', 'timeline']);
+            $timeline_view = $view === 'timeline';
+        }
+
+        $calendar_owner = null;
+        $selected_group = null;
+        $user_id = Request::option('user_id', User::findCurrent()->id);
+        $group_id = Request::option('group_id');
+
+        if (Config::get()->CALENDAR_GROUP_ENABLE) {
+            if ($group_id) {
+                $selected_group = ContactGroup::find($group_id);
+                if ($selected_group->owner_id !== User::findCurrent()->id) {
+                    //Thou shalt not see the groups of others!
+                    throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+                }
+                $view = $view === 'timeline' ? 'timeline' : 'group';
+            } elseif ($user_id) {
+                $calendar_owner = User::getCalendarOwner($user_id);
+                $view = 'single';
             }
         } else {
-            // open read only events and course events not as form
-            // show information in dialog instead
-            if (!$this->event->havePermission(Event::PERMISSION_WRITABLE)
-                    || $this->event instanceof CourseEvent) {
-                if (!$this->event instanceof CourseEvent && $this->event->attendees->count() > 1) {
-                    if ($this->event->group_status) {
-                        $this->redirect($this->url_for('calendar/single/edit_status/' . implode('/',
-                            [$this->range_id, $this->event->event_id])));
-                    } else {
-                        $this->redirect($this->url_for('calendar/single/event/' . implode('/',
-                            [$this->range_id, $this->event->event_id])));
+            //Show the calendar of the current user.
+            $view = 'single';
+            $calendar_owner = User::findCurrent();
+        }
+
+        //Check for permissions:
+        $read_permissions = false;
+        $write_permissions = false;
+        if ($calendar_owner) {
+            $read_permissions  = $calendar_owner->isCalendarReadable();
+            $write_permissions = $calendar_owner->isCalendarWritable();
+        } elseif ($selected_group) {
+            //Count on how many group member calendars the current user has read or write permissions:
+            foreach ($selected_group->items as $item) {
+                if ($item->user) {
+                    if ($item->user->isCalendarReadable()) {
+                        $read_permissions = true;
                     }
-                } else {
-                    $this->redirect($this->url_for('calendar/single/event/' . implode('/',
-                            [$this->range_id, $this->event->event_id])));
+                    if ($item->user->isCalendarWritable()) {
+                        $write_permissions = true;
+                    }
                 }
-                return null;
-            }
-            if (!Request::isXhr()) {
-                PageLayout::setTitle($this->getTitle($this->calendar, _('Termin bearbeiten')));
+                if ($read_permissions && $write_permissions) {
+                    //We only need to determine one read and one write permission to set the relevant fullcalendar
+                    //properties. The action to add/edit a date determines in which calendars the current user
+                    //may write into.
+                    break;
+                }
             }
         }
+        if (!$read_permissions) {
+            throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+        }
 
-        if (Config::get()->CALENDAR_GROUP_ENABLE
-                && $this->calendar->getRange() == Calendar::RANGE_USER) {
+        $this->buildSidebar(false);
 
-            if (Config::get()->CALENDAR_GRANT_ALL_INSERT) {
-                $search_obj = SQLSearch::get("SELECT DISTINCT auth_user_md5.user_id, "
-                    . "{$GLOBALS['_fullname_sql']['full_rev_username']} as fullname, "
-                    . "auth_user_md5.perms, auth_user_md5.username "
-                    . "FROM auth_user_md5 "
-                    . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
-                    . 'WHERE auth_user_md5.user_id <> ' . DBManager::get()->quote($GLOBALS['user']->id)
-                    . ' AND (username LIKE :input OR Vorname LIKE :input '
-                    . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
-                    . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
-                    . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
-                    . ") ORDER BY fullname ASC",
-                    _('Person suchen'), 'user_id');
-            } else {
-                $search_obj = SQLSearch::get("SELECT DISTINCT auth_user_md5.user_id, "
-                    . "{$GLOBALS['_fullname_sql']['full_rev_username']} as fullname, "
-                    . "auth_user_md5.perms, auth_user_md5.username "
-                    . "FROM calendar_user "
-                    . "LEFT JOIN auth_user_md5 ON calendar_user.owner_id = auth_user_md5.user_id "
-                    . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
-                    . 'WHERE calendar_user.user_id = '
-                    . DBManager::get()->quote($GLOBALS['user']->id)
-                    . ' AND calendar_user.permission > ' . Event::PERMISSION_READABLE
-                    . ' AND auth_user_md5.user_id <> ' . DBManager::get()->quote($GLOBALS['user']->id)
-                    . ' AND (username LIKE :input OR Vorname LIKE :input '
-                    . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
-                    . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
-                    . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input "
-                    . ") ORDER BY fullname ASC",
-                    _('Person suchen'), 'user_id');
-            }
+        $sidebar = Sidebar::get();
 
-            // SEMBBS
-            // Eintrag von Terminen bereits ab PERMISSION_READABLE
-            /*
-            $search_obj = new SQLSearch('SELECT DISTINCT auth_user_md5.user_id, '
-                . $GLOBALS['_fullname_sql']['full_rev'] . ' as fullname, username, perms '
-                . 'FROM calendar_user '
-                . 'LEFT JOIN auth_user_md5 ON calendar_user.owner_id = auth_user_md5.user_id '
-                . 'LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) '
-                . 'WHERE calendar_user.user_id = '
-                . DBManager::get()->quote($GLOBALS['user']->id)
-                . ' AND calendar_user.permission >= ' . Event::PERMISSION_READABLE
-                . ' AND (username LIKE :input OR Vorname LIKE :input '
-                . "OR CONCAT(Vorname,' ',Nachname) LIKE :input "
-                . "OR CONCAT(Nachname,' ',Vorname) LIKE :input "
-                . 'OR Nachname LIKE :input OR '
-                . $GLOBALS['_fullname_sql']['full_rev'] . ' LIKE :input '
-                . ') ORDER BY fullname ASC',
-                _('Nutzer suchen'), 'user_id');
-            // SEMBBS
-             *
-             */
-
-
-            $this->quick_search = QuickSearch::get('user_id', $search_obj)
-                    ->fireJSFunctionOnSelect('STUDIP.Messages.add_adressee')
-                    ->withButton();
-
-      //      $default_selected_user = array($this->calendar->getRangeId());
-            $this->mps = MultiPersonSearch::get('add_adressees')
-                ->setLinkText(_('Mehrere Teilnehmende hinzufügen'))
-       //         ->setDefaultSelectedUser($default_selected_user)
-                ->setTitle(_('Mehrere Teilnehmende hinzufügen'))
-                ->setExecuteURL($this->url_for($this->base . 'edit'))
-                ->setJSFunctionOnSubmit('STUDIP.Messages.add_adressees')
-                ->setSearchObject($search_obj);
-            $owners = SimpleORMapCollection::createFromArray(
-                    CalendarUser::findByUser_id($this->calendar->getRangeId()))
-                    ->pluck('owner_id');
-            foreach (Calendar::getGroups($GLOBALS['user']->id) as $group) {
-                $this->mps->addQuickfilter(
-                    $group->name,
-                    $group->members->filter(
-                        function ($member) use ($owners) {
-                            if (in_array($member->user_id, $owners)) {
-                                return $member;
-                            }
-                        })->pluck('user_id')
+        if (Config::get()->CALENDAR_GROUP_ENABLE) {
+            if ($calendar_owner && $calendar_owner->id === User::findCurrent()->id) {
+                //The user is viewing their own calendar.
+                $options = new OptionsWidget();
+                $options->addCheckbox(
+                    _('Abgelehnte Termine anzeigen'),
+                    Request::bool('show_declined'),
+                    $this->url_for('calendar/calendar', ['show_declined' => '1']),
+                    $this->url_for('calendar/calendar')
                 );
+                $sidebar->addWidget($options);
             }
-        }
 
-        $stored = false;
-        if (Request::submitted('store')) {
-            $stored = $this->storeEventData($this->event, $this->calendar);
-        }
+            //Check if the user has groups. If so, display a select widget to select a group.
+            $groups = ContactGroup::findBySQL(
+                'owner_id = :owner_id ORDER BY name ASC',
+                [
+                    'owner_id' => User::findCurrent()->id
+                ]
+            );
+            if ($groups) {
+                $available_groups = [];
 
-        if ($stored !== false) {
-            if ($stored === 0) {
-                if (Request::isXhr()) {
-                    header('X-Dialog-Close: 1');
-                    exit;
-                } else {
-                    PageLayout::postMessage(MessageBox::success(_('Der Termin wurde nicht geändert.')));
-                    $this->relocate('calendar/single/' . $this->last_view, ['atime' => $this->atime]);
+                //Check if the user has at least read permissions for the calendar of one user of one group:
+                foreach ($groups as $group) {
+                    foreach ($group->items as $item) {
+                        if ($item->user && $item->user->isCalendarReadable()) {
+                            $available_groups[] = $group;
+                            break 1;
+                        }
+                    }
                 }
-            } else {
-                PageLayout::postMessage(MessageBox::success(_('Der Termin wurde gespeichert.')));
-                $this->relocate('calendar/single/' . $this->last_view, ['atime' => $this->atime]);
+                if ($available_groups) {
+                    $group_select = new SelectWidget(
+                        _('Gruppe'),
+                        $this->url_for('calendar/calendar/index', ['view' => 'group']),
+                        'group_id'
+                    );
+                    $options = [
+                        '' => _('(bitte wählen)')
+                    ];
+                    foreach ($available_groups as $available_group) {
+                        $options[$available_group->id] = $available_group->name;
+                    }
+                    $group_select->setOptions($options);
+                    $group_select->setSelection($group_id);
+                    $sidebar->addWidget($group_select);
+                }
+            }
+            //Get all calendars where the user has access to:
+            $other_users = User::findBySql(
+                "INNER JOIN `contact` c
+                ON `auth_user_md5`.`user_id` = c.`owner_id`
+                WHERE c.`user_id` = :current_user_id
+                AND c.`calendar_permissions` <> ''
+                ORDER BY `auth_user_md5`.`Vorname` ASC, `auth_user_md5`.`Nachname` ASC",
+                ['current_user_id' => User::findCurrent()->id]
+            );
+            if ($other_users) {
+                $calendar_select = new SelectWidget(
+                    _('Kalender auswählen'),
+                    $this->url_for('calendar/calendar'),
+                    'user_id'
+                );
+                $select_options = [
+                    '' => _('(bitte wählen)'),
+                    User::findCurrent()->id => _('Eigener Kalender')
+                ];
+                foreach ($other_users as $user) {
+                    $select_options[$user->id] = $user->getFullName();
+                }
+                $calendar_select->setOptions($select_options, Request::get('user_id'));
+                $sidebar->addWidget($calendar_select);
             }
         }
 
-        $this->createSidebar('edit', $this->calendar);
-        $this->createSidebarFilter();
+        if (Config::get()->CALENDAR_GROUP_ENABLE && $selected_group) {
+            $views = new ViewsWidget();
+            $views->setTitle(_('Kalenderansicht'));
+            $views->addLink(
+                _('Gruppenkalender'),
+                $this->url_for('calendar/calendar', ['view' => 'group', 'group_id' => $group_id])
+            )->setActive($view === 'group');
+            $views->addLink(
+                _('Zeitleiste'),
+                $this->url_for('calendar/calendar', ['view' => 'timeline', 'group_id' => $group_id])
+            )->setActive($view === 'timeline');
+            $sidebar->addWidget($views);
+        }
+
+        $calendar_resources = [];
+        $calendar_group_title = '';
+        if ($group_view && $selected_group) {
+            //All users in the selected group that have granted read permissions to the user can be shown.
+            foreach ($selected_group->items as $item) {
+                if ($item->user && $item->user->isCalendarReadable()) {
+                    $calendar_resources[] = [
+                        'id' => $item->user_id,
+                        'title' => $item->user ? $item->user->getFullName() : '',
+                        'parent_name' => ''
+                    ];
+                }
+            }
+            $calendar_group_title = $selected_group->name;
+        }
+
+        $fullcalendar_studip_urls = [];
+        if ($write_permissions) {
+            if ($calendar_owner) {
+                $fullcalendar_studip_urls['add'] = $this->url_for('calendar/date/add', ['user_id' => $calendar_owner->id]);
+            } elseif ($selected_group) {
+                $fullcalendar_studip_urls['add'] = $this->url_for('calendar/date/add', ['group_id' => $group->id]);
+            }
+        }
+
+        $calendar_settings = User::findCurrent()->getConfiguration()->CALENDAR_SETTINGS ?? [];
+
+        //Map calendar settings to fullcalendar settings:
+
+        $default_view = 'timeGridWeek';
+        if ($timeline_view) {
+            $default_view = 'resourceTimelineWeek';
+            if ($calendar_settings['view'] === 'day') {
+                $default_view = 'resourceTimelineDay';
+            }
+        } elseif (!empty($calendar_settings['view'])) {
+            if ($calendar_settings['view'] === 'day') {
+                $default_view = 'timeGridDay';
+            } elseif ($calendar_settings['view'] === 'month') {
+                $default_view = 'dayGridMonth';
+            }
+        }
+
+        $slot_durations = $this->getUserCalendarSlotSettings();
+
+        //Create the fullcalendar object:
+        $default_date = \Studip\Calendar\Helper::getDefaultCalendarDate();
+
+        $data_url_params = [];
+        if (Request::bool('show_declined')) {
+            $data_url_params['show_declined'] = '1';
+        }
+        if ($timeline_view) {
+            $data_url_params['timeline_view'] = '1';
+        }
+
+        $this->fullcalendar = Studip\Fullcalendar::create(
+            _('Kalender'),
+            [
+                'editable'    => $write_permissions,
+                'selectable'  => $write_permissions,
+                'studip_urls' => $fullcalendar_studip_urls,
+                'dialog_size' => 'auto',
+                'minTime'     => sprintf('%02u:00', $calendar_settings['start'] ?? 8),
+                'maxTime'     => sprintf('%02u:00', $calendar_settings['end'] ?? 20),
+                'defaultDate' => $default_date->format('Y-m-d'),
+                'allDaySlot'  => !$group_view,
+                'allDayText'  => '',
+                'header'      => [
+                    'left'   => (
+                        $timeline_view
+                            ? 'resourceTimelineWeek,resourceTimelineDay'
+                            : 'dayGridYear,dayGridMonth,timeGridWeek,timeGridDay'
+                    ),
+                    'right'  => 'prev,today,next'
+                ],
+                'weekNumbers' => true,
+                'views' => [
+                    'dayGridMonth' => [
+                        'eventTimeFormat' => ['hour' => 'numeric', 'minute' => '2-digit'],
+                        'displayEventEnd' => true
+                    ],
+                    'timeGridWeek' => [
+                        'columnHeaderFormat' => ['weekday' => 'short', 'year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit', 'omitCommas' => true],
+                        'weekends'           => $calendar_settings['type_week'] === 'LONG',
+                        'slotDuration'       => $slot_durations['week']
+                    ],
+                    'timeGridDay' => [
+                        'columnHeaderFormat' => ['weekday' => 'long', 'year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit', 'omitCommas' => true],
+                        'slotDuration'       => $slot_durations['day']
+                    ],
+                    'resourceTimelineWeek' => [
+                        'columnHeaderFormat' => ['weekday' => 'long', 'year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit', 'omitCommas' => true],
+                        'titleFormat'        => ['year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit'],
+                        'weekends'           => $calendar_settings['type_week'] === 'LONG',
+                        'slotDuration'       => $slot_durations['week_group']
+                    ],
+                    'resourceTimelineDay' => [
+                        'columnHeaderFormat' => ['weekday' => 'long', 'year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit', 'omitCommas' => true],
+                        'titleFormat'        => ['year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit'],
+                        'slotDuration'       => $slot_durations['day_group']
+                    ]
+                ],
+                'defaultView' => $default_view,
+                'timeGridEventMinHeight' => 20,
+                'eventSources' => [
+                    [
+                        'url' => $this->url_for(
+                            (
+                            $group_view
+                                ? 'calendar/calendar/calendar_group_data/' . $selected_group->id
+                                : 'calendar/calendar/calendar_data/' . $calendar_owner->id
+                            ),
+                            $data_url_params
+                        ),
+                        'method' => 'GET',
+                        'extraParams' => []
+                    ]
+                ],
+                'resources' => $calendar_resources,
+                'resourceLabelText' => $calendar_group_title
+            ]
+        );
     }
 
-    public function edit_status_action($range_id, $event_id)
+    public function course_action($course_id)
     {
-        global $user;
+        PageLayout::setTitle(_('Veranstaltungskalender'));
 
-        $this->range_id = $range_id ?: $this->range_id;
-        $this->calendar = new SingleCalendar($this->range_id);
-        $this->event = $this->calendar->getEvent($event_id);
-        $stored = false;
-        $old_status = $this->event->group_status;
+        if (!$course_id || !Config::get()->CALENDAR_GROUP_ENABLE || !Config::get()->COURSE_CALENDAR_ENABLE) {
+            throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+        }
 
-        if (Request::submitted('store')) {
+        $course = Course::find($course_id);
+        if (!$course) {
+            throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+        }
 
-            if ($this->event->isNew()
-                || !Config::get()->CALENDAR_GROUP_ENABLE
-                || !$this->calendar->havePermission(Calendar::PERMISSION_OWN)
-                || !$this->calendar->getRange() == Calendar::RANGE_USER
-                || !$this->event->havePermission(Event::PERMISSION_READABLE)) {
+        if (!$course->isVisibleForUser() || !$course->isCalendarReadable()) {
+            throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+        }
+
+        if (Navigation::hasItem('/course/calendar')) {
+            Navigation::activateItem('/course/calendar');
+        }
+
+        $sidebar = Sidebar::get();
+
+        $actions = new ActionsWidget();
+        $actions->addLink(
+            _('Termin anlegen'),
+            $this->url_for('calendar/date/add/course_' . $course->id),
+            Icon::create('add'),
+            ['data-dialog' => 'size=default']
+        );
+        $actions->addLink(
+            _('Drucken'),
+            'javascript:void(window.print());',
+            Icon::create('print')
+        );
+        $actions->addLink(
+            _('Einstellungen'),
+            $this->url_for('settings/calendar'),
+            Icon::create('settings'),
+            ['data-dialog' => 'reload-on-close']
+        );
+        $sidebar->addWidget($actions);
+
+        $date = new DateSelectWidget();
+        $date->setCalendarControl(true);
+        $sidebar->addWidget($date);
+
+        //Create the fullcalendar object:
+
+        $calendar_writable = $course->isCalendarWritable();
+        $calendar_settings = User::findCurrent()->getConfiguration()->CALENDAR_SETTINGS ?? [];
+        $slot_settings = $this->getUserCalendarSlotSettings();
+
+        $fullcalendar_studip_urls = [];
+        if ($calendar_writable) {
+            $fullcalendar_studip_urls['add'] = $this->url_for('calendar/date/add/course_' . $course->id);
+        }
+
+        $this->fullcalendar = Studip\Fullcalendar::create(
+            _('Veranstaltungskalender'),
+            [
+                'editable'    => $calendar_writable,
+                'selectable'  => $calendar_writable,
+                'studip_urls' => $fullcalendar_studip_urls,
+                'minTime'     => sprintf('%02u:00', $calendar_settings['start'] ?? 8),
+                'maxTime'     => sprintf('%02u:00', $calendar_settings['end'] ?? 20),
+                'allDaySlot'  => true,
+                'allDayText'  => '',
+                'header'      => [
+                    'left'    => 'dayGridYear,dayGridMonth,timeGridWeek,timeGridDay',
+                    'right'   => 'prev,today,next'
+                ],
+                'weekNumbers' => true,
+                'views'       => [
+                    'dayGridMonth' => [
+                        'eventTimeFormat' => ['hour' => 'numeric', 'minute' => '2-digit'],
+                        'displayEventEnd' => true
+                    ],
+                    'timeGridWeek' => [
+                        'columnHeaderFormat' => [ 'weekday' => 'short', 'year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit', 'omitCommas' => true ],
+                        'weekends'           => $calendar_settings['type_week'] === 'LONG',
+                        'slotDuration'       => $slot_settings['week']
+                    ],
+                    'timeGridDay'  => [
+                        'columnHeaderFormat' => [ 'weekday' => 'long', 'year' => 'numeric', 'month' => '2-digit', 'day' => '2-digit', 'omitCommas' => true ],
+                        'slotDuration'       => $slot_settings['day']
+                    ]
+                ],
+                'defaultView'            => 'timeGridWeek',
+                'timeGridEventMinHeight' => 20,
+                'eventSources'           => [
+                    [
+                        'url'         => $this->url_for('calendar/calendar/calendar_data/course_' . $course->id),
+                        'method'      => 'GET',
+                        'extraParams' => []
+                    ]
+                ]
+            ]
+        );
+    }
+
+    public function calendar_data_action($range_and_id)
+    {
+        $range_and_id = explode('_', $range_and_id);
+        $range = '';
+        $range_id = '';
+        if (!empty($range_and_id[1])) {
+            $range = $range_and_id[0];
+            $range_id = $range_and_id[1];
+        }
+        if (!$range) {
+            //Show the personal calendar of the current user:
+            $range = 'user';
+            $range_id = User::findCurrent()->id;
+        }
+        $owner = null;
+        if (!$range_id) {
+            //Assume a user calendar. $range contains the user-ID.
+            $owner = User::getCalendarOwner($range);
+        } elseif ($range === 'user') {
+            $owner = User::getCalendarOwner($range_id);
+        } elseif ($range === 'course') {
+            $owner = Course::getCalendarOwner($range_id);
+        }
+
+        if (!$owner || !$owner->isCalendarReadable()) {
+            throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+        }
+
+        $begin = Request::getDateTime('start', \DateTime::RFC3339);
+        $end = Request::getDateTime('end', \DateTime::RFC3339);
+        if (!($begin instanceof \DateTime) || !($end instanceof \DateTime)) {
+            //No time range specified.
+            throw new InvalidArgumentException('Invalid parameters!');
+        }
+
+        $calendar_events = CalendarDateAssignment::getEvents(
+            $begin,
+            $end,
+            $owner->id,
+            ['PUBLIC', 'PRIVATE', 'CONFIDENTIAL'],
+            Request::bool('show_declined', false)
+        );
+
+        $result = [];
+
+        foreach ($calendar_events as $date) {
+            $event = $date->toEventData(User::findCurrent()->id);
+            $result[] = $event->toFullcalendarEvent();
+        }
+
+        if ($range === 'user') {
+            //Include course dates of courses that shall be displayed in the calendar:
+            $course_dates = CalendarCourseDate::getEvents($begin, $end, $owner->id);
+            foreach ($course_dates as $course_date) {
+                $event = $course_date->toEventData(User::findCurrent()->id);
+                $event->background_colour = '#ffffff';
+                $event->text_colour = '#000000';
+                $event->border_colour = '#000000';
+                $event->event_classes = [];
+                $result[] = $event->toFullcalendarEvent();
+            }
+            //Include relevant cancelled course dates:
+            $cancelled_course_dates = CalendarCourseExDate::getEvents($begin, $end, $owner->id);
+            foreach ($cancelled_course_dates as $cancelled_course_date) {
+                $event = $cancelled_course_date->toEventData(User::findCurrent()->id);
+                $event->background_colour = '#ffffff';
+                $event->text_colour = '#000000';
+                $event->border_colour = '#000000';
+                $event->event_classes = [];
+                $result[] = $event->toFullcalendarEvent();
+            }
+        }
+        //At this point, everything went fine. We can save the beginning as default date
+        //if the current user is looking at their own calendar:
+        if ($owner instanceof User && $owner->id === User::findCurrent()->id) {
+            $_SESSION['calendar_date'] = $begin->format('Y-m-d');
+        }
+        $this->render_json($result);
+    }
+
+    public function calendar_group_data_action($group_id)
+    {
+        $begin = Request::getDateTime('start', \DateTime::RFC3339);
+        $end = Request::getDateTime('end', \DateTime::RFC3339);
+        $timeline_view = Request::bool('timeline_view', false);
+
+        if (!($begin instanceof \DateTime) || !($end instanceof \DateTime)) {
+            //No time range specified.
+            throw new InvalidArgumentException('Invalid parameters!');
+        }
+
+        $group = null;
+        $users = [];
+        if ($group_id) {
+            //Get the group first:
+            $group = ContactGroup::find($group_id);
+            if ($group->owner_id !== User::findCurrent()->id) {
                 throw new AccessDeniedException();
             }
-
-            $status = Request::int('status', 1);
-            if ($status > 0 && $status < 6) {
-                $this->event->group_status = $status;
-                $stored = $this->event->store();
+            foreach ($group->items as $item) {
+                if ($item->user->isCalendarReadable()) {
+                    $users[] = $item->user;
+                }
             }
+            if (!$users) {
+                //No user has granted read access to the calendar for the current user.
+                throw new AccessDeniedException(_('Sie dürfen diesen Kalender nicht sehen!'));
+            }
+        }
 
-            if ($stored !== false) {
-                if ($stored === 0) {
-                    if (Request::isXhr()) {
-                        header('X-Dialog-Close: 1');
-                        exit;
-                    } else {
-                        PageLayout::postMessage(MessageBox::success(_('Der Teilnahmestatus wurde nicht geändert.')));
-                        $this->relocate('calendar/single/' . $this->last_view, ['atime' => $this->atime]);
+        $result = [];
+
+        foreach ($users as $user) {
+            $events = CalendarDateAssignment::getEvents($begin, $end, $user->id);
+            if ($events) {
+                foreach ($events as $event) {
+                    $data = $event->toEventData(User::findCurrent()->id);
+                    if (!$timeline_view) {
+                        $data->title = $user->getFullName();
                     }
-                } else {
-                    // send message to organizer...
-                    if ($this->event->author_id != $user->id) {
-                        setTempLanguage($this->event->author_id);
-                        $message = new messaging();
-                        $msg_text = sprintf(_('%s hat den Terminvorschlag für "%s" am %s von %s auf %s geändert.'),
-                                get_fullname(), $this->event->getTitle(),
-                                strftime('%c', $this->event->getStart()),
-                                $this->event->toStringGroupStatus($old_status), $this->event->toStringGroupStatus());
-                        if ($status == CalendarEvent::PARTSTAT_DELEGATED) {
-                            $msg_text .= "\n"
-                                    . sprintf(_('Der Termin wird akzeptiert, aber %s nimmt nicht selbst am Termin teil.'),
-                                    get_fullname());
-                        }
-                        $subject = sprintf(_('Terminvorschlag am %s von %s %s'),
-                                strftime('%c', $this->event->getStart()), get_fullname(), $this->event->toStringGroupStatus());
-                        $msg_text .= "\n\n**" . _('Beginn') . ':** ';
-                        if ($this->event->isDayEvent()) {
-                            $msg_text .= strftime('%x ', $this->event->getStart());
-                            $msg_text .= _('ganztägig');
-                        } else {
-                            $msg_text .= strftime('%c', $this->event->getStart());
-                        }
-                        $msg_text .= "\n**" . _('Ende') . ':** ';
-                        if ($this->event->isDayEvent()) {
-                            $msg_text .= strftime('%x ', $this->event->getEnd());
-                        } else {
-                            $msg_text .= strftime('%c', $this->event->getEnd());
-                        }
-                        $msg_text .= "\n**" . _('Zusammenfassung') . ':** ' . $this->event->getTitle() . "\n";
-                        if ($event_data = $this->event->getDescription()) {
-                            $msg_text .= '**' . _('Beschreibung') . ":** $event_data\n";
-                        }
-                        if ($event_data = $this->event->toStringCategories()) {
-                            $msg_text .= '**' . _('Kategorie') . ":** $event_data\n";
-                        }
-                        if ($event_data = $this->event->toStringPriority()) {
-                            $msg_text .= '**' . _('Priorität') . ":** $event_data\n";
-                        }
-                        if ($event_data = $this->event->toStringAccessibility()) {
-                            $msg_text .= '**' . _('Zugriff') . ":** $event_data\n";
-                        }
-                        if ($event_data = $this->event->toStringRecurrence()) {
-                            $msg_text .= '**' . _('Wiederholung') . ":** $event_data\n";
-                        }
-                        $member = [];
-                        foreach ($this->event->attendees as $attendee) {
-                            if ($attendee->range_id == $this->event->getAuthorId()) {
-                                $member[] = $attendee->user->getFullName()
-                                    . ' ('. _('Organisator') . ')';
-                            } else {
-                                $member[] = $attendee->user->getFullName()
-                                        . ' (' . $this->event->toStringGroupStatus($attendee->group_status)
-                                        . ')';
-                            }
-                        }
-                        $msg_text .= '**' . _('Teilnehmende') . ':** ' . implode(', ', $member);
-                        $msg_text .= "\n\n" . _('Hier kommen Sie direkt zum Termin in Ihrem Kalender:') . "\n";
-                        $msg_text .= URLHelper::getURL('dispatch.php/calendar/single/edit/'
-                                . $this->event->getAuthorId() . '/' . $this->event->event_id);
-                        $message->insert_message(
-                                addslashes($msg_text),
-                                [get_username($this->event->getAuthorId())],
-                                $this->event->range_id,
-                                '', '', '', '', addslashes($subject));
-                        restoreLanguage();
-                    }
-                    PageLayout::postMessage(MessageBox::success(_('Der Teilnahmestatus wurde gespeichert.')));
-                    $this->relocate('calendar/single/' . $this->last_view, ['atime' => $this->atime]);
+                    $result[] = $data->toFullcalendarEvent();
                 }
             }
         }
-
-        $this->createSidebar('edit', $this->calendar);
-        $this->createSidebarFilter();
+        $this->render_json($result);
     }
 
-    public function switch_action()
+    public function add_courses_action()
     {
-        $default_view = $this->settings['view'] ?: 'week';
-        $view = Request::option('last_view', $default_view);
-        $this->range_id = Request::option('range_id', $GLOBALS['user']->id);
-        $object_type = get_object_type($this->range_id);
-        switch ($object_type) {
-            case 'user':
-                URLHelper::addLinkParam('cid', '');
-                $this->redirect($this->url_for('calendar/single/'
-                        . $view . '/' . $this->range_id));
-                break;
-            case 'sem':
-            case 'inst':
-            case 'fak':
-                URLHelper::addLinkParam('cid', $this->range_id);
-                $this->redirect($this->url_for('calendar/single/'
-                        . $view . '/' . $this->range_id));
-                break;
-            case 'group':
-                URLHelper::addLinkParam('cid', '');
-                $this->redirect($this->url_for('calendar/group/'
-                        . $view . '/' . $this->range_id));
-                break;
+        $selected_semester_pseudo_id = Request::option('semester_id');
+        $this->selected_semesters_id = '';
+        $this->available_semester_data = [];
+        $semesters = Semester::getAll();
+        foreach ($semesters as $semester) {
+            $this->available_semester_data[$semester['id']] = [
+                'id'   => $semester['id'],
+                'name' => $semester['name']
+            ];
+        }
+        $this->available_semester_data = array_reverse($this->available_semester_data);
+
+        if (!$selected_semester_pseudo_id) {
+            $selected_semester_pseudo_id = User::findCurrent()->getConfiguration()->MY_COURSES_SELECTED_CYCLE;
+            if (!Config::get()->MY_COURSES_ENABLE_ALL_SEMESTERS && $selected_semester_pseudo_id === 'all') {
+                $selected_semester_pseudo_id = 'next';
+            }
+            if (!$selected_semester_pseudo_id) {
+                $selected_semester_pseudo_id = Config::get()->MY_COURSES_DEFAULT_CYCLE;
+            }
+        }
+        if ($selected_semester_pseudo_id === 'next') {
+            $semester = Semester::findNext();
+            $this->selected_semester_id = $semester->id;
+        } elseif (in_array($selected_semester_pseudo_id, ['all', 'current'])) {
+            $semester = Semester::findCurrent();
+            $this->selected_semester_id = $semester->id;
+        } elseif ($selected_semester_pseudo_id === 'last') {
+            $semester = Semester::findPrevious();
+            $this->selected_semester_id = $semester->id;
+        } else {
+            $this->selected_semester_id = $selected_semester_pseudo_id ?? '';
+            if (!Semester::exists($this->selected_semesters_id)) {
+                $this->selected_semester_id = '';
+            }
+        }
+
+        $this->selected_course_ids = SimpleCollection::createFromArray(
+            CourseMember::findBySQL(
+                'user_id = :user_id AND bind_calendar = 1',
+                ['user_id' => User::findCurrent()->id]
+            )
+        )->pluck('seminar_id');
+
+        $this->semester_data = [];
+        $all_semesters = Semester::getAll();
+        foreach ($all_semesters as $semester) {
+            $data = [
+                'id' => $semester->id,
+                'name' => $semester->name,
+                'courses' => []
+            ];
+            $this->semester_data[] = $data;
+        }
+
+        if (Request::submitted('add')) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            $course_ids = Request::getArray('courses_course_ids');
+            foreach ($course_ids as $course_id => $selected) {
+                $course_membership = CourseMember::findOneBySQL(
+                    'seminar_id = :course_id AND user_id = :user_id',
+                    [
+                        'course_id' => $course_id,
+                        'user_id'   => User::findCurrent()->id
+                    ]
+                );
+                if ($course_membership) {
+                    $course_membership->bind_calendar = $selected ? '1' : '0';
+                    $course_membership->store();
+                }
+            }
+            PageLayout::postSuccess(_('Die Zuordnung von Veranstaltungen zum Kalender wurde aktualisiert.'));
+            $this->redirect('calendar/calendar');
         }
     }
 
-    public function jump_to_action()
+    public function export_action()
     {
-        $date = Request::get('jmp_date');
-        if ($date) {
-            $atime = strtotime($date . strftime(' %T', $this->atime));
-        } else {
-            $atime = 'now';
+        PageLayout::setTitle(_('Termine exportieren'));
+        $this->begin = new DateTimeImmutable();
+        $this->end = $this->begin->add(new DateInterval('P1Y'));
+        $this->dates_to_export = 'user';
+        if (Request::submitted('export')) {
+            CSRFProtection::verifyUnsafeRequest();
+            $this->begin = Request::getDateTime('begin', 'd.m.Y');
+            $this->end = Request::getDateTime('end', 'd.m.Y');
+            if ($this->begin >= $this->end) {
+                PageLayout::postError(_('Der Startzeitpunkt darf nicht nach dem Endzeitpunkt liegen!'));
+                return;
+            }
+            $this->dates_to_export = Request::get('dates_to_export');
+            if (!in_array($this->dates_to_export, ['user', 'course', 'all'])) {
+                PageLayout::postError(_('Bitte wählen Sie aus, welche Termine exportiert werden sollen!'));
+                return;
+            }
+            $ical = '';
+            $calendar_export = new ICalendarExport();
+            if ($this->dates_to_export === 'user') {
+                $ical = $calendar_export->exportCalendarDates(User::findCurrent()->id, $this->begin, $this->end);
+            } elseif ($this->dates_to_export === 'course') {
+                $ical = $calendar_export->exportCourseDates(User::findCurrent()->id, $this->begin, $this->end);
+                $ical .= $calendar_export->exportCourseExDates(User::findCurrent()->id, $this->begin, $this->end);
+            } elseif ($this->dates_to_export === 'all') {
+                $ical = $calendar_export->exportCalendarDates(User::findCurrent()->id, $this->begin, $this->end);
+                $ical .= $calendar_export->exportCourseDates(User::findCurrent()->id, $this->begin, $this->end);
+                $ical .= $calendar_export->exportCourseExDates(User::findCurrent()->id, $this->begin, $this->end);
+            }
+            $ical = $calendar_export->writeHeader() . $ical . $calendar_export->writeFooter();
+            $this->response->add_header('Content-Type', 'text/calendar;charset=utf-8');
+            $this->response->add_header('Content-Disposition', 'attachment; filename="studip.ics"');
+            $this->response->add_header('Content-Transfer-Encoding', 'binary');
+            $this->response->add_header('Pragma', 'public');
+            $this->response->add_header('Cache-Control', 'private');
+            $this->response->add_header('Content-Length', strlen($ical));
+            $this->render_text($ical);
         }
-        $action = Request::option('action', 'week');
-        $this->range_id = $this->range_id ?: $GLOBALS['user']->id;
-        $this->redirect($this->url_for($this->base . $action,
-                ['atime' => $atime, 'range_id' => $this->range_id]));
     }
 
-    public function show_declined_action ()
+    public function import_action() {}
+
+    public function import_file_action()
     {
-        $config = UserConfig::get($GLOBALS['user']->id);
-        $this->settings['show_declined'] = Request::int('show_declined') ? '1' : '0';
-     //   var_dump($this->settings); exit;
-        $config->store('CALENDAR_SETTINGS', $this->settings);
-        $action = Request::option('action', 'week');
-        $this->range_id = $this->range_id ?: $GLOBALS['user']->id;
-        $this->redirect($this->url_for($this->base . $action,
-                ['range_id' => $this->range_id]));
+        if (Request::submitted('import')) {
+            CSRFProtection::verifySecurityToken();
+            $range_id = Context::getId() ?? User::findCurrent()->id;
+            $calendar_import = new ICalendarImport($range_id);
+            $calendar_import->convertPublicToPrivate(Request::bool('import_as_private_imp'));
+            $calendar_import->import(file_get_contents($_FILES['importfile']['tmp_name']));
+            $import_count = $calendar_import->getCountEvents();
+            PageLayout::postSuccess(sprintf(
+                ngettext(
+                    'Ein Termin wurde importiert.',
+                    'Es wurden %u Termine importiert.',
+                    $import_count
+                ),
+                $import_count
+            ));
+            $this->redirect($this->url_for('calendar/calendar/'));
+        }
     }
 
-    protected function storeEventData(CalendarEvent $event, SingleCalendar $calendar)
+    public function share_action()
     {
-        $messages = [];
-        if (Request::int('isdayevent')) {
-            $dt_string = Request::get('start_date') . ' 00:00:00';
-        } else {
-            $dt_string = sprintf(
-                '%s %u:%02u',
-                Request::get('start_date'),
-                Request::int('start_hour'),
-                Request::int('start_minute')
+        PageLayout::setTitle(_('Kalender teilen'));
+        if (!Config::get()->CALENDAR_GROUP_ENABLE) {
+            throw new FeatureDisabledException();
+        }
+
+        $calendar_contacts = Contact::findBySql(
+            "JOIN `auth_user_md5` USING (`user_id`)
+             WHERE `contact`.`owner_id` = :user_id
+               AND `contact`.`calendar_permissions` <> ''
+             ORDER BY `auth_user_md5`.`Vorname`, `auth_user_md5`.`Nachname`",
+            [
+                'user_id' => User::findCurrent()->id
+            ]
+        );
+        $user_data = [];
+        foreach ($calendar_contacts as $contact) {
+            $user_data[$contact->user_id] = [
+                'id' => $contact->user_id,
+                'name' => $contact->friend->getFullName(),
+                'write_permissions' => $contact->calendar_permissions === 'WRITE'
+            ];
+        }
+        $this->selected_users_json = json_encode($user_data, JSON_FORCE_OBJECT);
+        $this->searchtype = new StandardSearch('user_id', ['simple_name' => true]);
+
+        if (Request::submitted('share')) {
+            CSRFProtection::verifyUnsafeRequest();
+            $selected_user_ids = Request::getArray('calendar_permissions', []);
+            $write_permissions = Request::getArray('calendar_write_permissions', []);
+
+            //Add/update contacts with calendar permissions:
+
+            foreach ($selected_user_ids as $user_id) {
+                $user = User::find($user_id);
+                if (!$user) {
+                    //No user? No contact!
+                    continue;
+                }
+                $contact = Contact::findOneBySql(
+                    'owner_id = :owner_id AND user_id = :user_id',
+                    [
+                        'owner_id' => User::findCurrent()->id,
+                        'user_id' => $user_id
+                    ]
+                );
+                if (!$contact) {
+                    $contact = new Contact();
+                    $contact->owner_id = User::findCurrent()->id;
+                    $contact->user_id = $user->id;
+                }
+                if (in_array($user->id, $write_permissions)) {
+                    $contact->calendar_permissions = 'WRITE';
+                } else {
+                    $contact->calendar_permissions = 'READ';
+                }
+                $contact->store();
+            }
+
+            //Revoke calendar permissions for all users that aren't in the list
+            //of selected users:
+            if ($selected_user_ids) {
+                $stmt = DBManager::get()->prepare(
+                    "UPDATE `contact` SET `calendar_permissions` = ''
+                    WHERE `owner_id` = :owner_id
+                    AND `user_id` NOT IN ( :user_ids )"
+                );
+                $stmt->execute([
+                    'owner_id' => User::findCurrent()->id,
+                    'user_ids' => $selected_user_ids
+                ]);
+            } else {
+                $stmt = DBManager::get()->prepare(
+                    "UPDATE `contact` SET `calendar_permissions` = ''
+                    WHERE `owner_id` = :owner_id"
+                );
+                $stmt->execute(['owner_id' => User::findCurrent()->id]);
+            }
+
+            PageLayout::postSuccess(
+                _('Die Kalenderfreigaben wurden geändert.')
             );
-        }
-        $event->setStart($this->parseDateTime($dt_string));
-        if (Request::int('isdayevent')) {
-            $dt_string = Request::get('end_date') . ' 23:59:59';
-        } else {
-            $dt_string = sprintf(
-                '%s %u:%02u',
-                Request::get('end_date'),
-                Request::int('end_hour'),
-                Request::int('end_minute')
-            );
-        }
-        $event->setEnd($this->parseDateTime($dt_string));
-
-        if (!$this->validate_datetime(sprintf('%02u:%02u',Request::int('start_hour'),Request::int('start_minute')))
-            || !$this->validate_datetime(sprintf('%02u:%02u',Request::int('end_hour'),Request::int('end_minute')))
-            ) {
-            $messages[] = _('Die Start- und/oder Endzeit ist ungültig!');
-        }
-
-        if ($event->getStart() > $event->getEnd()) {
-            $messages[] = _('Die Startzeit muss vor der Endzeit liegen.');
-        }
-
-        $event->setTitle(Request::get('summary', ''));
-        $event->event->description = Request::get('description', '');
-        $event->setUserDefinedCategories(Request::get('categories', ''));
-        $event->event->location        = Request::get('location', '');
-        $event->event->category_intern = Request::int('category_intern', 1);
-        $event->setAccessibility(Request::option('accessibility', 'PRIVATE'));
-        $event->setPriority(Request::int('priority', 0));
-
-        if (!$event->getTitle()) {
-            $messages[] = _('Es muss eine Zusammenfassung angegeben werden.');
-        }
-
-        $rec_type = Request::option('recurrence', 'single');
-        $expire = Request::option('exp_c', 'never');
-        $rrule = [
-            'linterval' => null,
-            'sinterval' => null,
-            'wdays' => null,
-            'month' => null,
-            'day' => null,
-            'rtype' => 'SINGLE',
-            'count' => null,
-            'expire' => null
-        ];
-        if ($expire == 'count') {
-            $rrule['count'] = Request::int('exp_count', 10);
-        } else if ($expire == 'date') {
-            if (Request::isXhr()) {
-                $exp_date = Request::get('exp_date');
-            } else {
-                $exp_date = Request::get('exp_date');
-            }
-            $exp_date = $exp_date ?: strftime('%x', time());
-            $rrule['expire'] = $this->parseDateTime($exp_date . ' 12:00');
-        }
-        switch ($rec_type) {
-            case 'daily':
-                if (Request::option('type_daily', 'day') === 'day') {
-                    $rrule['linterval'] = Request::int('linterval_d', 1);
-                    $rrule['rtype'] = 'DAILY';
-                } else {
-                    $rrule['linterval'] = 1;
-                    $rrule['wdays'] = '12345';
-                    $rrule['rtype'] = 'WEEKLY';
-                }
-                break;
-            case 'weekly':
-                $rrule['rtype'] = 'WEEKLY';
-                $rrule['linterval'] = Request::int('linterval_w', 1);
-                $rrule['wdays'] = implode('', Request::intArray('wdays',
-                        [strftime('%u', $event->getStart())]));
-                break;
-            case 'monthly':
-                $rrule['rtype'] = 'MONTHLY';
-                if (Request::option('type_m', 'day') === 'day') {
-                    $rrule['linterval'] = Request::int('linterval_m1', 1);
-                    $rrule['day'] = Request::int('day_m',
-                            strftime('%e', $event->getStart()));
-                } else {
-                    $rrule['linterval'] = Request::int('linterval_m2', 1);
-                    $rrule['sinterval'] = Request::int('sinterval_m', 1);
-                    $rrule['wdays'] = Request::int('wday_m',
-                            strftime('%u', $event->getStart()));
-                }
-                break;
-            case 'yearly':
-                $rrule['rtype'] = 'YEARLY';
-                $rrule['linterval'] = 1;
-                if (Request::option('type_y', 'day') === 'day') {
-                    $rrule['day'] = Request::int('day_y',
-                            strftime('%e', $event->getStart()));
-                    $rrule['month'] = Request::int('month_y1',
-                            date('n', $event->getStart()));
-                } else {
-                    $rrule['sinterval'] = Request::int('sinterval_y', 1);
-                    $rrule['wdays'] = Request::int('wday_y',
-                            strftime('%u', $event->getStart()));
-                    $rrule['month'] = Request::int('month_y2',
-                            date('n', $event->getStart()));
-                }
-                break;
-        }
-        if (sizeof($messages)) {
-            PageLayout::postMessage(MessageBox::error(_('Bitte Eingaben korrigieren'), $messages));
-            return false;
-        } else {
-            $event->setRecurrence($rrule);
-            $exceptions = array_diff(Request::getArray('exc_dates'),
-                    Request::getArray('del_exc_dates'));
-            $event->setExceptions($this->parseExceptions($exceptions));
-            // if this is a group event, store event in the calendars of each attendee
-            if (Config::get()->CALENDAR_GROUP_ENABLE) {
-                $attendee_ids = Request::optionArray('attendees');
-                return $calendar->storeEvent($event, $attendee_ids);
-            } else {
-                return $calendar->storeEvent($event);
-            }
+            $this->response->add_header('X-Dialog-Close', '1');
         }
     }
 
-    /**
-     * Parses a string with exception dates from input form and returns an array
-     * with all dates as unix timestamp identified by an internally used pattern.
-     *
-     * @param string $exc_dates
-     * @return array An array of unix timestamps.
-     */
-    protected function parseExceptions($exc_dates) {
-        $matches = [];
-        $dates = [];
-        preg_match_all('%(\d{1,2})\h*([/.])\h*(\d{1,2})\h*([/.])\h*(\d{4})\s*%',
-                implode(' ', $exc_dates), $matches, PREG_SET_ORDER);
-        foreach ($matches as $match) {
-            if ($match[2] == '/') {
-                $dates[] = strtotime($match[1].'/'.$match[3].'/'.$match[5]);
-            } else {
-                $dates[] = strtotime($match[1].$match[2].$match[3].$match[4].$match[5]);
-            }
-        }
-        return $dates;
-    }
-
-    /**
-     * Parses a string as date time in the format "j.n.Y H:i:s" and returns the
-     * corresponding unix time stamp.
-     *
-     * @param string $dt_string The date time string.
-     * @return int A unix time stamp
-     */
-    protected function parseDateTime($dt_string)
+    public function publish_action()
     {
-        $dt_array = date_parse_from_format('j.n.Y H:i:s', $dt_string);
-        return mktime($dt_array['hour'], $dt_array['minute'], $dt_array['second'],
-                $dt_array['month'], $dt_array['day'], $dt_array['year']);
-    }
+        $this->short_id = null;
+        if (Request::submitted('delete_id')) {
+            CSRFProtection::verifySecurityToken();
+            IcalExport::deleteKey(User::findCurrent()->id);
+            PageLayout::postSuccess(_('Die Adresse, unter der Ihre Termine abrufbar sind, wurde gelöscht'));
+        }
 
+        if (Request::submitted('new_id')) {
+            CSRFProtection::verifySecurityToken();
+            $this->short_id = IcalExport::setKey(User::findCurrent()->id);
+            PageLayout::postSuccess(_('Eine Adresse, unter der Ihre Termine abrufbar sind, wurde erstellt.'));
+        } else {
+            $this->short_id = IcalExport::getKeyByUser(User::findCurrent()->id);
+        }
+
+        $text = '';
+        if (Request::submitted('submit_email')) {
+            $email_reg_exp = '/^([-.0-9=?A-Z_a-z{|}~])+@([-.0-9=?A-Z_a-z{|}~])+\.[a-zA-Z]{2,6}$/i';
+            if (preg_match($email_reg_exp, Request::get('email')) !== 0) {
+                $subject = '[' .Config::get()->UNI_NAME_CLEAN . ']' . _('Exportadresse für Ihre Termine');
+                $text .= _('Diese Email wurde vom Stud.IP-System verschickt. Sie können auf diese Nachricht nicht antworten.') . "\n\n";
+                $text .= _('Über diese Adresse erreichen Sie den Export für Ihre Termine:') . "\n\n";
+                $text .= $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/ical/index/'
+                    . IcalExport::getKeyByUser(User::findCurrent()->id);
+                StudipMail::sendMessage(Request::get('email'), $subject, $text);
+                PageLayout::postSuccess(_('Die Adresse wurde verschickt!'));
+            } else {
+                PageLayout::postError(_('Bitte geben Sie eine gültige Email-Adresse an.'));
+            }
+            $this->short_id = IcalExport::getKeyByUser(User::findCurrent()->id);
+        }
+        PageLayout::setTitle(_('Kalender veröffentlichen'));
+    }
 }

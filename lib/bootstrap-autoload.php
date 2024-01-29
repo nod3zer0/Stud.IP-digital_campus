@@ -8,6 +8,7 @@ StudipAutoloader::register();
 
 // General classes folders
 StudipAutoloader::addAutoloadPath('lib/models');
+StudipAutoloader::addAutoloadPath('lib/models/calendar');
 StudipAutoloader::addAutoloadPath('lib/models/resources');
 StudipAutoloader::addAutoloadPath('lib/classes');
 StudipAutoloader::addAutoloadPath('lib/classes', 'Studip');

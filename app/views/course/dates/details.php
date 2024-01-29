@@ -39,6 +39,17 @@
             </td>
         </tr>
     <? endif; ?>
+    <? if (!empty($date->room_booking->resource)) : ?>
+        <? $room = $date->room_booking->resource->getDerivedClassInstance() ?>
+        <? if ($room instanceof Resource) : ?>
+            <tr>
+                <td><strong><?= _('Raum') ?></strong></td>
+                <td>
+                    <?= htmlReady($room->getFullName()) ?>
+                </td>
+            </tr>
+        <? endif ?>
+    <? endif ?>
     <? if (count($date->statusgruppen) > 0): ?>
         <tr>
             <td><strong><?= _('Beteiligte Gruppen') ?></strong></td>
@@ -96,3 +107,8 @@
         STUDIP.Table.enhanceSortableTable($('#course_date_files'));
     </script>
 <? endif; ?>
+<? if (Request::bool('extra_buttons') && $GLOBALS['perm']->have_studip_perm('user', $course->id)) : ?>
+    <div data-dialog-button>
+        <?= \Studip\LinkButton::create(_('Zur Veranstaltung'), $controller->url_for('course/details', ['cid' => $course->id])) ?>
+    </div>
+<? endif ?>

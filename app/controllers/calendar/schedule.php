@@ -144,7 +144,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         ];
 
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views');
-        PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters), 'screen, print');
+        PageLayout::addStyle($factory->render('calendar/schedule/stylesheet', $style_parameters), 'screen, print');
 
         if (Request::option('printview')) {
             $this->calendar_view->setReadOnly();
@@ -243,11 +243,7 @@ class Calendar_ScheduleController extends AuthenticatedController
                 $this->render_template('calendar/schedule/_entry_course');
             } else if ($id) {
                 $entry_columns = CalendarScheduleModel::getScheduleEntries($GLOBALS['user']->id, 0, 0, $id);
-                $entries = [];
-                $entry_columns = array_pop($entry_columns);
-                if ($entry_columns) {
-                    $entries = $entry_columns->getEntries();
-                }
+                $entries = array_pop($entry_columns)->getEntries();
                 $this->show_entry = array_pop($entries);
                 $this->render_template('calendar/schedule/_entry_schedule');
             }

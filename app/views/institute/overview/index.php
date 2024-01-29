@@ -50,7 +50,6 @@
 </article>
 
 <?= $news ?>
-<?= $dates ?>
 <?= $evaluations ?>
 <?= $questionnaires ?>
 

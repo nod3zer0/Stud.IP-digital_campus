@@ -1169,16 +1169,6 @@ class UserManagement
             if ($count) {
                 $msg .= 'info§' . sprintf(_('%s Einträge aus den Terminen gelöscht.'), $count) . '§';
             }
-            // delete membership in group calendars
-            if (Config::get()->CALENDAR_GROUP_ENABLE) {
-                $count = CalendarUser::deleteBySQL(
-                    'owner_id = :user_id OR user_id = :user_id',
-                    [':user_id' => $user_id]
-                );
-                if ($count) {
-                    $msg .= 'info§' . sprintf(_('%s Verknüpfungen mit Gruppenterminkalendern gelöscht.'), $count) . '§';
-                }
-            }
         }
 
         // delete all messages send or received by this user

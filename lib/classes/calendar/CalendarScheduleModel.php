@@ -20,6 +20,8 @@ require_once __DIR__ . '/default_color_definitions.php';
  * Pseudo-namespace containing helper methods for the schedule.
  *
  * @since      2.0
+ *
+ * @deprecated since Stud.IP 5.5
  */
 class CalendarScheduleModel
 {

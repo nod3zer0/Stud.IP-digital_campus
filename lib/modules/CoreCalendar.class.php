@@ -20,7 +20,7 @@ class CoreCalendar extends CorePlugin implements StudipModule
             return null;
         }
 
-        $navigation = new Navigation(_('Kalender'), "seminar_main.php?auswahl={$course_id}&redirect_to=dispatch.php/calendar/single/");
+        $navigation = new Navigation(_('Kalender'), URLHelper::getURL('dispatch.php/calendar/calendar/course/' . $course_id));
         $navigation->setImage(Icon::create('schedule', Icon::ROLE_CLICKABLE));
         return $navigation;
     }
@@ -34,7 +34,7 @@ class CoreCalendar extends CorePlugin implements StudipModule
             return null;
         }
 
-        $navigation = new Navigation(_('Kalender'), 'dispatch.php/calendar/single/');
+        $navigation = new Navigation(_('Kalender'), 'dispatch.php/calendar/calendar/course/' . $course_id);
         $navigation->setImage(Icon::create('schedule', Icon::ROLE_INFO_ALT));
         $navigation->setActiveImage(Icon::create('schedule', Icon::ROLE_INFO));
         return ['calendar' => $navigation];
@@ -49,10 +49,10 @@ class CoreCalendar extends CorePlugin implements StudipModule
             'summary' => _('Kalender'),
             'category' => _('Lehr- und Lernorganisation'),
             'icon' => Icon::create('schedule', Icon::ROLE_INFO),
-            'icon_clickable' => Icon::create('schedule', Icon::ROLE_CLICKABLE),
-            'displayname' => _('Planer'),
+            'displayname' => _('Kalender'),
         ];
     }
+
     public function isActivatableForContext(Range $context)
     {
         return Config::get()->CALENDAR_GROUP_ENABLE && $context->getRangeType() === 'course';
@@ -60,7 +60,6 @@ class CoreCalendar extends CorePlugin implements StudipModule
 
     public function getInfoTemplate($course_id)
     {
-        // TODO: Implement getInfoTemplate() method.
         return null;
     }
 }

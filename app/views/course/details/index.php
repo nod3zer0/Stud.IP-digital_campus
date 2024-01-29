@@ -522,4 +522,9 @@ if (!empty($mvv_tree)) : ?>
     <? endif ?>
     </footer>
 <? endif ?>
-<?= Feedback::getHTML($course->id, Course::class) ?>
+<? if (Request::bool('link_to_course') && $GLOBALS['perm']->have_studip_perm('autor', $course->id)) : ?>
+    <footer data-dialog-button>
+        <?= \Studip\LinkButton::create(_('Direkt zur Veranstaltung'), URLHelper::getURL('dispatch.php/course/overview', ['cid' => $course->id]))?>
+    </footer>
+<? endif ?>
+<?= Feedback::getHTML($course->id, 'Course'); ?>

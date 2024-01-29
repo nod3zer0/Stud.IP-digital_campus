@@ -10,7 +10,7 @@
  * @property string $event_id database column
  * @property int $mkdate database column
  * @property ConsultationSlot $slot belongs_to ConsultationSlot
- * @property EventData $event has_one EventData
+ * @property CalendarDate $event belongs_to CalendarDate
  */
 class ConsultationEvent extends SimpleORMap
 {
@@ -23,9 +23,9 @@ class ConsultationEvent extends SimpleORMap
             'foreign_key' => 'slot_id',
         ];
         $config['has_one']['event'] = [
-            'class_name'        => EventData::class,
+            'class_name'        => CalendarDate::class,
             'foreign_key'       => 'event_id',
-            'assoc_foreign_key' => 'event_id',
+            'assoc_foreign_key' => 'id',
             'on_delete'         => 'delete',
         ];
 

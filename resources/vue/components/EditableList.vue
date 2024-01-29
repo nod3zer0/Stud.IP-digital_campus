@@ -78,7 +78,7 @@ export default {
         return {
             resort: false, //this is just for triggering the computed property sortedItems to be sorted again
             preventChangeOfQuickselect: false,
-            allItems: this.items
+            allItems: this.items ?? []
         };
     },
     methods: {
@@ -159,8 +159,8 @@ export default {
                 if (a.icon === b.icon) {
                     return a.name.localeCompare(b.name);
                 } else {
-                    let a_icon = a.icon || '';
-                    let b_icon = b.icon || '';
+                    let a_icon = typeof a.icon === 'string' ? a.icon : '';
+                    let b_icon = typeof b.icon === 'string' ? b.icon : '';
                     if (this.category_order.indexOf(a_icon) > -1 && this.category_order.indexOf(b_icon) > -1) {
                         return this.category_order.indexOf(a_icon) < this.category_order.indexOf(b_icon) ? -1 : 1;
                     } else {

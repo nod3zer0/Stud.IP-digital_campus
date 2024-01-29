@@ -38,6 +38,8 @@
  *  print $plan->render();
  *
  * @since      2.0
+ *
+ * @deprecated since Stud.IP 5.5
  */
 
 class CalendarView
@@ -213,7 +215,7 @@ class CalendarView
             'entry_height' => $this->getHeight()
         ];
         $factory = new Flexi_TemplateFactory(dirname(__file__).'/../../app/views');
-        PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
+        PageLayout::addStyle($factory->render('calendar/schedule/stylesheet', $style_parameters));
 
         $template = $GLOBALS['template_factory']->open("calendar/calendar_view.php");
         $template->set_attribute("calendar_view", $this);

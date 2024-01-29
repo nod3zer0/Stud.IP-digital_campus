@@ -51,17 +51,14 @@ class iCalController extends StudipController
             $GLOBALS['user'] = new Seminar_User($user_id);
             $GLOBALS['perm'] = new Seminar_Perm();
 
-            $extype = 'ALL_EVENTS';
-            $calender_writer = new CalendarWriterICalendar();
-            $export = new CalendarExport($calender_writer);
-            $export->exportFromDatabase($user_id, strtotime('-4 week'), 2114377200, 'ALL_EVENTS');
-
-            if ($GLOBALS['_calendar_error']->getMaxStatus(ErrorHandler::ERROR_CRITICAL)) {
-                $this->set_status(500);
-                $this->render_nothing();
-                return;
-            }
-            $content = join($export->getExport());
+            $end = DateTime::createFromFormat('U', '2114377200');
+            $start = new DateTime();
+            $start->modify('-4 week');
+            $ical_export = new ICalendarExport();
+            $ical = $ical_export->exportCalendarDates($user_id, $start, $end)
+                  . $ical_export->exportCourseDates($user_id, $start, $end)
+                  . $ical_export->exportCourseExDates($user_id, $start, $end);
+            $content = $ical_export->writeHeader() . $ical . $ical_export->writeFooter();
             if (mb_stripos($_SERVER['HTTP_USER_AGENT'], 'google-calendar') !== false) {
                 $content = str_replace(['CLASS:PRIVATE','CLASS:CONFIDENTIAL'], 'CLASS:PUBLIC', $content);
             }

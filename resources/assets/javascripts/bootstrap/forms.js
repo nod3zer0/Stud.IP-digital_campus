@@ -427,6 +427,24 @@ STUDIP.ready(function () {
         });
     }
 
+    /*
+     * Form elements with the "simplevue" class are meant for forms that just need some vue components
+     * to do something fancy inside the form but which do not need the full functionality of the form builder.
+     */
+    let simple_vue_items = document.querySelectorAll('form .simplevue:not(.vueified)');
+    if (simple_vue_items.length > 0) {
+        STUDIP.Vue.load().then(({createApp}) => {
+            simple_vue_items.forEach(f => {
+                createApp({
+                    el: f,
+                    mounted() {
+                        this.$el.classList.add('vueified');
+                    }
+                });
+            });
+        });
+    }
+
     // Well, this is really nasty: Select2 can't determine the select
     // element's width if it is hidden (by itself or by its parent).
     // This is due to the fact that elements are not rendered when hidden

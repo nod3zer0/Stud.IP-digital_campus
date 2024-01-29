@@ -13,6 +13,8 @@
  * @author      Rasmus Fuhse <fuhse@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ *
+ * @deprecated since Stud.IP 5.5
  */
 
 class CalendarColumn

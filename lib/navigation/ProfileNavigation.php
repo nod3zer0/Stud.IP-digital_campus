@@ -103,7 +103,7 @@ class ProfileNavigation extends Navigation
                 $navigation->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'dispatch.php/settings/messaging'));
 
                 if (Config::get()->CALENDAR_ENABLE) {
-                    $navigation->addSubNavigation('calendar_new', new Navigation(_('Terminkalender'), 'dispatch.php/settings/calendar'));
+                    $navigation->addSubNavigation('calendar_new', new Navigation(_('Kalender'), 'dispatch.php/settings/calendar'));
                 }
 
                 if (!$perm->have_perm('admin') && Config::get()->MAIL_NOTIFICATION_ENABLE) {

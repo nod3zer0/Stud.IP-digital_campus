@@ -28,7 +28,7 @@ class Privacy
         ],
         'date' => [
             'CalendarEvent',
-            'EventData',
+            'CalendarDate',
             'CourseDate',
             'CourseExDate',
         ],

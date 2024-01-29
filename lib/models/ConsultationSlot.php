@@ -166,26 +166,24 @@ class ConsultationSlot extends SimpleORMap
      * Creates a Stud.IP calendar event relating to the slot.
      *
      * @param  User $user User object to create the event for
-     * @return EventData Created event
+     * @return CalendarDate Created event
      */
-    public function createEvent(User $user)
+    public function createEvent(User $user) : CalendarDate
     {
-        $event = new EventData();
-        $event->uid = $this->createEventId($user);
+        $event = new CalendarDate();
+        $event->unique_id = $this->createEventId($user);
         $event->author_id = $user->id;
         $event->editor_id = $user->id;
-        $event->start     = $this->start_time;
+        $event->begin     = $this->start_time;
         $event->end       = $this->end_time;
-        $event->class     = 'PRIVATE';
-        $event->priority  = 0;
+        $event->access    = 'PRIVATE';
         $event->location  = $this->block->room;
-        $event->rtype     = 'SINGLE';
+        $event->repetition_type = '';
         $event->store();
 
-        $calendar_event = new CalendarEvent();
-        $calendar_event->range_id     = $user->id;
-        $calendar_event->group_status = 0;
-        $calendar_event->event_id     = $event->id;
+        $calendar_event = new CalendarDateAssignment();
+        $calendar_event->range_id         = $user->id;
+        $calendar_event->calendar_date_id = $event->id;
         $calendar_event->store();
 
         return $event;
@@ -267,12 +265,12 @@ class ConsultationSlot extends SimpleORMap
             });
 
             if (count($bookings) > 0) {
-                $event->event->category_intern = 1;
+                $event->event->category = 1;
 
                 if (count($bookings) === 1) {
                     $booking = $bookings->first();
 
-                    $event->event->summary = sprintf(
+                    $event->event->title = sprintf(
                         _('Termin mit %s'),
                         $booking->user ? $booking->user->getFullName() : _('unbekannt')
                     );
@@ -288,9 +286,9 @@ class ConsultationSlot extends SimpleORMap
                     }));
                 }
             } else {
-                $event->event->category_intern = 9;
-                $event->event->summary         = _('Freier Termin');
-                $event->event->description     = _('Dieser Termin ist noch nicht belegt.');
+                $event->event->category    = 9;
+                $event->event->title       = _('Freier Termin');
+                $event->event->description = _('Dieser Termin ist noch nicht belegt.');
             }
 
             $event->event->store();

@@ -20,7 +20,7 @@ class TerminWidget extends CorePlugin implements PortalPlugin
     public function getMetadata()
     {
         return [
-            'description' => _('Mit diesem Widget haben Sie ihre aktuellen Termine im Überlick.')
+            'description' => _('Dieses Widget zeigt die eigenen aktuellen Termine an.')
         ];
     }
 
@@ -31,8 +31,9 @@ class TerminWidget extends CorePlugin implements PortalPlugin
         $template = $GLOBALS['template_factory']->open('shared/string');
         $template->content = $response->body;
 
-        $navigation = new Navigation('', 'dispatch.php/calendar/single/week', ['self' => true]);
-        $navigation->setImage(Icon::create('add', 'clickable', ["title" => _('Neuen Termin anlegen')]));
+        $navigation = new Navigation('', 'dispatch.php/calendar/date/add');
+        $navigation->setImage(Icon::create('add', Icon::ROLE_CLICKABLE, ['title' => _('Neuen Termin anlegen')]));
+        $navigation->setLinkAttributes(['data-dialog' => 'reload-on-close']);
         $template->icons = [$navigation];
 
         return $template;

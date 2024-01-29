@@ -20,15 +20,15 @@ class ContactController extends AuthenticatedController
         parent::before_filter($action, $args);
 
         // Load statusgroups
-        $this->groups = SimpleCollection::createFromArray(Statusgruppen::findByRange_id(User::findCurrent()->id));
+        $this->groups = SimpleCollection::createFromArray(ContactGroup::findByOwner_id(User::findCurrent()->id));
 
         // Load requested group
         if (!empty($args[0])) {
-            $this->group = $this->groups->findOneBy('statusgruppe_id', $args[0]);
+            $this->group = $this->groups->findOneBy('id', $args[0]);
 
             //Check for cheaters
-            if ($this->group->range_id != User::findCurrent()->id) {
-                throw new AccessDeniedException;
+            if ($this->group->owner_id !== User::findCurrent()->id) {
+                throw new AccessDeniedException();
             }
         }
 
@@ -43,16 +43,17 @@ class ContactController extends AuthenticatedController
         // Check if we need to add contacts
         $mps      = MultiPersonSearch::load('contacts');
         $imported = 0;
-        foreach ($mps->getAddedUsers() as $userId) {
-            $user_to_add = User::find($userId);
+        foreach ($mps->getAddedUsers() as $user_id) {
+            $user_to_add = User::find($user_id);
             if ($user_to_add) {
                 $new_contact = [
                     'owner_id' => User::findCurrent()->id,
-                    'user_id'  => $user_to_add->id];
+                    'user_id'  => $user_to_add->id,
+                ];
                 if ($filter && $this->group) {
-                    $new_contact['group_assignments'][] = [
-                        'statusgruppe_id' => $this->group->id,
-                        'user_id'         => $user_to_add->id
+                    $new_contact['groups'][] = [
+                        'group_id' => $this->group->id,
+                        'user_id'  => $user_to_add->id,
                     ];
                 }
                 $imported += (bool)Contact::import($new_contact)->store();
@@ -74,7 +75,7 @@ class ContactController extends AuthenticatedController
 
         if ($filter) {
             $selected = $this->group;
-            $contacts = SimpleCollection::createFromArray(User::findMany($selected->members->pluck('user_id')));
+            $contacts = SimpleCollection::createFromArray(User::findMany($selected->items->pluck('user_id')));
         } else {
             $selected = false;
             $contacts = User::findCurrent()->contacts;
@@ -125,7 +126,7 @@ class ContactController extends AuthenticatedController
                     $contact = Contact::find([User::findCurrent()->id, User::findByUsername($contact_username)->id]);
                     if ($contact) {
                         if ($group) {
-                            $contact->group_assignments->unsetBy('statusgruppe_id', $group);
+                            $contact->groups->unsetBy('group_id', $group);
                             if ($contact->store()) {
                                 $removed_group_number++;
                             }
@@ -144,7 +145,7 @@ class ContactController extends AuthenticatedController
             $contact = Contact::find([User::findCurrent()->id, User::findByUsername(Request::username('user'))->id]);
             if ($contact) {
                 if ($group) {
-                    $contact->group_assignments->unsetBy('statusgruppe_id', $group);
+                    $contact->group_assignments->unsetBy('group_id', $group);
                     if ($contact->store()) {
                         PageLayout::postSuccess(_('Der Kontakt wurde aus der Gruppe entfernt.'));
                     }
@@ -161,8 +162,8 @@ class ContactController extends AuthenticatedController
     public function editGroup_action()
     {
         if (!$this->group) {
-            $this->group           = new Statusgruppen();
-            $this->group->range_id = User::findCurrent()->id;
+            $this->group           = new ContactGroup();
+            $this->group->owner_id = User::findCurrent()->id;
         }
         if (Request::submitted('store')) {
             CSRFProtection::verifyRequest();

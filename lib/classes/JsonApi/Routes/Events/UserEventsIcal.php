@@ -24,14 +24,14 @@ class UserEventsIcal extends NonJsonApiController
             throw new RecordNotFoundException();
         }
 
-        $writer = new \CalendarWriterICalendar();
-        $export = new \CalendarExport($writer);
-        $export->exportFromDatabase($observedUser->id, 0, 2114377200, ['CalendarEvent', 'CourseEvent', 'CourseCancelledEvent']);
-        if ($GLOBALS['_calendar_error']->getMaxStatus(\ErrorHandler::ERROR_CRITICAL)) {
-            throw new InternalServerError();
-        }
+        $end = \DateTime::createFromFormat('U', '2114377200');
+        $start = new \DateTime();
+        $ical_export = new \ICalendarExport();
+        $ical = $ical_export->exportCalendarDates($observedUser->id, $start, $end)
+              . $ical_export->exportCourseDates($observedUser->id, $start, $end)
+              . $ical_export->exportCourseExDates($observedUser->id, $start, $end);
+        $content = $ical_export->writeHeader() . $ical . $ical_export->writeFooter();
 
-        $content = implode($export->getExport());
         $response->getBody()->write($content);
 
         return $response->withHeader('Content-Type', 'text/calendar')

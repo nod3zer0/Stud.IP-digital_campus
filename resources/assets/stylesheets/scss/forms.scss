@@ -37,7 +37,7 @@ form.default {
         font-style: italic;
     }
 
-    input[type=date], input[type=email], input[type=number],
+    input[type=date], input[type=datetime-local], input[type=email], input[type=number],
     input[type=password], input[type=text], input[type=time], input[type=url], input[type=tel],
     textarea, select {
         box-sizing: border-box;
@@ -86,8 +86,12 @@ form.default {
         max-width: $max-width-m;
     }
 
-    input[type=date], input[type=number], input[type=time], input[type=tel]:not(.size-m)  {
+    input[type=date].hasDatepicker, input[type=date][data-date-picker], input[type=number], input[type=time], input[type=tel]:not(.size-m)  {
         max-width: $max-width-s;
+    }
+
+    input[type=date]:not(.hasDatepicker, [data-date-picker]) {
+        max-width: $max-width-m;
     }
 
     textarea {
@@ -531,6 +535,17 @@ form.default {
         }
         output {
             margin-left: 10px;
+        }
+    }
+
+    .input-with-icon {
+        input {
+            display: inline;
+            width: calc(100% - 24px);
+        }
+        img.icon {
+            height: 2em;
+            margin-top: 0.5ex;
         }
     }
 }

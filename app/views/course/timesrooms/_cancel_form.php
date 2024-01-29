@@ -6,7 +6,7 @@ if (isset($termin) && $termin instanceof CourseExDate) {
 }
 ?>
 <p>
-    <strong> <?= _('Wenn Sie die nicht stattfindenden Termine mit einem Kommentar versehen, werden die Ausfalltermine im Ablaufplan weiterhin dargestellt und auch im Terminkalender eingeblendet.') ?></strong>
+    <strong> <?= _('Wenn Sie die nicht stattfindenden Termine mit einem Kommentar versehen, werden die Ausfalltermine im Ablaufplan weiterhin dargestellt und auch im Kalender angezeigt.') ?></strong>
 </p>
 
 <label for="cancel_comment">

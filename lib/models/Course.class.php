@@ -80,7 +80,7 @@
  * @property-read mixed $config additional field
  */
 
-class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, FeedbackRange
+class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, FeedbackRange, Studip\Calendar\Owner
 {
     protected static function configure($config = [])
     {
@@ -1080,5 +1080,41 @@ class Course extends SimpleORMap implements Range, PrivacyObject, StudipItem, Fe
     public function __toString() : string
     {
         return $this->getFullName();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getCalendarOwner(string $owner_id): ?\Studip\Calendar\Owner
+    {
+        return self::find($owner_id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isCalendarReadable(?string $user_id = null): bool
+    {
+        if ($user_id === null) {
+            $user_id = self::findCurrent()->id;
+        }
+
+        //Calendar read permissions are granted for all participants
+        //that have at least user permissions.
+        return $GLOBALS['perm']->have_studip_perm('user', $this->id, $user_id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isCalendarWritable(string $user_id = null): bool
+    {
+        if ($user_id === null) {
+            $user_id = self::findCurrent()->id;
+        }
+
+        //Calendar write permissions are granted for all participants
+        //that have autor permissions or higher.
+        return $GLOBALS['perm']->have_studip_perm('autor', $this->id, $user_id);
     }
 }

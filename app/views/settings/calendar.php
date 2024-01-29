@@ -4,8 +4,7 @@ use Studip\Button, Studip\LinkButton;
 $cal_views = [
     'day'   => _('Tagesansicht'),
     'week'  => _('Wochenansicht'),
-    'month' => _('Monatsansicht'),
-    'year'  => _('Jahresansicht'),
+    'month' => _('Monatsansicht')
 ];
 $cal_deletes = [
     12 => _('12 Monate nach Ablauf'),
@@ -27,18 +26,19 @@ $cal_step_weeks = [
 ];
 ?>
 
-<form method="post" action="<?= $controller->url_for('settings/calendar/store') ?>" class="default">
+<form method="post" action="<?= $controller->link_for('settings/calendar/store') ?>" class="default"
+    <?= Request::isDialog() ? 'data-dialog="reload-on-close"' : '' ?>>
     <input type="hidden" name="studip_ticket" value="<?= get_ticket() ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset>
         <legend>
-            <?= _('Einstellungen des Terminkalenders') ?>
+            <?= _('Einstellungen des Kalenders') ?>
         </legend>
 
         <label>
             <?= _('Startansicht') ?>
-            <select name="cal_view" id="cal_view" size="1">
+            <select name="cal_view" id="cal_view">
                 <? foreach ($cal_views as $index => $label): ?>
                     <option value="<?= $index ?>" <? if ($view == $index) echo 'selected'; ?>>
                         <?= $label ?>
@@ -48,15 +48,14 @@ $cal_step_weeks = [
         </label>
 
         <label>
-            <?= _('Wochenansicht') ?>
-            <select name="cal_type_week">
-                <option value="LONG"<?= $type_week == 'LONG' ? ' selected' : "" ?>>
-                    <?= _('7 Tage-Woche') ?>
-                </option>
-                <option value="SHORT"<?= $type_week == 'SHORT' ? ' selected' : "" ?>>
-                    <?= _('5 Tage-Woche') ?>
-                </option>
-            </select>
+            <input type="radio" name="cal_type_week" value="LONG"
+                <?= $type_week == 'LONG' ? 'checked' : "" ?>>
+            <?= _('Alle Wochentage in der Wochenansicht anzeigen.') ?>
+        </label>
+        <label>
+            <input type="radio" name="cal_type_week" value="SHORT"
+                <?= $type_week == 'SHORT' ? 'checked' : "" ?>>
+            <?= _('Nur Montag bis Freitag in der Wochenansicht anzeigen.') ?>
         </label>
     </fieldset>
 
@@ -65,34 +64,27 @@ $cal_step_weeks = [
             <?= _('Einzelterminkalender') ?>
         </legend>
 
-        <div>
-            <?= _('Zeitraum der Tages- und Wochenansicht') ?>
-            <section class="hgroup">
-                <label>
-                    <?= _("Von") ?>
-                    <select name="cal_start" aria-label="<?= _('Startzeit der Tages- und Wochenansicht') ?>" class="size-s">
-                        <? for ($i = 0; $i < 24; $i += 1): ?>
-                            <option value="<?= $i ?>" <? if ($start == $i) echo 'selected'; ?>>
-                                <?= sprintf('%02u:00', $i) ?>
-                            </option>
-                        <? endfor; ?>
-                    </select>
-                    <?= _("Uhr") ?>
-                </label>
+        <label>
+            <?= _('Startuhrzeit') ?>
+            <select name="cal_start" aria-label="<?= _('Startzeit der Tages- und Wochenansicht') ?>" class="size-s">
+                <? for ($i = 0; $i < 24; $i += 1): ?>
+                    <option value="<?= $i ?>" <? if ($start == $i) echo 'selected'; ?>>
+                        <?= sprintf(_('%02u:00 Uhr'), $i) ?>
+                    </option>
+                <? endfor; ?>
+            </select>
+        </label>
 
-                <label>
-                    <?= _("Bis") ?>
-                    <select name="cal_end" aria-label="<?= _('Endzeit der Tages- und Wochenansicht') ?>" class="size-s">
-                        <? for ($i = 0; $i < 24; $i += 1): ?>
-                            <option value="<?= $i ?>" <? if ($end == $i) echo 'selected'; ?>>
-                                <?= sprintf('%02u:00', $i) ?>
-                            </option>
-                        <? endfor; ?>
-                    </select>
-                    <?= _("Uhr") ?>.
-                </label>
-            </section>
-        </div>
+        <label>
+            <?= _('Enduhrzeit') ?>
+            <select name="cal_end" aria-label="<?= _('Endzeit der Tages- und Wochenansicht') ?>" class="size-s">
+                <? for ($i = 0; $i < 24; $i += 1): ?>
+                    <option value="<?= $i ?>" <? if ($end == $i) echo 'selected'; ?>>
+                        <?= sprintf(_('%02u:00 Uhr'), $i) ?>
+                    </option>
+                <? endfor; ?>
+            </select>
+        </label>
 
         <label>
             <?= _('Zeitintervall der Tagesansicht') ?>
@@ -153,7 +145,7 @@ $cal_step_weeks = [
     </fieldset>
 <? endif ?>
 
-    <footer>
+    <footer data-dialog-button>
         <? if (Request::option('atime')): ?>
             <input type="hidden" name="atime" value="<?= Request::option('atime') ?>">
         <? endif ?>

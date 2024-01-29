@@ -33,7 +33,7 @@
  * @property-read mixed $room_request additional field
  */
 
-class CourseExDate extends SimpleORMap implements PrivacyObject
+class CourseExDate extends SimpleORMap implements PrivacyObject, Event
 {
     /**
      * Configures this model.
@@ -247,4 +247,176 @@ class CourseExDate extends SimpleORMap implements PrivacyObject
             date('H:i', $this->end_time)
         );
     }
+
+    //Start of Event interface implementation.
+
+    public static function getEvents(DateTime $begin, DateTime $end, string $range_id): array
+    {
+        return self::findBySQL(
+            "JOIN `seminar_user`
+               ON `seminar_user`.`seminar_id` = `ex_termine`.`range_id`
+             WHERE `seminar_user`.`user_id` = :user_id
+               AND `ex_termine`.`date` BETWEEN :begin AND :end
+               AND (
+                   IFNULL(`ex_termine`.`metadate_id`, '') = ''
+                   OR `ex_termine`.`metadate_id` NOT IN (
+                       SELECT `metadate_id`
+                       FROM `schedule_seminare`
+                       WHERE `user_id` = :user_id
+                         AND `visible` = 0
+                   )
+               )
+             ORDER BY date",
+            [
+                'begin'   => $begin->getTimestamp(),
+                'end'     => $end->getTimestamp(),
+                'user_id' => $range_id
+            ]
+        );
+    }
+
+    //Event interface implementation:
+
+    public function getObjectId() : string
+    {
+        return (string) $this->id;
+    }
+
+    public function getPrimaryObjectID(): string
+    {
+        return $this->range_id;
+    }
+
+    public function getObjectClass(): string
+    {
+        return static::class;
+    }
+
+    public function getTitle(): string
+    {
+        return sprintf('%s (fällt aus)', $this->course->name ?? '');
+    }
+
+    public function getBegin(): DateTime
+    {
+        $begin = new DateTime();
+        $begin->setTimestamp($this->date);
+        return $begin;
+    }
+
+    public function getEnd(): DateTime
+    {
+        $end = new DateTime();
+        $end->setTimestamp($this->end_time);
+        return $end;
+    }
+
+    public function getDuration(): DateInterval
+    {
+        $begin = $this->getBegin();
+        $end = $this->getEnd();
+        return $end->diff($begin);
+    }
+
+    public function getLocation(): string
+    {
+        return '';
+    }
+
+    public function getUniqueId(): string
+    {
+        return sprintf('Stud.IP-SEM-%1$s@%2$s', $this->id, $_SERVER['SERVER_NAME']);
+    }
+
+    public function getDescription(): string
+    {
+        return trim($this->getValue('content'));
+    }
+
+    public function getAdditionalDescriptions(): array
+    {
+        $descriptions = [];
+        if (count($this->dozenten) > 0) {
+            $descriptions[_('Durchführende Lehrende')] = implode(', ', $this->dozenten->getFullname());
+        }
+        if (count($this->statusgruppen) > 0) {
+            $descriptions[_('Beteiligte Gruppen')] = implode(', ', $this->statusgruppen->getValue('name'));
+        }
+        return $descriptions;
+    }
+
+    public function isAllDayEvent(): bool
+    {
+        //Course dates are never all day events.
+        return false;
+    }
+
+    public function isWritable(string $user_id): bool
+    {
+        return $GLOBALS['perm']->have_studip_perm('dozent', $this->range_id, $user_id);
+    }
+
+    public function getCreationDate(): DateTime
+    {
+        $mkdate = new DateTime();
+        $mkdate->setTimestamp($this->mkdate);
+        return $mkdate;
+    }
+
+    public function getModificationDate(): DateTime
+    {
+        $chdate = new DateTime();
+        $chdate->setTimestamp($this->chdate);
+        return $chdate;
+    }
+
+    public function getImportDate(): DateTime
+    {
+        return $this->getCreationDate();
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function getEditor(): ?User
+    {
+        return null;
+    }
+
+    public function toEventData(string $user_id): \Studip\Calendar\EventData
+    {
+        $begin = new DateTime();
+        $begin->setTimestamp($this->date);
+        $end = new DateTime();
+        $end->setTimestamp($this->end_time);
+
+        $studip_view_urls = [];
+        if ($GLOBALS['perm']->have_studip_perm('user', $this->range_id, $user_id)) {
+            $studip_view_urls['show'] = URLHelper::getURL('dispatch.php/course/details', ['cid' => $this->range_id, 'link_to_course' => '1']);
+        }
+
+        return new \Studip\Calendar\EventData(
+            $begin,
+            $end,
+            $this->getTitle(),
+            [],
+            '#000000',
+            '#aaaaaa',
+            $this->isWritable($user_id),
+            CourseExDate::class,
+            $this->id,
+            Course::class,
+            $this->range_id,
+            'course',
+            $this->range_id,
+            $studip_view_urls,
+            [],
+            'seminar',
+            'rgba(0,0,0,0)'
+        );
+    }
+
+    //End of Event interface implementation.
 }

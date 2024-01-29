@@ -34,7 +34,7 @@ class Settings_CalendarController extends Settings_SettingsController
         parent::before_filter($action, $args);
 
         PageLayout::setHelpKeyword('Basis.MyStudIPTerminkalender');
-        PageLayout::setTitle(_('Einstellungen des Terminkalenders anpassen'));
+        PageLayout::setTitle(_('Einstellungen des Kalenders anpassen'));
         Navigation::activateItem('/profile/settings/calendar_new');
     }
 
@@ -71,6 +71,11 @@ class Settings_CalendarController extends Settings_SettingsController
         ]);
 
         PageLayout::postSuccess(_('Ihre Einstellungen wurden gespeichert'));
-        $this->redirect('settings/calendar');
+        if (Request::isDialog()) {
+            $this->response->add_header('X-Dialog-Close', '1');
+            $this->render_nothing();
+        } else {
+            $this->redirect('settings/calendar');
+        }
     }
 }

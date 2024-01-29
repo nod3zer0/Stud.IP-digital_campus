@@ -162,6 +162,16 @@ class Fullcalendar
                     end: this.toRFC3339String(info.event.end)
                 }
             }).fail(info.revert);
+        } else if (info.event.extendedProps.studip_api_urls.resize_dialog) {
+            STUDIP.Dialog.fromURL(
+                info.event.extendedProps.studip_api_urls.resize_dialog,
+                {
+                    data: {
+                        begin: this.toRFC3339String(info.event.start),
+                        end: this.toRFC3339String(info.event.end)
+                    }
+                }
+            );
         }
     }
 
@@ -242,40 +252,80 @@ class Fullcalendar
 
         var drop_resource_id = info.newResource ? info.newResource.id : info.event.extendedProps.studip_range_id;
 
-        if (info.event.extendedProps.studip_api_urls.move) {
+        if (info.event.extendedProps.studip_api_urls.move || info.event.extendedProps.studip_api_urls.move_dialog) {
+            let move_dialog = info.event.extendedProps.studip_api_urls.move_dialog;
             if (info.event.allDay) {
-                $.post({
-                    async: false,
-                    url: info.event.extendedProps.studip_api_urls.move,
-                    data: {
-                        resource_id: drop_resource_id,
-                        begin: this.toRFC3339String(info.event.start.setHours(0,0,0)),
-                        end: this.toRFC3339String(info.event.start.setHours(23,59,59))
-                    }
-                }).fail(info.revert);
+                if (move_dialog) {
+                    STUDIP.Dialog.fromURL(
+                        move_dialog,
+                        {
+                            data: {
+                                resource_id: drop_resource_id,
+                                begin: this.toRFC3339String(info.event.start.setHours(0, 0, 0)),
+                                end: this.toRFC3339String(info.event.start.setHours(23, 59, 59))
+                            }
+                        }
+                    );
+                } else {
+                    jQuery.post({
+                        async: false,
+                        url: info.event.extendedProps.studip_api_urls.move,
+                        data: {
+                            resource_id: drop_resource_id,
+                            begin: this.toRFC3339String(info.event.start.setHours(0, 0, 0)),
+                            end: this.toRFC3339String(info.event.start.setHours(23, 59, 59))
+                        }
+                    }).fail(info.revert);
+                }
             } else if (info.event.end === null) {
-                var real_end = new Date();
+                let real_end = new Date();
                 real_end.setTime(info.event.start.getTime());
                 real_end.setHours(info.event.start.getHours()+2);
-                $.post({
-                    async: false,
-                    url: info.event.extendedProps.studip_api_urls.move,
-                    data: {
-                        resource_id: drop_resource_id,
-                        begin: this.toRFC3339String(info.event.start),
-                        end: this.toRFC3339String(real_end)
-                    }
-                }).fail(info.revert);
+                if (move_dialog) {
+                    STUDIP.Dialog.fromURL(
+                        move_dialog,
+                        {
+                            data: {
+                                resource_id: drop_resource_id,
+                                begin: this.toRFC3339String(info.event.start),
+                                end: this.toRFC3339String(real_end)
+                            }
+                        }
+                    );
+                } else {
+                    jQuery.post({
+                        async: false,
+                        url: info.event.extendedProps.studip_api_urls.move,
+                        data: {
+                            resource_id: drop_resource_id,
+                            begin: this.toRFC3339String(info.event.start),
+                            end: this.toRFC3339String(real_end)
+                        }
+                    }).fail(info.revert);
+                }
             } else {
-                $.post({
-                    async: false,
-                    url: info.event.extendedProps.studip_api_urls.move,
-                    data: {
-                        resource_id: drop_resource_id,
-                        begin: this.toRFC3339String(info.event.start),
-                        end: this.toRFC3339String(info.event.end)
-                    }
-                }).fail(info.revert);
+                if (move_dialog) {
+                    STUDIP.Dialog.fromURL(
+                        move_dialog,
+                        {
+                            data: {
+                                resource_id: drop_resource_id,
+                                begin: this.toRFC3339String(info.event.start),
+                                end: this.toRFC3339String(info.event.end)
+                            }
+                        }
+                    );
+                } else {
+                    jQuery.post({
+                        async: false,
+                        url: info.event.extendedProps.studip_api_urls.move,
+                        data: {
+                            resource_id: drop_resource_id,
+                            begin: this.toRFC3339String(info.event.start),
+                            end: this.toRFC3339String(info.event.end)
+                        }
+                    }).fail(info.revert);
+                }
             }
         }
     }
@@ -370,6 +420,12 @@ class Fullcalendar
             studip_functions: [],
             resourceAreaWidth: '20%',
             select (selectionInfo) {
+                let calendar_config = JSON.parse(selectionInfo.view.context.calendar.el.dataset.config);
+                let dialog_size = 'auto';
+                if (calendar_config.dialog_size !== undefined) {
+                    dialog_size = calendar_config.dialog_size;
+                }
+
                 if (!selectionInfo.view.viewSpec.options.editable || !selectionInfo.view.viewSpec.options.studip_urls) {
                     //The calendar isn't editable.
                     return;
@@ -380,15 +436,19 @@ class Fullcalendar
                             data: {
                                 begin: selectionInfo.start.getTime()/1000,
                                 end: selectionInfo.end.getTime()/1000,
-                                ressource_id: selectionInfo.resource.id
-                            }
+                                ressource_id: selectionInfo.resource.id,
+                                all_day: selectionInfo.allDay ? '1' : '0'
+                            },
+                            size: dialog_size
                         });
                     } else {
                         STUDIP.Dialog.fromURL(selectionInfo.view.viewSpec.options.studip_urls.add, {
                             data: {
                                 begin: selectionInfo.start.getTime()/1000,
-                                end: selectionInfo.end.getTime()/1000
-                            }
+                                end: selectionInfo.end.getTime()/1000,
+                                all_day: selectionInfo.allDay ? '1' : '0'
+                            },
+                            size: dialog_size
                         });
                     }
                 }
@@ -421,15 +481,33 @@ class Fullcalendar
                 if (extended_props.studip_view_urls === undefined) {
                     return;
                 }
+                let calendar_config = JSON.parse(eventClickInfo.view.context.calendar.el.dataset.config);
+                let dialog_size = 'auto';
+                if (calendar_config.dialog_size !== undefined) {
+                    //Use the configured default dialog size for the fullcalendar instance:
+                    dialog_size = calendar_config.dialog_size;
+                }
+                if (extended_props.dialog_size !== undefined) {
+                    //Use the dialog size of the event:
+                    dialog_size = extended_props.dialog_size;
+                }
                 if (!event.startEditable && extended_props.studip_view_urls.show) {
                     STUDIP.Dialog.fromURL(
-                        STUDIP.URLHelper.getURL(extended_props.studip_view_urls.show)
+                        STUDIP.URLHelper.getURL(extended_props.studip_view_urls.show),
+                        {size: dialog_size}
                     );
-                } else if (event.startEditable && extended_props.studip_view_urls.edit) {
-                    STUDIP.Dialog.fromURL(
-                        STUDIP.URLHelper.getURL(extended_props.studip_view_urls.edit),
-                        {'size': 'big'}
-                    );
+                } else if (event.startEditable) {
+                    if (extended_props.studip_view_urls.edit) {
+                        STUDIP.Dialog.fromURL(
+                            STUDIP.URLHelper.getURL(extended_props.studip_view_urls.edit),
+                            {size: dialog_size}
+                        );
+                    } else if (extended_props.studip_view_urls.show) {
+                        STUDIP.Dialog.fromURL(
+                            STUDIP.URLHelper.getURL(extended_props.studip_view_urls.show),
+                            {size: dialog_size}
+                        );
+                    }
                 }
                 return false;
             },
@@ -611,6 +689,77 @@ class Fullcalendar
         config = $.extend({}, config, additional_config);
 
         return this.init(node, config);
+    }
+
+    static submitDatePicker() {
+        let picked_date = jQuery('#booking-plan-jmpdate').val();
+        let booking_plan_datepicker = true;
+        if (!picked_date) {
+            //Not a booking plan date selector.
+            picked_date = jQuery('#date_select').val();
+            booking_plan_datepicker = false;
+        }
+        let iso_date_string = '';
+        if (picked_date) {
+            if (picked_date.includes('.')) {
+                let [day, month, year] = picked_date.split('.');
+                iso_date_string = year.padStart(4, '20') + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');
+            } else if (picked_date.includes('/')) {
+                let [day, month, year] = picked_date.split('/');
+                iso_date_string = year.padStart(4, '20') + '-' + month.padStart(2, '0') + '-' + day.padStart(2, '0');
+            } else if (picked_date.includes('-')) {
+                iso_date_string = picked_date;
+            }
+        }
+        if (iso_date_string) {
+            jQuery('[data-fullcalendar="1"],[data-resources-fullcalendar="1"]').each(function () {
+                this.calendar.gotoDate(iso_date_string);
+            });
+            if (booking_plan_datepicker) {
+                Fullcalendar.updateDateURL();
+            }
+        }
+    }
+
+    static updateDateURL() {
+        let changedMoment;
+        jQuery('[data-fullcalendar="1"],[data-resources-fullcalendar="1"]').each(function () {
+            changedMoment = this.calendar.getDate();
+        });
+        if (changedMoment) {
+            let changed_date = STUDIP.Fullcalendar.toRFC3339String(changedMoment).split('T')[0];
+            //Get the timestamp:
+            let timestamp = changedMoment.getTime() / 1000;
+
+            jQuery('a.resource-bookings-actions').each(function () {
+                const url = new URL(this.href);
+                url.searchParams.set('timestamp', timestamp)
+                url.searchParams.set('defaultDate', changed_date)
+                this.href = url.toString();
+            });
+
+            // Now change the URL of the window.
+            const url = new URL(window.location.href);
+            url.searchParams.set('defaultDate', changed_date);
+
+            // Update url in history
+            history.pushState({}, null, url.toString());
+
+            // Adjust links accordingly
+            url.searchParams.delete('allday');
+            jQuery('.booking-plan-std_view').attr('href', url.toString());
+
+            url.searchParams.set('allday', 1);
+            jQuery('.booking-plan-allday_view').attr('href', url.toString());
+
+            // Update sidebar value
+            let element = jQuery('#booking-plan-jmpdate,#date_select').first();
+            element.val(changedMoment.toLocaleDateString('de-DE'));
+            if (element.is('#booking-plan-jmpdate')) {
+                //Store the date in the sessionStorage:
+                sessionStorage.setItem('booking_plan_date', changed_date);
+            }
+        }
     }
 }
 

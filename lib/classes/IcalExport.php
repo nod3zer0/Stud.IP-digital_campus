@@ -50,17 +50,24 @@ class IcalExport
         while ($length--) {
             while (1) {
                 $rnd = rand(48, 122);
-                if ($rnd < 48)
+                if ($rnd < 48) {
                     continue;
-                if ($rnd > 57 && $rnd < 65)
+                }
+                if ($rnd > 57 && $rnd < 65) {
                     continue;
-                if ($rnd > 90 && $rnd < 97)
+                }
+                if ($rnd > 90 && $rnd < 97) {
                     continue;
-                if ($rnd > 122)
+                }
+                if ($rnd > 122) {
                     continue;
+                }
                 $char = chr($rnd);
-                if ($rejected[$char] > 1) {
+                if (isset($rejected[$char]) && $rejected[$char] > 1) {
                     continue;
+                }
+                if (!isset($rejected[$char])) {
+                    $rejected[$char] = 0;
                 }
                 $rejected[$char]++;
                 $ret .= $char;

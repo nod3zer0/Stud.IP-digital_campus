@@ -20,6 +20,8 @@
  * Kind of bean class for the calendar view.
  *
  * @since      2.0
+ *
+ * @deprecated since Stud.IP 5.5
  */
 
 class CalendarWeekView extends CalendarView

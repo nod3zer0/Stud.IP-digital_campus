@@ -388,4 +388,29 @@ class Course extends SchemaProvider
 
         return array_merge($relationships, [self::REL_STATUS_GROUPS => $relation]);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasResourceMeta($resource): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getResourceMeta($resource)
+    {
+        $avatar = \CourseAvatar::getAvatar($resource->id);
+
+        return [
+            'avatar' => [
+                'small' => $avatar->getURL(\Avatar::SMALL),
+                'medium' => $avatar->getURL(\Avatar::MEDIUM),
+                'normal' => $avatar->getURL(\Avatar::NORMAL),
+            ],
+        ];
+    }
+
 }

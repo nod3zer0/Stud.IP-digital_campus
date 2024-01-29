@@ -20,25 +20,19 @@ class CalendarNavigation extends Navigation
      */
     public function __construct()
     {
-        global $perm;
-
-        parent::__construct(_('Planer'));
-
-        if (
-            isset($perm)
-            && !$perm->have_perm('admin')
-            && Config::get()->SCHEDULE_ENABLE
-        ) {
-            $planerinfo = _('Stundenplan');
-        } else {
-            $planerinfo = _('Termine');
+        $title = _('Kalender');
+        $main_url = URLHelper::getURL('dispatch.php/calendar/calendar');
+        if (!$GLOBALS['perm']->have_perm('admin') && Config::get()->SCHEDULE_ENABLE) {
+            $title = _('Stundenplan');
+            $main_url = URLHelper::getURL('dispatch.php/calendar/schedule');
         }
+        parent::__construct($title, $main_url);
 
-        $this->setImage(Icon::create('schedule', 'navigation', ["title" => $planerinfo]));
+        $this->setImage(Icon::create('schedule', 'navigation', ['title' => $title]));
     }
 
     /**
-     * Initialize the subnavigation of this item. This method
+     * Initialize the sub-navigation of this item. This method
      * is called once before the first item is added or removed.
      */
     public function initSubNavigation()
@@ -47,16 +41,13 @@ class CalendarNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        // schedule
         if (!$perm->have_perm('admin') && Config::get()->SCHEDULE_ENABLE) {
             $navigation = new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule');
             $this->addSubNavigation('schedule', $navigation);
         }
 
-        // calendar
-        $atime = $atime ? intval($atime) : Request::int($atime);
         if (Config::get()->CALENDAR_ENABLE) {
-            $navigation = new Navigation(_('Terminkalender'), 'dispatch.php/calendar/single', ['self' => 1]);
+            $navigation = new Navigation(_('Kalender'), 'dispatch.php/calendar/calendar');
             $this->addSubNavigation('calendar', $navigation);
         }
     }

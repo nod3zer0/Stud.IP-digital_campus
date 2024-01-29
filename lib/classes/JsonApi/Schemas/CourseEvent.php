@@ -18,16 +18,16 @@ class CourseEvent extends SchemaProvider
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
-            'title' => $resource->title,
+            'title' => isset($resource->course) ? $resource->course->getFullName() : '',
             'description' => $resource->getDescription(),
-            'start' => date('c', $resource->getStart()),
-            'end' => date('c', $resource->getEnd()),
-            'categories' => array_filter($resource->toStringCategories(true)),
-            'location' => $resource->getLocation(),
-
+            'start' => date('c', $resource->date),
+            'end' => date('c', $resource->end_time),
+            'categories' => '',
+            'location' => $resource->raum ?? '',
+            'is-cancelled' => $resource instanceof \CourseExDate,
             'mkdate' => date('c', $resource->mkdate),
             'chdate' => date('c', $resource->chdate),
-            'recurrence' => $resource->getRecurrence(),
+            'recurrence' => isset($resource->cycle) ? $resource->cycle->toString() : '',
         ];
     }
 

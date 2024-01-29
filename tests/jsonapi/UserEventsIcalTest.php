@@ -23,16 +23,18 @@ class UserEventsIcalTest extends \Codeception\Test\Unit
     {
         $credentials = $this->tester->getCredentialsForTestAutor();
 
-        $calendar = new \SingleCalendar($credentials['id']);
-        $event = $calendar->getNewEvent();
-        $event->setTitle('blypyp');
-
-        $oldUser = $GLOBALS['user'] ?? null;
-        $GLOBALS['user'] = \User::find($credentials['id']);
-
-        $calendar->storeEvent($event, [$credentials['id']]);
-
-        $GLOBALS['user'] = $oldUser;
+        $event = new \CalendarDate();
+        $event->setId($event->getNewId());
+        $now = time();
+        $event->begin = $now;
+        $event->end = $now + 3600;
+        $event->title = 'blypyp';
+        $event->store();
+        $calendar_date = new \CalendarDateAssignment();
+        $calendar_date->setId([$credentials['id'], $event->getId()]);
+        $calendar_date->calendar_date = $event;
+        $calendar_date->suppress_mails = true;
+        $calendar_date->store();
 
         $app = $this->tester->createApp($credentials, 'get', '/users/{id}/events.ics', UserEventsIcal::class);
 

@@ -18,17 +18,15 @@ class CalendarEvent extends SchemaProvider
     public function getAttributes($resource, ContextInterface $context): iterable
     {
         return [
-            'title' => $resource->title,
-            'description' => $resource->getDescription(),
-            'start' => date('c', $resource->getStart()),
-            'end' => date('c', $resource->getEnd()),
-            'categories' => $resource->toStringCategories(true),
-            'location' => $resource->getLocation(),
-// TODO: 'is-canceled'    => $singledate->isHoliday() ?: false,
-
-            'mkdate' => date('c', $resource->mkdate),
-            'chdate' => date('c', $resource->chdate),
-            'recurrence' => $resource->getRecurrence(),
+            'title' => $resource->calendar_date->title,
+            'description' => $resource->calendar_date->description,
+            'start' => date('c', $resource->calendar_date->begin),
+            'end' => date('c', $resource->calendar_date->end),
+            'categories' => $resource->calendar_date->getCategoryAsString(),
+            'location' => $resource->calendar_date->location,
+            'mkdate' => date('c', $resource->calendar_date->mkdate),
+            'chdate' => date('c', $resource->calendar_date->chdate),
+            'recurrence' => $resource->calendar_date->getRepetitionAsString(),
         ];
     }
 
@@ -39,7 +37,9 @@ class CalendarEvent extends SchemaProvider
     {
         $relationships = [];
 
-        if ($owner = $resource->getOwner()) {
+        $owner = $resource->user ?? $resource->course;
+
+        if ($owner) {
             $link = $this->createLinkToResource($owner);
             $relationships = [
                 self::REL_OWNER => [self::RELATIONSHIP_LINKS => [Link::RELATED => $link], self::RELATIONSHIP_DATA => $owner],

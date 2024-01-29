@@ -27,19 +27,15 @@ class CourseEventsIndex extends JsonApiController
             throw new AuthorizationFailedException();
         }
 
-        $dates = $course->dates->map(function ($courseDate) {
-            return new \CourseEvent($courseDate->id);
-        });
-        $exDates = $course->ex_dates->map(function ($courseDate) {
-            return new \CourseCancelledEvent($courseDate->id);
-        });
-
-        $allDates = array_merge($dates, $exDates);
-        usort($allDates, function ($date1, $date2) {
+        $all_dates = array_merge(
+            $course->dates->getArrayCopy(),
+            $course->ex_dates->getArrayCopy()
+        );
+        usort($all_dates, function ($date1, $date2) {
             return intval($date1->date) <=> intval($date2->date);
         });
         list($offset, $limit) = $this->getOffsetAndLimit();
 
-        return $this->getPaginatedContentResponse(array_slice($allDates, $offset, $limit), count($allDates));
+        return $this->getPaginatedContentResponse(array_slice($all_dates, $offset, $limit), count($all_dates));
     }
 }

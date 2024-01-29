@@ -23,6 +23,7 @@ class Semester extends SchemaProvider
             'start-of-lectures' => date('c', $semester->vorles_beginn),
             'end-of-lectures' => date('c', $semester->vorles_ende),
             'visible' => (bool) $semester->visible,
+            'is-current' => $semester->isCurrent(),
         ];
     }
 

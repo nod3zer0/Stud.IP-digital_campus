@@ -1,4 +1,5 @@
-<form name="edit_termin" action='<?= $controller->url_for('course/dates/save_details/' . $date->id) ?>' method="post" class="default" data-termin-id="<?= htmlReady($date->id) ?>">
+<form name="edit_termin" action='<?= $controller->url_for('course/dates/save_details/' . $date->id) ?>' method="post" class="default" data-termin-id="<?= htmlReady($date->id) ?>"
+      data-course-id="<?= htmlReady(Context::getID()) ?>">
     <?= CSRFProtection::tokenTag() ?>
 
     <fieldset>
@@ -93,6 +94,17 @@
         </div>
     </fieldset>
 <? endif; ?>
+<? if (!empty($date->room_booking->resource)) : ?>
+    <? $room = $date->room_booking->resource->getDerivedClassInstance() ?>
+    <? if ($room instanceof Resource) : ?>
+        <fieldset>
+            <legend><?= _('Raum') ?></legend>
+            <section>
+                <?= htmlReady($room->getFullName()) ?>
+            </section>
+        </fieldset>
+    <? endif ?>
+<? endif ?>
 
 <? if (count($groups) > 0): ?>
     <fieldset>
@@ -156,6 +168,12 @@
                 _('Ausfallen lassen'),
                 $controller->url_for('course/cancel_dates', ['termin_id' => $date->id]),
                 ['data-dialog' => '']
+            ) ?>
+        <? endif ?>
+        <? if (Request::submitted('extra_buttons')) : ?>
+            <?= Studip\LinkButton::create(
+                _('Zur Veranstaltung'),
+                $controller->url_for('course/details', ['cid' => $date->range_id])
             ) ?>
         <? endif ?>
     </footer>

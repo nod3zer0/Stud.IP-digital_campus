@@ -16,7 +16,7 @@
  * @property int $chdate database column
  * @property ConsultationSlot $slot belongs_to ConsultationSlot
  * @property User $user belongs_to User
- * @property EventData|null $event has_one EventData
+ * @property CalendarDate $event has_one CalendarDate
  */
 class ConsultationBooking extends SimpleORMap implements PrivacyObject
 {
@@ -37,9 +37,9 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
             'foreign_key' => 'user_id',
         ];
         $config['has_one']['event'] = [
-            'class_name'        => EventData::class,
+            'class_name'        => CalendarDate::class,
             'foreign_key'       => 'student_event_id',
-            'assoc_foreign_key' => 'event_id',
+            'assoc_foreign_key' => 'id',
             'on_delete'         => 'delete',
         ];
 
@@ -48,8 +48,8 @@ class ConsultationBooking extends SimpleORMap implements PrivacyObject
             setTempLanguage($booking->user_id);
 
             $event = $booking->slot->createEvent($booking->user);
-            $event->category_intern = 1;
-            $event->summary = sprintf(
+            $event->category = 1;
+            $event->title = sprintf(
                 _('Termin bei %s'),
                 $booking->slot->block->range->getFullName()
             );

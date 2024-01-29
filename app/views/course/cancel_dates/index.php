@@ -12,7 +12,7 @@
 
         <label>
             <?= _('Kommentar') ?>
-            <?= tooltipIcon(_('Wenn Sie die nicht stattfindenden Termine mit einem Kommentar versehen, werden die Ausfalltermine im Ablaufplan weiterhin dargestellt und auch im Terminkalender eingeblendet.')) ?>
+            <?= tooltipIcon(_('Wenn Sie die nicht stattfindenden Termine mit einem Kommentar versehen, werden die Ausfalltermine im Ablaufplan weiterhin dargestellt und auch im Kalender angezeigt.')) ?>
             <textarea wrap="virtual" name="cancel_dates_comment" id="cancel_dates_comment"></textarea>
         </label>
         <label>

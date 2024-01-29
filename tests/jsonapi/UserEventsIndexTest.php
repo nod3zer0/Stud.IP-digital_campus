@@ -55,14 +55,16 @@ class UserEventsIndexTest extends \Codeception\Test\Unit
 
     private function createEvent($credentials)
     {
-        $calendar = new \SingleCalendar($credentials['id']);
-        $event = $calendar->getNewEvent();
-
-        $oldUser = $GLOBALS['user'];
-        $GLOBALS['user'] = \User::find($credentials['id']);
-
-        $calendar->storeEvent($event, [$credentials['id']]);
-
-        $GLOBALS['user'] = $oldUser;
+        $event = new \CalendarDate();
+        $event->setId($event->getNewId());
+        $now = time();
+        $event->begin = $now;
+        $event->end = $now + 3600;
+        $event->store();
+        $calendar_date = new \CalendarDateAssignment();
+        $calendar_date->setId([$credentials['id'], $event->getId()]);
+        $calendar_date->calendar_date = $event;
+        $calendar_date->suppress_mails = true;
+        $calendar_date->store();
     }
 }

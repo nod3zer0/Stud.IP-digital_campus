@@ -5,15 +5,17 @@
 </template>
 
 <script>
-    function pad(what, length = 2) {
-        return `00000000${what}`.substr(-length);
-    }
 
     export default {
         name: 'studip-date-time',
         props: {
             timestamp: Number,
             relative: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            date_only: {
                 type: Boolean,
                 required: false,
                 default: false
@@ -40,18 +42,8 @@
                     return `Should be integer: ${this.timestamp}`;
                 }
                 let date = new Date(this.timestamp * 1000);
-                let now = Date.now();
-                if (!force_absolute && this.relative && this.display_relative()) {
-                    if (now - date < 1 * 60 * 1000) {
-                        return this.$gettext('Jetzt');
-                    }
-                    if (now - date < 2 * 60 * 60 * 1000) {
-                        return this.$gettext('Vor %s Minuten').replace('%s', Math.floor((now - date) / (1000 * 60)));
-                    }
-                    return pad(date.getHours()) + ':' + pad(date.getMinutes());
-                } else {
-                    return pad(date.getDate()) + '.' + pad(date.getMonth() + 1) + '.' + date.getFullYear() + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
-                }
+                let relative_value = !force_absolute && this.relative && this.display_relative();
+                return STUDIP.DateTime.getStudipDate(date, relative_value, this.date_only);
             }
         },
         mounted: function () {

@@ -80,7 +80,7 @@
  * @property mixed $lock_rule additional field
  * @property mixed $oercampus_description additional field
  */
-class User extends AuthUserMd5 implements Range, PrivacyObject
+class User extends AuthUserMd5 implements Range, PrivacyObject, Studip\Calendar\Owner
 {
     /**
      *
@@ -1540,5 +1540,57 @@ class User extends AuthUserMd5 implements Range, PrivacyObject
     {
         return $this->config->EXPIRATION_DATE > 0
             && $this->config->EXPIRATION_DATE < time();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getCalendarOwner(string $owner_id): ?\Studip\Calendar\Owner
+    {
+        return self::find($owner_id);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isCalendarReadable(?string $user_id = null): bool
+    {
+        if ($user_id === null) {
+            $user_id = self::findCurrent()->id;
+        }
+
+        if ($this->id === $user_id) {
+            //The owner can always read their own calendar.
+            return true;
+        }
+        return Contact::countBySql(
+            "`owner_id` = :this_user_id AND `user_id` = :other_user_id
+            AND `calendar_permissions` <> ''",
+            ['this_user_id' => $this->id, 'other_user_id' => $user_id]
+        ) > 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isCalendarWritable(string $user_id = null): bool
+    {
+        if ($user_id === null) {
+            $user_id = self::findCurrent()->id;
+        }
+
+        if ($this->id === $user_id) {
+            //The owner can always write their own calendar.
+            return true;
+        }
+        if (Config::get()->CALENDAR_GRANT_ALL_INSERT) {
+            //All users can write in all users calendars.
+            return true;
+        }
+        return Contact::countBySql(
+                "`owner_id` = :this_user_id AND `user_id` = :other_user_id
+            AND `calendar_permissions` = 'WRITE'",
+            ['this_user_id' => $this->id, 'other_user_id' => $user_id]
+        ) > 0;
     }
 }

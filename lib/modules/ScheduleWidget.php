@@ -39,15 +39,45 @@ class ScheduleWidget extends CorePlugin implements PortalPlugin
      */
     public function getPortalTemplate()
     {
-        $view = CalendarScheduleModel::getUserCalendarView(
-            $GLOBALS['user']->id,
-            false,
-            false,
-            $days = array(0,1,2,3,4)
+        $week_slot_duration = \Studip\Calendar\Helper::getCalendarSlotDuration('week');
+        $calendar_settings = $GLOBALS['user']->cfg->CALENDAR_SETTINGS ?? [];
+
+        $semester = Semester::findCurrent();
+        $fullcalendar = \Studip\Fullcalendar::create(
+            '',
+            [
+                'minTime' => '08:00',
+                'maxTime' => '20:00',
+                'allDaySlot' => false,
+                'header' => [
+                    'left' => '',
+                    'right' => ''
+                ],
+                'views' => [
+                    'timeGridWeek' => [
+                        'columnHeaderFormat' => ['weekday' => 'long'],
+                        'weekends'           => $calendar_settings['type_week'] === 'LONG',
+                        'slotDuration'       => $week_slot_duration
+                    ]
+                ],
+                'defaultView' => 'timeGridWeek',
+                'defaultDate' => date('Y-m-d'),
+                'timeGridEventMinHeight' => 20,
+                'eventSources' => [
+                    [
+                        'url' => URLHelper::getURL('dispatch.php/calendar/calendar/schedule_data'),
+                        'method' => 'GET',
+                        'extraParams' => [
+                            'semester_id' => $semester->id,
+                            'full_semester_time_range' => false
+                        ]
+                    ]
+                ]
+            ]
         );
 
         $template = $GLOBALS['template_factory']->open('shared/string');
-        $template->content = CalendarWidgetView::createFromWeekView($view)->render();
+        $template->content = $fullcalendar;
 
         return $template;
     }

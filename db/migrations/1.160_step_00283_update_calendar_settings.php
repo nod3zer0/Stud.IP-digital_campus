@@ -17,7 +17,17 @@ class Step00283UpdateCalendarSettings extends Migration {
             'showmonth' => 'month',
             'showyear' => 'year'];
         $res = DBManager::get()->query("SELECT user_id FROM `user_config` WHERE field = 'CALENDAR_SETTINGS'");
-        $default_settings = Calendar::getDefaultUserSettings();
+        $default_settings = [
+            'view'              => 'week',
+            'start'             => '9',
+            'end'               => '20',
+            'step_day'          => '900',
+            'step_week'         => '1800',
+            'type_week'         => 'LONG',
+            'step_week_group'   => '3600',
+            'step_day_group'    => '3600',
+            'show_declined'     => '0'
+        ];
         Config::get()->store('CALENDAR_SETTINGS', $default_settings);
         foreach ($res as $row) {
             $config = new UserConfig($row['user_id']);

@@ -10,9 +10,14 @@
  * @property string $owner_id database column
  * @property string $user_id database column
  * @property int|null $mkdate database column
+ * @property string $calendar_permissions database column
+ *     An enum with the possible values "", "READ" and "WRITE".
+ *     The empty string specifies that no calendar permissions are granted.
  * @property SimpleORMapCollection|StatusgruppeUser[] $group_assignments has_many StatusgruppeUser
  * @property User $owner belongs_to User
  * @property User $friend belongs_to User
+ * @property string $mkdate database column
+ * @property string $chdate database column
  */
 class Contact extends SimpleORMap
 {
@@ -29,15 +34,16 @@ class Contact extends SimpleORMap
             'foreign_key' => 'user_id'
         ];
 
-        $config['has_many']['group_assignments'] = [
-            'class_name'        => 'StatusgruppeUser',
+        $config['has_many']['groups'] = [
+            'class_name'        => ContactGroupItem::class,
             'assoc_func'        => 'findByContact',
             'foreign_key'       => function ($me) {
                 return [$me];
             },
-            'assoc_foreign_key' => function ($group, $params) {
-                $group->setValue('user_id', $params[0]->user_id);
-            },
+            'assoc_foreign_key' => function ($item, $params) {
+                //Nothing else here. But this has to be present
+                //so that storing a new contact works.
+             },
             'on_store'          => 'store',
             'on_delete'         => 'delete'
         ];

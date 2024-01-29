@@ -4,6 +4,7 @@ const Dates = {
             termin_id = $('#new_topic')
                 .closest('[data-termin-id]')
                 .data().terminId;
+        let course_id = jQuery('#new_topic').closest('[data-course-id]').data().courseId;
 
         if (!topic_name) {
             $('#new_topic').focus();
@@ -12,7 +13,8 @@ const Dates = {
 
         $.post(STUDIP.URLHelper.getURL('dispatch.php/course/dates/add_topic'), {
             title: topic_name,
-            termin_id: termin_id
+            termin_id: termin_id,
+            cid: course_id
         }).done(function(response) {
             if (response.li !== undefined) {
                 $('#new_topic')

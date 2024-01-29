@@ -38,7 +38,14 @@ class UserEventsIndex extends JsonApiController
         }
         $end = strtotime('+2 weeks', $start);
 
-        $list = \SingleCalendar::getEventList($user->id, $start, $end, $user->id);
+        //See the RecordNotFoundException above: This route only lets user
+        //retrieve the dates of their own calendar. So no permission check
+        //is needed.
+        $start_dt = new \DateTime();
+        $start_dt->setTimestamp($start);
+        $end_dt = new \DateTime();
+        $end_dt->setTimestamp($end);
+        $list = \CalendarDateAssignment::getEvents($start_dt, $end_dt, $user->id);
         list($offset, $limit) = $this->getOffsetAndLimit();
 
         return $this->getPaginatedContentResponse(

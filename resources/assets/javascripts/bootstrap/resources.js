@@ -483,7 +483,7 @@ STUDIP.ready(function () {
             } else if ($(this).hasClass('fc-today-button')
                 || $(this).hasClass('fc-prev-button')
                 || $(this).hasClass('fc-next-button')) {
-                updateDateURL();
+                STUDIP.Fullcalendar.updateDateURL();
             }
         }
     );
@@ -594,71 +594,11 @@ STUDIP.ready(function () {
         $('.booking-plan-allday_view').attr('href', url.toString());
     }
 
-    function submitDatePicker() {
-        var picked = $('#booking-plan-jmpdate').val();
-        var iso_date_string = '';
-        if(picked) {
-            if (picked.includes('.')) {
-                let [day, month, year] = picked.split('.');
-                iso_date_string = year.padStart(4, "20") + '-' + month.padStart(2, "0") + '-' + day.padStart(2, "0");
-            } else if (picked.includes('/')) {
-                let [day, month, year] = picked.split('/');
-                iso_date_string = year.padStart(4, "20") + '-' + month.padStart(2, "0") + '-' + day.padStart(2, "0");
-            } else if (picked.includes('-')) {
-                iso_date_string = picked;
-            }
-        }
-        if (iso_date_string) {
-            $('*[data-resources-fullcalendar="1"]').each(function () {
-                this.calendar.gotoDate(iso_date_string);
-            });
-            updateDateURL();
-        }
-    }
-
-    function updateDateURL() {
-        let changedMoment;
-        $('[data-resources-fullcalendar="1"]').each(function () {
-            changedMoment = $(this)[0].calendar.getDate();
-        });
-        if (changedMoment) {
-            let changedDate = STUDIP.Fullcalendar.toRFC3339String(changedMoment).split('T')[0];
-            //Get the timestamp:
-            let timeStamp = changedMoment.getTime() / 1000;
-
-            $('a.resource-bookings-actions').each(function () {
-                const url = new URL(this.href);
-                url.searchParams.set('timestamp', timeStamp)
-                url.searchParams.set('defaultDate', changedDate)
-                this.href = url.toString();
-            });
-
-            // Now change the URL of the window.
-            const url = new URL(window.location.href);
-            url.searchParams.set('defaultDate', changedDate);
-
-            // Update url in history
-            history.pushState({}, null, url.toString());
-
-            // Adjust links accordingly
-            url.searchParams.delete('allday');
-            $('.booking-plan-std_view').attr('href', url.toString());
-
-            url.searchParams.set('allday', 1);
-            $('.booking-plan-allday_view').attr('href', url.toString());
-
-            // Update sidebar value
-            $('#booking-plan-jmpdate').val(changedMoment.toLocaleDateString('de-DE'));
-
-            //Store the date in the sessionStorage:
-            sessionStorage.setItem('booking_plan_date', changedDate)
-        }
-    }
 
     jQuery('#booking-plan-jmpdate').datepicker(
         {
             dateFormat: 'dd.mm.yy',
-            onClose: submitDatePicker
+            onClose: STUDIP.Fullcalendar.submitDatePicker
         }
     );
     jQuery('.resource-booking-time-fields input[type="date"]').datepicker(

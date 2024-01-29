@@ -44,7 +44,7 @@ function startpage_redirect($page_code) {
             $jump_page = "dispatch.php/contact";
         break;
         case 5:
-            $jump_page = "dispatch.php/calendar/single";
+            $jump_page = "dispatch.php/calendar";
         break;
         case 6:
             // redirect to global blubberstream

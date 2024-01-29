@@ -5,6 +5,8 @@
  * @author  Jan-Hendrik Willms <tleilax+studip@gmail.com>
  * @license GPL2 or any later version
  * @since   Stud.IP 3.4
+ *
+ * @deprecated since Stud.IP 5.5
  */
 class CalendarWidgetView extends CalendarWeekView
 {
