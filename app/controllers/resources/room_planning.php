@@ -569,10 +569,10 @@ class Resources_RoomPlanningController extends AuthenticatedController
         if ($this->resource->userHasPermission($this->user, 'admin')) {
             $this->booking_types[] = ResourceBooking::TYPE_PLANNED;
         }
-        if ($this->user_has_booking_permissions) {
-            URLHelper::addLinkParam('display_single_bookings', Request::get("display_single_bookings"));
-            $this->display_single_bookings = Request::get("display_single_bookings");
-        }
+
+        URLHelper::addLinkParam('display_single_bookings', Request::get("display_single_bookings"));
+        $this->display_single_bookings = Request::get("display_single_bookings");
+
 
         if (!$this->user_has_booking_permissions && $this->display_all_requests) {
             throw new AccessDeniedException(
