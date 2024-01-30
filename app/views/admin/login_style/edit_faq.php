@@ -16,12 +16,15 @@
         <input type="text" name="title" value="<?= htmlReady($entry->title) ?>" required>
     </label>
 
-    <label class="studiprequired">
-        <?= _('Text') ?>
-        <span title="<?= _('Dies ist ein Pflichtfeld') ?>" aria-hidden="true" class="asterisk">*</span>
+    <label>
+        <span class="studiprequired">
+            <?= _('Text') ?>
+            <span title="<?= _('Dies ist ein Pflichtfeld') ?>" aria-hidden="true" class="asterisk">*</span>
+        </span>
         <textarea name="description"
                   class="add_toolbar wysiwyg" data-editor="toolbar=minimal"><?= htmlReady($entry->description)?></textarea>
     </label>
+
 
     <div data-dialog-button>
         <?= \Studip\Button::create(_('Speichern')) ?>
