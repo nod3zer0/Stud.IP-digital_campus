@@ -15,10 +15,10 @@
     <dd><?= join(', ', $plugin['type']) ?></dd>
 
     <dt><?= _('Origin') ?></dt>
-    <dd><?= htmlReady($manifest['origin']) ?></dd>
+    <dd><?= htmlReady($manifest['origin'] ?? '?') ?></dd>
 
     <dt><?= _('Version') ?></dt>
-    <dd><?= htmlReady($manifest['version']) ?></dd>
+    <dd><?= htmlReady($manifest['version'] ?? '?') ?></dd>
 
     <dt><?= _('Beschreibung') ?></dt>
     <dd>

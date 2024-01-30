@@ -247,10 +247,10 @@ class JsupdaterController extends AuthenticatedController
         Questionnaire::findEachMany(
             function (Questionnaire $questionnaire) use ($pageInfo, &$data) {
                 if ($questionnaire->latestAnswerTimestamp() > $pageInfo['questionnaire']['last_update']) {
-                    $template = $this->get_template_factory()->open("questionnaire/evaluate");
-                    $template->filtered = $pageInfo['questionnaire']['filtered'];
+                    $template = $this->get_template_factory()->open('questionnaire/evaluate');
+                    $template->questionnaire = $questionnaire;
+                    $template->filtered = $pageInfo['questionnaire']['filtered'] ?? [];
                     $template->set_layout(null);
-                    $template->set_attribute("questionnaire", $questionnaire);
                     $data[$questionnaire->id] = [
                         'html' => $template->render()
                     ];

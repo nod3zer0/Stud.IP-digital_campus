@@ -141,7 +141,7 @@ class WikiPage extends SimpleORMap implements PrivacyObject
         ) {
             return true;
         }
-        if ($user_id === null) {
+        if ($user_id === null && User::findCurrent()) {
             $user_id = User::findCurrent()->id;
         }
 
@@ -174,7 +174,7 @@ class WikiPage extends SimpleORMap implements PrivacyObject
      */
     public function isEditable(?string $user_id = null): bool
     {
-        if ($user_id === null) {
+        if ($user_id === null && User::findCurrent()) {
             $user_id = User::findCurrent()->id;
         }
         if ($GLOBALS['perm']->have_studip_perm(
