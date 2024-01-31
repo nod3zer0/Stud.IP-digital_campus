@@ -29,6 +29,16 @@ class Resources_RoomRequestController extends AuthenticatedController
 
         $this->current_user = User::findCurrent();
 
+        $default_filters = [];
+        if (in_array($action, ['resolve', 'decline'])) {
+            $default_filters['get_only_request_ids'] = true;
+            $default_filters['filter_request_id'] = $args[0];
+        } elseif ($action === 'planning') {
+            $default_filters['request_periods'] ='periodic';
+        }
+
+        $this->filter = $this->getFilters($default_filters);
+
         if (in_array($action, ['overview', 'planning', 'export_list', 'resolve', 'decline'])) {
             $user_is_global_resource_autor = ResourceManager::userHasGlobalPermission($this->current_user, 'autor');
             if (!RoomManager::userHasRooms($this->current_user, 'autor', true) && !$user_is_global_resource_autor) {
@@ -38,155 +48,79 @@ class Resources_RoomRequestController extends AuthenticatedController
             $this->available_rooms = RoomManager::getUserRooms($this->current_user, 'autor', true);
             $this->selected_room_ids = [];
 
-            $this->filter =& $_SESSION[__CLASS__]['filter'];
-
-            if (in_array($action, ['resolve', 'decline'])) {
-                $this->filter['get_only_request_ids'] = true;
-                $this->filter['filter_request_id'] = $args[0];
-            } else {
-                $this->filter['get_only_request_ids'] = false;
+            if (!Semester::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE)) {
+                $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE = Semester::findCurrent()->id;
             }
+        }
 
-            if ($action === 'planning') {
-                $this->filter['request_periods'] ='periodic';
+        $this->selected_room_ids = [];
+        if (isset($this->filter['room_id'])) {
+            $room = Resource::find($this->filter['room_id']);
+            if (!$room) {
+                PageLayout::postError(
+                    _('Der gewählte Raum wurde nicht gefunden!')
+                );
+                return;
             }
-
-            if (Request::get('reset_filter')) {
-                $this->filter = [
-                    'marked'       => -1,
-                    'own_requests' => 1,
-                    'request_status' => 'open'
-                ];
-            } else {
-                if (Request::option('institut_id')) {
-                    $GLOBALS['user']->cfg->store('MY_INSTITUTES_DEFAULT', Request::option('institut_id'));
-                }
-                if (Request::option('semester_id')) {
-                    $GLOBALS['user']->cfg->store('MY_COURSES_SELECTED_CYCLE', Request::option('semester_id'));
-                }
-                if (Request::option('request_status')) {
-                    $this->filter['request_status'] = Request::get('request_status');
-                }
-                if (!Semester::find($GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE)) {
-                    $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE = Semester::findCurrent()->id;
-                }
-                $this->filter['marked'] = -1;
-                if (Request::submitted('marked')) {
-                    $this->filter['marked'] = Request::get('marked');
-                }
-                if (Request::submitted('request_periods')) {
-                    $request_periods = Request::get('request_periods');
-                    if (in_array($request_periods, ['aperiodic', 'periodic'])) {
-                        $this->filter['request_periods'] = $request_periods;
-                    } else {
-                        $this->filter['request_periods'] = null;
-                    }
-                }
-                if (Request::submitted('toggle_specific_requests')) {
-                    $this->filter['specific_requests'] = !Request::bool('toggle_specific_requests');
-                }
-                if (Request::submitted('toggle_own_requests')) {
-                    $this->filter['own_requests'] = !Request::bool('toggle_own_requests');
-                }
-                if (Request::submitted('course_type')) {
-                    $this->filter['course_type'] = Request::option('course_type');
-                    if ($this->filter['course_type'] == 'all') {
-                        unset($this->filter['course_type']);
-                    }
-                }
-                if (Request::submitted('group')) {
-                    $this->filter['group'] = Request::option('group');
-                    if ($this->filter['group'] == 'all') {
-                        unset($this->filter['group']);
-                    }
-                }
-                if (Request::submitted('room_id')) {
-                    $this->filter['room_id'] = Request::get('room_id');
-                    if ($this->filter['room_id'] == 'all') {
-                        unset($this->filter['room_id']);
-                    }
-                }
-                if (Request::submitted('dow')) {
-                    $this->filter['dow'] = Request::option('dow');
-                    if ($this->filter['dow'] == 'all') {
-                        unset($this->filter['dow']);
-                    }
-                }
+            $room = $room->getDerivedClassInstance();
+            if (!($room instanceof Room)) {
+                PageLayout::postError(
+                    _('Es wurde kein Raum ausgewählt!')
+                );
+                return;
             }
-
-            $this->selected_room_ids = [];
-            if (!empty($this->filter['room_id'])) {
-                $room = Resource::find($this->filter['room_id']);
-                if (!($room instanceof Resource)) {
-                    PageLayout::postError(
-                        _('Der gewählte Raum wurde nicht gefunden!')
-                    );
-                    return;
-                }
+            if (!$room->userHasPermission($this->current_user, 'autor')) {
+                PageLayout::postError(
+                    sprintf(
+                        _('Die Berechtigungen für den Raum %s sind nicht ausreichend, um die Anfrageliste anzeigen zu können!'),
+                        htmlReady($room->name)
+                    )
+                );
+                return;
+            }
+            $this->selected_room_ids = [$room->id];
+        } elseif (isset($this->filter['group'])) {
+            //Filter rooms by the selected room group:
+            $clipboard = Clipboard::find($this->filter['group']);
+            if (!$clipboard) {
+                PageLayout::postError(
+                    _('Die gewählte Raumgruppe wurde nicht gefunden!')
+                );
+                return;
+            }
+            $room_ids = $clipboard->getAllRangeIds('Room');
+            if (!$room_ids) {
+                PageLayout::postError(
+                    _('Die gewählte Raumgruppe enthält keine Räume!')
+                );
+                return;
+            }
+            $rooms = Resource::findMany($room_ids);
+            foreach ($rooms as $room) {
                 $room = $room->getDerivedClassInstance();
-                if (!($room instanceof Room)) {
-                    PageLayout::postError(
-                        _('Es wurde kein Raum ausgewählt!')
-                    );
-                    return;
-                }
-                if (!$room->userHasPermission($this->current_user, 'autor', [])) {
-                    PageLayout::postError(
-                        sprintf(
-                            _('Die Berechtigungen für den Raum %s sind nicht ausreichend, um die Anfrageliste anzeigen zu können!'),
-                            htmlReady($room->name)
-                        )
-                    );
-                    return;
-                }
-                $this->selected_room_ids = [$room->id];
-            } elseif (!empty($this->filter['group'])) {
-                //Filter rooms by the selected room group:
-                $clipboard = Clipboard::find($this->filter['group']);
-                if (!($clipboard instanceof Clipboard)) {
-                    PageLayout::postError(
-                        _('Die gewählte Raumgruppe wurde nicht gefunden!')
-                    );
-                    return;
-                }
-                $room_ids = $clipboard->getAllRangeIds('Room');
-                if (!$room_ids) {
-                    PageLayout::postError(
-                        _('Die gewählte Raumgruppe enthält keine Räume!')
-                    );
-                    return;
-                }
-                $rooms = Resource::findMany($room_ids);
-                foreach ($rooms as $room) {
-                    $room = $room->getDerivedClassInstance();
-                    if ($room instanceof Room) {
-                        $this->selected_room_ids[] = $room->id;
-                    }
-                }
-            } else {
-                //No filter for a room or a room group set:
-                //Display requests of all available rooms:
-                foreach ($this->available_rooms as $room) {
+                if ($room instanceof Room) {
                     $this->selected_room_ids[] = $room->id;
                 }
             }
-
-            // if sorting according to table column was chosen, set the correct
-            // sort order (ascending vs descending)
-            if ($sort_value = Request::int('sorting')) {
-                $this->filter['sorting'] = $sort_value;
-                $this->filter['sort_order'] = Request::get('sort_order') === 'desc' ? 'desc' : 'asc';
+        } else {
+            //No filter for a room or a room group set:
+            //Display requests of all available rooms:
+            foreach ($this->available_rooms as $room) {
+                $this->selected_room_ids[] = $room->id;
             }
-
-            //At this point, only the "marked" filter is definetly set.
-            //If more filters are set, we must show the reset button.
-            $this->show_filter_reset_button = count($this->filter) > 2;
-
-            //The following filters are special:
-            $this->filter['semester'] = $GLOBALS['user']->cfg->MY_COURSES_SELECTED_CYCLE;
-            $this->filter['institute'] = $GLOBALS['user']->cfg->MY_INSTITUTES_DEFAULT;
-            $this->entries_per_page = Config::get()->ENTRIES_PER_PAGE;
         }
+
+        // if sorting according to table column was chosen, set the correct
+        // sort order (ascending vs descending)
+        $sort_value = Request::int('sorting');
+        if ($sort_value) {
+            $_SESSION[__CLASS__]['sort'] = [
+                'by' => $sort_value,
+                'dir' => Request::option('sort_order') === 'desc' ? 'desc' : 'asc',
+            ];
+        }
+
+        $this->entries_per_page = Config::get()->ENTRIES_PER_PAGE;
     }
 
     /**
@@ -195,9 +129,9 @@ class Resources_RoomRequestController extends AuthenticatedController
     protected function getFilteredRoomRequests()
     {
         $sql = '';
-        if (!empty($this->filter['request_status']) && $this->filter['request_status'] == 'closed') {
+        if (!empty($this->filter['request_status']) && $this->filter['request_status'] === 'closed') {
             $sql .= "resource_requests.closed IN ('1', '2') ";
-        } elseif (!empty($this->filter['request_status']) && $this->filter['request_status'] == 'denied') {
+        } elseif (!empty($this->filter['request_status']) && $this->filter['request_status'] === 'denied') {
             $sql .= "resource_requests.closed = '3' ";
         } else {
             $sql .= "resource_requests.closed < '1' ";
@@ -245,7 +179,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         }
 
 
-        $institute_id = $this->filter['institute'];
+        $institute_id = $this->filter['institute'] ?? null;
         if ($institute_id) {
             $common_seminar_sql = 'resource_requests.course_id IN (
                 SELECT seminar_id FROM seminare
@@ -278,7 +212,10 @@ class Resources_RoomRequestController extends AuthenticatedController
             }
         }
 
-        if ($this->filter['marked'] > -1 && $this->filter['marked'] < ResourceRequest::MARKING_STATES) {
+        if (
+            isset($this->filter['marked'])
+            && $this->filter['marked'] < ResourceRequest::MARKING_STATES
+        ) {
             if ($sql) {
                 $sql .= ' AND ';
             }
@@ -341,8 +278,8 @@ class Resources_RoomRequestController extends AuthenticatedController
         $sql .= " GROUP BY resource_requests.id ";
 
         // if table should be sorted by marking state
-        if (isset($this->filter['sorting'])) {
-            switch ($this->filter['sorting']) {
+        if (isset($_SESSION[__CLASS__]['sort'])) {
+            switch ($_SESSION[__CLASS__]['sort']['by']) {
                 case 1:
                     $sql .= " ORDER BY resource_requests.marked ";
                     break;
@@ -352,7 +289,7 @@ class Resources_RoomRequestController extends AuthenticatedController
                 default:
                     $sql .= " ORDER BY mkdate ";
             }
-            $sql .= $this->filter['sort_order'] === 'desc' ? 'DESC' : 'ASC';
+            $sql .= $_SESSION[__CLASS__]['sort']['dir'] === 'desc' ? 'DESC' : 'ASC';
         }
 
         $requests = RoomRequest::findBySql($sql, $sql_params);
@@ -409,9 +346,12 @@ class Resources_RoomRequestController extends AuthenticatedController
             }
         }
         // sort requests according to display table columns not in the resource request db table
-        if (!empty($this->filter['sorting']) &&
-            $this->filter['sorting'] != 1 && $this->filter['sorting'] != 10) {
-            $result = $this->sort_request_table($result, $this->filter['sorting'], $this->filter['sort_order']);
+        if (
+            isset($_SESSION[__CLASS__]['sort'])
+            && $_SESSION[__CLASS__]['sort']['by'] != 1
+            && $_SESSION[__CLASS__]['sort']['by'] != 10
+        ) {
+            $result = $this->sort_request_table($result, $_SESSION[__CLASS__]['sort']['by'], $_SESSION[__CLASS__]['sort']['dir']);
         }
 
         return $result;
@@ -551,226 +491,24 @@ class Resources_RoomRequestController extends AuthenticatedController
         }
         PageLayout::setTitle(_('Anfragenliste'));
 
+        $this->setupSidebar('overview');
+
         $sidebar = Sidebar::get();
 
-        if ($this->show_filter_reset_button) {
-            $filter_reset_widget = new ActionsWidget();
-            $filter_reset_widget->addLink(
-                _('Filter zurücksetzen'),
-                $this->overviewURL(['reset_filter' => '1']),
-                Icon::create('decline')
-            );
-            $sidebar->addWidget($filter_reset_widget);
-        }
-
-        $institute_selector = new InstituteSelectWidget(
-            '',
-            'institut_id',
-            'get'
-        );
-        $institute_selector->includeAllOption();
-        $institute_selector->setSelectedElementIds($this->filter['institute']);
-        $sidebar->addWidget($institute_selector);
-
-        $semester_selector = new SemesterSelectorWidget(
-            '',
-            'semester_id',
-            'get'
-        );
-        $semester_selector->setSelection($this->filter['semester']);
-        $semester_selector->setRange(time(), PHP_INT_MAX);
-        $sidebar->addWidget($semester_selector);
-
-        $request_status_selector = new SelectWidget(
-            _('Status der Anfrage'),
-            $this->overviewURL(),
-            'request_status'
-        );
-        $request_status_selector->setOptions(
-            [
-                'open' => _('offen'),
-                'closed' => _('bearbeitet'),
-                'denied' => _('abgelehnt')
-            ]
-        );
-        $sidebar->addWidget($request_status_selector);
-
-        $list = new SelectWidget(
-            _('Veranstaltungstypfilter'),
-            $this->overviewURL(),
-            'course_type'
-        );
-        $list->addElement(
-            new SelectElement(
-                'all',
-                _('Alle'),
-                empty($this->filter['course_type'])
-            ),
-            'course-type-all'
-        );
-
-        foreach (SemClass::getClasses() as $class_id => $class) {
-            if ($class['studygroup_mode']) {
-                continue;
-            }
-
-            $element = new SelectElement(
-                $class_id,
-                $class['name'],
-                !empty($this->filter['course_type']) && $this->filter['course_type'] === (string)$class_id
-            );
-            $list->addElement(
-                $element->setAsHeader(),
-                'course-type-' . $class_id
-            );
-
-            foreach ($class->getSemTypes() as $id => $result) {
-                $element = new SelectElement(
-                    $class_id . '_' . $id,
-                    $result['name'],
-                    !empty($this->filter['course_type']) && $this->filter['course_type'] === $class_id . '_' . $id
-                );
-                $list->addElement(
-                    $element->setIndentLevel(1),
-                    'course-type-' . $class_id . '_' . $id
-                );
-            }
-        }
-        $sidebar->addWidget($list, 'filter-course-type');
-
-        $widget = new SelectWidget(
-            _('Raumgruppen'),
-            $this->overviewURL(),
-            'group'
-        );
-        $widget->addElement(
-            new SelectElement(
-                '',
-                _('Alle'),
-                empty($this->filter['group'])
-            ),
-            'clip-all'
-        );
-        foreach (Clipboard::getClipboardsForUser($GLOBALS['user']->id, ['Room']) as $clip) {
-            $widget->addElement(
-                new SelectElement(
-                    $clip->id,
-                    $clip->name,
-                    !empty($this->filter['group']) && $this->filter['group'] == $clip->id
-                ),
-                'clip-' . $clip->id
-            );
-        }
-        $sidebar->addWidget($widget);
-
-        $widget = new SelectWidget(
-            _('Räume'),
-            $this->overviewURL(),
-            'room_id'
-        );
-        $widget->addElement(
-            new SelectElement(
-                '',
-                _('Bitte wählen'),
-                empty($this->filter['room_id'])
-            )
-        );
-        foreach ($this->available_rooms as $room) {
-            $widget->addElement(
-                new SelectElement(
-                    $room->id,
-                    $room->name,
-                    !empty($this->filter['room_id']) && $room->id == $this->filter['room_id']
-                )
-            );
-        }
-        $sidebar->addWidget($widget);
-
-        $widget = new OptionsWidget(_('Filter'));
-        $widget->addRadioButton(
-            _('Alle Anfragen'),
-            $this->overviewURL($this->filter['marked'] != '-1' ? ['marked' => '-1'] : []),
-            $this->filter['marked'] == -1
-        );
-        $widget->addRadioButton(
-            _('Nur markierte Anfragen'),
-            $this->overviewURL($this->filter['marked'] != '1' ? ['marked' => '1'] : []),
-            $this->filter['marked'] == 1
-        );
-        $widget->addRadioButton(
-            _('Nur unmarkierte Anfragen'),
-            $this->overviewURL($this->filter['marked'] != '0' ? ['marked' => '0'] : []),
-            $this->filter['marked'] == 0
-        );
-        $widget->addElement(new WidgetElement('<br>'));
-
-        $widget->addRadioButton(
-            _('Alle Termine'),
-            $this->overviewURL(['request_periods' => '0']),
-            empty($this->filter['request_periods'])
-        );
-        $widget->addRadioButton(
-            _('Nur regelmäßige Termine'),
-            $this->overviewURL(['request_periods' => 'periodic']),
-            !empty($this->filter['request_periods']) && $this->filter['request_periods'] == 'periodic'
-        );
-        $widget->addRadioButton(
-            _('Nur unregelmäßige Termine'),
-            $this->overviewURL(['request_periods' => 'aperiodic']),
-            !empty($this->filter['request_periods']) && $this->filter['request_periods'] == 'aperiodic'
-        );
-        $widget->addElement(new WidgetElement('<br>'));
-        $widget->addCheckbox(
-            _('Nur mit Raumangabe'),
-            !empty($this->filter['specific_requests']),
-            $this->overviewURL(['toggle_specific_requests' => !empty($this->filter['specific_requests'])])
-        );
-        $widget->addCheckbox(
-            _('Eigene Anfragen anzeigen'),
-            !empty($this->filter['own_requests']),
-            $this->overviewURL(['toggle_own_requests' => !empty($this->filter['own_requests'])])
-        );
-
-        $sidebar->addWidget($widget);
-
-        $dow_selector = new SelectWidget(
-            _('Wochentag'),
-            $this->overviewURL(),
-            'dow');
-        $dow_selector->addElement(
-            new SelectElement(
-                'all', _('Alle'), empty($this->filter['dow'])
-            ),
-            'dow-all'
-        );
-        foreach (range(1, 7) as $day) {
-            $dow_selector->addElement(
-                new SelectElement(
-                    $day,
-                    strftime('%A', strtotime('this monday +' . ($day - 1) . ' day')),
-                    !empty($this->filter['dow']) && $this->filter['dow'] == $day
-                ),
-                'dow-' . $day
-            );
-        }
-        $sidebar->addWidget($dow_selector, 'filter-dow');
-
-        $relevant_export_url_params = [
+        $relevant_export_filters = [
             'institut_id'               => 'institute',
             'semester_id'               => 'semester',
             'course_type'               => 'course_type',
             'group'                     => 'group',
-            'room_id'                   => null,
+            'room_id'                   => 'room_id',
             'marked'                    => 'marked',
             'request_periods'           => 'request_periods',
             'toggle_specific_requests'  => 'specific_requests',
             'dow'                       => 'dow'
         ];
         $export_url_params = [];
-        foreach ($relevant_export_url_params as $param => $filter_name) {
-            if (Request::submitted($param)) {
-                $export_url_params[$param] = Request::get($param);
-            } elseif (isset($this->filter[$filter_name])) {
+        foreach ($relevant_export_filters as $param => $filter_name) {
+            if (isset($this->filter[$filter_name])) {
                 $export_url_params[$param] = $this->filter[$filter_name];
             }
         }
@@ -802,8 +540,8 @@ class Resources_RoomRequestController extends AuthenticatedController
         );
         $this->requests = $requests;
         $this->page = $page;
-        $this->sort_order = $this->filter['sort_order'] ?? '';
-        $this->sort_var = $this->filter['sorting']?? '';
+        $this->sort_var = $_SESSION[__CLASS__]['sort']['by'] ?? '';
+        $this->sort_order = $_SESSION[__CLASS__]['sort']['dir'] ?? '';
 
         $this->request_status = $this->filter['request_status'] ?? '';
     }
@@ -2610,107 +2348,7 @@ class Resources_RoomRequestController extends AuthenticatedController
         PageLayout::setTitle(_('Anfragenliste'));
         PageLayout::allowFullscreenMode();
 
-        $sidebar = Sidebar::get();
-
-        if ($this->show_filter_reset_button) {
-            $filter_reset_widget = new ActionsWidget();
-            $filter_reset_widget->addLink(
-                _('Filter zurücksetzen'),
-                $this->planningURL(['reset_filter' => '1']),
-                Icon::create('decline')
-            );
-            $sidebar->addWidget($filter_reset_widget);
-        }
-
-        $institute_selector = new InstituteSelectWidget(
-            '',
-            'institut_id',
-            'get'
-        );
-        $institute_selector->includeAllOption();
-        $institute_selector->setSelectedElementIds($this->filter['institute']);
-        $sidebar->addWidget($institute_selector);
-
-        $semester_selector = new SemesterSelectorWidget(
-            '',
-            'semester_id',
-            'get'
-        );
-        $semester_selector->setSelection($this->filter['semester']);
-        $sidebar->addWidget($semester_selector);
-
-        $list = new SelectWidget(
-            _('Veranstaltungstypfilter'),
-            $this->planningURL(),
-            'course_type'
-        );
-        $list->addElement(
-            new SelectElement(
-                'all',
-                _('Alle'),
-                empty($this->filter['course_type'])
-            ),
-            'course-type-all'
-        );
-
-        foreach (SemClass::getClasses() as $class_id => $class) {
-            if ($class['studygroup_mode']) {
-                continue;
-            }
-
-            $element = new SelectElement(
-                $class_id,
-                $class['name'],
-                isset($this->filter['course_type']) && ($this->filter['course_type'] === (string)$class_id)
-            );
-            $list->addElement(
-                $element->setAsHeader(),
-                'course-type-' . $class_id
-            );
-
-            foreach ($class->getSemTypes() as $id => $result) {
-                $element = new SelectElement(
-                    $class_id . '_' . $id,
-                    $result['name'],
-                    isset($this->filter['course_type']) && ($this->filter['course_type'] === $class_id . '_' . $id)
-                );
-                $list->addElement(
-                    $element->setIndentLevel(1),
-                    'course-type-' . $class_id . '_' . $id
-                );
-            }
-        }
-        $sidebar->addWidget($list, 'filter-course-type');
-
-
-        $widget = new OptionsWidget(_('Filter'));
-        $widget->addRadioButton(
-            _('Alle Anfragen'),
-            $this->planningURL($this->filter['marked'] != '-1' ? ['marked' => '-1'] : []),
-            $this->filter['marked'] == -1
-        );
-        $widget->addRadioButton(
-            _('Nur markierte Anfragen'),
-            $this->planningURL($this->filter['marked'] != '1' ? ['marked' => '1'] : []),
-            $this->filter['marked'] == 1
-        );
-        $widget->addRadioButton(
-            _('Nur unmarkierte Anfragen'),
-            $this->planningURL($this->filter['marked'] != '0' ? ['marked' => '0'] : []),
-            $this->filter['marked'] == 0
-        );
-        $widget->addElement(new WidgetElement('<br>'));
-        $widget->addCheckbox(
-            _('Nur mit Raumangabe'),
-            !empty($this->filter['specific_requests']),
-            $this->overviewURL(['toggle_specific_requests' => !empty($this->filter['specific_requests'])])
-        );
-        $widget->addCheckbox(
-            _('Eigene Anfragen anzeigen'),
-            !empty($this->filter['own_requests']),
-            $this->overviewURL(['toggle_own_requests' => !empty($this->filter['own_requests'])])
-        );
-        $sidebar->addWidget($widget);
+        $this->setupSidebar('planning');
 
         $this->requests = $this->getFilteredRoomRequests();
 
@@ -2730,7 +2368,7 @@ class Resources_RoomRequestController extends AuthenticatedController
             if ($this->filter['semester']) {
                 $this->semester = Semester::find($this->filter['semester']);
             } else {
-                $this->semester = Semester::find(Semester::findCurrent()->id);
+                $this->semester = Semester::findCurrent();
             }
 
             $booking_colour = ColourValue::find('Resources.BookingPlan.Booking.Bg');
@@ -2762,6 +2400,290 @@ class Resources_RoomRequestController extends AuthenticatedController
                 ],
             ];
             $this->event_color = $request_colour;
+        }
+    }
+
+    private function getFilters(array $defaults = []): array
+    {
+        $user_config = User::findCurrent()->getConfiguration();
+
+        $filters = [
+            'get_only_request_ids' => false,
+            'semester'             => $user_config->MY_COURSES_SELECTED_CYCLE,
+            'institute'            => $user_config->MY_INSTITUTES_DEFAULT,
+        ];
+
+        if ($filters['institute'] === 'all') {
+            unset($filters['institute']);
+        }
+
+        return array_merge(
+            $filters,
+            $defaults,
+            $_SESSION[__CLASS__]['filter'] ?? []
+        );
+    }
+
+    public function filter_action(string $key, string $value = null): void
+    {
+        $config_filters = [
+            'semester'  => 'MY_COURSES_SELECTED_CYCLE',
+            'institute' => 'MY_INSTITUTES_DEFAULT',
+        ];
+
+        if ($key === 'from_request') {
+            $key = $value;
+            $value = Request::option($key);
+        }
+
+        if (strlen($value) === 0) {
+            $value = null;
+        }
+
+        if (isset($config_filters[$key])) {
+            User::findCurrent()->getConfiguration()->store(
+                $config_filters[$key],
+                $value
+            );
+        } elseif ($value === null && isset($_SESSION[__CLASS__]['filter'][$key])) {
+            unset($_SESSION[__CLASS__]['filter'][$key]);
+        } else {
+            $_SESSION[__CLASS__]['filter'][$key] = $value;
+        }
+
+        $from = Request::option('from', 'overview');
+        $this->redirect($this->action_url($from));
+    }
+
+    public function reset_filter_action(string $return_to): void
+    {
+        if (!$this->has_action($return_to)) {
+            throw new InvalidArgumentException('Invalid return_to path');
+        }
+
+        unset($_SESSION[__CLASS__]['filter']);
+
+        $this->redirect($this->action_url($return_to));
+    }
+
+    private function setupSidebar(string $action): void
+    {
+        $from_params = $action === 'overview' ? [] : ['from' => $action];
+
+        $sidebar = Sidebar::get();
+
+        if (!empty($_SESSION[__CLASS__]['filter'])) {
+            $filter_reset_widget = new ActionsWidget();
+            $filter_reset_widget->addLink(
+                _('Filter zurücksetzen'),
+                $this->reset_filterURL($action),
+                Icon::create('decline')
+            );
+            $sidebar->addWidget($filter_reset_widget);
+        }
+
+        $institute_selector = new InstituteSelectWidget(
+            $this->filterURL('from_request', 'institute', $from_params),
+            'institute',
+            'get'
+        );
+        $institute_selector->includeAllOption();
+        $institute_selector->setSelectedElementIds($this->filter['institute'] ?? []);
+        $sidebar->addWidget($institute_selector);
+
+        $semester_selector = new SemesterSelectorWidget(
+            $this->filterURL('from_request', 'semester', $from_params),
+            'semester',
+            'get'
+        );
+        $semester_selector->setSelection($this->filter['semester']);
+        if ($action === 'overview') {
+            $semester_selector->setRange(time(), PHP_INT_MAX);
+        }
+        $sidebar->addWidget($semester_selector);
+
+        if ($action === 'overview') {
+            $request_status_selector = new SelectWidget(
+                _('Status der Anfrage'),
+                $this->filterURL('from_request', 'request_status', $from_params),
+                'request_status'
+            );
+            $request_status_selector->setOptions([
+                '' => _('offen'),
+                'closed' => _('bearbeitet'),
+                'denied' => _('abgelehnt'),
+            ], $this->filter['request_status'] ?? null);
+            $sidebar->addWidget($request_status_selector);
+        }
+
+        $list = new SelectWidget(
+            _('Veranstaltungstypfilter'),
+            $this->filterURL('from_request', 'course_type', $from_params),
+            'course_type'
+        );
+        $list->addElement(
+            new SelectElement(
+                '',
+                _('Alle'),
+                empty($this->filter['course_type'])
+            ),
+            'course-type-all'
+        );
+
+        foreach (SemClass::getClasses() as $class_id => $class) {
+            if ($class['studygroup_mode']) {
+                continue;
+            }
+
+            $element = new SelectElement(
+                $class_id,
+                $class['name'],
+                isset($this->filter['course_type']) && $this->filter['course_type'] === (string) $class_id
+            );
+            $list->addElement(
+                $element->setAsHeader(),
+                'course-type-' . $class_id
+            );
+
+            foreach ($class->getSemTypes() as $id => $result) {
+                $element = new SelectElement(
+                    $class_id . '_' . $id,
+                    $result['name'],
+                    isset($this->filter['course_type']) && ($this->filter['course_type'] === $class_id . '_' . $id)
+                );
+                $list->addElement(
+                    $element->setIndentLevel(1),
+                    'course-type-' . $class_id . '_' . $id
+                );
+            }
+        }
+        $sidebar->addWidget($list, 'filter-course-type');
+
+        if ($action === 'overview') {
+            $widget = new SelectWidget(
+                _('Raumgruppen'),
+                $this->filterURL('from_request', 'group', $from_params),
+                'group'
+            );
+            $widget->addElement(
+                new SelectElement(
+                    '',
+                    _('Alle'),
+                    empty($this->filter['group'])
+                ),
+                'clip-all'
+            );
+            foreach (Clipboard::getClipboardsForUser(User::findCurrent()->id, ['Room']) as $clip) {
+                $widget->addElement(
+                    new SelectElement(
+                        $clip->id,
+                        $clip->name,
+                        isset($this->filter['group']) && $this->filter['group'] == $clip->id
+                    ),
+                    'clip-' . $clip->id
+                );
+            }
+            $sidebar->addWidget($widget);
+
+            $widget = new SelectWidget(
+                _('Räume'),
+                $this->filterURL('from_request', 'room_id', $from_params),
+                'room_id'
+            );
+            $widget->addElement(
+                new SelectElement(
+                    '',
+                    _('Bitte wählen'),
+                    empty($this->filter['room_id'])
+                )
+            );
+            foreach ($this->available_rooms as $room) {
+                $widget->addElement(
+                    new SelectElement(
+                        $room->id,
+                        $room->name,
+                        !empty($this->filter['room_id']) && $room->id == $this->filter['room_id']
+                    )
+                );
+            }
+            $sidebar->addWidget($widget);
+
+        }
+
+        $widget = new OptionsWidget(_('Filter'));
+        $widget->addRadioButton(
+            _('Alle Anfragen'),
+            $this->filterURL('marked', $from_params),
+            !isset($this->filter['marked'])
+        );
+        $widget->addRadioButton(
+            _('Nur markierte Anfragen'),
+            $this->filterURL('marked', 1, $from_params),
+            isset($this->filter['marked']) && $this->filter['marked'] == 1
+        );
+        $widget->addRadioButton(
+            _('Nur unmarkierte Anfragen'),
+            $this->filterURL('marked', 0, $from_params),
+            isset($this->filter['marked']) && $this->filter['marked'] == 0
+        );
+        $widget->addElement(new WidgetElement('<br>'));
+
+        if ($action === 'overview') {
+            $widget->addRadioButton(
+                _('Alle Termine'),
+                $this->filterURL('request_periods', $from_params),
+                !isset($this->filter['request_periods'])
+            );
+            $widget->addRadioButton(
+                _('Nur regelmäßige Termine'),
+                $this->filterURL('request_periods', 'periodic', $from_params),
+                isset($this->filter['request_periods']) && $this->filter['request_periods'] == 'periodic'
+            );
+            $widget->addRadioButton(
+                _('Nur unregelmäßige Termine'),
+                $this->filterURL('request_periods', 'aperiodic', $from_params),
+                isset($this->filter['request_periods']) && $this->filter['request_periods'] == 'aperiodic'
+            );
+            $widget->addElement(new WidgetElement('<br>'));
+        }
+
+        $widget->addCheckbox(
+            _('Nur mit Raumangabe'),
+            !empty($this->filter['specific_requests']),
+            $this->filterURL('specific_requests', empty($this->filter['specific_requests']) ?: '', $from_params)
+        );
+        $widget->addCheckbox(
+            _('Eigene Anfragen anzeigen'),
+            !empty($this->filter['own_requests']),
+            $this->filterURL('own_requests', empty($this->filter['own_requests']) ?: '', $from_params)
+        );
+        $sidebar->addWidget($widget);
+
+        if ($action === 'overview') {
+            $dow_selector = new SelectWidget(
+                _('Wochentag'),
+                $this->filterURL('from_request', 'dow', $from_params),
+                'dow'
+            );
+            $dow_selector->addElement(
+                new SelectElement(
+                    '',
+                    _('Alle'),
+                    empty($this->filter['dow'])
+                ),
+                'dow-all'
+            );
+            foreach (range(1, 7) as $day) {
+                $dow_selector->addElement(
+                    new SelectElement(
+                        $day,
+                        strftime('%A', strtotime('this monday +' . ($day - 1) . ' day')),
+                        isset($this->filter['dow']) && $this->filter['dow'] == $day
+                    ),
+                    'dow-' . $day
+                );
+            }
+            $sidebar->addWidget($dow_selector, 'filter-dow');
         }
     }
 }
