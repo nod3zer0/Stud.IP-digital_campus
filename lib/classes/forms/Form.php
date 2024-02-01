@@ -318,6 +318,7 @@ class Form extends Part
                     }
                 }
             }
+            header('Content-Type: application/json');
             echo json_encode($output);
             page_close();
             die();

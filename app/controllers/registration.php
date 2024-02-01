@@ -1,4 +1,7 @@
 <?php
+
+use Studip\Forms\Form;
+
 class RegistrationController extends AuthenticatedController
 {
     protected $allow_nobody = true;
@@ -14,7 +17,7 @@ class RegistrationController extends AuthenticatedController
     {
         $new_user = new User();
 
-        $this->registrationform = \Studip\Forms\Form::fromSORM(
+        $this->registrationform = Form::fromSORM(
             $new_user,
             [
                 'legend' => _('Herzlich willkommen!'),
@@ -108,7 +111,7 @@ class RegistrationController extends AuthenticatedController
         $this->registrationform->setCancelButtonName(URLHelper::getURL('index.php?cancel_login=1'));
 
         $this->registrationform->addStoreCallback(
-            function ($form) {
+            function (Form $form) {
                 $new_user = $form->getLastPart()->getContextObject();
 
                 $GLOBALS['sess']->regenerate_session_id(['auth']);

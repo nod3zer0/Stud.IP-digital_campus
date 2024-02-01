@@ -323,11 +323,10 @@ STUDIP.ready(function () {
                             let v = this;
                             this.STUDIPFORM_VALIDATIONNOTES = [];
 
-                            let validation_promise = new Promise(function (resolve, reject) {
+                            return new Promise((resolve, reject) => {
                                 let validated = v.$el.checkValidity();
 
                                 $(v.$el).find('input, select, textarea').each(function () {
-                                    let name = $(this).attr('name');
                                     if (!this.validity.valid) {
                                         let note = {
                                             name: this.name,
@@ -362,35 +361,30 @@ STUDIP.ready(function () {
                                         v.STUDIPFORM_VALIDATIONNOTES.push(note);
                                     }
                                 });
-                                if (v.STUDIPFORM_SERVERVALIDATION) {
 
+                                if (v.STUDIPFORM_SERVERVALIDATION) {
                                     let params = v.getFormValues();
+                                    if (v.STUDIPFORM_AUTOSAVEURL) {
+                                        params.STUDIPFORM_AUTOSTORE = 1;
+                                    }
                                     params.STUDIPFORM_SERVERVALIDATION = 1;
 
-                                    $.ajax({
-                                        url: v.STUDIPFORM_VALIDATION_URL,
-                                        data: params,
-                                        type: 'post',
-                                        dataType: 'json',
-                                        success(output) {
-                                            for (let i in output) {
-                                                let note = {
-                                                    name: output[i].name,
-                                                    label: output[i].label,
-                                                    description: output[i].error,
-                                                    describedby: null
-                                                };
-                                                v.STUDIPFORM_VALIDATIONNOTES.push(note);
-                                            }
-                                            validated = v.STUDIPFORM_VALIDATIONNOTES.length < 1;
-                                            resolve(validated);
+                                    $.post(v.STUDIPFORM_VALIDATION_URL, params).done((output) => {
+                                        for (let i in output) {
+                                            v.STUDIPFORM_VALIDATIONNOTES.push({
+                                                name: output[i].name,
+                                                label: output[i].label,
+                                                description: output[i].error,
+                                                describedby: null
+                                            });
                                         }
+                                        validated = v.STUDIPFORM_VALIDATIONNOTES.length < 1;
+                                        resolve(validated);
                                     });
                                 } else {
                                     resolve(validated);
                                 }
                             });
-                            return validation_promise;
                         },
                         setInputs(inputs) {
                             for (const [key, value] of Object.entries(inputs)) {
