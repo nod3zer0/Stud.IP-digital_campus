@@ -282,7 +282,7 @@ class Form extends Part
              \Request::isPost()
              && \Request::isAjax()
              && !\Request::isDialog()
-             && \Request::submitted($this->getSaveButtonName())
+             && \Request::submitted('STUDIPFORM_AUTOSTORE')
         ) {
             if (\Request::submitted('STUDIPFORM_SERVERVALIDATION')) {
                 $this->validate();

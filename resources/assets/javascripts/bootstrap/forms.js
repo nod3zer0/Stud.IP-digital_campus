@@ -284,6 +284,7 @@ STUDIP.ready(function () {
 
                                 if (v.STUDIPFORM_AUTOSAVEURL) {
                                     let params = v.getFormValues();
+                                    params.STUDIPFORM_AUTOSTORE = 1;
 
                                     $.ajax({
                                         url: v.STUDIPFORM_AUTOSAVEURL,
