@@ -91,7 +91,7 @@ class I18NStringDatafield extends I18NString
                 "`datafield_id` = ? AND `range_id` = ? AND `sec_range_id` = ? AND `lang` = ''",
                 $object_id
             );
-            $base = $df->content;
+            $base = $df->content ?? '';
         }
         $table = null;
         $field = null;

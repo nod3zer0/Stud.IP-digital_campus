@@ -1034,7 +1034,7 @@ class Modul extends ModuleManagementModelTreeItem
         foreach ($this->modulteile as $modulteil) {
             $mt_courses = $modulteil->getAssignedCoursesBySemester($semester_id, $only_visible);
             foreach ($mt_courses as $course) {
-                $courses[$course->id] = $course;
+                $courses[$course['seminar_id']] = $course;
             }
         }
         return $courses;

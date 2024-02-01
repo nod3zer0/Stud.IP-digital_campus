@@ -394,7 +394,7 @@ class Modulteil extends ModuleManagementModelTreeItem
         foreach ($this->lvgruppen as $lvgruppe) {
             $lvg_courses = $lvgruppe->getAssignedCoursesBySemester($semester_id, $only_visible);
             foreach ($lvg_courses as $course) {
-                $courses[$course->id] = $course;
+                $courses[$course['seminar_id']] = $course;
             }
         }
         return $courses;

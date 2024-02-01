@@ -1,4 +1,12 @@
-<tbody class="<?= $modul_id == $modul->id ? 'not-collapsed' : 'collapsed' ?>">
+<?php
+/**
+ * @var string|null $modul_id
+ * @var Modul $modul
+ * @var Semester $selected_semester
+ * @var Search_ModuleController $controller
+ */
+?>
+<tbody class="<?= (isset($modul_id) && $modul_id == $modul->id) ? 'not-collapsed' : 'collapsed' ?>">
     <tr class="table-header header-row" id="modul_<?= htmlReady($modul->id) ?>">
         <td style="vertical-align: middle; text-align: center;">
             <a data-dialog="size=auto" title="<?= htmlReady($modul->getDisplayName()) . ' (' . _('Vollständige Modulbeschreibung') . ')' ?>" href="<?= $controller->link_for('shared/modul/description/' . $modul->id) ?>">
@@ -25,7 +33,7 @@
         <? endif; ?>
         </td>
     </tr>
-<? if ($details_id == $modul->id): ?>
+<? if (isset($details_id) && $details_id == $modul->id): ?>
     <?= $this->render_partial('search/module/details') ?>
 <? endif; ?>
 </tbody>
