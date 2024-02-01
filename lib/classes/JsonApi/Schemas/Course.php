@@ -399,10 +399,14 @@ class Course extends SchemaProvider
 
     /**
      * @inheritdoc
+     *
+     * @param \Course $resource
      */
     public function getResourceMeta($resource)
     {
-        $avatar = \CourseAvatar::getAvatar($resource->id);
+        $avatar = $resource->isStudygroup()
+                ? \StudygroupAvatar::getAvatar($resource->id)
+                : \CourseAvatar::getAvatar($resource->id);
 
         return [
             'avatar' => [

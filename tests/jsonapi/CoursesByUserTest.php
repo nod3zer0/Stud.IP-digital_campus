@@ -13,6 +13,9 @@ class CoursesByUserTest extends \Codeception\Test\Unit
     protected function _before()
     {
         \DBManager::getInstance()->setConnection('studip', $this->getModule('\\Helper\\StudipDb')->dbh);
+        //Initialize $SEM_TYPE and $SEM_CLASS arrays
+        $GLOBALS['SEM_CLASS'] = SemClass::getClasses();
+        $GLOBALS['SEM_TYPE'] = SemType::getTypes();
     }
 
     protected function _after()
