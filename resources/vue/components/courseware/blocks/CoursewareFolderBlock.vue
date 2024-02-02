@@ -11,6 +11,11 @@
         >
             <template #content>
                 <div v-if="currentTitle !== ''" class="cw-block-title">{{ currentTitle }}</div>
+                <courseware-companion-box
+                    v-if="folderTypeHasChanged && canEdit"
+                    mood="pointing"
+                    :msgCompanion="$gettext('Der Ordnertyp wurde nach der Erstellung des Blocks geändert! Bitte überprüfen Sie die Einstellungen.')"
+                />
                 <div v-if="isHomework" class="cw-block-folder-info">
                     <p>
                         {{
@@ -181,13 +186,13 @@ export default {
             termsOfUse: 'terms-of-use/all',
         }),
         folderType() {
-            return this.block?.attributes?.payload?.type;
+            return this.block?.attributes?.payload?.['folder-type'];
         },
         storedFolderType() {
-            return this.block?.attributes?.payload?.folder_type;
+            return this.block?.attributes?.payload?.type;
         },
         folderTypeHasChanged() {
-            return this.folderType === this.storedFolderType;
+            return this.folderType !== this.storedFolderType;
         },
         folderId() {
             return this.block?.attributes?.payload?.folder_id;

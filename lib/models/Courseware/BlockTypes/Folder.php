@@ -55,27 +55,28 @@ class Folder extends BlockType
         if ($folder) {
             $typedFolder = $folder->getTypedFolder();
             $payload['folder-type'] = $typedFolder->folder_type;
-
-            foreach ($typedFolder->getFiles() as $folderFile) {
-                $file['id'] = $folderFile->id;
-                $file['attributes'] = [
-                    'name'          => $folderFile->name,
-                    'mime-type'     => $folderFile->mime_type,
-                    'filesize'      => (int) $folderFile->size,
-                    'mkdate'        => date('c', $folderFile->mkdate),
-                ];
-                $file['relationships'] = [
-                    'owner' => [
-                        'data' => ['type' => 'users', 'id' => $folderFile->user_id],
-                        'meta' => ['name' => $folderFile->getFileRef()->getAuthorName()]
-                        ]
-                ];
-                $file['meta'] = [
-                    'download-url'  => $folderFile->getDownloadURL(),
-                ];
-    
-                if ($this->filePermission($typedFolder, $file, $user)) {
-                    array_push($payload['files'], $file);
+            if ($typedFolder->isReadable($user->id)) {   
+                foreach ($typedFolder->getFiles() as $folderFile) {
+                    $file['id'] = $folderFile->id;
+                    $file['attributes'] = [
+                        'name'          => $folderFile->name,
+                        'mime-type'     => $folderFile->mime_type,
+                        'filesize'      => (int) $folderFile->size,
+                        'mkdate'        => date('c', $folderFile->mkdate),
+                    ];
+                    $file['relationships'] = [
+                        'owner' => [
+                            'data' => ['type' => 'users', 'id' => $folderFile->user_id],
+                            'meta' => ['name' => $folderFile->getFileRef()->getAuthorName()]
+                            ]
+                    ];
+                    $file['meta'] = [
+                        'download-url'  => $folderFile->getDownloadURL(),
+                    ];
+        
+                    if ($this->filePermission($typedFolder, $file, $user)) {
+                        array_push($payload['files'], $file);
+                    }
                 }
             }
         }
