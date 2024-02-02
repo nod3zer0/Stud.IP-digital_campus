@@ -196,14 +196,20 @@
         </label>
 
         <label>
-            <?= _("Kurzer Beschreibungstext zum Anlegen einer Veranstaltung") ?>
-            <textarea id="create_description" maxlength="200" style="width: 100%"><?= htmlReady($sem_class['create_description']) ?></textarea>
+            <input type="checkbox" id="is_group" value="1" <?= $sem_class['is_group'] ? 'checked' : '' ?>>
+            <?= _('Kann Unterveranstaltungen haben') ?>
         </label>
 
         <label>
-            <input type="checkbox" id="is_group" value="1"<?= $sem_class['is_group'] ? " checked" : "" ?>>
-            <?= _("Kann Unterveranstaltungen haben") ?>
+            <input type="checkbox" id="unlimited_forbidden" value="1" <?= $sem_class['unlimited_forbidden'] ? 'checked' : '' ?>>
+            <?= _('Unbegrenzte Laufzeit verbieten') ?>
         </label>
+
+        <label>
+            <?= _('Kurzer Beschreibungstext zum Anlegen einer Veranstaltung') ?>
+            <textarea id="create_description" maxlength="200" style="width: 100%"><?= htmlReady($sem_class['create_description']) ?></textarea>
+        </label>
+
     </fieldset>
 
     <fieldset class="attribute_table">

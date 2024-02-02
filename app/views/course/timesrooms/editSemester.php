@@ -37,9 +37,11 @@
                         </option>
                     <? endif ?>
                 <? endforeach ?>
-                <option value="-1"<?= $course->isOpenEnded() ? 'selected' : '' ?>>
-                    <?= _('Unbegrenzt') ?>
-                </option>
+                <? if (!$course->getSemClass()['unlimited_forbidden']) : ?>
+                    <option value="-1"<?= $course->isOpenEnded() ? 'selected' : '' ?>>
+                        <?= _('Unbegrenzt') ?>
+                    </option>
+                <? endif ?>
             </select>
         </label>
     </fieldset>

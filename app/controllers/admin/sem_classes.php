@@ -125,6 +125,7 @@ class Admin_SemClassesController extends AuthenticatedController
         $sem_class->set('admission_type_default', Request::int("admission_type_default"));
         $sem_class->set('show_raumzeit', Request::int("show_raumzeit"));
         $sem_class->set('is_group', Request::int("is_group"));
+        $sem_class->set('unlimited_forbidden', Request::bool('unlimited_forbidden'));
         $sem_class->store();
         foreach (array_keys($sem_class->getModules()) as $module_name) {
             if ($sem_class->isModuleMandatory($module_name) && !$old_data_sem_class->isModuleMandatory($module_name)) {
