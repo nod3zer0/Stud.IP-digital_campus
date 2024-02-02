@@ -42,9 +42,9 @@ class StructuralElementsSharedIndex extends JsonApiController
         }
 
         list($offset, $limit) = $this->getOffsetAndLimit();
-        $resources = [];
+        $elements = [];
         $contents = StructuralElement::findBySQL(
-            'range_id != ? AND range_type = ? ORDER BY mkdate DESC',
+            'range_id != ? AND range_type = ? ORDER BY mkdate ASC',
             [$user->id, 'user']
         );
 
@@ -68,7 +68,15 @@ class StructuralElementsSharedIndex extends JsonApiController
             }
 
             if ($add_content) {
-                $resources[] = $content;
+                $elements[] = $content;
+            }
+        }
+
+        $resources = [];
+        foreach ($elements as $element) {
+            $has_parent = array_column($elements, null, 'id')[$element->parent_id] ?? false;
+            if (!$has_parent) {
+                $resources[] = $element;
             }
         }
 
