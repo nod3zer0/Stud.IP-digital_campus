@@ -6,10 +6,15 @@
         <? if ($this->required) : ?>
             <span class="asterisk" title="<?= _('Dies ist ein Pflichtfeld') ?>" aria-hidden="true">*</span>
         <? endif ?>
-
-        <input type="text" list="<?= $this->title ?>" id="" v-model="<?= htmlReady($this->name) ?>" <?= $this->required ? 'required aria-required="true"' : '' ?> />
-
-        <datalist class="" id="<?= $this->title ?>" <?= $attributes ?>>
+        <input type="text"
+               list="<?= htmlReady($this->title) ?>"
+               v-model="<?= htmlReady($this->name) ?>"
+               name="<?= htmlReady($this->name) ?>"
+               value="<?= htmlReady($this->value) ?>"
+               id="<?= htmlReady($id) ?>"
+               <?= $this->required ? 'required aria-required="true"' : '' ?>
+            <?= $attributes ?>>
+        <datalist class="" id="<?= htmlReady($this->title)  ?>">
             <? foreach ($options as $key => $option) : ?>
                 <option value="<?= htmlReady($option) ?>"<?= ($option == $value ? " selected" : "") ?>>
                 </option>

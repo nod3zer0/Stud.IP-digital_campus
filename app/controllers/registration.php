@@ -16,7 +16,9 @@ class RegistrationController extends AuthenticatedController
     public function index_action()
     {
         $new_user = new User();
-
+        $new_user->perms = 'user';
+        $new_user->auth_plugin = 'standard';
+        $new_user->preferred_language = $_SESSION['_language'] ?? Config::get()->DEFAULT_LANGUAGE;
         $this->registrationform = Form::fromSORM(
             $new_user,
             [
@@ -26,6 +28,7 @@ class RegistrationController extends AuthenticatedController
                         'label' => _('Benutzername'),
                         'required' => true,
                         'maxlength' => '63',
+                        'attributes' => ['autocomplete' => 'off'],
                         'validate' => function ($value, $input) {
                             if (!preg_match(Config::get()->USERNAME_REGULAR_EXPRESSION, $value)) {
                                 return Config::get()->getMetadata('USERNAME_REGULAR_EXPRESSION')['comment'] ?:
@@ -46,6 +49,7 @@ class RegistrationController extends AuthenticatedController
                         'required' => true,
                         'maxlength' => '31',
                         'minlength' =>  '8',
+                        'attributes' => ['autocomplete' => 'new-password'],
                         'mapper' => function($value) {
                             $hasher = UserManagement::getPwdHasher();
                             return $hasher->HashPassword($value);
@@ -57,6 +61,7 @@ class RegistrationController extends AuthenticatedController
                         'required' => true,
                         'maxlength' => '31',
                         'minlength' =>  '8',
+                        'attributes' => ['autocomplete' => 'new-password'],
                         ':pattern'    => "password.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\$&')", //mask special chars
                         'data-validation_requirement' => _('Passwörter stimmen nicht überein.'),
                         'store' => function() {}
@@ -64,23 +69,28 @@ class RegistrationController extends AuthenticatedController
                     'title_front' => [
                         'label' => _('Titel'),
                         'type'  => 'datalist',
+                        'attributes' => ['autocomplete' => 'honorific-prefix'],
                         'options' => $GLOBALS['TITLE_FRONT_TEMPLATE']
                     ],
                     'title_rear' => [
                         'label' => _('Titel nachgestellt'),
                         'type'  => 'datalist',
+                        'attributes' => ['autocomplete' => 'honorific-suffix'],
                         'options' => $GLOBALS['TITLE_REAR_TEMPLATE'],
                     ],
                     'vorname' => [
                         'label' => _('Vorname'),
+                        'attributes' => ['autocomplete' => 'given-name'],
                         'required' => true
                     ],
                     'nachname' => [
                         'label' => _('Nachname'),
+                        'attributes' => ['autocomplete' => 'family-name'],
                         'required' => true
                     ],
                     'geschlecht' => [
                         'name' => 'geschlecht',
+                        'value' => 0,
                         'label' => _('Geschlecht'),
                         'type' => 'radio',
                         'orientation' => 'horizontal',
@@ -94,6 +104,7 @@ class RegistrationController extends AuthenticatedController
                     'email' => [
                         'label' => _('E-Mail'),
                         'required' => true,
+                        'attributes' => ['autocomplete' => 'email'],
                         'validate' => function ($value, $input) {
                             $user = User::findOneByEmail($value);
                             $context = $input->getContextObject();
