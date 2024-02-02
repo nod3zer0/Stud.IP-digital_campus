@@ -293,6 +293,7 @@ class NewsController extends StudipController
             $news->date           = $news_template->date;
             $news->expire         = $news_template->expire;
             $news->allow_comments = $news_template->allow_comments;
+            $news->user_id        = User::findCurrent()->id;
         } else {
             // for new news, set startdate to today and range to dialog context
             $news->date   = strtotime('today');
@@ -359,6 +360,12 @@ class NewsController extends StudipController
                         'type' => 'checkbox'
                     ],
                     'user_id' => [
+                        'type' => 'hidden',
+                        'mapper' => function () use ($news) {
+                            return $news->user_id ?: User::findCurrent()->id;
+                        }
+                    ],
+                    'chdate_uid' => [
                         'type' => 'no',
                         'mapper' => function () {
                             return User::findCurrent()->id;
@@ -366,8 +373,9 @@ class NewsController extends StudipController
                     ],
                     'author' => [
                         'type' => 'no',
-                        'mapper' => function () {
-                            return get_fullname();
+                        'mapper' => function () use ($news) {
+                            $author = $news->user_id ? User::find($news->user_id): User::findCurrent();
+                            return $author ? $author->getFullname() : '';
                         }
                     ]
                 ]
