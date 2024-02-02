@@ -64,10 +64,14 @@ class Course_CoursewareController extends CoursewareController
         $this->user_id = $user->id;
         /** @var array<mixed> $last */
         $last = UserConfig::get($this->user_id)->getValue('COURSEWARE_LAST_ELEMENT');
+        $lastStructuralElement = \Courseware\StructuralElement::findOneById($last);
 
         if ($unit_id === null) {
-            $this->redirectToFirstUnit('course', Context::getId(), $last);
-
+            if ($lastStructuralElement->canVisit($user)) {
+                $this->redirectToFirstUnit('course', Context::getId(), $last);
+            } else {
+                $this->redirectToFirstUnit('course', Context::getId(), []);
+            }
             return;
         }
 
@@ -75,7 +79,12 @@ class Course_CoursewareController extends CoursewareController
         $this->unit_id = null;
         $unit = Unit::find($unit_id);
         if (isset($unit)) {
-            $this->setEntryElement('course', $unit, $last, Context::getId());
+            if ($lastStructuralElement->canVisit($user)) {
+                $this->setEntryElement('course', $unit, $last, Context::getId());
+            } else {
+                $rootElement = [Context::getId() => $unit->structural_element->id];
+                $this->setEntryElement('course', $unit, $rootElement, Context::getId());
+            }
         }
     }
 
