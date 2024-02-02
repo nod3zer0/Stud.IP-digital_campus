@@ -22,10 +22,10 @@
                             :aria-description="unit.element.attributes.title"
                         />
                         <label @click="selectedUnit = unit" :key="'label-' + unit.id" :for="'cw-element-link-unit-' + unit.id">
-                            <div class="icon"><studip-icon shape="courseware" size="32"/></div>
+                            <div class="icon"><studip-icon shape="courseware" :size="32"/></div>
                             <div class="text">{{ unit.element.attributes.title }}</div>
-                            <studip-icon shape="radiobutton-unchecked" size="24" class="unchecked" />
-                            <studip-icon shape="check-circle" size="24" class="check" />
+                            <studip-icon shape="radiobutton-unchecked" :size="24" class="unchecked" />
+                            <studip-icon shape="check-circle" :size="24" class="check" />
                         </label>
                     </template>
                 </fieldset>

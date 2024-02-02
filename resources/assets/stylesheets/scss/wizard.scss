@@ -1,4 +1,5 @@
 @import '../mixins';
+
 .wizard-wrapper {
     display: flex;
 
@@ -11,28 +12,34 @@
             margin: auto;
             display: block;
         }
-    
+
         p {
             margin: 15px;
         }
+
         .wizard-requirements {
             span {
                 font-weight: 700;
             }
+
             ul {
                 padding: 4px 0;
+
                 li {
                     list-style: none;
+
                     button {
                         padding: 2px 0;
                         background-color: transparent;
                         border: none;
                         color: var(--base-color);
                         cursor: pointer;
+
                         &:hover {
                             color: var(--red);
                         }
                     }
+
                     img {
                         padding-right: 4px;
                         display: inline-block;
@@ -42,6 +49,7 @@
             }
         }
     }
+
     .wizard-content-wrapper {
         flex-grow: 2;
         margin-left: 15px;
@@ -54,12 +62,13 @@
             list-style: none;
             padding: 0;
             margin: 1.5em 0 2.5em 0;
-        
+
             li {
                 display: inline-block;
                 position: relative;
                 margin-right: 60px;
                 border: solid 2px var(--base-color);
+
                 button {
                     padding: 6px 0;
                     height: 36px;
@@ -68,15 +77,19 @@
                     background: no-repeat;
                     border: none;
                 }
+
                 &.valid {
                     background-color: var(--base-color);
                 }
+
                 &.invalid {
                     background-color: white;
                 }
+
                 &.optional {
                     border: dashed thin var(--base-color);
                 }
+
                 &::before {
                     position: absolute;
                     content: "";
@@ -86,6 +99,7 @@
                     transform: translateY(-50%);
                     left: 100%;
                 }
+
                 &.active::after {
                     position: absolute;
                     content: "";
@@ -96,18 +110,21 @@
                     left: -1px;
                 }
             }
+
             li:last-child {
                 margin-right: 0;
+
                 &::before {
                     display: none;
                 }
             }
-            
+
         }
-        
+
         .wizard-list {
             list-style: none;
             padding: 0;
+
             .wizard-item {
                 .wizard-content {
                     max-width: 555px;
@@ -136,23 +153,26 @@
 
 
 form.default fieldset.radiobutton-set {
-    > legend {
+    >legend {
         margin: 0px;
         width: 100%;
     }
+
     border: none;
     padding: 0px;
     margin-left: 0px;
     margin-right: 0px;
 
-    > input[type=radio] {
+    >input[type=radio] {
         opacity: 0;
         position: absolute;
-        &:focus + label {
+
+        &:focus+label {
             outline: auto;
         }
     }
-    > label {
+
+    >label {
         cursor: pointer;
         border: 1px solid var(--content-color-40);
         transition: background-color 200ms;
@@ -163,48 +183,98 @@ form.default fieldset.radiobutton-set {
         padding-bottom: 2px;
         margin-bottom: 0;
         border-top: none;
+
         :not(.undecorated) {
             text-indent: 0;
         }
-        > .text {
+
+        >.text {
             width: 100%;
             margin-left: 10px;
         }
-        > .unchecked {
+
+        >.unchecked {
             margin-right: 0;
         }
-        > .check {
+
+        >.check {
             display: none;
         }
     }
-    > label:first-of-type {
+
+    >label:first-of-type {
         border-top: 1px solid var(--content-color-40);
     }
-    > label:last-child::after {
+
+    >label:last-child::after {
         content: none;
     }
-    > div {
+
+    >div {
         border: 1px solid var(--content-color-40);
         border-top: none;
         display: none;
         padding: 10px;
 
     }
-    > input[type=radio]:checked + label {
+
+    >input[type=radio]:checked+label {
         background-color: var(--content-color-20);
         transition: background-color 200ms;
-        > .unchecked {
+
+        >.unchecked {
             display: none;
         }
-        > .check {
+
+        >.check {
             display: inline-block;
         }
     }
-    > input[type=radio]:checked + label + div {
+
+    >input[type=radio]:checked+label+div {
         display: block;
+
         .description {
             animation-duration: 400ms;
             animation-name: terms_of_use_fadein;
         }
     }
 }
+
+@include media-breakpoint-small-down() {
+    .wizard-wrapper {
+
+        .wizard-meta {
+            display: none;
+        }
+
+        .wizard-content-wrapper .wizard-progress {
+            li {
+                margin-right: 30px;
+
+                &::before {
+                    width: 32px;
+                }
+            }
+        }
+    }
+}
+
+@include media-breakpoint-tiny-down() {
+    .wizard-wrapper {
+        .wizard-meta {
+            display: none;
+        }
+
+        .wizard-content-wrapper .wizard-progress {
+            li {
+                margin-right: 8px;
+
+                &::before {
+                    width: 10px;
+                }
+            }
+        }
+    }
+}
+
