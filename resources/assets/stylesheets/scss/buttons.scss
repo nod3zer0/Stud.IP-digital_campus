@@ -133,6 +133,10 @@ button.button {
         float: left;
         margin-left: 5px;
         margin-right: 0;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
     }
 }
 
