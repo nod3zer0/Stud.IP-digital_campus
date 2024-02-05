@@ -10,7 +10,7 @@ class WebserviceClient
     {
         static $instances = [];
 
-        if (!$instances[$classname . $webservice_url]) {
+        if (!isset($instances[$classname . $webservice_url])) {
             $instances[$classname . $webservice_url] = new $classname($webservice_url);
         }
 

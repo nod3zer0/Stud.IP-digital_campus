@@ -93,8 +93,8 @@ class ElearningController extends AuthenticatedController
                 $connection_status = $connected_cms[$cms]->getConnectionStatus($cms);
 
                 foreach ($connection_status as $type => $msg) {
-                    if ($msg["error"] != "") {
-                        PageLayout::postMessage(MessageBox::error(_("Es traten Probleme bei der Anbindung einzelner Lermodule auf. Bitte wenden Sie sich an Ihren Systemadministrator."), [$cms .': ' . $msg["error"]]));
+                    if (!empty($msg["error"])) {
+                        PageLayout::postError(_("Es traten Probleme bei der Anbindung einzelner Lermodule auf. Bitte wenden Sie sich an Ihren Systemadministrator."), [$cms .': ' . $msg["error"]]);
                         $GLOBALS["ELEARNING_INTERFACE_" . $cms . "_ACTIVE"] = false;
                     }
                 }

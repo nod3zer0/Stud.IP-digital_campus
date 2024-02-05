@@ -70,26 +70,25 @@ class ConnectedCMS
     public function init($cms)
     {
         global $ELEARNING_INTERFACE_MODULES;
-        $this->name = $ELEARNING_INTERFACE_MODULES[$cms]["name"] ?? null;
+
+        $this->name = $ELEARNING_INTERFACE_MODULES[$cms]['name'] ?? null;
         $this->ABSOLUTE_PATH_ELEARNINGMODULES = $ELEARNING_INTERFACE_MODULES[$cms]["ABSOLUTE_PATH_ELEARNINGMODULES"];
         $this->ABSOLUTE_PATH_SOAP = $ELEARNING_INTERFACE_MODULES[$cms]["ABSOLUTE_PATH_SOAP"];
-        if (isset($ELEARNING_INTERFACE_MODULES[$cms]["RELATIVE_PATH_DB_CLASSES"]))
-        {
+        if (isset($ELEARNING_INTERFACE_MODULES[$cms]["RELATIVE_PATH_DB_CLASSES"])) {
             $this->RELATIVE_PATH_DB_CLASSES = $ELEARNING_INTERFACE_MODULES[$cms]["RELATIVE_PATH_DB_CLASSES"];
             $this->db_classes = $ELEARNING_INTERFACE_MODULES[$cms]["db_classes"];
-        }
-        else {
+        } else {
             $this->RELATIVE_PATH_DB_CLASSES = false;
         }
-        $this->CLASS_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]["CLASS_PREFIX"];
-        $this->auth_necessary = $ELEARNING_INTERFACE_MODULES[$cms]["auth_necessary"];
-        $this->USER_AUTO_CREATE = $ELEARNING_INTERFACE_MODULES[$cms]["USER_AUTO_CREATE"];
-        $this->USER_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]["USER_PREFIX"];
-        $this->target_file = $ELEARNING_INTERFACE_MODULES[$cms]["target_file"];
-        $this->logo_file = $ELEARNING_INTERFACE_MODULES[$cms]["logo_file"];
-        $this->soap_data = $ELEARNING_INTERFACE_MODULES[$cms]["soap_data"];
-        $this->types = $ELEARNING_INTERFACE_MODULES[$cms]["types"];
-        $this->roles = $ELEARNING_INTERFACE_MODULES[$cms]["roles"];
+        $this->CLASS_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]['CLASS_PREFIX'];
+        $this->auth_necessary = $ELEARNING_INTERFACE_MODULES[$cms]['auth_necessary'];
+        $this->USER_AUTO_CREATE = $ELEARNING_INTERFACE_MODULES[$cms]['USER_AUTO_CREATE'] ?? null;
+        $this->USER_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]['USER_PREFIX'] ?? null;
+        $this->target_file = $ELEARNING_INTERFACE_MODULES[$cms]['target_file'] ?? null;
+        $this->logo_file = $ELEARNING_INTERFACE_MODULES[$cms]['logo_file'] ?? null;
+        $this->soap_data = $ELEARNING_INTERFACE_MODULES[$cms]['soap_data'] ?? null;
+        $this->types = $ELEARNING_INTERFACE_MODULES[$cms]['types'] ?? null;
+        $this->roles = $ELEARNING_INTERFACE_MODULES[$cms]['roles'] ?? null;
     }
 
     /**
@@ -100,16 +99,16 @@ class ConnectedCMS
     */
     public function initSubclasses()
     {
-        if ($this->auth_necessary)
-        {
-            require_once($this->CLASS_PREFIX . "ConnectedUser.class.php");
+        if ($this->auth_necessary) {
+            require_once $this->CLASS_PREFIX . "ConnectedUser.class.php";
             $classname = $this->CLASS_PREFIX . "ConnectedUser";
             $this->user = new $classname($this->cms_type);
-            require_once($this->CLASS_PREFIX  . "ConnectedPermissions.class.php");
+
+            require_once $this->CLASS_PREFIX  . "ConnectedPermissions.class.php";
             $classname = $this->CLASS_PREFIX  . "ConnectedPermissions";
             $this->permissions = new $classname($this->cms_type);
         }
-        require_once($this->CLASS_PREFIX . "ConnectedLink.class.php");
+        require_once $this->CLASS_PREFIX . "ConnectedLink.class.php";
         $classname = $this->CLASS_PREFIX . "ConnectedLink";
         $this->link = new $classname($this->cms_type);
     }

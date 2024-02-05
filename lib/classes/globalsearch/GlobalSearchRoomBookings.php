@@ -109,12 +109,15 @@ class GlobalSearchRoomBookings extends GlobalSearchModule
         $additional .= date('d.m.Y H:i', $res['end']);
 
         return [
-            'name' => self::mark($res['user_free_name'], $search),
-            'url'  => URLHelper::getURL('resources.php', [
-                'view'        => 'view_schedule',
-                'show_object' => $res['resource_id'],
-                'start_time'  => strtotime('last monday', $res['begin'] + 24 * 60 * 60)
-            ], true),
+            'name' => self::mark($res['name'], $search),
+            'url'  => URLHelper::getURL(
+                'dispatch.php/resources/room_planning/booking_plan/' . $res['id'],
+                [
+                    'defaultDate' => date('Y-m-d', strtotime('last monday', $res['begin'] + 24 * 60 * 60)),
+                    'display_all_requests' => true,
+                ],
+                true
+            ),
             'img'        => Icon::create('room-clear')->asImagePath(),
             'additional' => self::mark($additional, $search),
             'expand'     => null

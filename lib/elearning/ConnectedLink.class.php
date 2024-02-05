@@ -33,7 +33,7 @@ class ConnectedLink
         global $ELEARNING_INTERFACE_MODULES;
 
         $this->cms_type = $cms;
-        $this->cms_link = $ELEARNING_INTERFACE_MODULES[$cms]["ABSOLUTE_PATH_ELEARNINGMODULES"] . $ELEARNING_INTERFACE_MODULES[$cms]["target_file"];
+        $this->cms_link = $ELEARNING_INTERFACE_MODULES[$cms]["ABSOLUTE_PATH_ELEARNINGMODULES"] . ($ELEARNING_INTERFACE_MODULES[$cms]["target_file"] ?? null);
     }
 
     /**
