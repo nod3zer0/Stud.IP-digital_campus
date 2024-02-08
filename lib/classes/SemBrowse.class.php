@@ -1173,7 +1173,7 @@ class SemBrowse {
         }
 
         $installed_languages = array_keys(Config::get()->INSTALLED_LANGUAGES);
-        $language = $_SESSION['_language'] ?: reset($installed_languages);
+        $language = $_SESSION['_language'] ?? reset($installed_languages);
         $option = Config::get()->COURSE_SEARCH_NAVIGATION_OPTIONS[$option_name];
         if (!$option['visible'] || $option['target'] !== $target) {
             return null;
