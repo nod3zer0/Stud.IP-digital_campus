@@ -32,14 +32,14 @@ class NewsWidget extends CorePlugin implements PortalPlugin
         $icons = [];
         if (StudipNews::CountUnread() > 0) {
             $navigation = new Navigation('', 'dispatch.php/news/visit_all');
-            $navigation->setImage(Icon::create('refresh', 'clickable', ["title" => _('Alle als gelesen markieren')]), ['class' => 'visit-all']);
+            $navigation->setImage(Icon::create('refresh', Icon::ROLE_CLICKABLE, ['title' => _('Alle als gelesen markieren')]), ['class' => 'visit-all']);
             $icons[] = $navigation;
         }
 
         if (Config::get()->NEWS_RSS_EXPORT_ENABLE) {
             if ($rss_id = StudipNews::GetRssIdFromRangeId('studip')) {
                 $navigation = new Navigation('', 'rss.php', ['id' => $rss_id]);
-                $navigation->setImage(Icon::create('rss', 'clickable', ["title" => _('RSS-Feed')]));
+                $navigation->setImage(Icon::create('rss', Icon::ROLE_CLICKABLE, ['title' => _('RSS-Feed')]));
                 $icons[] = $navigation;
             }
         }
@@ -52,7 +52,7 @@ class NewsWidget extends CorePlugin implements PortalPlugin
                 $navigation = new Navigation('', 'dispatch.php/news/rss_config/studip');
                 $navigation->setImage(
                     Icon::create(
-                        'rss',
+                        'admin',
                         Icon::ROLE_CLICKABLE,
                         ['title' => _('RSS-Feed konfigurieren')]
                     ),
