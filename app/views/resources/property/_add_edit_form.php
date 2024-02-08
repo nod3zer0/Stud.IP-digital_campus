@@ -39,7 +39,7 @@
 <label>
     <?= _('Mögliche Werte') ?>
     <input type="text" name="options" value="<?= htmlReady($options) ?>"
-        <?= !$GLOBALS['perm']->have_perm('root') ? 'disabled="disabled"' : '' ?>>
+        <?= !ResourceManager::userHasGlobalPermission(User::findCurrent(), 'admin') ? 'disabled' : '' ?>>
 </label>
 <label>
     <?= _('Angezeigter Name') ?>
