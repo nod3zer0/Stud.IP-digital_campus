@@ -125,8 +125,10 @@ class Course_ContentmodulesController extends AuthenticatedController
                     $active_tool->store();
                 }
             }
-            //$this->redirect("course/contentmodules/trigger", ['cid' => $context->getId()]);
+            $this->redirect("course/contentmodules/trigger", ['cid' => $context->getId(), 'plugin_id' => $module->getPluginId()]);
+            return;
         }
+        $active_tool = ToolActivation::find([$context->id, Request::int('plugin_id')]);
         $template = $GLOBALS['template_factory']->open('tabs.php');
         $template->navigation = Navigation::getItem('/course');
         Navigation::getItem('/course/admin')->setActive(true);
