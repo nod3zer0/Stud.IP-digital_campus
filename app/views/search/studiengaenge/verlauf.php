@@ -84,14 +84,26 @@
                                 </td>
                             <? endif ?>
                             <td><?= htmlReady($modulTeil['name']) ?> </td>
-                            <? for ($i = 1; $i <= $max_fachsemester; $i++) : ?>
-                                <? $fachsemester_typ = $GLOBALS['MVV_MODULTEIL_STGABSCHNITT']['STATUS']['values'][$modulTeil['fachsemester'][$fachsemesterData[$i]]] ?>
-                                <? if ($fachsemester_typ['visible']) : ?>
-                            <td class="mvv-type-<?= $modulTeil['fachsemester'][$fachsemesterData[$i]] ?>"><span title="<? printf(_('%s Semester (%s)'), $i . ModuleManagementModel::getLocaleOrdinalNumberSuffix($i), $fachsemester_typ['name']) ?>"><?= $fachsemester_typ['icon'] ?></span></td>
-                                <? else : ?>
+                        <? for ($i = 1; $i <= $max_fachsemester; $i++) :
+                            $fachsemester_typ = null;
+                            if (isset(
+                                $fachsemesterData[$i],
+                                $modulTeil['fachsemester'][$fachsemesterData[$i]],
+                                $GLOBALS['MVV_MODULTEIL_STGABSCHNITT']['STATUS']['values'][$modulTeil['fachsemester'][$fachsemesterData[$i]]]
+                            )) {
+                                $fachsemester_typ = $GLOBALS['MVV_MODULTEIL_STGABSCHNITT']['STATUS']['values'][$modulTeil['fachsemester'][$fachsemesterData[$i]]];
+                            }
+                        ?>
+                            <? if (!empty($fachsemester_typ['visible'])) : ?>
+                                <td class="mvv-type-<?= $modulTeil['fachsemester'][$fachsemesterData[$i]] ?? '' ?>">
+                                    <span title="<? printf(_('%s Semester (%s)'), $i . ModuleManagementModel::getLocaleOrdinalNumberSuffix($i), $fachsemester_typ['name']) ?>">
+                                        <?= $fachsemester_typ['icon'] ?>
+                                    </span>
+                                </td>
+                            <? else : ?>
                                 <td class="mvv-type">&nbsp;</td>
-                                <? endif ?>
-                            <? endfor ?>
+                            <? endif ?>
+                        <? endfor ?>
                         </tr>
                     <? endforeach ?>
 

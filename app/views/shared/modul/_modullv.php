@@ -1,5 +1,5 @@
 <? $modulTeil = $modul->modulteile->first(); ?>
-<? $modulTeilDeskriptor = $modulTeil->getDeskriptor($display_language); ?>
+<? $modulTeilDeskriptor = $modulTeil->getDeskriptor($display_language ?? null); ?>
 <table class="mvv-modul-details default nohover" data-mvv-id="<?= $modulTeil->id; ?>" data-mvv-type="modulteil">
     <tbody>
         <? $modulTeilSumme = $modulTeil->wl_praesenz + $modulTeil->wl_bereitung + $modulTeil->wl_selbst + $modulTeil->wl_pruef ?>
@@ -73,7 +73,7 @@
     <tbody>
         <tr>
             <td style="width: 30%;"><strong><?= _('Angebotsrhythmus') ?></strong></td>
-            <td style="width: 70%;" data-mvv-field="mvv_modulteil.semester"><?= $GLOBALS['MVV_NAME_SEMESTER']['values'][$modulTeil->semester]['name'] ?></td>
+            <td style="width: 70%;" data-mvv-field="mvv_modulteil.semester"><?= $GLOBALS['MVV_NAME_SEMESTER']['values'][$modulTeil->semester]['name'] ?? '' ?></td>
         </tr>
         <tr>
             <td style="width: 30%;"><strong><?= _('Aufnahmekapazität') ?></strong></td>

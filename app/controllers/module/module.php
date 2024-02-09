@@ -5,8 +5,6 @@
  * @since       3.5
  */
 
-require_once 'lib/classes/exportdocument/ExportPDF.class.php';
-
 class Module_ModuleController extends MVVController
 {
     public $filter = [];

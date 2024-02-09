@@ -27,8 +27,8 @@ define('K_PATH_IMAGES', $GLOBALS['STUDIP_BASE_PATH'] . '/public/assets/images/')
  *  //cancels all other output.
  *
  */
-class ExportPDF extends TCPDF implements ExportDocument {
-
+class ExportPDF extends TCPDF implements ExportDocument
+{
     private $media_proxy = NULL;
     private $config;
     private $defaults = false;

@@ -63,7 +63,7 @@ class Shared_ModulController extends AuthenticatedController
 
                 $sws += (int) $modulTeil->sws;
 
-                $num_bezeichnung = $GLOBALS['MVV_MODULTEIL']['NUM_BEZEICHNUNG']['values'][$modulTeil->num_bezeichnung]['name'];
+                $num_bezeichnung = $GLOBALS['MVV_MODULTEIL']['NUM_BEZEICHNUNG']['values'][$modulTeil->num_bezeichnung]['name'] ?? '';
 
                 $name_kurz = sprintf('%s %d', $num_bezeichnung, $modulTeil->nummer);
 
@@ -94,7 +94,7 @@ class Shared_ModulController extends AuthenticatedController
             $this->semester = $currentSemester;
             $this->sws = $sws;
 
-            $this->pruef_ebene = $GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene]['name'];
+            $this->pruef_ebene = $GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene]['name'] ?? null;
             $this->modul = $modul;
             $this->type = $type;
             $this->self_url = $this->url_for('modul/show/' . $modul_id);
@@ -133,15 +133,18 @@ class Shared_ModulController extends AuthenticatedController
 
         $this->semesterSelector = Semester::getSemesterSelector(null, $currentSemester['semester_id'], 'semester_id', false);
         $this->modul = $modul;
-        $this->pruefungsEbene = $GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene]['name'];
+        $this->pruefungsEbene = isset($GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene])
+                              ? $GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene]['name']
+                              : null;
         $this->modulDeskriptor = $modul->getDeskriptor($display_language);
         $this->startSemester = Semester::findByTimestamp($modul->start);
-        if ($modul->responsible_institute) {
-            if ($modul->responsible_institute->institute) {
-                $this->instituteName = $modul->responsible_institute->institute->getValue('name');
-            } else {
-                $this->instituteName = _('Unbekannte Einrichtung');
-            }
+
+        if (!$modul->responsible_institute) {
+            $this->instituteName = null;
+        } elseif ($modul->responsible_institute->institute) {
+            $this->instituteName = $modul->responsible_institute->institute->name;
+        } else {
+            $this->instituteName = _('Unbekannte Einrichtung');
         }
         $this->type = $type;
         $this->semester = $currentSemester;

@@ -36,7 +36,7 @@
             <? $wlPruef += $modulTeil->wl_pruef; ?>
             <? $modulTeilSumme = $modulTeil->wl_praesenz + $modulTeil->wl_bereitung + $modulTeil->wl_selbst + $modulTeil->wl_pruef; ?>
             <? $modulSumme += $modulTeilSumme; ?>
-            <? if ($show_synopse) : ?>
+            <? if (!empty($show_synopse)) : ?>
             <tr data-mvv-id="<?= $modulTeil->getId(); ?>" data-mvv-type="modulteil">
                 <td data-mvv-field="mvv_modulteil.nummer mvv_modulteil.num_bezeichnung"><strong><?= htmlReady($name_kurz) ?></strong></td>
                 <td data-mvv-field="mvv_modulteil.lernlehrform"><?= $GLOBALS['MVV_MODULTEIL']['LERNLEHRFORM']['values'][$modulTeil->lernlehrform]['name'] ?></td>

@@ -82,7 +82,7 @@ class Module_DownloadController extends MVVController
 
         foreach ($modul->modulteile as $modulTeil) {
             $deskriptor = $modulTeil->getDeskriptor($language);
-            $num_bezeichnung = $GLOBALS['MVV_MODULTEIL']['NUM_BEZEICHNUNG']['values'][$modulTeil->num_bezeichnung]['name'];
+            $num_bezeichnung = $GLOBALS['MVV_MODULTEIL']['NUM_BEZEICHNUNG']['values'][$modulTeil->num_bezeichnung]['name'] ?? '';
 
             $name_kurz = sprintf('%s %d', $num_bezeichnung, $modulTeil->nummer);
             $modulTeilData[$modulTeil->id] = [
@@ -97,7 +97,7 @@ class Module_DownloadController extends MVVController
                 'wl_bereitung'           => $modulTeil->wl_bereitung,
                 'wl_selbst'              => $modulTeil->wl_selbst,
                 'wl_pruef'               => $modulTeil->wl_pruef,
-                'turnus'                 => $GLOBALS['MVV_NAME_SEMESTER']['values'][$modulTeil->semester]['name'],
+                'turnus'                 => $GLOBALS['MVV_NAME_SEMESTER']['values'][$modulTeil->semester]['name'] ?? '',
                 'kommentar_wl_preasenz'  => $deskriptor->kommentar_wl_praesenz,
                 'kommentar_wl_bereitung' => $deskriptor->kommentar_wl_bereitung,
                 'kommentar_wl_selbst'    => $deskriptor->kommentar_wl_selbst,
@@ -133,7 +133,7 @@ class Module_DownloadController extends MVVController
             ));
         $this->semesterSelector = Semester::GetSemesterSelector(null, $currentSemester->getId(), 'semester_id', false);
         $this->modul = $modul;
-        $this->pruefungsEbene = $GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene]['name'];
+        $this->pruefungsEbene = $GLOBALS['MVV_MODUL']['PRUEF_EBENE']['values'][$modul->pruef_ebene]['name'] ?? null;
         $this->modulDeskriptor = $modul->getDeskriptor($language);
         $this->startSemester = Semester::find($modul->start);
         if ($modul->responsible_institute->institute) {

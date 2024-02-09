@@ -172,7 +172,7 @@
         </header>
         <section>
             <? foreach ($all_documents as $category => $files) : ?>
-                <? if ($GLOBALS['MVV_DOCUMENTS']['CATEGORY']['values'][$category]['visible']) : ?>
+                <? if (!empty($GLOBALS['MVV_DOCUMENTS']['CATEGORY']['values'][$category]['visible'])) : ?>
                     <strong><?= htmlReady($GLOBALS['MVV_DOCUMENTS']['CATEGORY']['values'][$category]['name']) ?></strong>
                     <ul>
                         <? foreach ($files as $file) : ?>

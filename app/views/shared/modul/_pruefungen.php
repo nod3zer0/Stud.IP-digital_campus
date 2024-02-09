@@ -9,7 +9,7 @@
     <tbody>
         <? foreach ($modul->modulteile as $modulTeil): ?>
             <?
-            $modulTeilDeskriptor = $modulTeil->getDeskriptor($display_language);
+            $modulTeilDeskriptor = $modulTeil->getDeskriptor($display_language ?? null);
             // Für die Kenntlichmachung der Modulteile in Listen die Nummer des
             // Modulteils und den ausgewählten Namen verwenden.
             // Ist keine Nummer vorhanden, dann Durchnummerieren und Standard-

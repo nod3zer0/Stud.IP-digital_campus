@@ -1,4 +1,4 @@
-<? $modulDeskriptor = $modul->getDeskriptor($display_language); ?>
+<? $modulDeskriptor = $modul->getDeskriptor($display_language ?? null); ?>
 <table class="mvv-modul-details default nohover" data-mvv-id="<?= $modul->getId(); ?>" data-mvv-type="modul">
     <colgroup>
         <col width="30%">
@@ -66,14 +66,14 @@
                     <? endif; ?>
                     <ul>
                     <? foreach ($pathes as $i => $path) : ?>
-                    <? $version = $trails[$i]['StgteilVersion']['version_id'];?>
+                    <? $version = $trails[$i]['StgteilVersion']['version_id'] ?? null;?>
                     <? $statement = DBManager::get()->prepare(
                              'SELECT `mvv_stgteilabschnitt_modul`.`abschnitt_id`  '
                            . 'FROM mvv_stgteilabschnitt_modul LEFT JOIN mvv_stgteilabschnitt USING(abschnitt_id) '
                            . 'WHERE modul_id = ? AND version_id = ?');
                        $statement->execute([$modul->getId(), $version]);
                        $res = $statement->fetchOne();
-                       $affect_id = $res['abschnitt_id'];
+                       $affect_id = $res['abschnitt_id'] ?? null;
                     ?>
                     <li data-mvv-field="mvv_stgteilabschnitt_modul" data-mvv-id="<?= $affect_id; ?>" data-mvv-cooid="<?= $modul->getId(); ?>">
                         <?= htmlReady($path)?>

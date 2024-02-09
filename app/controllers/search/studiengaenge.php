@@ -402,7 +402,7 @@ class Search_StudiengaengeController extends MVVController
                             [
                                 'name' => $file->getDisplayName(),
                                 'url'  => $mvv_file_ref->file_ref->getDownloadURL(),
-                                'metadata_url' => $mvv_file_ref->file_ref->file->metadata['url'],
+                                'metadata_url' => $mvv_file_ref->file_ref->file->metadata['url'] ?? null,
                                 'extension' => $mvv_file_ref->file_ref->file->getExtension(),
                                 'is_link' => ($filetype instanceof URLFile)
                             ];
