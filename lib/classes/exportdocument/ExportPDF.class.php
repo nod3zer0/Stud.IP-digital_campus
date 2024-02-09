@@ -117,7 +117,7 @@ class ExportPDF extends TCPDF implements ExportDocument
                 $headers = get_headers($url, true, get_default_http_stream_context($url));
                 list(, $status) = explode(' ', $headers[0]);
 
-                $url = $headers['Location'] ?: $headers['location'] ?: $url;
+                $url = $headers['Location'] ?? $headers['location'] ?? $url;
             } while (in_array($status, [300, 301, 302, 303, 305, 307]));
 
             $status = $status ?: 404;
@@ -299,7 +299,10 @@ class ExportPDF extends TCPDF implements ExportDocument
     {
         $convurl = $url;
         $url_elements = @parse_url($url);
-        $url = $url_elements['path'].'?'.$url_elements['query'];
+        $url = $url_elements['path'];
+        if (isset($url_elements['query'])) {
+            $url .= "?{$url_elements['query']}";
+        }
         if (mb_strpos(implode('#', $this->domains), $url_elements['host']) !== false) {
             if (mb_strpos($url, 'dispatch.php/media_proxy?url=') !== false) {
                 $targeturl = urldecode(mb_substr($url, 4));
