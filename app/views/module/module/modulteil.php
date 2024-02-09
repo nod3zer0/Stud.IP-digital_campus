@@ -11,7 +11,7 @@ if ($GLOBALS['MVV_MODULTEIL']['SPRACHE']['default'] != $display_language) {
     STUDIP.MVV.PARENT_ID = '<?= $modulteil->getId() ?>';
 </script>
 
-<form id="modulteil_form" class="default" action="<?= $controller->action_link('modulteil/', $modulteil->id) ?>"
+<form id="modulteil_form" class="default" action="<?= $controller->action_link('modulteil', $modulteil->id) ?>"
       method="post">
     <?= CSRFProtection::tokenTag() ?>
 
