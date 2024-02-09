@@ -122,7 +122,8 @@ button.button {
 
 /* Grouped Buttons */
 .button-group {
-    display: inline-block;
+    display: inline-flex;
+    gap: 5px;
     list-style: none;
     margin: 0 0.8em 0 0;
     padding: 0;
@@ -130,13 +131,8 @@ button.button {
 
     button,
     .button {
-        float: left;
-        margin-left: 5px;
+        margin-left: 0;
         margin-right: 0;
-
-        &:first-of-type {
-            margin-left: 0;
-        }
     }
 }
 
