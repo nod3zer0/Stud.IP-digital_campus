@@ -1260,3 +1260,39 @@ button.as-link {
     text-decoration: underline;
     color: $contrast-blue;
 }
+
+.talk-bubble-wrapper {
+    .talk-bubble {
+        background-color: var(--white);
+        border-radius: 8px;
+        border: solid 2px #000;
+
+        &::after {
+            top: -2px;
+            border-top-color: var(--black);
+            left: -18px;
+        }
+        .talk-bubble-content {
+            .talk-bubble-talktext {
+                .html {
+                    .opengraph,
+                    blockquote {
+                        border: solid thin var(--black);
+                        border-left: 3px solid var(--black);
+                    }
+                }
+            }
+        }
+    }
+
+    &.talk-bubble-own-post {
+        .talk-bubble {
+            background-color: var(--white);
+
+            &::after {
+                border-top-color: var(--black);
+                right: -18px;
+            }
+        }
+    }
+} 
