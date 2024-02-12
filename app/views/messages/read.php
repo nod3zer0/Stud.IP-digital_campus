@@ -88,14 +88,27 @@
 <div align="center" data-dialog-button>
     <div class="button-group">
     <? if ($message['autor_id'] !== '____%system%____'): ?>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", ['answer_to' => $message->getId(), 'quote' => $message->getId()]) ?>" data-dialog="width=700;height=700"><?= \Studip\Button::create(_("Antworten"))?></a>
+        <?= Studip\LinkButton::create(
+            _('Antworten'),
+            URLHelper::getURL('dispatch.php/messages/write', ['answer_to' => $message->id, 'quote' => $message->id]),
+            ['data-dialog' => 'size=700']
+        ) ?>
     <? endif; ?>
-        <a href="<?= URLHelper::getLink("dispatch.php/messages/write", ['answer_to' => $message->getId(), 'forward' => "rec"]) ?>" data-dialog="width=700;height=700"><?= \Studip\Button::create(_("Weiterleiten"))?></a>
+        <?= Studip\LinkButton::create(
+            _('Weiterleiten'),
+            URLHelper::getURL('dispatch.php/messages/write', ['answer_to' => $message->id, 'forward' => 'rec']),
+            ['data-dialog' => 'size=700']
+        ) ?>
     </div>
-    <a href="<?= URLHelper::getLink("dispatch.php/messages/print/".$message->getId()) ?>" class="print_action"><?= \Studip\Button::create(_("Drucken"))?></a>
+    <?= Studip\Button::create(
+        _('Drucken'),
+        URLHelper::getURL('dispatch.php/messages/print/' . $message->id),
+        ['class' => 'print_action']
+
+    ) ?>
     <form action="<?= $controller->delete($message, $mbox) ?>" method="post" style="display: inline;">
         <input type="hidden" name="studip-ticket" value="<?= get_ticket() ?>">
-        <?= \Studip\Button::create(_("Löschen"), 'delete', [
+        <?= \Studip\Button::create(_('Löschen'), 'delete', [
             'data-confirm' => _('Nachricht wirklich löschen?'),
         ])?>
     </form>
