@@ -164,33 +164,37 @@ class Course_Gradebook_LecturersController extends AuthenticatedController
     public function store_grades_action()
     {
         CSRFProtection::verifyUnsafeRequest();
-        $course = \Context::get();
-        $studentIds = $course->getMembersWithStatus('autor', true)->pluck('user_id');
-        $definitionIds = \SimpleCollection::createFromArray(
-            Definition::findByCourse($course)
-        )->pluck('id');
+        if (Request::submitted('accept')) {
+            $course = \Context::get();
+            $studentIds = $course->getMembersWithStatus('autor', true)->pluck('user_id');
+            $definitionIds = \SimpleCollection::createFromArray(
+                Definition::findByCourse($course)
+            )->pluck('id');
 
-        $grades = \Request::getArray('grades');
-        $passed = \Request::getArray('passed');
-        $feedback = \Request::getArray('feedback');
-        foreach ($grades as $studentId => $studentGrades) {
-            if (!in_array($studentId, $studentIds)) {
-                continue;
-            }
-            foreach ($studentGrades as $definitionId => $strGrade) {
-                if (!in_array($definitionId, $definitionIds)) {
+            $grades = \Request::getArray('grades');
+            $passed = \Request::getArray('passed');
+            $feedback = \Request::getArray('feedback');
+            foreach ($grades as $studentId => $studentGrades) {
+                if (!in_array($studentId, $studentIds)) {
                     continue;
                 }
+                foreach ($studentGrades as $definitionId => $strGrade) {
+                    if (!in_array($definitionId, $definitionIds)) {
+                        continue;
+                    }
 
-                $instance = new Instance([$definitionId, $studentId]);
-                $instance->rawgrade = ((int) $strGrade) / 100.0;
-                $instance->passed = $passed[$studentId][$definitionId] ?? 0;
-                $instance->feedback = $feedback[$studentId][$definitionId] ?? '';
-                $instance->store();
+                    $instance = new Instance([$definitionId, $studentId]);
+                    $instance->rawgrade = ((int)$strGrade) / 100.0;
+                    $instance->passed = $passed[$studentId][$definitionId] ?? 0;
+                    $instance->feedback = $feedback[$studentId][$definitionId] ?? '';
+                    $instance->store();
+                }
             }
-        }
 
-        \PageLayout::postSuccess(_('Die Noten wurden gespeichert.'));
+            \PageLayout::postSuccess(_('Die Noten wurden gespeichert.'));
+        } else {
+            \PageLayout::postError(_('Beim Übermitteln der Daten trat ein Fehler auf.'));
+        }
         $this->redirect('course/gradebook/lecturers/custom_definitions');
     }
 
