@@ -930,6 +930,12 @@ class Resources extends \RESTAPI\RouteMap
             $this->halt(403, 'You do not have sufficient permissions to modify the interval!');
         }
 
+        if (
+            !$interval->takes_place
+            && $resource->isAssigned(new \DateTime('@' . $interval->begin), new \DateTime('@' . $interval->end))
+        ) {
+            $this->halt(409, 'Already booked');
+        }
         //Switch the takes_place field:
         $interval->takes_place = $interval->takes_place ? '0' : '1';
 
