@@ -81,9 +81,9 @@ class OERHostOERSI extends OERHost
                     if (!$material['category']) {
                         $material['category'] = $material->autoDetectCategory();
                     }
-                    $material['front_image_content_type'] = $material_data['_source']['image'] ? 'image/jpg' : null;
+                    $material['front_image_content_type'] = !empty($material_data['_source']['image']) ? 'image/jpg' : null;
                     $material['data'] = [
-                        'front_image_url' => $material_data['_source']['image'],
+                        'front_image_url' => $material_data['_source']['image'] ?? null,
                         'download' => $material_data['_source']['encoding'][0]['contentUrl'] ?: '',
                         'id' => $material_data['_id'],
                         'organization' => $material_data['_source']['sourceOrganization'][0]['name'] ?: $material_data['_source']['publisher'][0]['name']
@@ -102,7 +102,9 @@ class OERHostOERSI extends OERHost
                     $material->setUsers($userdata);
 
                     //set topics:
-                    $material->setTopics($material_data['_source']['keywords']);
+                    if (isset($material_data['_source']['keywords'])) {
+                        $material->setTopics($material_data['_source']['keywords']);
+                    }
 
                 }
             } else {

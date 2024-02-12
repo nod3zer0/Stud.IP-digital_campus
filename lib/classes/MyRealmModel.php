@@ -677,7 +677,7 @@ class MyRealmModel
 
             // Now sort courses by sem_tree entry order.
             uksort($_tmp_courses[$sem_key], function ($a, $b) use ($order, $max) {
-                return (str_pad($order[$a], $max, '0') - str_pad($order[$b], $max, '0'));
+                return str_pad($order[$a] ?? '', $max, '0') - str_pad($order[$b] ?? '', $max, '0');
             });
 
             //At this point the $_tmp_courses array is sorted by the ordering
