@@ -235,7 +235,7 @@ $MAIL_ATTACHMENTS_MAX_SIZE = 10;                             //maximum size of a
 $INSTALLED_LANGUAGES["de_DE"] =  ["path"=>"de", "picture"=>"lang_de.gif", "name"=>"Deutsch"];
 $INSTALLED_LANGUAGES["en_GB"] =  ["path"=>"en", "picture"=>"lang_en.gif", "name"=>"English"];
 $CONTENT_LANGUAGES['de_DE'] = ['picture' => 'lang_de.gif', 'name' => 'Deutsch'];
-//$CONTENT_LANGUAGES['en_GB'] = array('picture' => 'lang_en.gif', 'name' => 'English');
+$CONTENT_LANGUAGES['en_GB'] = array('picture' => 'lang_en.gif', 'name' => 'English');
 
 $_language_domain = "studip";  // the name of the language file. Should not be changed except in cases of individual translations or special terms.
 

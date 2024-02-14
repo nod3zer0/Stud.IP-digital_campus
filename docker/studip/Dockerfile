@@ -12,6 +12,7 @@ RUN apt update && apt install -y --no-install-recommends \
         libzip-dev \
         libicu-dev \
         vim \
+        locales \
     && rm -rf /var/lib/apt/lists/*
 
 # Install php extensions
@@ -57,6 +58,13 @@ RUN cp ./config/config.inc.php.dist ./config/config.inc.php
 # Add custom entrypoint
 COPY ./docker/studip/docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
+RUN chmod -R 755 /var/www/studip/public/plugins_packages
+RUN chown -R www-data /var/www/studip/public/plugins_packages
+RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG en_GB.UTF-8
+ENV LANGUAGE en_GB:en
+ENV LC_ALL en_GB.UTF-8
 
 # Set start parameters
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

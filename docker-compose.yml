@@ -10,7 +10,7 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 1
       MYSQL_DATABASE: studip_db
       MYSQL_USER: studip_user
-      MYSQL_PASSWORD: studip_password
+      MYSQL_PASSWORD: Bup8S9rJ9uCrXGicydaQ
       DEMO_DATA: 1
       MAIL_TRANSPORT: debug
   web:
@@ -31,7 +31,7 @@ services:
     environment:
       MYSQL_DATABASE: studip_db
       MYSQL_USER: studip_user
-      MYSQL_PASSWORD: studip_password
+      MYSQL_PASSWORD: Bup8S9rJ9uCrXGicydaQ
       MYSQL_HOST: db
       STUDIP_MAIL_TRANSPORT: debug
 
