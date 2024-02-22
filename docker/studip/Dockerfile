@@ -45,8 +45,8 @@ ENV APACHE_DOCUMENT_ROOT /var/www/studip/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 #reverse proxy hot fix
-RUN printf '%s\n%s\n' "ServerName studip.ceskar.xyz" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf
-RUN printf '%s\n%s\n' "UseCanonicalName On" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf
+#RUN printf '%s\n%s\n' "ServerName studip.ceskar.xyz" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf
+#RUN printf '%s\n%s\n' "UseCanonicalName On" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf
 
 
 COPY --from=build /studip /var/www/studip
