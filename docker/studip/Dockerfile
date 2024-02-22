@@ -44,6 +44,10 @@ FROM base
 ENV APACHE_DOCUMENT_ROOT /var/www/studip/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+#reverse proxy hot fix
+RUN printf '%s\n%s\n' "ServerName studip.ceskar.xyz" "$(cat test.txt)" >test.txt
+RUN printf '%s\n%s\n' "UseCanonicalName On" "$(cat test.txt)" >test.txt
+
 
 COPY --from=build /studip /var/www/studip
 
@@ -58,8 +62,10 @@ RUN cp ./config/config.inc.php.dist ./config/config.inc.php
 # Add custom entrypoint
 COPY ./docker/studip/docker-entrypoint.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/docker-entrypoint.sh
+# plugins hot fix
 RUN chmod -R 755 /var/www/studip/public/plugins_packages
 RUN chown -R www-data /var/www/studip/public/plugins_packages
+#locales hot fix
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen
 ENV LANG en_GB.UTF-8
