@@ -17,6 +17,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/studip/Dockerfile
+      args:
+        - ProxyUrl=https://studip.ceskar.xyz/
 
     depends_on:
       - db
