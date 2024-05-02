@@ -47,9 +47,20 @@ namespace {
 
     $CONTENT_LANGUAGES['en_GB'] = ['picture' => 'lang_en.gif', 'name' => 'English'];
 
-        $STUDIP_AUTH_PLUGIN[] = "SimpleSamlPHP";
 
-    $STUDIP_AUTH_CONFIG_SIMPLESAMLPHP = array(
-	    "user_data_mapping" =>
-                                                array(  "auth_user_md5.perms" => array("callback" => "getUserData", "map_args" => "role")));
+     if (getenv('BUT_FIT_IDP')) {
+     #BUT FIT SSO plugin
+     $STUDIP_AUTH_PLUGIN[] = "SimpleSamlPHP";
+
+     #Settings for SimpleSamlPHP that allow use of BUT FIT IDP
+     $STUDIP_AUTH_CONFIG_SIMPLESAMLPHP = array(
+            "return_to_url" => 'https://studip.ceskar.xyz/index.php?sso=simplesamlphp&cancel_login=1',
+            "sp_name" => 'default-sp',
+            "username_attribute" => 'urn:oid:1.3.6.1.4.1.5923.1.1.1.13',
+            "user_data_mapping" =>      array(  "auth_user_md5.perms" => array("callback" => "assignButFitRoles", "map_args" => ""),
+                                                "auth_user_md5.Email" => array("callback" => "getButFitUserData", "map_args" => "urn:oid:0.9.2342.19200300.100.1.3"),
+                                                "auth_user_md5.Nachname" => array("callback" => "getButFitUserData", "map_args" => "urn:oid:2.5.4.4"),
+                                                "auth_user_md5.Vorname" => array("callback" => "getButFitUserData", "map_args" => "urn:oid:2.5.4.42")));
+     }
+
 }

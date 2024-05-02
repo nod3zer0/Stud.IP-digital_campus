@@ -48,6 +48,11 @@ if ($auth->auth["uid"]!="nobody") {
         $casauth = StudipAuthAbstract::GetInstance('cas');
         $docaslogout = true;
     }
+    if ($auth->auth["auth_plugin"] == "simplesamlphp"){
+        $SimpleSamlPHPAuth = StudipAuthAbstract::GetInstance('simplesamlphp');
+        $dosimplesamlphplogout = true;
+    }
+
     //Logout aus dem Sessionmanagement
     $auth->logout();
     $sess->delete();
@@ -61,6 +66,9 @@ if ($auth->auth["uid"]!="nobody") {
     //der logout() Aufruf fuer CAS (dadurch wird das Cookie (Ticket) im Browser zerstoert)
     if (!empty($docaslogout)) {
         $casauth->logout();
+    }
+    if (!empty($dosimplesamlphplogout)) {
+        $SimpleSamlPHPAuth->logout();
     }
     $sess->start();
     $_SESSION['_language'] = $_language;
