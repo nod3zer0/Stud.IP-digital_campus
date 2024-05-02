@@ -46,4 +46,10 @@ namespace {
     $MAIL_TRANSPORT = getenv('STUDIP_MAIL_TRANSPORT');
 
     $CONTENT_LANGUAGES['en_GB'] = ['picture' => 'lang_en.gif', 'name' => 'English'];
+
+        $STUDIP_AUTH_PLUGIN[] = "SimpleSamlPHP";
+
+    $STUDIP_AUTH_CONFIG_SIMPLESAMLPHP = array(
+	    "user_data_mapping" =>
+                                                array(  "auth_user_md5.perms" => array("callback" => "getUserData", "map_args" => "role")));
 }

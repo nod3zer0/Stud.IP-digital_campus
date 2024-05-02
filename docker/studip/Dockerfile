@@ -75,6 +75,18 @@ ENV LANG en_GB.UTF-8
 ENV LANGUAGE en_GB:en
 ENV LC_ALL en_GB.UTF-8
 
+# SimpleSamlPHP
+
+#copy SimpleSamlPHP
+COPY ./docker/studip/simplesamlphp /var/simplesamlphp
+#copy apache site config
+COPY ./docker/studip/000-default.conf /etc/apache2/sites-available/000-default.conf
+#create cache directory
+RUN mkdir -p /var/cache/simplesamlphp/core
+#make permissions
+RUN chown -R www-data /var/simplesamlphp
+RUN chown -R www-data /var/cache/simplesamlphp
+
 # Set start parameters
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
