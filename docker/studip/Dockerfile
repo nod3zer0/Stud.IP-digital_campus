@@ -48,8 +48,8 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
 #reverse proxy fix
 ARG ProxyUrl
-RUN printf '%s\n%s\n' "ServerName $ProxyUrl" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf
-RUN printf '%s\n%s\n' "UseCanonicalName On" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf
+RUN if [[ -z "$ProxyUrl" ]] ; then printf '%s\n%s\n' "ServerName $ProxyUrl" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf ; fi
+RUN if [[ -z "$ProxyUrl" ]] ;  then printf '%s\n%s\n' "UseCanonicalName On" "$(cat /etc/apache2/apache2.conf)" >/etc/apache2/apache2.conf ; fi
 
 
 COPY --from=build /studip /var/www/studip

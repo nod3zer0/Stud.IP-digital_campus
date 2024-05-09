@@ -13,6 +13,7 @@ if [ ! -f $CONFIGFILE ]; then
     cp "$CONF.dist" "$CONF"
 fi
 
+
 # wait until MySQL is really available
 maxcounter=45
 

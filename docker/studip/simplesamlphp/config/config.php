@@ -31,7 +31,7 @@ $config = [
      * external url, no matter where you come from (direct access or via the
      * reverse proxy).
      */
-    'baseurlpath' => 'https://studip.ceskar.xyz/simplesaml/',
+    'baseurlpath' => 'http://localhost:8032/',
 
     /*
      * The 'application' configuration array groups a set configuration options
@@ -52,13 +52,13 @@ $config = [
          * need to compute the right URLs yourself and pass them dynamically
          * to SimpleSAMLphp's API.
          */
-        'baseURL' => 'https://studip.ceskar.xyz',
+        //'baseURL' => 'https://studip.ceskar.xyz',
     ],
 
     /*
      * The following settings are *filesystem paths* which define where
      * SimpleSAMLphp can find or write the following things:
-     * - 'cachedir': Where SimpleSAMLphp can write its cache. 
+     * - 'cachedir': Where SimpleSAMLphp can write its cache.
      * - 'loggingdir': Where to write logs. MUST be set to NULL when using a logging
      *                 handler other than `file`.
      * - 'datadir': Storage of general data.
